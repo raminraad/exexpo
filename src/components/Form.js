@@ -29,7 +29,7 @@ export default class Logo extends Component<{}> {
                     ref={(input) => this.password = input}
                 />
                 <TouchableOpacity style={styles.button}>
-                    <Text style={styles.buttonText}>{this.props.type}</Text>
+                    <Text style={styles.buttonText}>{this.props.type==='Login'?'ورود به حساب':'ایجاد حساب'}</Text>
                 </TouchableOpacity>
             </View>
         );
@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
     },
     inputBox: {
         width: 300,
+        height:50,
         backgroundColor: 'rgba(255,255,255,0.2)',
         borderRadius: 25,
         paddingHorizontal: 16,
@@ -53,6 +54,7 @@ const styles = StyleSheet.create({
     },
     button: {
         width: 300,
+        height:50,
         marginVertical: 10,
         backgroundColor: '#1c313a',
         borderRadius: 25,
@@ -63,5 +65,5 @@ const styles = StyleSheet.create({
         fontWeight: '500',
         color: '#ffffff',
         textAlign: 'center',
-    },
+    }
 });

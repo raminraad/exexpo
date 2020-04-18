@@ -12,7 +12,7 @@ const Stack = createStackNavigator();
 function App() {
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName="Login">
+            <Stack.Navigator initialRouteName="Login" screenOptions={{headerShown: false}}>
                 <Stack.Screen name="Login" component={Login} options={{title: 'Login'}}/>
                 <Stack.Screen name="SignUp" component={SignUp}/>
             </Stack.Navigator>

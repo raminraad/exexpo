@@ -3,22 +3,19 @@ import {Platform, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import Logo from '../components/Logo';
 import Form from '../components/Form';
 
-export default class Signup extends Component<{}> {
-
-    goBack() {
-        // Actions.pop();
-    }
+export default class SignUp extends Component<{}> {
 
     render() {
         return (
             <View style={styles.container}>
                 <Logo/>
-                <Form type={'Signup'}/>
-                <View style={styles.signupTextCont}>
-                    <Text style={styles.signupText}>
+                <Form type={'SignUp'}/>
+                <View style={styles.signUpTextCont}>
+                    <Text style={styles.signUpText}>
                         قبلاً حساب کاربری ایجاد کرده اید؟{' '}
                     </Text>
-                    <TouchableOpacity onPress={this.goBack}><Text style={styles.signupButton}>ورود به
+                    <TouchableOpacity onPress={() => this.props.navigation.navigate('Login')}><Text
+                        style={styles.signUpButton}>ورود به
                         حساب</Text></TouchableOpacity>
                 </View>
             </View>
@@ -33,18 +30,18 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    signupTextCont: {
+    signUpTextCont: {
         flexGrow: 1,
         alignItems: 'flex-end',
         justifyContent: 'center',
         paddingVertical: 16,
         flexDirection: 'row-reverse',
     },
-    signupText: {
+    signUpText: {
         color: 'rgba(255,255,255,0.6)',
         fontSize: 16,
     },
-    signupButton: {
+    signUpButton: {
         color: '#ffffff',
         fontSize: 16,
         fontWeight: '500',

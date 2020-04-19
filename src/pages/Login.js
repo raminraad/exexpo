@@ -1,4 +1,4 @@
-import React, {Component,useState} from 'react';
+import React, {Component, useState} from 'react';
 import {StyleSheet, Text, View, TextInput, TouchableOpacity} from 'react-native';
 import Logo from '../components/Logo';
 
@@ -7,12 +7,22 @@ export default class Login extends Component<{}> {
     constructor({navigatioin}) {
         super(navigatioin);
         this.gotoSignUp = this.gotoSignUp.bind(this);
-        this.checkLoginInfo = this.checkLoginInfo.bind(this);
+        this.submitHandler = this.submitHandler.bind(this);
+        this.state = {
+            username: '',
+            password: '',
+            message: ''
+        };
+        this.msgWrongLoginInfo = 'نام کاربری و یا کلمه عبور اشتباه است';
     }
 
-    checkLoginInfo() {
-        if (this.username === 'a')
-            this.props.navigation.navigate('SignUp');
+    submitHandler() {
+        //todo: replace with web service call
+        if (this.state.username === 'raad' && this.state.password === '11') {
+            alert('Welcome');
+            this.setState({message: ''});
+        } else
+            this.setState({message: this.msgWrongLoginInfo});
     }
 
     gotoSignUp() {
@@ -24,26 +34,30 @@ export default class Login extends Component<{}> {
             <Logo/>
             <View style={styles.container}>
                 <TextInput
+                    name='username'
                     style={styles.inputBox}
                     underlineColorAndroid="rgba(0,0,0,0)"
                     textAlign="right"
                     placeholder="نام کاربری"
                     keyboardType='email-address'
                     onSubmitEditing={() => this.password.focus()}
-                    onChangeText={text => this.username = text}
+                    onChangeText={(val) => this.setState({username: val})}
                     ref={(input) => this.username = input}
                 />
                 <TextInput
+                    name='password'
                     style={styles.inputBox}
                     underlineColorAndroid="rgba(0,0,0,0)"
                     textAlign="right"
                     secureTextEntry={true}
                     placeholder="گذرواژه"
+                    onSubmitEditing={() => this.submitHandler()}
+                    onChangeText={(val) => this.setState({password: val})}
                     ref={(input) => this.password = input}
                 />
                 <Text
-                    style={styles.wrongLoginInfo}>نام کاربری و یا کلمه عبور اشتباه است</Text>
-                <TouchableOpacity style={styles.button} onPress={this.checkLoginInfo}>
+                    style={styles.message}>{this.state.message}</Text>
+                <TouchableOpacity style={styles.button} onPress={this.submitHandler}>
                     <Text
                         style={styles.buttonText}>ورود به حساب</Text>
                 </TouchableOpacity>
@@ -105,7 +119,7 @@ const styles = StyleSheet.create({
         color: '#fff',
         textAlign: 'center',
     },
-    wrongLoginInfo: {
+    message: {
         fontSize: 20,
         fontWeight: '500',
         width: 300,

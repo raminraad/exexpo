@@ -108,8 +108,8 @@ const styles = StyleSheet.create({
     wrongLoginInfo: {
         fontSize: 20,
         fontWeight: '500',
-        width:300,
+        width: 300,
         color: '#fff',
-        textAlign: 'right',
+        textAlign: 'center',
     }
 });

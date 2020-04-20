@@ -20,11 +20,6 @@ const styles = StyleSheet.create({
         height: 164,
     },
     container: {
-        flexGrow: 2,
-        flex: 1,
-        marginBottom: 100,
-        marginTop: 100,
-        justifyContent: 'flex-start',
         alignItems: 'center',
     },
     logoText: {

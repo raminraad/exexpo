@@ -1,5 +1,5 @@
-import React, {Component, useState} from 'react';
-import {StyleSheet, Text, View, TextInput, TouchableOpacity} from 'react-native';
+import React, {Component} from 'react';
+import {StyleSheet, Text, View, TextInput, TouchableOpacity, KeyboardAvoidingView} from 'react-native';
 import Logo from '../components/Logo';
 
 
@@ -18,8 +18,8 @@ export default class Login extends Component<{}> {
 
     submitHandler() {
         //todo: replace with web service call
-        if (this.state.username === 'raad' && this.state.password === '11') {
-            alert('Welcome');
+        if (this.state.username.toLowerCase() === 'raad' && this.state.password === '11') {
+            this.gotoHome();
             this.setState({message: ''});
         } else
             this.setState({message: this.msgWrongLoginInfo});
@@ -29,10 +29,17 @@ export default class Login extends Component<{}> {
         this.props.navigation.navigate('SignUp')
     }
 
+    gotoHome() {
+        this.props.navigation.navigate('Home')
+    }
+
+
     render() {
         return <View style={styles.container}>
-            <Logo/>
-            <View style={styles.container}>
+            <View style={{flex: 2, justifyContent: 'flex-end'}}>
+                <Logo/>
+            </View>
+            <View style={{flex: 3, justifyContent: 'center'}}>
                 <TextInput
                     name='username'
                     style={styles.inputBox}
@@ -64,9 +71,9 @@ export default class Login extends Component<{}> {
             </View>
             <View style={styles.signUpTextCont}>
                 <Text style={styles.signUpText}>هنوز حساب کاریری ندارید؟ </Text>
-                <TouchableOpacity onPress={this.gotoSignUp}><Text
-                    style={styles.signUpButton}>ایجاد حساب
-                    کاربری</Text></TouchableOpacity>
+                <TouchableOpacity onPress={this.gotoSignUp}>
+                    <Text style={styles.signUpButton}>ایجاد حساب
+                        کاربری</Text></TouchableOpacity>
             </View>
         </View>;
     }
@@ -77,13 +84,11 @@ const styles = StyleSheet.create({
         backgroundColor: '#455a64',
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'space-around',
     },
     signUpTextCont: {
-        flexGrow: 1,
         alignItems: 'flex-end',
-        justifyContent: 'center',
-        paddingVertical: 16,
+        paddingBottom: 16,
         flexDirection: 'row-reverse',
     },
     signUpText: {

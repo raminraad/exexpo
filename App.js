@@ -13,51 +13,35 @@ import Order from "./src/pages/Order";
 import Details from "./src/pages/Details";
 
 
-const HomeStack = createStackNavigator();
-const DetailsStack = createStackNavigator();
-const Drawer = createDrawerNavigator();
+const HomeDrawer = createDrawerNavigator();
+const LoginStack = createStackNavigator();
 
-const HomeStackScreen = ({navigation}) => (
-    <HomeStack.Navigator screenOptions={{
-        headerStyle: {
-            backgroundColor: 'orange',
-        },
-        headerTintColor: 'gray',
-        headerTitleStyle: {
-            fontWeight: 'bold'
-        }
-    }}>
-        <HomeStack.Screen name='Login' component={Login} options={{title: 'Login'}}/>
-        <HomeStack.Screen name='SignUp' component={SignUp} options={{title: 'SignUp'}}/>
-        <HomeStack.Screen name='Home' component={Home} options={{title: 'Overview'}}/>
-    </HomeStack.Navigator>
-);
-const DetailsStackScreen = ({navigation}) => (
-    <DetailsStack.Navigator screenOptions={{
-        headerStyle: {
-            backgroundColor: 'orange',
-        },
-        headerTintColor: 'gray',
-        headerTitleStyle: {
-            fontWeight: 'bold'
-        }
-    }}>
-        <DetailsStack.Screen name='Details' component={Details} options={{}}/>
-    </DetailsStack.Navigator>
+const HomeDrawerScreen = ({navigation}) => (
+    <HomeDrawer.Navigator>
+        <HomeDrawer.Screen name='Home' component={Home} options={{title: 'Overview'}}/>
+        <HomeDrawer.Screen name='Details' component={Details} options={{title: 'Detail'}}/>
+        <HomeDrawer.Screen name='Order' component={Order} options={{title: 'Order'}}/>
+        <HomeDrawer.Screen name='Profile' component={Profile} options={{title: 'Profile'}}/>
+        <HomeDrawer.Screen name='Login' component={Login} options={{title: 'Login'}}/>
+    </HomeDrawer.Navigator>
 );
 
 function App() {
     return (
         <NavigationContainer>
-            <Drawer.Navigator initialRouteName="Home">
-                <Drawer.Screen name="Home" component={HomeStackScreen}/>
-                <Drawer.Screen name="Profile" component={DetailsStackScreen}/>
-            </Drawer.Navigator>
-            {/*<Stack.Navigator initialRouteName="Login" screenOptions={{headerShown: false}}>
-                <Stack.Screen name="Login" component={Login} options={{title: 'Login'}}/>
-                <Stack.Screen name="SignUp" component={SignUp}/>
-                <Stack.Screen name="Home" component={Home}/>
-            </Stack.Navigator>*/}
+            <LoginStack.Navigator initialRouteName="Login" screenOptions={{
+                headerStyle: {
+                    backgroundColor: 'seagreen',
+                },
+                headerTintColor: 'black',
+                headerTitleStyle: {
+                    fontWeight: 'bold'
+                }
+            }}>
+                <LoginStack.Screen name="Home" component={HomeDrawerScreen}/>
+                <LoginStack.Screen name="Login" component={Login}/>
+                <LoginStack.Screen name="SignUp" component={SignUp}/>
+            </LoginStack.Navigator>
         </NavigationContainer>
     );
 }

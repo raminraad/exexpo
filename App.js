@@ -11,18 +11,18 @@ import {createDrawerNavigator} from "@react-navigation/drawer";
 import Profile from "./src/pages/Profile";
 import Order from "./src/pages/Order";
 import Details from "./src/pages/Details";
+import {DrawerContent} from "./src/components/DrawerContent";
 
 
 const HomeDrawer = createDrawerNavigator();
 const LoginStack = createStackNavigator();
 
 const HomeDrawerScreen = ({navigation}) => (
-    <HomeDrawer.Navigator>
+    <HomeDrawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
         <HomeDrawer.Screen name='Home' component={Home} options={{title: 'Overview'}}/>
         <HomeDrawer.Screen name='Details' component={Details} options={{title: 'Detail'}}/>
         <HomeDrawer.Screen name='Order' component={Order} options={{title: 'Order'}}/>
         <HomeDrawer.Screen name='Profile' component={Profile} options={{title: 'Profile'}}/>
-        <HomeDrawer.Screen name='Login' component={Login} options={{title: 'Login'}}/>
     </HomeDrawer.Navigator>
 );
 

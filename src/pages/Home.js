@@ -1,11 +1,13 @@
 import React, {Component} from 'react';
 import {StyleSheet, Text, View} from "react-native";
+import DrawerHeader from "../components/DrawerHeader";
 
 
 class Home extends Component {
     render() {
         return (
-            <View style={styles.container}>
+            <View >
+                <DrawerHeader style={styles.container}/>
                 <Text>This is my Home</Text>
             </View>
         );
@@ -13,7 +15,6 @@ class Home extends Component {
 }
 
 export default Home;
-
 
 const styles = StyleSheet.create({
     container: {

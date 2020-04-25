@@ -88,16 +88,28 @@ export function DrawerContent(props) {
                         <DrawerItem
                             icon={({color, size}) => (
                                 <Icon
-                                    name="car-brake-parking"
+                                    name="account"
                                     color={color}
                                     size={size}
                                 />
                             )}
-                            label="عمومی"
+                            label="کاربران"
                             onPress={() => {
-                                props.navigation.navigate('BookmarkScreen')
+                                props.navigation.navigate('Members')
                             }}
-                        />
+                        /><DrawerItem
+                        icon={({color, size}) => (
+                            <Icon
+                                name="car-brake-parking"
+                                color={color}
+                                size={size}
+                            />
+                        )}
+                        label="عمومی"
+                        onPress={() => {
+                            props.navigation.navigate('BookmarkScreen')
+                        }}
+                    />
                         <DrawerItem
                             icon={({color, size}) => (
                                 <Icon

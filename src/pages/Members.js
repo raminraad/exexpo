@@ -4,7 +4,7 @@ import DrawerHeader from "../components/DrawerHeader";
 import ModuleList from "../components/ModuleList";
 
 
-function Home({navigation}) {
+function Members({navigation}) {
     return (
         <View>
             <DrawerHeader  navigation={navigation}/>
@@ -13,7 +13,7 @@ function Home({navigation}) {
     );
 }
 
-export default Home;
+export default Members;
 
 const styles = StyleSheet.create({
     container: {

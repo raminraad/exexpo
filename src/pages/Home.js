@@ -1,17 +1,15 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {StyleSheet, Text, View} from "react-native";
 import DrawerHeader from "../components/DrawerHeader";
 
 
-class Home extends Component {
-    render() {
-        return (
-            <View >
-                <DrawerHeader style={styles.container}/>
-                <Text>This is my Home</Text>
-            </View>
-        );
-    }
+function Home({navigation}) {
+    return (
+        <View>
+            <DrawerHeader style={styles.container} navigation={navigation}/>
+            <Text>This is my Home</Text>
+        </View>
+    );
 }
 
 export default Home;

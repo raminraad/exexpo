@@ -34,16 +34,16 @@ export function DrawerContent(props) {
             <DrawerContentScrollView {...props}>
                 <View style={styles.drawerContent}>
                     <View style={styles.userInfoSection}>
-                        <View style={{flexDirection: 'row', marginTop: 15}}>
-                            <Avatar.Image
-                                source={require('../images/xxx_avatar.png')}
-                                size={100}
-                            />
+                        <View style={{flexDirection: 'row', marginTop: 15,justifyContent:'space-around',alignItems:'center'}}>
                             <View style={{marginLeft: 15, flexDirection: 'column'}}>
                                 <Title style={styles.title}>رامین راد</Title>
                                 <Caption style={styles.caption}>@raminraad</Caption>
                                 <Caption style={styles.caption}>کارشناس بازاریابی</Caption>
                             </View>
+                            <Avatar.Image
+                                source={require('../images/xxx_avatar.png')}
+                                size={100}
+                            />
                         </View>
 
                         <View style={styles.row}>
@@ -175,7 +175,7 @@ export function DrawerContent(props) {
                             size={size}
                         />
                     )}
-                    label="Sign Out"
+                    label="خروج"
                     onPress={() => {
                         Alert('signOut()')
                     }}
@@ -190,11 +190,10 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     userInfoSection: {
-        paddingLeft: 20,
+        padding: 20,
     },
     title: {
-        fontSize: 16,
-        marginTop: 3,
+        fontSize: 18,
         fontWeight: 'bold',
     },
     caption: {
@@ -204,7 +203,7 @@ const styles = StyleSheet.create({
     row: {
         marginTop: 20,
         flexDirection: 'row',
-        alignItems: 'center',
+        justifyContent: 'center',
     },
     section: {
         flexDirection: 'row',
@@ -217,6 +216,7 @@ const styles = StyleSheet.create({
     },
     drawerSection: {
         marginTop: 15,
+        alignItems: 'flex-end'
     },
     bottomDrawerSection: {
         marginBottom: 15,

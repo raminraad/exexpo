@@ -20,7 +20,7 @@ const HomeDrawer = createDrawerNavigator();
 const LoginStack = createStackNavigator();
 
 const HomeDrawerScreen = ({navigation}) => (
-    <HomeDrawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
+    <HomeDrawer.Navigator drawerType='slide' drawerContent={props => <DrawerContent {...props}  />} drawerPosition='right' >
         <HomeDrawer.Screen name='Home' component={Home} options={{title: 'Overview'}}/>
         <HomeDrawer.Screen name='Members' component={Members} options={{title: 'Members'}}/>
         <HomeDrawer.Screen name='Customers' component={Customers} options={{title: 'Members'}}/>

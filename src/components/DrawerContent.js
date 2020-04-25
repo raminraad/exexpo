@@ -48,12 +48,12 @@ export function DrawerContent(props) {
 
                         <View style={styles.row}>
                             <View style={styles.section}>
-                                <Paragraph style={[styles.paragraph, styles.caption]}>80</Paragraph>
-                                <Caption style={styles.caption}>Following</Caption>
+                                <Paragraph style={[styles.paragraph, styles.caption]}>94</Paragraph>
+                                <Caption style={styles.caption}>بازدید شده</Caption>
                             </View>
                             <View style={styles.section}>
-                                <Paragraph style={[styles.paragraph, styles.caption]}>100</Paragraph>
-                                <Caption style={styles.caption}>Followers</Caption>
+                                <Paragraph style={[styles.paragraph, styles.caption]}>174</Paragraph>
+                                <Caption style={styles.caption}>کل زیرمجموعه</Caption>
                             </View>
                         </View>
                     </View>
@@ -67,7 +67,7 @@ export function DrawerContent(props) {
                                     size={size}
                                 />
                             )}
-                            label="Home"
+                            label="صفحه اصلی"
                             onPress={() => {
                                 props.navigation.navigate('Home')
                             }}
@@ -80,7 +80,7 @@ export function DrawerContent(props) {
                                     size={size}
                                 />
                             )}
-                            label="Profile"
+                            label="کاربری و دسترسی"
                             onPress={() => {
                                 props.navigation.navigate('Profile')
                             }}
@@ -88,12 +88,12 @@ export function DrawerContent(props) {
                         <DrawerItem
                             icon={({color, size}) => (
                                 <Icon
-                                    name="bookmark-outline"
+                                    name="car-brake-parking"
                                     color={color}
                                     size={size}
                                 />
                             )}
-                            label="Bookmarks"
+                            label="عمومی"
                             onPress={() => {
                                 props.navigation.navigate('BookmarkScreen')
                             }}
@@ -106,7 +106,7 @@ export function DrawerContent(props) {
                                     size={size}
                                 />
                             )}
-                            label="Settings"
+                            label="تنظیمات"
                             onPress={() => {
                                 props.navigation.navigate('SettingScreen')
                             }}
@@ -114,28 +114,43 @@ export function DrawerContent(props) {
                         <DrawerItem
                             icon={({color, size}) => (
                                 <Icon
-                                    name="account-check-outline"
+                                    name="logout"
                                     color={color}
                                     size={size}
                                 />
                             )}
-                            label="Support"
+                            label="خروج"
                             onPress={() => {
                                 props.navigation.navigate('SupportScreen')
                             }}
                         />
                     </Drawer.Section>
-                    <Drawer.Section title="Preferences">
-                        <TouchableRipple onPress={() => {
-                            toggleTheme()
-                        }}>
-                            <View style={styles.preference}>
-                                <Text>Dark Theme</Text>
-                                <View pointerEvents="none">
-                                    <Switch value={isDarkTheme}/>
-                                </View>
-                            </View>
-                        </TouchableRipple>
+                    <Drawer.Section title="وضعیت کنونی                                                              ">
+                        <View style={styles.preference}>
+                            <Text>1399/02/03 14:28:11</Text>
+                            <Text>ورود قبلی</Text>
+                        </View>
+                        <View style={styles.preference}>
+                            <Text>17</Text>
+                            <Text>آنلاین در پرتال</Text>
+                        </View>
+                        <View style={styles.preference}>
+                            <Text>4</Text>
+                            <Text>ورود امروز کاربران</Text>
+                        </View>
+                        <View style={styles.preference}>
+                            <Text>428</Text>
+                            <Text>ورود ماه اخیر کاربران</Text>
+                        </View>
+                        <View style={styles.preference}>
+                            <Text>2</Text>
+                            <Text>اعلانات کاربر</Text>
+                        </View>
+                        <View style={styles.preference}>
+                            <Text>5</Text>
+                            <Text>در انتظار تأیید</Text>
+                        </View>
+
                     </Drawer.Section>
                 </View>
             </DrawerContentScrollView>

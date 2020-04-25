@@ -5,7 +5,7 @@ export default class Logo extends Component<{}> {
     render() {
         return (
             <View style={styles.container}>
-                <Image style={styles.tinyLogo} source={require('../images/Logo.png')}/>
+                <Image style={styles.tinyLogo} source={require('../images/logo-oval-red-en.png')}/>
                 <Text style={styles.logoText}>
                     اتوماسیون جامع مزمز
                 </Text>

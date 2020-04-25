@@ -30,6 +30,7 @@ function App() {
     return (
         <NavigationContainer>
             <LoginStack.Navigator initialRouteName="Login" screenOptions={{
+                headerShown: false,
                 headerStyle: {
                     backgroundColor: 'seagreen',
                 },

@@ -22,84 +22,84 @@ export default class Menu extends Component {
                     title: "مدیریت کاربران",
                     color: "#8e44ad",
                     members: 8,
-                    image: "https://img.icons8.com/color/96/000000/name.png"
+                    image: require("../../assets/icons/xxx/name.png")
                 },
                 {
                     id: 2,
                     title: "بازاریابی",
                     color: "#9b59b6",
                     members: 12,
-                    image: "https://img.icons8.com/color/96/000000/attract-customers.png"
+                    image: require("../../assets/icons/xxx/attract-customers.png")
                 },
                 {
                     id: 3,
                     title: "مشتریان",
                     color: "#16a085",
                     members: 6,
-                    image: "https://img.icons8.com/color/96/000000/groups.png"
+                    image: require("../../assets/icons/xxx/groups.png")
                 },
                 {
                     id: 4,
                     title: "آموزش",
                     color: "#1abc9c",
                     members: 7,
-                    image: "https://img.icons8.com/color/96/000000/classroom.png"
+                    image: require("../../assets/icons/xxx/classroom.png")
                 },
                 {
                     id: 5,
                     title: "نمودار",
                     color: "#2980b9",
                     members: 8,
-                    image: "https://img.icons8.com/color/96/000000/combo-chart.png"
+                    image: require("../../assets/icons/xxx/combo-chart.png")
                 },
                 {
                     id: 6,
                     title: "بازار بین المللی",
                     color: "#3498db",
                     members: 23,
-                    image: "https://img.icons8.com/dusk/96/000000/globe-earth.png"
+                    image: require("../../assets/icons/xxx/globe-earth.png")
                 },
                 {
                     id: 7,
                     title: "برنامه ریزی",
-                    color: "#341f97",
+                    color: "#433097",
                     members: 45,
-                    image: "https://img.icons8.com/color/96/000000/to-do.png"
+                    image: require("../../assets/icons/xxx/to-do.png")
                 },
                 {
                     id: 8,
                     title: "شبکه توزیع",
                     color: "#5f27cd",
                     members: 13,
-                    image: "https://img.icons8.com/color/96/000000/nvstec.png"
+                    image: require("../../assets/icons/xxx/nvstec.png")
                 },
                 {
                     id: 9,
                     title: "کالاها",
                     color: "#3E2723",
                     members: 13,
-                    image: "https://img.icons8.com/color/96/000000/ingredients-for-cooking.png"
+                    image: require("../../assets/icons/xxx/ingredients-for-cooking.png")
                 },
                 {
                     id: 10,
                     title: "مسیرهای توزیع",
                     color: "#5D4037",
                     members: 13,
-                    image: "https://img.icons8.com/color/96/000000/where-to-quest.png"
+                    image: require("../../assets/icons/xxx/where-to-quest.png")
                 },
                 {
                     id: 11,
                     title: "بازاریابی تلفنی",
                     color: "#e74c3c",
                     members: 13,
-                    image: "https://img.icons8.com/color/96/000000/man-on-phone.png"
+                    image: require("../../assets/icons/xxx/man-on-phone.png")
                 },
                 {
                     id: 12,
                     title: "فرمول های محاسباتی",
                     color: "#c0392b",
                     members: 13,
-                    image: "https://img.icons8.com/color/96/000000/calculate.png"
+                    image: require("../../assets/icons/xxx/calculate.png")
                 },
             ]
         };
@@ -132,7 +132,7 @@ export default class Menu extends Component {
                                           <Image style={styles.icon}
                                                  source={{uri: "https://img.icons8.com/ios/40/000000/settings.png"}}/>
                                       </View>
-                                      <Image style={styles.cardImage} source={{uri: item.image}}/>
+                                      <Image style={styles.cardImage} source={item.image}/>
                                       <View style={styles.cardFooter}>
                                           <Text style={styles.subTitle}> تعداد رکورد {item.members}</Text>
                                       </View>

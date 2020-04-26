@@ -18,7 +18,8 @@ export default class Login extends Component<{}> {
 
     submitHandler() {
         //todo: replace with web service call
-        if (this.state.username.toLowerCase() === 'raad' && this.state.password === '11') {
+        // if (this.state.username.toLowerCase() === 'raad' && this.state.password === '11')
+        if (true) {
             this.gotoHome();
             this.setState({message: ''});
         } else

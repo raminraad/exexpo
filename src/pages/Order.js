@@ -6,7 +6,7 @@ class Home extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <Text>This is my Order page</Text>
+                <Text>This is Order page</Text>
             </View>
         );
     }

@@ -7,16 +7,15 @@ import {
     Image,
     Alert,
     ScrollView,
-    FlatList,
+    FlatList, SectionList,
 } from 'react-native';
 import DrawerHeader from "../components/DrawerHeader";
 
 export default class Menu extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            data: [
+    menuData = [
+        {
+            title: "کاربران و دسترسی سیستم", data: [
                 {
                     id: 1,
                     title: "مدیریت کاربران",
@@ -38,6 +37,10 @@ export default class Menu extends Component {
                     members: 6,
                     image: require("../../assets/icons/xxx/groups.png")
                 },
+            ]
+        },
+        {
+            title: "اپلیکیشن ها و ماژول ها", data: [
                 {
                     id: 4,
                     title: "آموزش",
@@ -59,6 +62,10 @@ export default class Menu extends Component {
                     members: 23,
                     image: require("../../assets/icons/xxx/globe-earth.png")
                 },
+            ]
+        },
+        {
+            title: "وضعیت کنونی سیستم", data: [
                 {
                     id: 7,
                     title: "برنامه ریزی",
@@ -102,7 +109,11 @@ export default class Menu extends Component {
                     image: require("../../assets/icons/xxx/calculate.png")
                 },
             ]
-        };
+        },
+    ];
+
+    constructor(props) {
+        super(props);
     }
 
     clickEventListener(item) {
@@ -113,7 +124,27 @@ export default class Menu extends Component {
         return (
             <View style={styles.container}>
                 <DrawerHeader navigation={this.props.navigation}/>
-                <FlatList style={styles.list}
+                <SectionList
+                    sections={this.menuData}
+                    renderItem={({item}) => {
+                        return (
+                            <TouchableOpacity style={styles.card}>
+                                <View style={styles.cardHeader}>
+                                    <Text style={styles.title}>{item.title}</Text>
+                                </View>
+                                <Image style={styles.cardImage} source={item.image}/>
+                                <View style={styles.cardFooter}>
+                                    <Text style={styles.subTitle}> تعداد رکورد {item.members}</Text>
+                                </View>
+                            </TouchableOpacity>
+                        )
+                    }}
+                    renderSectionHeader={({section}) => <Text style={styles.sectionHeader}>{section.title}</Text>}
+                    keyExtractor={(item) => {
+                        return item.id;
+                    }}
+                />
+                {/*<FlatList style={styles.list}
                           contentContainerStyle={styles.listContainer}
                           data={this.state.data}
                           horizontal={false}
@@ -138,7 +169,7 @@ export default class Menu extends Component {
                                       </View>
                                   </TouchableOpacity>
                               )
-                          }}/>
+                          }}/>*/}
             </View>
         );
     }
@@ -147,7 +178,7 @@ export default class Menu extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginTop: 20,
+        backgroundColor: '#116496',
     },
     list: {
         //paddingHorizontal: 5,
@@ -158,46 +189,64 @@ const styles = StyleSheet.create({
     },
     /******** card **************/
     card: {
-        marginHorizontal: 2,
-        marginVertical: 2,
+        flexDirection: 'row-reverse',
+        justifyContent: 'space-between',
+        borderRadius: 25,
+        borderWidth: 2,
+        borderColor: '#0a3d62',
+        height: 100,
+        marginRight: 50,
+        marginLeft: 50,
+        marginBottom: 20,
         flexBasis: '48%',
+        color: "#2c3e50",
+        backgroundColor: '#3498db',
     },
     cardHeader: {
         paddingVertical: 17,
         paddingHorizontal: 16,
         borderTopLeftRadius: 1,
         borderTopRightRadius: 1,
-        flexDirection: 'row',
-        alignItems: "center",
-        justifyContent: "center"
     },
     cardContent: {
         paddingVertical: 12.5,
         paddingHorizontal: 16,
     },
     cardFooter: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        paddingTop: 12.5,
-        paddingBottom: 25,
+        paddingVertical: 12.5,
         paddingHorizontal: 16,
         borderBottomLeftRadius: 1,
         borderBottomRightRadius: 1,
+        flexDirection: 'column-reverse',
     },
     cardImage: {
         height: 70,
         width: 70,
-        alignSelf: 'center'
+        alignSelf: 'center',
+    },
+    sectionHeader: {
+        paddingTop: 2,
+        paddingHorizontal: 10,
+        paddingBottom: 10,
+        marginTop: 20,
+        fontSize: 22,
+        fontWeight: 'bold',
+        color: "#fff",
+        backgroundColor: '#116496',
+    },
+    item: {
+        padding: 10,
+        fontSize: 18,
+        height: 44,
     },
     title: {
-        fontSize: 16,
+        fontSize: 18,
         flex: 1,
         color: "#FFFFFF",
         fontWeight: 'bold'
     },
     subTitle: {
-        fontSize: 12,
-        flex: 1,
+        fontSize: 16,
         color: "#FFFFFF",
     },
     icon: {

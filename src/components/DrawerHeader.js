@@ -17,10 +17,17 @@ import React from "react";
 function DrawerHeader({navigation}) {
     return (
         <Header
-            backgroundColor='#feb428'
+            backgroundColor='#003d5b'
             placement="right"
-            rightComponent={{icon: 'menu', color: '#fff',onPress:()=>{navigation.openDrawer()}}}
-            centerComponent={{text: 'صفحه اصلی', style: {color: '#fff',alignSelf:'center'}}}
+            rightComponent={{
+                icon: 'menu', color: '#fff', onPress: () => {
+                    navigation.openDrawer()
+                }
+            }}
+            centerComponent={{
+                text: 'صفحه اصلی',
+                style: {color: '#fff', alignSelf: 'center', fontWeight: 'bold', fontSize: 20}
+            }}
             leftComponent={{icon: 'home', color: '#fff'}}
         />
     );

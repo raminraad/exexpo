@@ -15,100 +15,99 @@ export default class Menu extends Component {
 
     menuData = [
         {
-            title: "کاربران و دسترسی سیستم", data: [
-                {
-                    id: 1,
-                    title: "مدیریت کاربران",
-                    color: "#8e44ad",
-                    members: 8,
-                    image: require("../../assets/icons/xxx/name.png")
-                },
-                {
-                    id: 2,
-                    title: "بازاریابی",
-                    color: "#9b59b6",
-                    members: 12,
-                    image: require("../../assets/icons/xxx/attract-customers.png")
-                },
-                {
-                    id: 3,
-                    title: "مشتریان",
-                    color: "#16a085",
-                    members: 6,
-                    image: require("../../assets/icons/xxx/groups.png")
-                },
-            ]
+            title: "کاربران و دسترسی سیستم", data: [{
+                pages: [
+                    {
+                        id: 1,
+                        title: "کاربران و مدیران",
+                        color: "rgba(5, 196, 107,0.6)",
+                        members: 8,
+                        image: require("../../assets/icons/xxx/name.png")
+                    },
+                    {
+                        id: 2,
+                        title: "بازاریابی",
+                        color: "rgba(5, 196, 107,0.6)",
+                        members: 12,
+                        image: require("../../assets/icons/xxx/attract-customers.png")
+                    },
+                    {
+                        id: 3,
+                        title: "مشتریان",
+                        color: "rgba(5, 196, 107,0.6)",
+                        members: 6,
+                        image: require("../../assets/icons/xxx/groups.png")
+                    },
+                ]
+            }]
         },
         {
-            title: "اپلیکیشن ها و ماژول ها", data: [
-                {
-                    id: 4,
-                    title: "آموزش",
-                    color: "#1abc9c",
-                    members: 7,
-                    image: require("../../assets/icons/xxx/classroom.png")
-                },
-                {
-                    id: 5,
-                    title: "نمودار",
-                    color: "#2980b9",
-                    members: 8,
-                    image: require("../../assets/icons/xxx/combo-chart.png")
-                },
-                {
-                    id: 6,
-                    title: "بازار بین المللی",
-                    color: "#3498db",
-                    members: 23,
-                    image: require("../../assets/icons/xxx/globe-earth.png")
-                },
-            ]
+            title: "اپلیکیشن ها و ماژول ها", data: [{
+                pages: [
+                    {
+                        id: 4,
+                        title: "آموزش",
+                        color: "rgba(5, 196, 107,0.6)",
+                        members: 7,
+                        image: require("../../assets/icons/xxx/classroom.png")
+                    },
+                    {
+                        id: 6,
+                        title: "بازار بین المللی",
+                        color: "rgba(5, 196, 107,0.6)",
+                        members: 23,
+                        image: require("../../assets/icons/xxx/globe-earth.png")
+                    },
+                ]
+            }]
         },
         {
-            title: "وضعیت کنونی سیستم", data: [
-                {
-                    id: 7,
-                    title: "برنامه ریزی",
-                    color: "#433097",
-                    members: 45,
-                    image: require("../../assets/icons/xxx/to-do.png")
-                },
-                {
-                    id: 8,
-                    title: "شبکه توزیع",
-                    color: "#5f27cd",
-                    members: 13,
-                    image: require("../../assets/icons/xxx/nvstec.png")
-                },
-                {
-                    id: 9,
-                    title: "کالاها",
-                    color: "#3E2723",
-                    members: 13,
-                    image: require("../../assets/icons/xxx/ingredients-for-cooking.png")
-                },
-                {
-                    id: 10,
-                    title: "مسیرهای توزیع",
-                    color: "#5D4037",
-                    members: 13,
-                    image: require("../../assets/icons/xxx/where-to-quest.png")
-                },
-                {
-                    id: 11,
-                    title: "بازاریابی تلفنی",
-                    color: "#e74c3c",
-                    members: 13,
-                    image: require("../../assets/icons/xxx/man-on-phone.png")
-                },
-                {
-                    id: 12,
-                    title: "فرمول های محاسباتی",
-                    color: "#c0392b",
-                    members: 13,
-                    image: require("../../assets/icons/xxx/calculate.png")
-                },
-            ]
+            title: "وضعیت کنونی سیستم", data: [{
+                pages: [
+                    {
+                        id: 7,
+                        title: "برنامه ریزی",
+                        color: "rgba(5, 196, 107,0.6)",
+                        members: 45,
+                        image: require("../../assets/icons/xxx/to-do.png")
+                    },
+                    {
+                        id: 8,
+                        title: "شبکه توزیع",
+                        color: "rgba(5, 196, 107,0.6)",
+                        members: 13,
+                        image: require("../../assets/icons/xxx/nvstec.png")
+                    },
+                    {
+                        id: 9,
+                        title: "کالاها",
+                        color: "rgba(5, 196, 107,0.6)",
+                        members: 13,
+                        image: require("../../assets/icons/xxx/ingredients-for-cooking.png")
+                    },
+                    {
+                        id: 10,
+                        title: "مسیرهای توزیع",
+                        color: "rgba(5, 196, 107,0.6)",
+                        members: 13,
+                        image: require("../../assets/icons/xxx/where-to-quest.png")
+                    },
+                    {
+                        id: 11,
+                        title: "بازاریابی تلفنی",
+                        color: "rgba(5, 196, 107,0.6)",
+                        members: 13,
+                        image: require("../../assets/icons/xxx/man-on-phone.png")
+                    },
+                    {
+                        id: 12,
+                        title: "فرمول های محاسباتی",
+                        color: "rgba(5, 196, 107,0.6)",
+                        members: 13,
+                        image: require("../../assets/icons/xxx/calculate.png")
+                    },
+                ]
+            }]
         },
     ];
 
@@ -128,15 +127,26 @@ export default class Menu extends Component {
                     sections={this.menuData}
                     renderItem={({item}) => {
                         return (
-                            <TouchableOpacity style={styles.card}>
-                                <View style={styles.cardHeader}>
-                                    <Text style={styles.title}>{item.title}</Text>
-                                </View>
-                                <Image style={styles.cardImage} source={item.image}/>
-                                <View style={styles.cardFooter}>
-                                    <Text style={styles.subTitle}> تعداد رکورد {item.members}</Text>
-                                </View>
-                            </TouchableOpacity>
+                            <FlatList style={styles.list}
+                                      contentContainerStyle={styles.listContainer}
+                                      data={item.pages}
+                                      numColumns={2}
+                                      keyExtractor={(item) => {
+                                          return item.id;
+                                      }}
+                                      renderItem={({item}) => {
+                                          return (
+                                              <TouchableOpacity style={[styles.card, {backgroundColor: item.color}]}>
+                                                  <View style={styles.cardHeader}>
+                                                      <Text style={styles.title}>{item.title}</Text>
+                                                      <Text style={styles.subTitle}> تعداد رکورد {item.members}</Text>
+                                                  </View>
+                                                  <Image style={styles.cardImage} source={item.image}/>
+                                                  <View style={styles.cardFooter}>
+                                                  </View>
+                                              </TouchableOpacity>
+                                          )
+                                      }}/>
                         )
                     }}
                     renderSectionHeader={({section}) => <Text style={styles.sectionHeader}>{section.title}</Text>}
@@ -144,32 +154,6 @@ export default class Menu extends Component {
                         return item.id;
                     }}
                 />
-                {/*<FlatList style={styles.list}
-                          contentContainerStyle={styles.listContainer}
-                          data={this.state.data}
-                          horizontal={false}
-                          numColumns={2}
-                          keyExtractor={(item) => {
-                              return item.id;
-                          }}
-                          renderItem={({item}) => {
-                              return (
-                                  <TouchableOpacity style={[styles.card, {backgroundColor: item.color}]}
-                                                    onPress={() => {
-                                                        this.clickEventListener(item.view)
-                                                    }}>
-                                      <View style={styles.cardHeader}>
-                                          <Text style={styles.title}>{item.title}</Text>
-                                          <Image style={styles.icon}
-                                                 source={{uri: "https://img.icons8.com/ios/40/000000/settings.png"}}/>
-                                      </View>
-                                      <Image style={styles.cardImage} source={item.image}/>
-                                      <View style={styles.cardFooter}>
-                                          <Text style={styles.subTitle}> تعداد رکورد {item.members}</Text>
-                                      </View>
-                                  </TouchableOpacity>
-                              )
-                          }}/>*/}
             </View>
         );
     }
@@ -177,36 +161,32 @@ export default class Menu extends Component {
 
 const styles = StyleSheet.create({
     container: {
+        display: 'flex',
         flex: 1,
         backgroundColor: '#116496',
     },
     list: {
-        //paddingHorizontal: 5,
-        backgroundColor: "#E6E6E6",
+        paddingHorizontal: 30,
+        flexDirection: 'row-reverse',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
     },
     listContainer: {
-        alignItems: 'center'
+
     },
     /******** card **************/
     card: {
+        flexBasis: '40%',
         flexDirection: 'row-reverse',
-        justifyContent: 'space-between',
-        borderRadius: 25,
-        borderWidth: 2,
-        borderColor: '#0a3d62',
-        height: 100,
-        marginRight: 50,
-        marginLeft: 50,
-        marginBottom: 20,
-        flexBasis: '48%',
-        color: "#2c3e50",
-        backgroundColor: '#3498db',
+        justifyContent: 'space-around',
+        borderRadius: 3,
+        borderTopLeftRadius: 25,
+        borderBottomRightRadius: 25,
+        marginVertical: 17,
+        marginHorizontal: 10,
     },
     cardHeader: {
-        paddingVertical: 17,
-        paddingHorizontal: 16,
-        borderTopLeftRadius: 1,
-        borderTopRightRadius: 1,
+        padding: 10,
     },
     cardContent: {
         paddingVertical: 12.5,
@@ -220,9 +200,11 @@ const styles = StyleSheet.create({
         flexDirection: 'column-reverse',
     },
     cardImage: {
+        opacity: 9.5,
         height: 70,
         width: 70,
         alignSelf: 'center',
+        marginVertical: 5,
     },
     sectionHeader: {
         paddingTop: 2,

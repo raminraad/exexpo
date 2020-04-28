@@ -27,14 +27,19 @@ export function DrawerContent(props) {
 
     const toggleTheme = () => {
         setIsDarkTheme(!isDarkTheme);
-    }
+    };
 
     return (
-        <View style={{flex: 1}}>
+        <View style={{flex: 1, backgroundColor: '#4f6d7a'}}>
             <DrawerContentScrollView {...props}>
                 <View style={styles.drawerContent}>
                     <View style={styles.userInfoSection}>
-                        <View style={{flexDirection: 'row', marginTop: 15,justifyContent:'space-around',alignItems:'center'}}>
+                        <View style={{
+                            flexDirection: 'row',
+                            marginTop: 15,
+                            justifyContent: 'space-around',
+                            alignItems: 'center'
+                        }}>
                             <View style={{marginLeft: 15, flexDirection: 'column'}}>
                                 <Title style={styles.title}>رامین راد</Title>
                                 <Caption style={styles.caption}>@raminraad</Caption>
@@ -42,7 +47,7 @@ export function DrawerContent(props) {
                             </View>
                             <Avatar.Image
                                 source={require('../images/xxx_avatar.png')}
-                                size={100}
+                                size={120}
                             />
                         </View>
 
@@ -60,6 +65,7 @@ export function DrawerContent(props) {
 
                     <Drawer.Section style={styles.drawerSection}>
                         <DrawerItem
+                            labelStyle={styles.drawerItemLabel}
                             icon={({color, size}) => (
                                 <Icon
                                     name="home-outline"
@@ -73,6 +79,7 @@ export function DrawerContent(props) {
                             }}
                         />
                         <DrawerItem
+                            labelStyle={styles.drawerItemLabel}
                             icon={({color, size}) => (
                                 <Icon
                                     name="account-outline"
@@ -86,6 +93,7 @@ export function DrawerContent(props) {
                             }}
                         />
                         <DrawerItem
+                            labelStyle={styles.drawerItemLabel}
                             icon={({color, size}) => (
                                 <Icon
                                     name="account"
@@ -98,6 +106,7 @@ export function DrawerContent(props) {
                                 props.navigation.navigate('Members')
                             }}
                         /><DrawerItem
+                        labelStyle={styles.drawerItemLabel}
                         icon={({color, size}) => (
                             <Icon
                                 name="car-brake-parking"
@@ -110,7 +119,38 @@ export function DrawerContent(props) {
                             props.navigation.navigate('BookmarkScreen')
                         }}
                     />
+                    </Drawer.Section>
+                    <Drawer.Section style={{borderTopWidth: 0.5}}>
+                        <Text style={styles.sectionHeader}>وضعیت کنونی سیستم</Text>
+                        <View style={styles.preference}>
+                            <Text style={styles.drawerItemLabel}>1399/02/03 14:28:11</Text>
+                            <Text style={styles.drawerItemLabel}>ورود قبلی</Text>
+                        </View>
+                        <View style={styles.preference}>
+                            <Text style={styles.drawerItemLabel}>17</Text>
+                            <Text style={styles.drawerItemLabel}>آنلاین در پرتال</Text>
+                        </View>
+                        <View style={styles.preference}>
+                            <Text style={styles.drawerItemLabel}>4</Text>
+                            <Text style={styles.drawerItemLabel}>ورود امروز کاربران</Text>
+                        </View>
+                        <View style={styles.preference}>
+                            <Text style={styles.drawerItemLabel}>428</Text>
+                            <Text style={styles.drawerItemLabel}>ورود ماه اخیر کاربران</Text>
+                        </View>
+                        <View style={styles.preference}>
+                            <Text style={styles.drawerItemLabel}>2</Text>
+                            <Text style={styles.drawerItemLabel}>اعلانات کاربر</Text>
+                        </View>
+                        <View style={styles.preference}>
+                            <Text style={styles.drawerItemLabel}>5</Text>
+                            <Text style={styles.drawerItemLabel}>در انتظار تأیید</Text>
+                        </View>
+
+                    </Drawer.Section>
+                    <Drawer.Section style={styles.drawerSection}>
                         <DrawerItem
+                            labelStyle={styles.drawerItemLabel}
                             icon={({color, size}) => (
                                 <Icon
                                     name="settings-outline"
@@ -124,6 +164,7 @@ export function DrawerContent(props) {
                             }}
                         />
                         <DrawerItem
+                            labelStyle={styles.drawerItemLabel}
                             icon={({color, size}) => (
                                 <Icon
                                     name="logout"
@@ -137,50 +178,9 @@ export function DrawerContent(props) {
                             }}
                         />
                     </Drawer.Section>
-                    <Drawer.Section title="وضعیت کنونی                                                              ">
-                        <View style={styles.preference}>
-                            <Text>1399/02/03 14:28:11</Text>
-                            <Text>ورود قبلی</Text>
-                        </View>
-                        <View style={styles.preference}>
-                            <Text>17</Text>
-                            <Text>آنلاین در پرتال</Text>
-                        </View>
-                        <View style={styles.preference}>
-                            <Text>4</Text>
-                            <Text>ورود امروز کاربران</Text>
-                        </View>
-                        <View style={styles.preference}>
-                            <Text>428</Text>
-                            <Text>ورود ماه اخیر کاربران</Text>
-                        </View>
-                        <View style={styles.preference}>
-                            <Text>2</Text>
-                            <Text>اعلانات کاربر</Text>
-                        </View>
-                        <View style={styles.preference}>
-                            <Text>5</Text>
-                            <Text>در انتظار تأیید</Text>
-                        </View>
-
-                    </Drawer.Section>
                 </View>
             </DrawerContentScrollView>
-            <Drawer.Section style={styles.bottomDrawerSection}>
-                <DrawerItem
-                    icon={({color, size}) => (
-                        <Icon
-                            name="exit-to-app"
-                            color={color}
-                            size={size}
-                        />
-                    )}
-                    label="خروج"
-                    onPress={() => {
-                        Alert('signOut()')
-                    }}
-                />
-            </Drawer.Section>
+
         </View>
     );
 }
@@ -193,10 +193,12 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     title: {
-        fontSize: 18,
+        color: 'rgba(255,255,255,0.8)',
+        fontSize: 22,
         fontWeight: 'bold',
     },
     caption: {
+        color: 'rgba(255,255,255,0.6)',
         fontSize: 14,
         lineHeight: 14,
     },
@@ -215,13 +217,9 @@ const styles = StyleSheet.create({
         marginRight: 3,
     },
     drawerSection: {
+        borderTopWidth: 0.7,
         marginTop: 15,
         alignItems: 'flex-end'
-    },
-    bottomDrawerSection: {
-        marginBottom: 15,
-        borderTopColor: '#f4f4f4',
-        borderTopWidth: 1
     },
     preference: {
         flexDirection: 'row',
@@ -229,4 +227,15 @@ const styles = StyleSheet.create({
         paddingVertical: 12,
         paddingHorizontal: 16,
     },
+    drawerItemLabel: {
+        color: 'rgba(255,255,255,0.9)',
+    },
+    sectionHeader: {
+        color: 'rgba(255,255,255,0.4)',
+        textAlign: 'center',
+        fontWeight: 'bold',
+        fontSize: 22,
+        marginVertical: 10
+    }
+
 });

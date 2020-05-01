@@ -15,7 +15,7 @@ import {Image, Text,View,StyleSheet,FlatList} from "react-native";
     ];
 class MemberList extends Component {
 
-    keyExtractor = (item, index) => index.toString()
+    keyExtractor = (item, index) => index.toString();
 
     renderItem = ({ item }) => (
         <ListItem
@@ -28,7 +28,7 @@ class MemberList extends Component {
             bottomDivider
             chevron
         />
-    )
+    );
 
     render () {
         return (

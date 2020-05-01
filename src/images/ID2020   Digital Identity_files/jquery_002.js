@@ -1449,7 +1449,7 @@ window.ResponsiveHelper = (function ($) {
                         });
                     }
                 }
-                ;
+
 
                 // add additional event handlers
                 this.resizeHandler = function () {
@@ -2375,7 +2375,7 @@ window.ResponsiveHelper = (function ($) {
             return !!e("animation")
         }
     };
-    j.csstransitions() && (a.support.transition = new String(f("transition")), a.support.transition.end = i.transition.end[a.support.transition]), j.cssanimations() && (a.support.animation = new String(f("animation")), a.support.animation.end = i.animation.end[a.support.animation]), j.csstransforms() && (a.support.transform = new String(f("transform")), a.support.transform3d = j.csstransforms3d())
+    j.csstransitions() && (a.support.transition = String(f("transition")), a.support.transition.end = i.transition.end[a.support.transition]), j.cssanimations() && (a.support.animation = String(f("animation")), a.support.animation.end = i.animation.end[a.support.animation]), j.csstransforms() && (a.support.transform = String(f("transform")), a.support.transform3d = j.csstransforms3d())
 }(window.Zepto || window.jQuery, window, document);
 
 // navigation accesibility module

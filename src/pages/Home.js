@@ -20,21 +20,21 @@ export default class Menu extends Component {
                     {
                         id: 1,
                         title: "کاربران و مدیران",
-                        color: "rgba(5, 196, 107,0.6)",
+                        color: "rgba(9,150,196,0.75)",
                         members: 8,
                         image: require("../../assets/icons/xxx/name.png")
                     },
                     {
                         id: 2,
                         title: "بازاریابی",
-                        color: "rgba(5, 196, 107,0.6)",
+                        color: "rgba(9,150,196,0.75)",
                         members: 12,
                         image: require("../../assets/icons/xxx/attract-customers.png")
                     },
                     {
                         id: 3,
                         title: "مشتریان",
-                        color: "rgba(5, 196, 107,0.6)",
+                        color: "rgba(9,150,196,0.75)",
                         members: 6,
                         image: require("../../assets/icons/xxx/groups.png")
                     },
@@ -47,14 +47,14 @@ export default class Menu extends Component {
                     {
                         id: 4,
                         title: "آموزش",
-                        color: "rgba(5, 196, 107,0.6)",
+                        color: "rgba(9,150,196,0.75)",
                         members: 7,
                         image: require("../../assets/icons/xxx/classroom.png")
                     },
                     {
                         id: 6,
                         title: "بازار بین المللی",
-                        color: "rgba(5, 196, 107,0.6)",
+                        color: "rgba(9,150,196,0.75)",
                         members: 23,
                         image: require("../../assets/icons/xxx/globe-earth.png")
                     },
@@ -67,42 +67,42 @@ export default class Menu extends Component {
                     {
                         id: 7,
                         title: "برنامه ریزی",
-                        color: "rgba(5, 196, 107,0.6)",
+                        color: "rgba(9,150,196,0.75)",
                         members: 45,
                         image: require("../../assets/icons/xxx/to-do.png")
                     },
                     {
                         id: 8,
                         title: "شبکه توزیع",
-                        color: "rgba(5, 196, 107,0.6)",
+                        color: "rgba(9,150,196,0.75)",
                         members: 13,
                         image: require("../../assets/icons/xxx/nvstec.png")
                     },
                     {
                         id: 9,
                         title: "کالاها",
-                        color: "rgba(5, 196, 107,0.6)",
+                        color: "rgba(9,150,196,0.75)",
                         members: 13,
                         image: require("../../assets/icons/xxx/ingredients-for-cooking.png")
                     },
                     {
                         id: 10,
                         title: "مسیرهای توزیع",
-                        color: "rgba(5, 196, 107,0.6)",
+                        color: "rgba(9,150,196,0.75)",
                         members: 13,
                         image: require("../../assets/icons/xxx/where-to-quest.png")
                     },
                     {
                         id: 11,
                         title: "بازاریابی تلفنی",
-                        color: "rgba(5, 196, 107,0.6)",
+                        color: "rgba(9,150,196,0.75)",
                         members: 13,
                         image: require("../../assets/icons/xxx/man-on-phone.png")
                     },
                     {
                         id: 12,
                         title: "فرمول های محاسباتی",
-                        color: "rgba(5, 196, 107,0.6)",
+                        color: "rgba(9,150,196,0.75)",
                         members: 13,
                         image: require("../../assets/icons/xxx/calculate.png")
                     },
@@ -186,6 +186,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
     },
     cardHeader: {
+        opacity: 0.9,
         padding: 10,
     },
     cardContent: {
@@ -200,20 +201,19 @@ const styles = StyleSheet.create({
         flexDirection: 'column-reverse',
     },
     cardImage: {
-        opacity: 9.5,
-        height: 70,
-        width: 70,
+        opacity: 0.7,
+        height: 48,
+        width: 48,
         alignSelf: 'center',
         marginVertical: 5,
     },
     sectionHeader: {
-        paddingTop: 2,
         paddingHorizontal: 10,
-        paddingBottom: 10,
+        marginBottom: 10,
         marginTop: 20,
         fontSize: 22,
         fontWeight: 'bold',
-        color: "#fff",
+        color: "rgba(255,255,255,0.7)",
         backgroundColor: '#116496',
     },
     item: {

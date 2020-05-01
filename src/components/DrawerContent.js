@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, TouchableHighlight} from 'react-native';
 import {
     Avatar,
     Title,
@@ -15,7 +15,8 @@ import {
     DrawerItem
 } from '@react-navigation/drawer';
 
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import IconCommunity from 'react-native-vector-icons/MaterialCommunityIcons';
+import IconMaterial from 'react-native-vector-icons/MaterialIcons';
 
 // import{ AuthContext } from '../components/context';
 
@@ -62,122 +63,120 @@ export function DrawerContent(props) {
                             </View>
                         </View>
                     </View>
-
                     <Drawer.Section style={styles.drawerSection}>
-                        <DrawerItem
-                            labelStyle={styles.drawerItemLabel}
-                            icon={({color, size}) => (
-                                <Icon
-                                    name="home-outline"
-                                    color={color}
-                                    size={size}
-                                />
-                            )}
-                            label="صفحه اصلی"
-                            onPress={() => {
-                                props.navigation.navigate('Home')
-                            }}
-                        />
-                        <DrawerItem
-                            labelStyle={styles.drawerItemLabel}
-                            icon={({color, size}) => (
-                                <Icon
-                                    name="account-outline"
-                                    color={color}
-                                    size={size}
-                                />
-                            )}
-                            label="کاربری و دسترسی"
-                            onPress={() => {
-                                props.navigation.navigate('Profile')
-                            }}
-                        />
-                        <DrawerItem
-                            labelStyle={styles.drawerItemLabel}
-                            icon={({color, size}) => (
-                                <Icon
-                                    name="account"
-                                    color={color}
-                                    size={size}
-                                />
-                            )}
-                            label="کاربران"
-                            onPress={() => {
-                                props.navigation.navigate('Members')
-                            }}
-                        /><DrawerItem
-                        labelStyle={styles.drawerItemLabel}
-                        icon={({color, size}) => (
-                            <Icon
-                                name="car-brake-parking"
-                                color={color}
-                                size={size}
-                            />
-                        )}
-                        label="عمومی"
-                        onPress={() => {
-                            props.navigation.navigate('BookmarkScreen')
-                        }}
-                    />
+                        <TouchableHighlight underlayColor='rgba(0,0,0,0.1)' style={styles.drawerItemHighlight}
+                                            onPress={() => {
+                                                props.navigation.navigate('Home')
+                                            }}>
+                            <View
+                                style={styles.preference}>
+                                <Text style={styles.drawerItemLabel}>صفحه اصلی</Text>
+                                <IconCommunity style={styles.drawerItemIcon}
+                                               name="home"
+                                               size={20}/>
+                            </View>
+                        </TouchableHighlight>
+                        <TouchableHighlight underlayColor='rgba(0,0,0,0.1)'
+                                            style={styles.drawerItemHighlight}
+                                            onPress={() => {
+                                                props.navigation.navigate('Home')
+                                            }}>
+                            <View
+                                style={styles.preference}>
+                                <Text style={styles.drawerItemLabel}>کاربری و دسترسی</Text>
+                                <IconCommunity style={styles.drawerItemIcon}
+                                               name="shield-account"
+                                               size={20}/>
+                            </View>
+                        </TouchableHighlight>
+                        <TouchableHighlight underlayColor='rgba(0,0,0,0.1)'
+                                            style={styles.drawerItemHighlight}
+                                            onPress={() => {
+                                                props.navigation.navigate('Home')
+                                            }}>
+                            <View
+                                style={styles.preference}>
+                                <Text style={styles.drawerItemLabel}>کاربران</Text>
+                                <IconCommunity style={styles.drawerItemIcon}
+                                               name="account"
+                                               size={20}/>
+                            </View>
+                        </TouchableHighlight>
+                        <TouchableHighlight underlayColor='rgba(0,0,0,0.1)'
+                                            style={styles.drawerItemHighlight}
+                                            onPress={() => {
+                                                props.navigation.navigate('Home')
+                                            }}>
+                            <View
+                                style={styles.preference}>
+                                <Text style={styles.drawerItemLabel}>عمومی</Text>
+                                <IconMaterial style={styles.drawerItemIcon}
+                                              name="public"
+                                              size={20}/>
+                            </View>
+                        </TouchableHighlight>
+                        <TouchableHighlight underlayColor='rgba(0,0,0,0.1)'
+                                            style={styles.drawerItemHighlight}
+                                            onPress={() => {
+                                                // props.navigation.navigate('SettingScreen')
+                                                alert('Setting')
+
+                                            }}>
+                            <View
+                                style={styles.preference}>
+                                <Text style={styles.drawerItemLabel}>تنظیمات</Text>
+                                <IconMaterial style={styles.drawerItemIcon}
+                                              name="settings"
+                                              size={20}/>
+                            </View>
+                        </TouchableHighlight>
+
+                        <TouchableHighlight underlayColor='rgba(0,0,0,0.1)'
+                                            style={styles.drawerItemHighlight}
+                                            onPress={() => {
+                                                // props.navigation.navigate('SettingScreen')
+                                                alert('You\'ve been logged out');
+                                            }}>
+                            <View
+                                style={styles.preference}>
+                                <Text style={styles.drawerItemLabel}>خروج</Text>
+                                <IconCommunity style={styles.drawerItemIcon}
+                                               name="logout"
+                                               size={20}/>
+                            </View>
+                        </TouchableHighlight>
+
                     </Drawer.Section>
+
                     <Drawer.Section style={{borderTopWidth: 0.5}}>
                         <Text style={styles.sectionHeader}>وضعیت کنونی سیستم</Text>
                         <View style={styles.preference}>
-                            <Text style={styles.drawerItemLabel}>1399/02/03 14:28:11</Text>
-                            <Text style={styles.drawerItemLabel}>ورود قبلی</Text>
+                            <Text style={styles.statusLabel}>1399/02/03 14:28:11</Text>
+                            <Text style={styles.statusLabel}>ورود قبلی</Text>
                         </View>
                         <View style={styles.preference}>
-                            <Text style={styles.drawerItemLabel}>17</Text>
-                            <Text style={styles.drawerItemLabel}>آنلاین در پرتال</Text>
+                            <Text style={styles.statusLabel}>17</Text>
+                            <Text style={styles.statusLabel}>آنلاین در پرتال</Text>
                         </View>
                         <View style={styles.preference}>
-                            <Text style={styles.drawerItemLabel}>4</Text>
-                            <Text style={styles.drawerItemLabel}>ورود امروز کاربران</Text>
+                            <Text style={styles.statusLabel}>4</Text>
+                            <Text style={styles.statusLabel}>ورود امروز کاربران</Text>
                         </View>
                         <View style={styles.preference}>
-                            <Text style={styles.drawerItemLabel}>428</Text>
-                            <Text style={styles.drawerItemLabel}>ورود ماه اخیر کاربران</Text>
+                            <Text style={styles.statusLabel}>428</Text>
+                            <Text style={styles.statusLabel}>ورود ماه اخیر کاربران</Text>
                         </View>
                         <View style={styles.preference}>
-                            <Text style={styles.drawerItemLabel}>2</Text>
-                            <Text style={styles.drawerItemLabel}>اعلانات کاربر</Text>
+                            <Text style={styles.statusLabel}>2</Text>
+                            <Text style={styles.statusLabel}>اعلانات کاربر</Text>
                         </View>
                         <View style={styles.preference}>
-                            <Text style={styles.drawerItemLabel}>5</Text>
-                            <Text style={styles.drawerItemLabel}>در انتظار تأیید</Text>
+                            <Text style={styles.statusLabel}>5</Text>
+                            <Text style={styles.statusLabel}>در انتظار تأیید</Text>
                         </View>
 
                     </Drawer.Section>
-                    <Drawer.Section style={styles.drawerSection}>
-                        <DrawerItem
-                            labelStyle={styles.drawerItemLabel}
-                            icon={({color, size}) => (
-                                <Icon
-                                    name="settings-outline"
-                                    color={color}
-                                    size={size}
-                                />
-                            )}
-                            label="تنظیمات"
-                            onPress={() => {
-                                props.navigation.navigate('SettingScreen')
-                            }}
-                        />
-                        <DrawerItem
-                            labelStyle={styles.drawerItemLabel}
-                            icon={({color, size}) => (
-                                <Icon
-                                    name="logout"
-                                    color={color}
-                                    size={size}
-                                />
-                            )}
-                            label="خروج"
-                            onPress={() => {
-                                props.navigation.navigate('SupportScreen')
-                            }}
-                        />
-                    </Drawer.Section>
+
                 </View>
             </DrawerContentScrollView>
 
@@ -188,6 +187,7 @@ export function DrawerContent(props) {
 const styles = StyleSheet.create({
     drawerContent: {
         flex: 1,
+        display: 'flex',
     },
     userInfoSection: {
         padding: 20,
@@ -219,23 +219,36 @@ const styles = StyleSheet.create({
     drawerSection: {
         borderTopWidth: 0.7,
         marginTop: 15,
-        alignItems: 'flex-end'
+        alignItems: 'flex-end',
     },
     preference: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        paddingVertical: 12,
-        paddingHorizontal: 16,
+        paddingVertical: 6,
+        paddingHorizontal: 16
+    },
+    statusLabel: {
+        color: 'rgba(255,255,255,0.9)',
     },
     drawerItemLabel: {
         color: 'rgba(255,255,255,0.9)',
+        marginRight: 15
+    },
+    drawerItemIcon: {
+        color: 'rgba(255,255,255,0.7)',
     },
     sectionHeader: {
         color: 'rgba(255,255,255,0.4)',
         textAlign: 'center',
         fontWeight: 'bold',
         fontSize: 22,
-        marginVertical: 10
+        marginVertical: 10,
+    },
+    drawerItemHighlight: {
+        marginVertical: 10,
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        alignSelf: 'stretch',
     }
 
 });

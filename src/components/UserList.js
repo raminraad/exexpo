@@ -1,6 +1,43 @@
 import {ListItem} from 'react-native-elements'
+import React, {Component} from 'react';
+import {FlatList, ScrollView, Text} from "react-native";
+/*import { YellowBox } from 'react-native'
+
+YellowBox.ignoreWarnings([
+    'VirtualizedLists should never be nested', // TODO: Remove when fixed
+]);*/
 
 const list = [
+    {
+        JobTitle: 'مدیر عامل',
+        avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/irae/128.jpg',
+        fullname: 'پرویز صدرعاملی'
+    },
+    {
+        username: 'رئیس انتظامات',
+        avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/flashmurphy/128.jpg',
+        fullname: 'عباس کردنوری'
+    },
+    {
+        username: 'کارشناس فنی',
+        avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/flexrs/128.jpg',
+        fullname: 'نادر فریادشیران'
+    },
+    {
+        username: 'مدیر تحقیق و توسعه',
+        avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/funwatercat/128.jpg',
+        fullname: 'کاظم اولیایی'
+    },
+    {
+        username: 'پشتیبانی فروش',
+        avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/g1sh/128.jpg',
+        fullname: 'رضا افتخاری'
+    },
+    {
+        username: 'رئیس حسابداری',
+        avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/jefffis/128.jpg',
+        fullname: 'ایران امیررضا واعظی آشتیانی'
+    },
     {
         username: 'معاون توسعه مدیریت و منابع',
         avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/HenryHoffman/128.jpg',
@@ -48,20 +85,15 @@ const list = [
     },
 ];
 
-
-import React, {Component} from 'react';
-import {FlatList} from "react-native";
-
 class UserList extends Component {
     keyExtractor = (item, index) => index.toString();
 
     renderItem = ({item}) => (
-        <ListItem subtit
-                  subtitle={item.username}
+        <ListItem subtitle={item.username}
                   title={item.fullname}
-                  rightAvatar={{source: {uri: item.avatar_url}}}
-                  bottomDivider
-                  chevron
+                  rightAvatar={{source: {uri: item.avatar_url}, size: 64}}
+                  topDivider
+            // chevron
         />
     );
 

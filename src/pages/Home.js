@@ -22,21 +22,22 @@ export default class Menu extends Component {
                         title: "کاربران و مدیران",
                         color: "rgba(9,150,196,0.75)",
                         members: 8,
-                        image: require("../../assets/icons/xxx/name.png")
+                        image: require("../../assets/icons/xxx/name.png"),
+                        page: 'Users'
                     },
                     {
                         id: 2,
                         title: "بازاریابی",
                         color: "rgba(9,150,196,0.75)",
                         members: 12,
-                        image: require("../../assets/icons/xxx/attract-customers.png")
+                        image: require("../../assets/icons/xxx/attract-customers.png"),
                     },
                     {
                         id: 3,
                         title: "مشتریان",
                         color: "rgba(9,150,196,0.75)",
                         members: 6,
-                        image: require("../../assets/icons/xxx/groups.png")
+                        image: require("../../assets/icons/xxx/groups.png"),
                     },
                 ]
             }]
@@ -49,14 +50,14 @@ export default class Menu extends Component {
                         title: "آموزش",
                         color: "rgba(9,150,196,0.75)",
                         members: 7,
-                        image: require("../../assets/icons/xxx/classroom.png")
+                        image: require("../../assets/icons/xxx/classroom.png"),
                     },
                     {
                         id: 6,
                         title: "بازار بین المللی",
                         color: "rgba(9,150,196,0.75)",
                         members: 23,
-                        image: require("../../assets/icons/xxx/globe-earth.png")
+                        image: require("../../assets/icons/xxx/globe-earth.png"),
                     },
                 ]
             }]
@@ -69,42 +70,42 @@ export default class Menu extends Component {
                         title: "برنامه ریزی",
                         color: "rgba(9,150,196,0.75)",
                         members: 45,
-                        image: require("../../assets/icons/xxx/to-do.png")
+                        image: require("../../assets/icons/xxx/to-do.png"),
                     },
                     {
                         id: 8,
                         title: "شبکه توزیع",
                         color: "rgba(9,150,196,0.75)",
                         members: 13,
-                        image: require("../../assets/icons/xxx/nvstec.png")
+                        image: require("../../assets/icons/xxx/nvstec.png"),
                     },
                     {
                         id: 9,
                         title: "کالاها",
                         color: "rgba(9,150,196,0.75)",
                         members: 13,
-                        image: require("../../assets/icons/xxx/ingredients-for-cooking.png")
+                        image: require("../../assets/icons/xxx/ingredients-for-cooking.png"),
                     },
                     {
                         id: 10,
                         title: "مسیرهای توزیع",
                         color: "rgba(9,150,196,0.75)",
                         members: 13,
-                        image: require("../../assets/icons/xxx/where-to-quest.png")
+                        image: require("../../assets/icons/xxx/where-to-quest.png"),
                     },
                     {
                         id: 11,
                         title: "بازاریابی تلفنی",
                         color: "rgba(9,150,196,0.75)",
                         members: 13,
-                        image: require("../../assets/icons/xxx/man-on-phone.png")
+                        image: require("../../assets/icons/xxx/man-on-phone.png"),
                     },
                     {
                         id: 12,
                         title: "فرمول های محاسباتی",
                         color: "rgba(9,150,196,0.75)",
                         members: 13,
-                        image: require("../../assets/icons/xxx/calculate.png")
+                        image: require("../../assets/icons/xxx/calculate.png"),
                     },
                 ]
             }]
@@ -122,7 +123,7 @@ export default class Menu extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <DrawerHeader navigation={this.props.navigation}/>
+                <DrawerHeader navigation={this.props.navigation} title={'ماژول ها'}/>
                 <SectionList
                     sections={this.menuData}
                     renderItem={({item}) => {
@@ -136,7 +137,13 @@ export default class Menu extends Component {
                                       }}
                                       renderItem={({item}) => {
                                           return (
-                                              <TouchableOpacity style={[styles.card, {backgroundColor: item.color}]}>
+                                              <TouchableOpacity style={[styles.card, {backgroundColor: item.color}]}
+                                                                onPress={() => {
+                                                                    if (item.page)
+                                                                        this.props.navigation.navigate(item.page);
+                                                                    else
+                                                                        alert('ماژول در حال ساخت میباشد');
+                                                                }}>
                                                   <View style={styles.cardHeader}>
                                                       <Text style={styles.title}>{item.title}</Text>
                                                       <Text style={styles.subTitle}> تعداد رکورد {item.members}</Text>
@@ -171,17 +178,15 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         flexWrap: 'wrap',
     },
-    listContainer: {
-
-    },
+    listContainer: {},
     /******** card **************/
     card: {
         flexBasis: '40%',
         flexDirection: 'row-reverse',
         justifyContent: 'space-around',
         borderRadius: 3,
-        borderTopLeftRadius: 25,
-        borderBottomRightRadius: 25,
+        borderTopLeftRadius: 15,
+        borderBottomRightRadius: 15,
         marginVertical: 17,
         marginHorizontal: 10,
     },

@@ -1,19 +1,19 @@
 import React from 'react';
 import {StyleSheet, Text, View} from "react-native";
 import DrawerHeader from "../components/DrawerHeader";
-import ModuleList from "../components/ModuleList";
+import UserList from "../components/UserList";
 
 
-function Home({navigation}) {
+function Users({navigation}) {
     return (
         <View>
-            <DrawerHeader  navigation={navigation}/>
-            <ModuleList style={styles.container}/>
+            <DrawerHeader navigation={navigation} title='کاربران'/>
+            <UserList style={styles.container}/>
         </View>
     );
 }
 
-export default Home;
+export default Users;
 
 const styles = StyleSheet.create({
     container: {

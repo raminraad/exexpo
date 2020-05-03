@@ -14,23 +14,30 @@ import React from "react";
 //     }
 // }
 
-function DrawerHeader({navigation}) {
-    return (
-        <Header
-            backgroundColor='#003d5b'
-            placement="right"
-            rightComponent={{
-                icon: 'menu', color: '#fff', onPress: () => {
-                    navigation.openDrawer()
-                }
-            }}
-            centerComponent={{
-                text: 'صفحه اصلی',
-                style: {color: '#fff', alignSelf: 'center', fontWeight: 'bold', fontSize: 20}
-            }}
-            leftComponent={{icon: 'home', color: '#fff'}}
-        />
-    );
+class DrawerHeader extends React.Component<{ navigation: any }> {
+    render() {
+        let {navigation} = this.props;
+        return (
+            <Header
+                backgroundColor='#003d5b'
+                placement="right"
+                rightComponent={{
+                    icon: 'menu', color: '#fff', onPress: () => {
+                        navigation.openDrawer()
+                    }
+                }}
+                centerComponent={{
+                    text: this.props.title,
+                    style: {color: '#fff', alignSelf: 'center', fontWeight: 'bold', fontSize: 20}
+                }}
+                leftComponent={{
+                    icon: 'home', color: '#fff', onPress: () => {
+                        navigation.navigate('Home')
+                    }
+                }}
+            />
+        );
+    }
 }
 
 export default DrawerHeader;

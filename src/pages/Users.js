@@ -2,14 +2,57 @@ import React from 'react';
 import {ScrollView, StyleSheet, Text, View} from "react-native";
 import DrawerHeader from "../components/DrawerHeader";
 import UserList from "../components/UserList";
-import {Icon} from "react-native-elements";
+import {Header, Icon} from "react-native-elements";
 import IconMaterial from 'react-native-vector-icons/MaterialIcons';
 
+
+class CrudHeader extends React.Component<{ navigation: any }> {
+    render() {
+        let {navigation} = this.props;
+        return (
+            <Header
+                backgroundColor='#457b9d'
+                linearGradientProps={{
+                    colors: ['#003049', '#457b9d'],
+                    start: {x: 0, y: 0.5},
+                    end: {x: 1, y: 0.5},
+                }}
+                //todo: replace paddingVertical with centering vertically
+                containerStyle={{paddingVertical: 20, alignContent: 'center', justifyContent: 'center'}}
+                placement="center"
+                rightComponent={<Icon
+                    onPress={() => alert('more')}
+                    reverse
+                    style={{textAlignVertical: "center"}}
+                    name='ios-more'
+                    type='ionicon'
+                    color='#517fa4'
+                />}
+                centerComponent={<Icon
+                    onPress={() => alert('search')}
+                    reverse
+                    style={{textAlignVertical: "center"}}
+                    name='ios-search'
+                    type='ionicon'
+                    color='#517fa4'
+                />}
+                leftComponent={<Icon
+                    onPress={() => navigation.navigate('Home')}
+                    reverse
+                    style={{textAlignVertical: "center"}}
+                    name='ios-arrow-back'
+                    type='ionicon'
+                    color='#517fa4'
+                />}
+            />
+        );
+    }
+}
 
 function Users({navigation}) {
     return (
         <View style={{display: 'flex', justifyContent: 'flex-start', flex: 1}}>
-            <DrawerHeader navigation={navigation} title='کاربران'/>
+            <CrudHeader navigation={navigation} title='کاربران'/>
             <UserList/>
             <View style={styles.addIconContainer}>
                 <IconMaterial

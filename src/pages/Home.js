@@ -123,7 +123,7 @@ export default class Menu extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <DrawerHeader navigation={this.props.navigation} title={'ماژول ها'}/>
+                <DrawerHeader navigation={this.props.navigation} title={'ماژول s'}/>
                 <SectionList
                     sections={this.menuData}
                     renderItem={({item}) => {

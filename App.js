@@ -13,6 +13,7 @@ import Order from "./src/pages/Order";
 import Details from "./src/pages/Details";
 import {DrawerContent} from "./src/components/DrawerContent";
 import Users from "./src/pages/Users";
+import {MenuProvider} from 'react-native-popup-menu';
 
 
 const HomeDrawer = createDrawerNavigator();
@@ -30,22 +31,23 @@ const HomeDrawerScreen = ({navigation}) => (
 
 function App() {
     return (
-        <NavigationContainer>
-            <LoginStack.Navigator initialRouteName="Login" screenOptions={{
-                headerShown: false,
-                headerStyle: {
-                    backgroundColor: 'seagreen',
-                },
-                headerTintColor: 'black',
-                headerTitleStyle: {
-                    fontWeight: 'bold'
-                }
-            }}>
-                <LoginStack.Screen name="Home" component={HomeDrawerScreen}/>
-                <LoginStack.Screen name="Login" component={Login}/>
-                <LoginStack.Screen name="SignUp" component={SignUp}/>
-            </LoginStack.Navigator>
-        </NavigationContainer>
+        <MenuProvider>
+            <NavigationContainer>
+                <LoginStack.Navigator initialRouteName="Login" screenOptions={{
+                    headerShown: false,
+                    headerStyle: {
+                        backgroundColor: 'seagreen',
+                    },
+                    headerTintColor: 'black',
+                    headerTitleStyle: {
+                        fontWeight: 'bold'
+                    }
+                }}>
+                    <LoginStack.Screen name="Home" component={HomeDrawerScreen}/>
+                    <LoginStack.Screen name="Login" component={Login}/>
+                    <LoginStack.Screen name="SignUp" component={SignUp}/>
+                </LoginStack.Navigator>
+            </NavigationContainer></MenuProvider>
     );
 }
 

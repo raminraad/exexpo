@@ -4,7 +4,13 @@ import DrawerHeader from "../components/DrawerHeader";
 import UserList from "../components/UserList";
 import {Header, Icon} from "react-native-elements";
 import IconMaterial from 'react-native-vector-icons/MaterialIcons';
-
+import {
+    Menu,
+    MenuOptions,
+    MenuOption,
+    MenuTrigger,
+} from 'react-native-popup-menu';
+import {Divider} from "react-native-paper";
 
 class CrudHeader extends React.Component<{ navigation: any }> {
     render() {
@@ -20,14 +26,31 @@ class CrudHeader extends React.Component<{ navigation: any }> {
                 //todo: replace paddingVertical with centering vertically
                 containerStyle={{paddingVertical: 20, alignContent: 'center', justifyContent: 'center'}}
                 placement="center"
-                rightComponent={<Icon
-                    onPress={() => alert('more')}
-                    reverse
-                    style={{textAlignVertical: "center"}}
-                    name='ios-more'
-                    type='ionicon'
-                    color='#517fa4'
-                />}
+                rightComponent={
+                    <View>
+                        <Menu>
+                            <MenuTrigger children={
+                                <Icon
+                                    reverse
+                                    style={{textAlignVertical: "center"}}
+                                    name='ios-more'
+                                    type='ionicon'
+                                    color='#517fa4'/>
+                            }/>
+                            <MenuOptions customStyles={optionsStyles}>
+                                <MenuOption onSelect={() => alert(`Item1`)} text='گزینه 1'/>
+                                <Divider/>
+                                <MenuOption onSelect={() => alert(`Item2`)} text='گزینه 2'/>
+                                <Divider/>
+                                <MenuOption onSelect={() => alert(`Item3`)} text='گزینه 3'/>
+                                <Divider/>
+                                <MenuOption onSelect={() => alert(`Item4`)} disabled={true} text='گزینه 4'/>
+                            </MenuOptions>
+                        </Menu>
+                    </View>
+
+
+                }
                 centerComponent={<Icon
                     onPress={() => alert('search')}
                     reverse
@@ -66,6 +89,26 @@ function Users({navigation}) {
 }
 
 export default Users;
+
+const optionsStyles = {
+    optionsContainer: {
+        padding: 5,
+        borderRadius: 5
+    },
+    optionsWrapper: {},
+    optionWrapper: {
+        height: 50,
+        justifyContent: 'center',
+
+    },
+    optionTouchable: {
+        underlayColor: 'gold',
+        activeOpacity: 70,
+    },
+    optionText: {
+        fontSize: 16
+    },
+};
 
 const styles = StyleSheet.create({
     container: {

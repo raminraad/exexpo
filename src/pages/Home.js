@@ -31,6 +31,7 @@ export default class Menu extends Component {
                         color: "rgba(9,150,196,0.75)",
                         members: 12,
                         image: require("../../assets/icons/xxx/attract-customers.png"),
+                        page: 'Order'
                     },
                     {
                         id: 3,

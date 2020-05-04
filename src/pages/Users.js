@@ -4,12 +4,7 @@ import DrawerHeader from "../components/DrawerHeader";
 import UserList from "../components/UserList";
 import {Header, Icon} from "react-native-elements";
 import IconMaterial from 'react-native-vector-icons/MaterialIcons';
-import {
-    Menu,
-    MenuOptions,
-    MenuOption,
-    MenuTrigger,
-} from 'react-native-popup-menu';
+import {Menu, MenuOptions, MenuOption, MenuTrigger,} from 'react-native-popup-menu';
 import {Divider} from "react-native-paper";
 
 class CrudHeader extends React.Component<{ navigation: any }> {

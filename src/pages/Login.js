@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {StyleSheet, Text, View, TextInput, TouchableOpacity, KeyboardAvoidingView} from 'react-native';
 import Logo from '../components/Logo';
+import {StackActions} from "@react-navigation/native";
 
 
 export default class Login extends Component<{}> {
@@ -31,7 +32,10 @@ export default class Login extends Component<{}> {
     }
 
     gotoHome() {
-        this.props.navigation.navigate('Home')
+        //clear the stack and set the Home screen as only screen
+        this.props.navigation.dispatch(
+            StackActions.replace('Home')
+        );
     }
 
 

@@ -117,14 +117,10 @@ export default class Menu extends Component {
         super(props);
     }
 
-    clickEventListener(item) {
-        Alert(item.title)
-    }
-
     render() {
         return (
             <View style={styles.container}>
-                <DrawerHeader navigation={this.props.navigation} title={'ماژول s'}/>
+                <DrawerHeader navigation={this.props.navigation} title={'ماژول ها'}/>
                 <SectionList
                     sections={this.menuData}
                     renderItem={({item}) => {

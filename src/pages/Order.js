@@ -151,6 +151,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#606070',
         padding: 10,
+
     },
     content: {
         paddingLeft: 10,
@@ -236,5 +237,6 @@ const CONTENT = [
         isExpanded: false,
         category_name: 'Item 15',
         subcategory: [{id: 43, val: 'Sub Cat 43'}, {id: 44, val: 'Sub Cat 44'}],
+
     },
 ];

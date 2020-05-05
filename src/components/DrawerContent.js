@@ -79,7 +79,7 @@ export function DrawerContent(props) {
                         <TouchableHighlight underlayColor='rgba(0,0,0,0.1)'
                                             style={styles.drawerItemHighlight}
                                             onPress={() => {
-                                                props.navigation.navigate('Home')
+                                                props.navigation.navigate('Profile')
                                             }}>
                             <View
                                 style={styles.preference}>
@@ -92,7 +92,7 @@ export function DrawerContent(props) {
                         <TouchableHighlight underlayColor='rgba(0,0,0,0.1)'
                                             style={styles.drawerItemHighlight}
                                             onPress={() => {
-                                                props.navigation.navigate('Home')
+                                                props.navigation.navigate('Users')
                                             }}>
                             <View
                                 style={styles.preference}>
@@ -105,7 +105,7 @@ export function DrawerContent(props) {
                         <TouchableHighlight underlayColor='rgba(0,0,0,0.1)'
                                             style={styles.drawerItemHighlight}
                                             onPress={() => {
-                                                props.navigation.navigate('Home')
+                                                props.navigation.navigate('Order')
                                             }}>
                             <View
                                 style={styles.preference}>
@@ -118,9 +118,7 @@ export function DrawerContent(props) {
                         <TouchableHighlight underlayColor='rgba(0,0,0,0.1)'
                                             style={styles.drawerItemHighlight}
                                             onPress={() => {
-                                                // props.navigation.navigate('SettingScreen')
-                                                alert('Setting')
-
+                                                props.navigation.navigate('Details')
                                             }}>
                             <View
                                 style={styles.preference}>
@@ -134,8 +132,7 @@ export function DrawerContent(props) {
                         <TouchableHighlight underlayColor='rgba(0,0,0,0.1)'
                                             style={styles.drawerItemHighlight}
                                             onPress={() => {
-                                                // props.navigation.navigate('SettingScreen')
-                                                alert('You\'ve been logged out');
+                                                props.navigation.navigate('Login')
                                             }}>
                             <View
                                 style={styles.preference}>

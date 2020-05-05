@@ -1,13 +1,11 @@
 import React, {Component} from 'react';
 import {FlatList, ScrollView, StyleSheet, Text, View} from "react-native";
-import DrawerHeader from "../components/DrawerHeader";
-import {Header, Icon, ListItem} from "react-native-elements";
-import IconMaterial from 'react-native-vector-icons/MaterialIcons';
-import IconEntypo from 'react-native-vector-icons/Entypo';
-import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
+import {Header, ListItem} from "react-native-elements";
+import IconFeather from 'react-native-vector-icons/Feather';
 import {Menu, MenuOptions, MenuOption, MenuTrigger,} from 'react-native-popup-menu';
 import {Divider} from "react-native-paper";
 
+const iconSize = 32;
 const list = [
     {
         jobTitle: 'مدیر فروش',
@@ -86,28 +84,56 @@ const list = [
     },
 ];
 
+class ModuleHeader extends React.Component<{ navigation: any }> {
+    render() {
+        let {navigation} = this.props;
+        return (
+            <Header
+                backgroundColor='#E7E7EE'
+                //todo: replace paddingVertical with centering vertically
+                placement="center"
+                rightComponent={<IconFeather
+                    color={'#006494'}
+                    onPress={() => this.props.navigation.toggleDrawer()}
+                    name={"menu"}
+                    size={iconSize}/>}
+
+                centerComponent={{text: this.props.title, style: {fontSize: 24, color: '#006494'}}}
+                containerStyle={styles.headerContainerStyle}
+                leftComponent={
+                    <IconFeather
+                        onPress={() => this.props.navigation.goBack()}
+                        color={'#006494'}
+                        name={"chevron-left"}
+                        size={iconSize}/>
+                }
+            />
+        );
+    }
+}
+
 class ModuleFooter extends React.Component<{ navigation: any }> {
     render() {
         let {navigation} = this.props;
         return (
             <Header
-                backgroundColor='#457b9d'
-                linearGradientProps={{
-                    colors: ['#118ab2', '#118ab2'],
-                    start: {x: 0, y: 0.5},
-                    end: {x: 1, y: 0.5},
-                }}
+                backgroundColor='#E7E7EE'
+                // linearGradientProps={{
+                //     colors: ['#118ab2', '#118ab2'],
+                //     start: {x: 0, y: 0.5},
+                //     end: {x: 1, y: 0.5},
+                // }}
                 //todo: replace paddingVertical with centering vertically
-                containerStyle={{paddingVertical: 20, alignContent: 'center', justifyContent: 'center'}}
+                containerStyle={styles.footerContainerStyle}
                 placement="center"
                 rightComponent={
                     <View>
                         <Menu>
                             <MenuTrigger children={
-                                <IconEntypo
-                                    color={'rgba(0,0,0,0.5)'}
-                                    name={"dots-three-vertical"}
-                                    size={32}/>
+                                <IconFeather
+                                    color={'rgba(0,0,0,0.6)'}
+                                    name={"more-vertical"}
+                                    size={iconSize}/>
                             }/>
                             <MenuOptions customStyles={optionsStyles}>
                                 <MenuOption onSelect={() => alert(`Item1`)} text='گزینه 1'/>
@@ -123,54 +149,19 @@ class ModuleFooter extends React.Component<{ navigation: any }> {
 
 
                 }
-                centerComponent={<IconFontAwesome
-                    onPress={() => this.props.navigation.goBack()}
-                    color={'rgba(0,0,0,0.5)'}
+                centerComponent={<IconFeather
+                    onPress={() => alert('جستجو')}
+                    color={'rgba(0,0,0,0.6)'}
                     name={"search"}
-                    size={32}/>}
+                    size={iconSize}/>}
 
-            />
-        );
-    }
-}
+                leftComponent={<IconFeather
+                    onPress={() => this.props.navigation.goBack()}
+                    color={'rgba(0,0,0,0.6)'}
+                    name={"plus-circle"}
+                    size={iconSize}/>}
 
-class ModuleHeader extends React.Component<{ navigation: any }> {
-    render() {
-        let {navigation} = this.props;
-        return (
-            <Header
-                backgroundColor='#E8F1F2'
-                //todo: replace paddingVertical with centering vertically
-                placement="center"
-                rightComponent={<View>
-                    <Menu>
-                        <MenuTrigger children={
-                            <IconEntypo
-                                color={'#006494'}
-                                name={"dots-three-vertical"}
-                                size={32}/>
-                        }/>
-                        <MenuOptions customStyles={optionsStyles}>
-                            <MenuOption onSelect={() => alert(`Item1`)} text='گزینه 1'/>
-                            <Divider/>
-                            <MenuOption onSelect={() => alert(`Item2`)} text='گزینه 2'/>
-                            <Divider/>
-                            <MenuOption onSelect={() => alert(`Item3`)} text='گزینه 3'/>
-                            <Divider/>
-                            <MenuOption onSelect={() => alert(`Item4`)} disabled={true} text='گزینه 4'/>
-                        </MenuOptions>
-                    </Menu>
-                </View>}
 
-                centerComponent={{text: this.props.title, style: {fontSize: 24}}}
-
-                leftComponent={
-                    <IconEntypo
-                        onPress={() => this.props.navigation.goBack()}
-                        color={'#006494'}
-                        name={"chevron-left"}
-                        size={32}/>
-                }
             />
         );
     }
@@ -205,20 +196,6 @@ function Users({navigation}) {
             <ModuleHeader navigation={navigation} title='کاربران'/>
             <UserList/>
             <ModuleFooter navigation={navigation}/>
-            <View style={styles.addIconContainer}>
-                <IconEntypo
-                    onPress={() => this.props.navigation.goBack()}
-                    color={'#118ab2'}
-                    name={"vinyl"}
-                    style={{position: 'absolute'}}
-                    size={105}/>
-                <IconMaterial
-                    onPress={() => alert('Add')}
-                    color={'#06d6a0'}
-                    style={{position: 'absolute'}}
-                    name={"add-circle"}
-                    size={98}/>
-            </View>
         </View>
     );
 }
@@ -246,18 +223,20 @@ const optionsStyles = {
 };
 
 const styles = StyleSheet.create({
-    // container: {
-    //     backgroundColor: '#455a64',
-    //     flex: 1,
-    //     display: 'flex',
-    //     alignItems: 'center',
-    //     justifyContent: 'center',
-    // },
-    addIconContainer: {
-        end: 240,
-        top: -60,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    listContainer: {},
-});
+    footerContainerStyle:
+        {
+            paddingVertical: 20,
+            alignContent: 'center',
+            justifyContent: 'center',
+            borderTopWidth: 3,
+            borderTopColor: 'rgba(0,0,0,0.2)'
+        },
+    headerContainerStyle:
+        {
+            paddingVertical: 20,
+            alignContent: 'center',
+            justifyContent: 'center',
+            borderBottomWidth: 3,
+            borderBottomColor: 'rgba(0,0,0,0.2)'
+        },
+})

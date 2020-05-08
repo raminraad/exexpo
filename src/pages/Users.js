@@ -5,6 +5,7 @@ import IconFeather from 'react-native-vector-icons/Feather';
 import {Menu, MenuOptions, MenuOption, MenuTrigger,} from 'react-native-popup-menu';
 import {Divider} from "react-native-paper";
 import UserItem from '../components/UserItem';
+import UserAddModal from "../components/UserAddModal";
 
 const iconSize = 32;
 const list = [
@@ -118,6 +119,13 @@ class ModuleHeader extends React.Component<{ navigation: any }> {
 }
 
 class ModuleFooter extends React.Component<{ navigation: any }> {
+    constructor() {
+        super();
+        this.onPressAdd=this.onPressAdd.bind(this);
+    }
+    onPressAdd(){
+        this.refs.addModal.showModal()
+    }
     render() {
         let {navigation} = this.props;
         return (
@@ -150,6 +158,7 @@ class ModuleFooter extends React.Component<{ navigation: any }> {
                                 <MenuOption onSelect={() => alert(`Item4`)} disabled={true} text='گزینه 4'/>
                             </MenuOptions>
                         </Menu>
+                        <UserAddModal ref={'addModal'} parentFaltList={this}/>
                     </View>
 
 
@@ -161,7 +170,7 @@ class ModuleFooter extends React.Component<{ navigation: any }> {
                     size={iconSize}/>}
 
                 leftComponent={<IconFeather
-                    onPress={() => this.props.navigation.goBack()}
+                    onPress={() => this.onPressAdd()}
                     color={'rgba(0,0,0,0.6)'}
                     name={"plus-circle"}
                     size={iconSize}/>}
@@ -181,23 +190,25 @@ class UserList extends Component {
 
     render() {
         return (
-            <FlatList
+                <FlatList
                 keyExtractor={this.keyExtractor}
                 data={list}
-                renderItem={this.renderItem}
-            />
+                renderItem={this.renderItem}/>
         )
     }
 }
 
-function Users({navigation}) {
-    return (
-        <View style={{display: 'flex', justifyContent: 'flex-start', flex: 1}}>
-            <ModuleHeader navigation={navigation} title='کاربران'/>
-            <UserList/>
-            <ModuleFooter navigation={navigation}/>
-        </View>
-    );
+class Users extends Component<{ navigation: any }> {
+    render() {
+        let {navigation} = this.props;
+        return (
+            <View style={{display: 'flex', justifyContent: 'flex-start', flex: 1}}>
+                <ModuleHeader navigation={navigation} title='کاربران'/>
+                <UserList/>
+                <ModuleFooter navigation={navigation}/>
+            </View>
+        );
+    }
 }
 
 export default Users;

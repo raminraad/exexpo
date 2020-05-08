@@ -32,6 +32,14 @@ export default class UserItem extends Component {
                     size={32}
                     color='#FE5F55'
                 />
+                <Icon
+                    reverse
+                    name="edit"
+                    onPress={() => alert('ویرایش آیتم')}
+                    type='font-awesome'
+                    size={32}
+                    color='#577399'
+                />
 
             </View>
         )

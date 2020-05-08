@@ -1,31 +1,36 @@
 import React, {Component} from 'react';
 import {FlatList, ScrollView, StyleSheet, Text, View} from "react-native";
-import {Header, ListItem} from "react-native-elements";
+import {Header} from "react-native-elements";
 import IconFeather from 'react-native-vector-icons/Feather';
 import {Menu, MenuOptions, MenuOption, MenuTrigger,} from 'react-native-popup-menu';
 import {Divider} from "react-native-paper";
+import UserItem from '../components/UserItem';
 
 const iconSize = 32;
 const list = [
     {
         jobTitle: 'مدیر فروش',
         avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/krystalfister/128.jpg',
-        fullname: 'ارغوان صدرعاملی'
+        fullname: 'ارغوان صدرعاملی',
+        description: 'دارای سابقه کاری در زمینه فروش مواد غذایی و قطعات کامپیوتر'
     },
     {
         jobTitle: 'رئیس انتظامات',
         avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/joshuasortino/128.jpg',
-        fullname: 'عباس کردنوری'
+        fullname: 'عباس کردنوری',
+        description: 'مشغول بکار بصورت آزمایشی'
     },
     {
         jobTitle: 'کارشناس فنی',
         avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/flexrs/128.jpg',
-        fullname: 'نادر فریادشیران'
+        fullname: 'نادر فریادشیران',
+        description: 'فوق لیسانس صنایع از دانشگاه صنعتی شریف'
     },
     {
         jobTitle: 'مدیر تحقیق و توسعه',
         avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/funwatercat/128.jpg',
-        fullname: 'کاظم اولیایی'
+        fullname: 'کاظم اولیایی',
+        description: 'با سابقه 15 ساله در زمینه تولید مواد شوینده و بهداشتی'
     },
     {
         jobTitle: 'پشتیبانی فروش',
@@ -171,12 +176,7 @@ class UserList extends Component {
     keyExtractor = (item, index) => index.toString();
 
     renderItem = ({item}) => (
-        <ListItem subtitle={item.jobTitle}
-                  title={item.fullname}
-                  rightAvatar={{source: {uri: item.avatar_url}, size: 64}}
-                  topDivider
-            // chevron
-        />
+            <UserItem item={item}/>
     );
 
     render() {

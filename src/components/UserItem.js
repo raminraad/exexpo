@@ -24,12 +24,14 @@ export default class UserItem extends Component {
     LeftAction = () => {
         return (
             <View style={styles.leftAction}>
-
-                <IconFeather
-                    onPress={() => alert('جستجو')}
-                    color='white'
-                    name={"trash"}
-                    size={32}/>
+                <Icon
+                    reverse
+                    name="trash"
+                    onPress={() => alert('حذف آیتم')}
+                    type='font-awesome'
+                    size={32}
+                    color='#FE5F55'
+                />
 
             </View>
         )
@@ -90,14 +92,11 @@ const styles = StyleSheet.create(
             color: '#EDF2F4'
         },
         leftAction: {
-            flex:.1,
             justifyContent: 'center',
             alignItems:'center',
             flexDirection:'row',
-            backgroundColor:'#EF233C',
             marginTop: 10,
             marginLeft: 10,
-            borderRadius: 5,
         }
     }
 );

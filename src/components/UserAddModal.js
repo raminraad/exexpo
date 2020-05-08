@@ -13,11 +13,21 @@ class UserAddModal extends Component {
                 ref={'myModal'}
                 style={styles.modal} position='center' backDrop={true} backButtonClose={true} swipeToClose={true}>
                 <TextInput
-                    name='username'
+                    name='fullname'
                     style={styles.inputBox}
                     underlineColorAndroid="rgba(0,0,0,0)"
                     textAlign="right"
-                    placeholder="نام کاربری"
+                    placeholder="نام و نام خانوادگی"
+                    onSubmitEditing={() => this.password.focus()}
+                    onChangeText={(val) => this.setState({username: val})}
+                    ref={(input) => this.username = input}
+                />
+                <TextInput
+                    name='jobTitle'
+                    style={styles.inputBox}
+                    underlineColorAndroid="rgba(0,0,0,0)"
+                    textAlign="right"
+                    placeholder="سمت"
                     onSubmitEditing={() => this.password.focus()}
                     onChangeText={(val) => this.setState({username: val})}
                     ref={(input) => this.username = input}
@@ -33,7 +43,7 @@ export default UserAddModal;
 const styles = StyleSheet.create(
     {
         modal:{
-            backgroundColor: 'grey',
+            backgroundColor: '#EEE',
             justifyContent:'center',
             //todo: remove two following lines when you moved modal to main screen class
             marginTop:-700,

@@ -3,11 +3,11 @@
 import * as React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import Login from "./src/pages/Login";
-import SignUp from "./src/pages/SignUp";
+import Login from "./src/screens/Login";
+import SignUp from "./src/screens/SignUp";
 import {createDrawerNavigator} from "@react-navigation/drawer";
 import {MenuProvider} from 'react-native-popup-menu';
-import {HomeDrawerScreen} from "./src/pages/HomeDrawerScreen";
+import {HomeDrawerScreen} from "./src/screens/HomeDrawerScreen";
 
 
 const LoginStack = createStackNavigator();

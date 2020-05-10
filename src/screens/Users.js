@@ -1,11 +1,13 @@
-import React, {Component} from 'react';
-import {FlatList, ScrollView, StyleSheet, Text, View} from "react-native";
-import {Header} from "react-native-elements";
+import React, { Component,useState } from 'react';
+import { FlatList, ScrollView, StyleSheet, Text, View , Modal,TouchableWithoutFeedback,Keyboard} from "react-native";
+import { Header } from "react-native-elements";
 import IconFeather from 'react-native-vector-icons/Feather';
-import {Menu, MenuOptions, MenuOption, MenuTrigger,} from 'react-native-popup-menu';
-import {Divider} from "react-native-paper";
+import { Menu, MenuOptions, MenuOption, MenuTrigger, } from 'react-native-popup-menu';
+import { Divider } from "react-native-paper";
 import UserItem from '../components/UserItem';
-import UserAddModal from "../components/UserAddModal";
+import UserAdd from "../components/UserAdd";
+import { MaterialIcons } from '@expo/vector-icons';
+
 
 const iconSize = 32;
 const list = [
@@ -92,7 +94,7 @@ const list = [
 
 class ModuleHeader extends React.Component<{ navigation: any }> {
     render() {
-        let {navigation} = this.props;
+        let { navigation } = this.props;
         return (
             <Header
                 backgroundColor='#E7E7EE'
@@ -102,32 +104,23 @@ class ModuleHeader extends React.Component<{ navigation: any }> {
                     color={'#006494'}
                     onPress={() => this.props.navigation.toggleDrawer()}
                     name={"menu"}
-                    size={iconSize}/>}
+                    size={iconSize} />}
 
-                centerComponent={{text: this.props.title, style: {fontSize: 24, color: '#006494'}}}
+                centerComponent={{ text: this.props.title, style: { fontSize: 24, color: '#006494' } }}
                 containerStyle={styles.headerContainerStyle}
                 leftComponent={
                     <IconFeather
                         onPress={() => this.props.navigation.goBack()}
                         color={'#006494'}
                         name={"chevron-left"}
-                        size={iconSize}/>
+                        size={iconSize} />
                 }
             />
         );
     }
 }
 
-class ModuleFooter extends React.Component<{ navigation: any }> {
-    constructor() {
-        super();
-        this.onPressAdd=this.onPressAdd.bind(this);
-    }
-    onPressAdd(){
-        this.refs.addModal.showModal()
-    }
-    render() {
-        let {navigation} = this.props;
+function ModuleFooter(props) {
         return (
             <Header
                 backgroundColor='#E7E7EE'
@@ -146,19 +139,18 @@ class ModuleFooter extends React.Component<{ navigation: any }> {
                                 <IconFeather
                                     color={'rgba(0,0,0,0.6)'}
                                     name={"more-vertical"}
-                                    size={iconSize}/>
-                            }/>
+                                    size={iconSize} />
+                            } />
                             <MenuOptions customStyles={optionsStyles}>
-                                <MenuOption onSelect={() => alert(`Item1`)} text='گزینه 1'/>
-                                <Divider/>
-                                <MenuOption onSelect={() => alert(`Item2`)} text='گزینه 2'/>
-                                <Divider/>
-                                <MenuOption onSelect={() => alert(`Item3`)} text='گزینه 3'/>
-                                <Divider/>
-                                <MenuOption onSelect={() => alert(`Item4`)} disabled={true} text='گزینه 4'/>
+                                <MenuOption onSelect={() => alert(`Item1`)} text='گزینه 1' />
+                                <Divider />
+                                <MenuOption onSelect={() => alert(`Item2`)} text='گزینه 2' />
+                                <Divider />
+                                <MenuOption onSelect={() => alert(`Item3`)} text='گزینه 3' />
+                                <Divider />
+                                <MenuOption onSelect={() => alert(`Item4`)} disabled={true} text='گزینه 4' />
                             </MenuOptions>
                         </Menu>
-                        <UserAddModal ref={'addModal'} parentFaltList={this}/>
                     </View>
 
 
@@ -167,48 +159,64 @@ class ModuleFooter extends React.Component<{ navigation: any }> {
                     onPress={() => alert('جستجو')}
                     color={'rgba(0,0,0,0.6)'}
                     name={"search"}
-                    size={iconSize}/>}
+                    size={iconSize} />}
 
                 leftComponent={<IconFeather
-                    onPress={() => this.onPressAdd()}
+                    onPress={props.onPressAdd}
                     color={'rgba(0,0,0,0.6)'}
                     name={"plus-circle"}
-                    size={iconSize}/>}
+                    size={iconSize} />}
 
 
             />
         );
-    }
 }
 
 class UserList extends Component {
     keyExtractor = (item, index) => index.toString();
 
-    renderItem = ({item}) => (
-            <UserItem item={item}/>
+    renderItem = ({ item }) => (
+        <UserItem item={item} />
     );
 
     render() {
         return (
-                <FlatList
+            <FlatList
                 keyExtractor={this.keyExtractor}
                 data={list}
-                renderItem={this.renderItem}/>
+                renderItem={this.renderItem} />
         )
     }
 }
 
-class Users extends Component<{ navigation: any }> {
-    render() {
-        let {navigation} = this.props;
+function Users (navigation) {
+    // let { navigation } = this.props;
+    const [modalOpen, setModalOpen] = useState(false);
+    const addItem=(item)=>{
+        item.key = Math.random().toString();
+        setReviews((currentReviews)=>{
+          return [item, ...currentReviews]
+        });
+        setModalOpen(false);
+      }
         return (
-            <View style={{display: 'flex', justifyContent: 'flex-start', flex: 1}}>
-                <ModuleHeader navigation={navigation} title='کاربران'/>
-                <UserList/>
-                <ModuleFooter navigation={navigation}/>
+            <View style={{ display: 'flex', justifyContent: 'flex-start', flex: 1 }}>
+                <Modal visible={modalOpen} animationType='slide'>
+                    <TouchableWithoutFeedback onPress={Keyboard.dismiss}><View style={styles.modalContent}>
+                        <MaterialIcons
+                            name='close'
+                            size={24}
+                            style={{ ...styles.modalToggle, ...styles.modalClose }}
+                            onPress={() => setModalOpen(false)}
+                        />
+                        <UserAdd addItem={addItem} />
+                    </View></TouchableWithoutFeedback>
+                </Modal>
+                <ModuleHeader navigation={navigation} title='کاربران' />
+                <UserList />
+                <ModuleFooter onPressAdd={()=>setModalOpen(true)} />
             </View>
         );
-    }
 }
 
 export default Users;
@@ -235,19 +243,22 @@ const optionsStyles = {
 
 const styles = StyleSheet.create({
     footerContainerStyle:
-        {
-            paddingVertical: 20,
-            alignContent: 'center',
-            justifyContent: 'center',
-            borderTopWidth: 3,
-            borderTopColor: 'rgba(0,0,0,0.2)'
-        },
+    {
+        paddingVertical: 20,
+        alignContent: 'center',
+        justifyContent: 'center',
+        borderTopWidth: 3,
+        borderTopColor: 'rgba(0,0,0,0.2)'
+    },
     headerContainerStyle:
-        {
-            paddingVertical: 20,
-            alignContent: 'center',
-            justifyContent: 'center',
-            borderBottomWidth: 3,
-            borderBottomColor: 'rgba(0,0,0,0.2)'
-        },
+    {
+        paddingVertical: 20,
+        alignContent: 'center',
+        justifyContent: 'center',
+        borderBottomWidth: 3,
+        borderBottomColor: 'rgba(0,0,0,0.2)'
+    },
+    modalContent: {
+        flex: 1,
+      },
 })

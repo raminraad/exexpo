@@ -170,7 +170,7 @@ function ModuleFooter(props) {
                             <IconFeather
                                 color={'rgba(0,0,0,0.6)'}
                                 name={"star"}
-                                size={sizeOfIcons.medium} />
+                                size={sizeOfIcons.large} />
                         } />
                         <MenuOptions customStyles={optionsStyles}>
                             <MenuOption onSelect={() => alert(`Item1`)} text='گزینه 1' />
@@ -190,13 +190,13 @@ function ModuleFooter(props) {
                 onPress={props.onPressSearch}
                 color={'rgba(0,0,0,0.6)'}
                 name={"search"}
-                size={sizeOfIcons.medium} />}
+                size={sizeOfIcons.large} />}
 
             leftComponent={<IconFeather
                 onPress={props.onPressAdd}
                 color={'rgba(0,0,0,0.6)'}
                 name={"plus-circle"}
-                size={sizeOfIcons.medium} />}
+                size={sizeOfIcons.large} />}
 
 
         />

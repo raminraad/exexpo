@@ -1,27 +1,16 @@
 import React from 'react';
-import {View, StyleSheet, TouchableHighlight} from 'react-native';
-import {
-    Avatar,
-    Title,
-    Caption,
-    Paragraph,
-    Drawer,
-    Text,
-    TouchableRipple,
-    Switch
-} from 'react-native-paper';
-import {
-    DrawerContentScrollView,
-    DrawerItem
-} from '@react-navigation/drawer';
-
+import { View, StyleSheet, TouchableHighlight } from 'react-native';
+import {Avatar,Title,Caption,Paragraph,Drawer,Text,TouchableRipple,Switch} from 'react-native-paper';
+import {DrawerContentScrollView,DrawerItem} from '@react-navigation/drawer';
 import IconCommunity from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconMaterial from 'react-native-vector-icons/MaterialIcons';
+import { globalStyles, colors, sizeOfIcons } from '../styles/global';
+
 
 // import{ AuthContext } from '../components/context';
 
 export function DrawerContent(props) {
-
+    const iconSize = sizeOfIcons.medium;
     const [isDarkTheme, setIsDarkTheme] = React.useState(false);
 
     // const { signOut } = React.useContext(AuthContext);
@@ -31,7 +20,7 @@ export function DrawerContent(props) {
     };
 
     return (
-        <View style={{flex: 1, backgroundColor: '#4f6d7a'}}>
+        <View style={{ flex: 1, backgroundColor: colors.drawerBackground ,borderLeftWidth:3,borderLeftColor:'rgba(5,5,5,0.4)'}}>
             <DrawerContentScrollView {...props}>
                 <View style={styles.drawerContent}>
                     <View style={styles.userInfoSection}>
@@ -41,7 +30,7 @@ export function DrawerContent(props) {
                             justifyContent: 'space-around',
                             alignItems: 'center'
                         }}>
-                            <View style={{marginLeft: 15, flexDirection: 'column'}}>
+                            <View style={{ marginLeft: 15, flexDirection: 'column' }}>
                                 <Title style={styles.title}>رامین راد</Title>
                                 <Caption style={styles.caption}>@raminraad</Caption>
                                 <Caption style={styles.caption}>کارشناس بازاریابی</Caption>
@@ -65,87 +54,87 @@ export function DrawerContent(props) {
                     </View>
                     <Drawer.Section style={styles.drawerSection}>
                         <TouchableHighlight underlayColor='rgba(0,0,0,0.1)' style={styles.drawerItemHighlight}
-                                            onPress={() => {
-                                                props.navigation.navigate('Home')
-                                            }}>
+                            onPress={() => {
+                                props.navigation.navigate('Home')
+                            }}>
                             <View
                                 style={styles.preference}>
                                 <Text style={styles.drawerItemLabel}>صفحه اصلی</Text>
                                 <IconCommunity style={styles.drawerItemIcon}
-                                               name="home"
-                                               size={20}/>
+                                    name="home"
+                                    size={iconSize} />
                             </View>
                         </TouchableHighlight>
                         <TouchableHighlight underlayColor='rgba(0,0,0,0.1)'
-                                            style={styles.drawerItemHighlight}
-                                            onPress={() => {
-                                                props.navigation.navigate('Profile')
-                                            }}>
+                            style={styles.drawerItemHighlight}
+                            onPress={() => {
+                                props.navigation.navigate('Profile')
+                            }}>
                             <View
                                 style={styles.preference}>
                                 <Text style={styles.drawerItemLabel}>کاربری و دسترسی</Text>
                                 <IconCommunity style={styles.drawerItemIcon}
-                                               name="shield-account"
-                                               size={20}/>
+                                    name="shield-account"
+                                    size={iconSize} />
                             </View>
                         </TouchableHighlight>
                         <TouchableHighlight underlayColor='rgba(0,0,0,0.1)'
-                                            style={styles.drawerItemHighlight}
-                                            onPress={() => {
-                                                props.navigation.navigate('Users')
-                                            }}>
+                            style={styles.drawerItemHighlight}
+                            onPress={() => {
+                                props.navigation.navigate('Users')
+                            }}>
                             <View
                                 style={styles.preference}>
                                 <Text style={styles.drawerItemLabel}>کاربران</Text>
                                 <IconCommunity style={styles.drawerItemIcon}
-                                               name="account"
-                                               size={20}/>
+                                    name="account"
+                                    size={iconSize} />
                             </View>
                         </TouchableHighlight>
                         <TouchableHighlight underlayColor='rgba(0,0,0,0.1)'
-                                            style={styles.drawerItemHighlight}
-                                            onPress={() => {
-                                                props.navigation.navigate('Order')
-                                            }}>
+                            style={styles.drawerItemHighlight}
+                            onPress={() => {
+                                props.navigation.navigate('Order')
+                            }}>
                             <View
                                 style={styles.preference}>
                                 <Text style={styles.drawerItemLabel}>عمومی</Text>
                                 <IconMaterial style={styles.drawerItemIcon}
-                                              name="public"
-                                              size={20}/>
+                                    name="public"
+                                    size={iconSize} />
                             </View>
                         </TouchableHighlight>
                         <TouchableHighlight underlayColor='rgba(0,0,0,0.1)'
-                                            style={styles.drawerItemHighlight}
-                                            onPress={() => {
-                                                props.navigation.navigate('Details')
-                                            }}>
+                            style={styles.drawerItemHighlight}
+                            onPress={() => {
+                                props.navigation.navigate('Details')
+                            }}>
                             <View
                                 style={styles.preference}>
                                 <Text style={styles.drawerItemLabel}>تنظیمات</Text>
                                 <IconMaterial style={styles.drawerItemIcon}
-                                              name="settings"
-                                              size={20}/>
+                                    name="settings"
+                                    size={iconSize} />
                             </View>
                         </TouchableHighlight>
 
                         <TouchableHighlight underlayColor='rgba(0,0,0,0.1)'
-                                            style={styles.drawerItemHighlight}
-                                            onPress={() => {
-                                                props.navigation.navigate('Login')
-                                            }}>
+                            style={styles.drawerItemHighlight}
+                            onPress={() => {
+                                props.navigation.navigate('Login')
+                            }}>
                             <View
                                 style={styles.preference}>
                                 <Text style={styles.drawerItemLabel}>خروج</Text>
                                 <IconCommunity style={styles.drawerItemIcon}
-                                               name="logout"
-                                               size={20}/>
+                                    name="logout"
+                                    size={iconSize} />
                             </View>
                         </TouchableHighlight>
 
                     </Drawer.Section>
 
-                    <Drawer.Section style={{borderTopWidth: 0.5}}>
+                    <Drawer.Section style={{ borderTopWidth: 0.5 }}>
                         <Text style={styles.sectionHeader}>وضعیت کنونی سیستم</Text>
                         <View style={styles.preference}>
                             <Text style={styles.statusLabel}>1399/02/03 14:28:11</Text>
@@ -184,18 +173,17 @@ export function DrawerContent(props) {
 const styles = StyleSheet.create({
     drawerContent: {
         flex: 1,
-        display: 'flex',
     },
     userInfoSection: {
         padding: 20,
     },
     title: {
-        color: 'rgba(255,255,255,0.8)',
-        fontSize: 22,
+        color: colors.palette.cream,
+        fontSize: 24,
         fontWeight: 'bold',
     },
     caption: {
-        color: 'rgba(255,255,255,0.6)',
+        color: colors.palette.cream,
         fontSize: 14,
         lineHeight: 14,
     },
@@ -221,21 +209,22 @@ const styles = StyleSheet.create({
     preference: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        paddingVertical: 6,
+        paddingVertical: 4,
         paddingHorizontal: 16
     },
     statusLabel: {
-        color: 'rgba(255,255,255,0.9)',
+        color: colors.palette.cream,
     },
     drawerItemLabel: {
-        color: 'rgba(255,255,255,0.9)',
-        marginRight: 15
+        color: colors.palette.cream,
+        marginRight: 15,
+        fontSize:18
     },
     drawerItemIcon: {
-        color: 'rgba(255,255,255,0.7)',
+        color: colors.drawerIcon,
     },
     sectionHeader: {
-        color: 'rgba(255,255,255,0.4)',
+        color: colors.palette.cream,
         textAlign: 'center',
         fontWeight: 'bold',
         fontSize: 22,
@@ -247,5 +236,4 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
         alignSelf: 'stretch',
     }
-
 });

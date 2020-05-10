@@ -37,7 +37,9 @@ export const colors = {
     btnOk:'#3DA5D9',
     btnCancel:'#979DAC',
     iconCollapse:'#f4afab',
-    iconExpand:'#c0c0c0'
+    iconExpand:'#c0c0c0',
+    drawerBackground:'#0f4c5c',
+    drawerIcon:'#98c1d9',
 };
 
 export const sizeOfIcons = {

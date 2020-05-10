@@ -14,7 +14,7 @@ export default class UserItem extends Component {
     };
 
     onPerss = () => {
-        this.setState((prevState, preveProps) => ({isSelected: !prevState.isSelected}));
+        this.setState((prevState, prevProps) => ({isSelected: !prevState.isSelected}));
     };
 
     renderDetails = () => (
@@ -29,7 +29,7 @@ export default class UserItem extends Component {
                 <Icon
                     reverse
                     name="trash"
-                    onPress={() => alert('حذف آیتم')}
+                    onPress={() => this.props.onDelete(this.props.item.key)}
                     type='font-awesome'
                     size={sizeOfIcons.small}
                     color={colors.btnDelete}

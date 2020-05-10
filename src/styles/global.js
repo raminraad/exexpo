@@ -12,7 +12,7 @@ export const globalStyles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    padding: 20,
+    padding: 40,
   },
   input:{
     borderWidth:1,

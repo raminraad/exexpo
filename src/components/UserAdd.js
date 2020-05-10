@@ -30,7 +30,6 @@ export default function UserAdd({ onSubmit,onCancel }) {
                                 value={props.values.body}
                             />
                             <TextInput
-                                keyboardType='numeric'
                                 style={globalStyles.input}
                                 placeholder='سمت'
                                 onChangeText={props.handleChange('jobTitle')}

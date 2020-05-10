@@ -82,7 +82,7 @@ const styles = StyleSheet.create(
             alignItems: 'center',
             backgroundColor: 'white',
             marginHorizontal: 10,
-            marginTop: 10,
+            marginTop: 5,
             borderRadius: 5
         },
         detailsContainer: {

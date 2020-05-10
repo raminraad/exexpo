@@ -53,7 +53,7 @@ export default class UserItem extends Component {
                     <TouchableWithoutFeedback onPress={this.onPerss}>
                         <View style={styles.container}>
                             <ListItem subtitle={this.props.item.jobTitle}
-                                      title={this.props.item.fullname}
+                                    title = {`${this.props.item.fName} ${this.props.item.lName}`}
                                       rightAvatar={{source: {uri: this.props.item.avatar_url}, size: 48}}
                                       style={{flex: 0.99, marginVertical: 0, padding: 0}}/>
                             <Icon

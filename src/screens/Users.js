@@ -8,87 +8,101 @@ import UserItem from '../components/UserItem';
 import UserAdd from "../components/UserAdd";
 import { MaterialIcons } from '@expo/vector-icons';
 
-
 const iconSize = 32;
-const list = [
+const userList = [
     {
         jobTitle: 'مدیر فروش',
         avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/krystalfister/128.jpg',
-        fullname: 'ارغوان صدرعاملی',
+        fName:'ارغوان',
+        lName:'صدرعاملی',
         description: 'دارای سابقه کاری در زمینه فروش مواد غذایی و قطعات کامپیوتر'
     },
     {
         jobTitle: 'رئیس انتظامات',
         avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/joshuasortino/128.jpg',
-        fullname: 'عباس کردنوری',
+        fName:'عباس',
+        lName:'فکوری',
         description: 'مشغول بکار بصورت آزمایشی'
     },
     {
         jobTitle: 'کارشناس فنی',
         avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/flexrs/128.jpg',
-        fullname: 'نادر فریادشیران',
+        fName:'نادر',
+        lName:'فریادشیران',
         description: 'فوق لیسانس صنایع از دانشگاه صنعتی شریف'
     },
     {
         jobTitle: 'مدیر تحقیق و توسعه',
         avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/funwatercat/128.jpg',
-        fullname: 'کاظم اولیایی',
+        fName:'کاظم',
+        lName:'اولیایی',        
         description: 'با سابقه 15 ساله در زمینه تولید مواد شوینده و بهداشتی'
     },
     {
         jobTitle: 'پشتیبانی فروش',
         avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/g1sh/128.jpg',
-        fullname: 'رضا افتخاری'
+        fName:'رضا ',
+        lName:'افتخاری',        
     },
     {
         jobTitle: 'رئیس حسابداری',
         avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/jefffis/128.jpg',
-        fullname: 'ایران امیررضا واعظی آشتیانی'
+        fName:'امیررضا',
+        lName:'آشتیانی',        
     },
     {
         jobTitle: 'معاون توسعه مدیریت و منابع',
         avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/HenryHoffman/128.jpg',
-        fullname: 'امیر حسن زرنانی'
+        fName:'امیر',
+        lName:'زهیرنیا',        
     },
     {
         jobTitle: 'دبیر هیات عالی نظارت',
         avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/SlaapMe/128.jpg',
-        fullname: 'فاضل شکری'
+        fName:'فاضل',
+        lName:'شریفی نیا',        
     },
     {
         jobTitle: 'عضو هيأت‌عامل',
         avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/RussellBishop/128.jpg',
-        fullname: 'سید علیرضا رضوی'
+        fName:'شهرام ',
+        lName:'فراهانی',        
     },
     {
         jobTitle: 'قائم مقام و عضو هيأت‌عامل',
         avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/SULiik/128.jpg',
-        fullname: 'علی اکبر صبور یراقی'
+        fName:'علی ',
+        lName:'بختیاری',        
     },
     {
         jobTitle: 'مدیر ارشد حسابرسی',
         avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/jennyshen/128.jpg',
-        fullname: 'فروغ گلساز شیرازی'
+        fName:'فروغ',
+        lName:'هویدا',        
     },
     {
         jobTitle: 'مدیر ارشد مجله حسابرس',
         avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/michzen/128.jpg',
-        fullname: 'محمد مهدی امیری'
+        fName:'محمد',
+        lName:'مصباح',        
     },
     {
         jobTitle: 'معاون فنی',
         avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/9lessons/128.jpg',
-        fullname: 'محمد رضا پورمند'
+        fName:'محمد',
+        lName:'فرخنده زاد',        
     },
     {
         jobTitle: 'معاون مالی',
         avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/AM_Kn2/128.jpg',
-        fullname: 'محمد مهدی سلطان دلال'
+        fName:'پرهام',
+        lName:'نزاکت',        
     },
     {
         jobTitle: 'معاون برنامه ریزی',
         avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/IsaryAmairani/128.jpg',
-        fullname: 'معصومه دورقی'
+        fName:'رزا',
+        lName:'هادی نیا',        
     },
 ];
 
@@ -110,7 +124,7 @@ class ModuleHeader extends React.Component<{ navigation: any }> {
                 containerStyle={styles.headerContainerStyle}
                 leftComponent={
                     <IconFeather
-                        onPress={() => this.props.navigation.goBack()}
+                        onPress={() => navigation.goBack()}
                         color={'#006494'}
                         name={"chevron-left"}
                         size={iconSize} />
@@ -172,48 +186,34 @@ function ModuleFooter(props) {
         );
 }
 
-class UserList extends Component {
-    keyExtractor = (item, index) => index.toString();
-
-    renderItem = ({ item }) => (
-        <UserItem item={item} />
-    );
-
-    render() {
-        return (
-            <FlatList
-                keyExtractor={this.keyExtractor}
-                data={list}
-                renderItem={this.renderItem} />
-        )
-    }
-}
-
-function Users (navigation) {
+function Users (props) {
     // let { navigation } = this.props;
     const [modalOpen, setModalOpen] = useState(false);
+    const [items, setItems] = useState(userList)
     const addItem=(item)=>{
         item.key = Math.random().toString();
-        setReviews((currentReviews)=>{
-          return [item, ...currentReviews]
+        setItems((currentItems)=>{
+            return [item, ...currentItems]
         });
         setModalOpen(false);
-      }
+    }
+    const keyExtractor = (item, index) => index.toString();
+
+    const renderItem = ({ item }) => (
+        <UserItem item={item} />
+    );
         return (
             <View style={{ display: 'flex', justifyContent: 'flex-start', flex: 1 }}>
                 <Modal visible={modalOpen} animationType='slide'>
                     <TouchableWithoutFeedback onPress={Keyboard.dismiss}><View style={styles.modalContent}>
-                        <MaterialIcons
-                            name='close'
-                            size={24}
-                            style={{ ...styles.modalToggle, ...styles.modalClose }}
-                            onPress={() => setModalOpen(false)}
-                        />
-                        <UserAdd addItem={addItem} />
+                        <UserAdd onSubmit={addItem} onCancel={()=>setModalOpen(false)}/>
                     </View></TouchableWithoutFeedback>
                 </Modal>
-                <ModuleHeader navigation={navigation} title='کاربران' />
-                <UserList />
+                <ModuleHeader navigation={props.navigation} title='کاربران' />
+                <FlatList
+                keyExtractor={keyExtractor}
+                data={items}
+                renderItem={renderItem} />
                 <ModuleFooter onPressAdd={()=>setModalOpen(true)} />
             </View>
         );

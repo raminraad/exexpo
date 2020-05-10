@@ -25,8 +25,24 @@ export const globalStyles = StyleSheet.create({
 });
 
 export const colors = {
+  palette:{
+    seaGreen:'#2a9d8f',
+    paleGray:'#e5e5e5',
+    cream:'#F1FAEE',
+    coal:'#111111',
+  },
     btnAdd:'#00C49A',
-    btnDelete:'#F02D3A',
+    btnDelete:'#e55934',
+    btnUpdate:'#3DA5D9',
     btnOk:'#3DA5D9',
-    btnCancel:'#A0A0A0'
+    btnCancel:'#979DAC',
+    iconCollapse:'#f4afab',
+    iconExpand:'#c0c0c0'
+};
+
+export const sizeOfIcons = {
+  small:16,
+  medium:24,
+  large:32,
+  xLarge:48
 };

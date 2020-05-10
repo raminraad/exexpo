@@ -7,8 +7,10 @@ import { Divider } from "react-native-paper";
 import UserItem from '../components/UserItem';
 import UserAdd from "../components/UserAdd";
 import { MaterialIcons } from '@expo/vector-icons';
+import { globalStyles, colors ,sizeOfIcons } from '../styles/global';
 
-const iconSize = 32;
+
+
 const userList = [
     {
         jobTitle: 'مدیر فروش',
@@ -118,7 +120,7 @@ class ModuleHeader extends React.Component<{ navigation: any }> {
                     color={'#006494'}
                     onPress={() => this.props.navigation.toggleDrawer()}
                     name={"menu"}
-                    size={iconSize} />}
+                    size={sizeOfIcons.medium} />}
 
                 centerComponent={{ text: this.props.title, style: { fontSize: 24, color: '#006494' } }}
                 containerStyle={styles.headerContainerStyle}
@@ -127,7 +129,7 @@ class ModuleHeader extends React.Component<{ navigation: any }> {
                         onPress={() => navigation.goBack()}
                         color={'#006494'}
                         name={"chevron-left"}
-                        size={iconSize} />
+                        size={sizeOfIcons.medium} />
                 }
             />
         );
@@ -152,8 +154,8 @@ function ModuleFooter(props) {
                             <MenuTrigger children={
                                 <IconFeather
                                     color={'rgba(0,0,0,0.6)'}
-                                    name={"more-vertical"}
-                                    size={iconSize} />
+                                    name={"star"}
+                                    size={sizeOfIcons.medium} />
                             } />
                             <MenuOptions customStyles={optionsStyles}>
                                 <MenuOption onSelect={() => alert(`Item1`)} text='گزینه 1' />
@@ -173,13 +175,13 @@ function ModuleFooter(props) {
                     onPress={() => alert('جستجو')}
                     color={'rgba(0,0,0,0.6)'}
                     name={"search"}
-                    size={iconSize} />}
+                    size={sizeOfIcons.medium} />}
 
                 leftComponent={<IconFeather
                     onPress={props.onPressAdd}
                     color={'rgba(0,0,0,0.6)'}
                     name={"plus-circle"}
-                    size={iconSize} />}
+                    size={sizeOfIcons.medium} />}
 
 
             />
@@ -245,9 +247,8 @@ const styles = StyleSheet.create({
     footerContainerStyle:
     {
         paddingVertical: 20,
-        alignContent: 'center',
-        justifyContent: 'center',
         borderTopWidth: 3,
+        paddingHorizontal:90,
         borderTopColor: 'rgba(0,0,0,0.2)'
     },
     headerContainerStyle:

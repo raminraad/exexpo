@@ -5,6 +5,8 @@ import {TouchableWithoutFeedback} from "react-native-gesture-handler";
 import IconFeather from 'react-native-vector-icons/Feather';
 import {Icon} from 'react-native-elements';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
+import { globalStyles, colors ,sizeOfIcons } from '../styles/global';
+
 
 export default class UserItem extends Component {
     state = {
@@ -29,16 +31,16 @@ export default class UserItem extends Component {
                     name="trash"
                     onPress={() => alert('حذف آیتم')}
                     type='font-awesome'
-                    size={32}
-                    color='#FE5F55'
+                    size={sizeOfIcons.small}
+                    color={colors.btnDelete}
                 />
                 <Icon
                     reverse
                     name="edit"
                     onPress={() => alert('ویرایش آیتم')}
                     type='font-awesome'
-                    size={32}
-                    color='#577399'
+                    size={sizeOfIcons.small}
+                    color={colors.btnUpdate}
                 />
 
             </View>
@@ -61,7 +63,7 @@ export default class UserItem extends Component {
                                 name={isSelected ? "chevron-up" : "chevron-down"}
                                 type='font-awesome'
                                 size={12}
-                                color={isSelected ? '#EE6C4D' : '#979DAC'}
+                                color={isSelected ? colors.iconCollapse : colors.iconExpand}
                             />
                         </View>
                     </TouchableWithoutFeedback>
@@ -87,20 +89,19 @@ const styles = StyleSheet.create(
             flexDirection: 'row-reverse',
             justifyContent: 'flex-start',
             alignItems: 'center',
-            backgroundColor: '#2a9d8f',
+            backgroundColor: colors.palette.paleGray,
             marginHorizontal: 10,
             marginTop: 0,
             padding: 15,
             borderRadius: 5
         },
         detailsText: {
-            fontSize: 16,
+            fontSize: 18,
             textAlign: 'right',
             paddingHorizontal: 35,
-            color: '#EDF2F4'
+            color: colors.palette.coal,
         },
         leftAction: {
-            justifyContent: 'center',
             alignItems:'center',
             flexDirection:'row',
             marginTop: 10,

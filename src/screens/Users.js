@@ -8,7 +8,9 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-// import { Header } from "react-native-elements";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import IconFeather from "react-native-vector-icons/Feather";
 import {
   Menu,
@@ -160,43 +162,10 @@ const userList = [
   },
 ];
 
-class ModuleHeader extends React.Component<{ navigation: any }> {
-  render() {
-    let { navigation } = this.props;
-    return (
-      <Header
-        backgroundColor="#E7E7EE"
-        //todo: replace paddingVertical with centering vertically
-        placement="center"
-        rightComponent={
-          <IconFeather
-            color={"#006494"}
-            onPress={() => this.props.navigation.toggleDrawer()}
-            name={"menu"}
-            size={sizeOfIcons.medium}
-          />
-        }
-        centerComponent={{
-          text: this.props.title,
-          style: { fontSize: 24, color: "#006494" },
-        }}
-        containerStyle={styles.headerContainerStyle}
-        leftComponent={
-          <IconFeather
-            onPress={() => navigation.goBack()}
-            color={"#006494"}
-            name={"chevron-left"}
-            size={sizeOfIcons.medium}
-          />
-        }
-      />
-    );
-  }
-}
-
 function Users(props) {
   const [addModalOpen, setAddModalOpen] = useState(false);
-  const [searchModalOpen, setSearchModalOpen] = useState(false);
+  const [isAdvancedSearchOpen, setIsAdvancedSearchModalOpen] = useState(false);
+  const [isInstantSearchOpen, setIsInstantSearchModalOpen] = useState(false);
   const [items, setItems] = useState(userList);
   const addItem = (item) => {
     item.key = Math.random().toString();
@@ -211,7 +180,7 @@ function Users(props) {
     setItems([...items]);
   };
 
-  const search = (item) => {
+  const performAdvancedSearch = (item) => {
     //todo: separate main list and view list
     setItems(userList);
     setItems((currentItems) => {
@@ -224,13 +193,103 @@ function Users(props) {
             String(c.description).includes(item.description))
       );
     });
-    setSearchModalOpen(false);
+    setIsAdvancedSearchModalOpen(false);
   };
+  const performInstantSearch = (keyword) => {
+    //todo: separate main list and view list
+    setItems(userList);
+    setItems((currentItems) => {
+      return currentItems.filter(
+        (c) =>
+        !keyword ||
+        ( String(c.fName).includes(keyword)) ||
+        ( String(c.lName).includes(keyword)) ||
+        ( String(c.jobTitle).includes(keyword)) ||
+        ( String(c.description).includes(keyword))
+        );
+      });
+      console.log(`${keyword} => ${userList.length} => ${items.length}`)
+  };
+
   const keyExtractor = (item, index) => item.key.toString();
 
   const renderItem = ({ item }) => (
     <UserItem item={item} onDelete={deleteItem} />
   );
+  const renderHeader = () => {
+    if (isInstantSearchOpen) {
+      return (
+        <Header searchBar rounded>
+          <Left style={{ flex: 1 }}>
+            <Button
+              transparent
+              onPress={() => setIsInstantSearchModalOpen(false)}
+            >
+              <Icon name={"arrow-back"} />
+            </Button>
+          </Left>
+          <Item style={{ flex: 10 }}>
+            <Input
+              placeholder="جستجو"
+              autoCorrect={false}
+              autoFocus={true}
+              maxLength={140}
+              onChangeText={(text)=>performInstantSearch(text)}
+            />
+            <Icon name={"ios-search"} />
+          </Item>
+          <Right style={{ flex: 1 }}>
+            <Button
+              transparent
+              onPress={() => {
+                setIsInstantSearchModalOpen(false);
+                setIsAdvancedSearchModalOpen(true);
+              }}
+            >
+              <MaterialCommunityIcons
+                name="table-search"
+                size={sizeOfIcons.medium}
+                color="white"
+              />
+            </Button>
+          </Right>
+        </Header>
+      );
+    } else {
+      return (
+        <Header>
+          <Left>
+            <Button transparent>
+              <Ionicons
+                name="ios-arrow-back"
+                size={sizeOfIcons.medium}
+                color="white"
+                onPress={() => props.navigation.goBack()}
+              />
+            </Button>
+          </Left>
+          <Body
+            style={{
+              flexDirection: "row-reverse",
+              justifyContent: "center",
+              paddingRight: 100,
+            }}
+          >
+            {/* todo: remove upper Body style after finding out why the fucking title in not being centered! */}
+            <Title>کـــــاربـــــران</Title>
+          </Body>
+          <Right>
+            <Button transparent>
+              <Icon
+                name="menu"
+                onPress={() => props.navigation.toggleDrawer()}
+              />
+            </Button>
+          </Right>
+        </Header>
+      );
+    }
+  };
   return (
     <Container>
       <Modal visible={addModalOpen} animationType="slide">
@@ -243,49 +302,17 @@ function Users(props) {
           </View>
         </TouchableWithoutFeedback>
       </Modal>
-      <Modal visible={searchModalOpen} animationType="slide">
+      <Modal visible={isAdvancedSearchOpen} animationType="slide">
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.modalContent}>
             <UserAdd
-              onSubmit={search}
-              onCancel={() => setSearchModalOpen(false)}
+              onSubmit={performAdvancedSearch}
+              onCancel={() => setIsAdvancedSearchModalOpen(false)}
             />
           </View>
         </TouchableWithoutFeedback>
       </Modal>
-
-      <Header>
-        <Left>
-          <Button transparent>
-            <Icon name="arrow-back" onPress={() => props.navigation.goBack()} />
-          </Button>
-        </Left>
-        <Body
-          style={{
-            flexDirection: "row-reverse",
-            justifyContent: "center",
-            paddingRight: 100,
-          }}
-        >
-          {/* todo: remove upper Body style after finding out why the fucking title in not being centered! */}
-          <Title>کـــــاربـــــران</Title>
-        </Body>
-        <Right>
-          <Button transparent>
-            <Icon name="menu" onPress={() => props.navigation.toggleDrawer()} />
-          </Button>
-        </Right>
-      </Header>
-      <Header searchBar rounded>
-        <Item>
-          <Icon name="ios-search" />
-          <Input placeholder="Search" />
-          <Icon name="ios-people" />
-        </Item>
-        <Button transparent>
-          <Text>Search</Text>
-        </Button>
-      </Header>
+      {renderHeader()}
       <FlatList
         keyExtractor={keyExtractor}
         data={items}
@@ -302,7 +329,7 @@ function Users(props) {
           </Button>
         </FooterTab>
         <FooterTab>
-          <Button onPress={() => setSearchModalOpen(true)}>
+          <Button onPress={() => setIsInstantSearchModalOpen(true)}>
             <IconFeather
               name="search"
               size={sizeOfIcons.large}

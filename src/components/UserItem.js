@@ -83,7 +83,9 @@ const styles = StyleSheet.create(
             backgroundColor: 'white',
             marginHorizontal: 10,
             marginTop: 5,
-            borderRadius: 5
+            borderRadius: 15,
+            borderColor:'rgba(3,3,3,0.5)',
+            borderWidth:0.5
         },
         detailsContainer: {
             flexDirection: 'row-reverse',

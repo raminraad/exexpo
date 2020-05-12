@@ -8,13 +8,40 @@ import SignUp from "./src/screens/SignUp";
 import {createDrawerNavigator} from "@react-navigation/drawer";
 import {MenuProvider} from 'react-native-popup-menu';
 import {HomeDrawerScreen} from "./src/screens/HomeDrawerScreen";
-
+import { AppLoading } from 'expo';
+import { Container, Text } from 'native-base';
+import * as Font from 'expo-font';
+import { Ionicons } from '@expo/vector-icons';
 
 const LoginStack = createStackNavigator();
 
-function App() {
-    return (
-        <MenuProvider>
+
+
+export default class App extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = {
+        isReady: false,
+      };
+    }
+  
+    async componentDidMount() {
+      await Font.loadAsync({
+        Roboto: require('native-base/Fonts/Roboto.ttf'),
+        Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf'),
+        ...Ionicons.font,
+      });
+      this.setState({ isReady: true });
+    }
+  
+    render() {
+      if (!this.state.isReady) {
+        return <AppLoading />;
+      }
+  
+      return (
+        <Container>
+          <MenuProvider>
             <NavigationContainer>
                 <LoginStack.Navigator initialRouteName="Login" screenOptions={{
                     headerShown: false,
@@ -32,7 +59,7 @@ function App() {
                 </LoginStack.Navigator>
             </NavigationContainer>
         </MenuProvider>
-    );
-}
-
-export default App;
+        </Container>
+      );
+    }
+  }

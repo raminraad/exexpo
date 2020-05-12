@@ -208,7 +208,7 @@ function Users(props) {
         ( String(c.description).includes(keyword))
         );
       });
-      console.log(`${keyword} => ${userList.length} => ${items.length}`)
+      // console.log(`${keyword} => ${userList.length} => ${items.length}`)
   };
 
   const keyExtractor = (item, index) => item.key.toString();

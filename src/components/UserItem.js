@@ -37,6 +37,7 @@ export default class UserItem extends Component {
                 <Icon
                     reverse
                     name="edit"
+                    // todo: implement update functionality
                     onPress={() => alert('ویرایش آیتم')}
                     type='font-awesome'
                     size={sizeOfIcons.small}

@@ -4,13 +4,13 @@ import {Avatar,Title,Caption,Paragraph,Drawer,Text,TouchableRipple,Switch} from 
 import {DrawerContentScrollView,DrawerItem} from '@react-navigation/drawer';
 import IconCommunity from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconMaterial from 'react-native-vector-icons/MaterialIcons';
-import { globalStyles, colors, sizeOfIcons } from '../styles/global';
+import { globalStyles, globalColors, globalSizes } from '../styles/global';
 
 
 // import{ AuthContext } from '../components/context';
 
 export function DrawerContent(props) {
-    const iconSize = sizeOfIcons.medium;
+    const iconSize = globalSizes.icons.medium;
     const [isDarkTheme, setIsDarkTheme] = React.useState(false);
 
     // const { signOut } = React.useContext(AuthContext);
@@ -20,7 +20,7 @@ export function DrawerContent(props) {
     };
 
     return (
-        <View style={{ flex: 1, backgroundColor: colors.drawerBackground ,borderLeftWidth:3,borderLeftColor:'rgba(5,5,5,0.4)'}}>
+        <View style={{ flex: 1, backgroundColor: globalColors.drawerBackground ,borderLeftWidth:3,borderLeftColor:'rgba(5,5,5,0.4)'}}>
             <DrawerContentScrollView {...props}>
                 <View style={styles.drawerContent}>
                     <View style={styles.userInfoSection}>
@@ -178,12 +178,12 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     title: {
-        color: colors.palette.cream,
+        color: globalColors.palette.cream,
         fontSize: 24,
         fontWeight: 'bold',
     },
     caption: {
-        color: colors.palette.cream,
+        color: globalColors.palette.cream,
         fontSize: 14,
         lineHeight: 14,
     },
@@ -213,18 +213,18 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16
     },
     statusLabel: {
-        color: colors.palette.cream,
+        color: globalColors.palette.cream,
     },
     drawerItemLabel: {
-        color: colors.palette.cream,
+        color: globalColors.palette.cream,
         marginRight: 15,
         fontSize:18
     },
     drawerItemIcon: {
-        color: colors.drawerIcon,
+        color: globalColors.drawerIcon,
     },
     sectionHeader: {
-        color: colors.palette.cream,
+        color: globalColors.palette.cream,
         textAlign: 'center',
         fontWeight: 'bold',
         fontSize: 22,

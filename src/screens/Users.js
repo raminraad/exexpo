@@ -22,7 +22,7 @@ import { Divider } from "react-native-paper";
 import UserItem from "../components/UserItem";
 import UserForm from "../components/UserForm";
 import { MaterialIcons } from "@expo/vector-icons";
-import { globalStyles, colors, sizeOfIcons } from "../styles/global";
+import { globalStyles, globalColors, globalSizes } from "../styles/global";
 import {
   Container,
   Header,
@@ -164,7 +164,10 @@ const userList = [
 
 function Users(props) {
   const [addModalOpen, setAddModalOpen] = useState(false);
-  const [editModalOpen, setEditModalOpen] = useState({isOpen:false,item:null});
+  const [editModalOpen, setEditModalOpen] = useState({
+    isOpen: false,
+    item: null,
+  });
   const [isAdvancedSearchOpen, setIsAdvancedSearchModalOpen] = useState(false);
   const [isInstantSearchOpen, setIsInstantSearchModalOpen] = useState(false);
   const [items, setItems] = useState(userList);
@@ -176,10 +179,8 @@ function Users(props) {
     setAddModalOpen(false);
   };
   const updateItem = (item) => {
-    // console.log((item.key));
-    // console.log(items.find(i=>i.key==item.key));
-    items[items.findIndex(i=>i.key==item.key)]=item;
-    setEditModalOpen({isOpen:false,item:null});
+    items[items.findIndex((i) => i.key == item.key)] = item;
+    setEditModalOpen({ isOpen: false, item: null });
   };
   const deleteItem = (itemKey) => {
     const index = items.findIndex((i) => i.key === itemKey);
@@ -221,7 +222,11 @@ function Users(props) {
   const keyExtractor = (item, index) => item.key.toString();
 
   const renderItem = ({ item }) => (
-    <UserItem item={item} onDelete={deleteItem} onEdit={()=>setEditModalOpen({isOpen:true,item:item})}/>
+    <UserItem
+      item={item}
+      onDelete={deleteItem}
+      onEdit={() => setEditModalOpen({ isOpen: true, item: item })}
+    />
   );
   const renderHeader = () => {
     if (isInstantSearchOpen) {
@@ -255,7 +260,7 @@ function Users(props) {
             >
               <MaterialCommunityIcons
                 name="table-search"
-                size={sizeOfIcons.medium}
+                size={globalSizes.icons.medium}
                 color="white"
               />
             </Button>
@@ -269,7 +274,7 @@ function Users(props) {
             <Button transparent>
               <Ionicons
                 name="ios-arrow-back"
-                size={sizeOfIcons.medium}
+                size={globalSizes.icons.medium}
                 color="white"
                 onPress={() => props.navigation.goBack()}
               />
@@ -314,8 +319,8 @@ function Users(props) {
           <View style={styles.modalContent}>
             <UserForm
               onSubmit={updateItem}
-              onCancel={() => setEditModalOpen({isOpen:false})}
-              item={editModalOpen.item} 
+              onCancel={() => setEditModalOpen({ isOpen: false })}
+              item={editModalOpen.item}
             />
           </View>
         </TouchableWithoutFeedback>
@@ -341,8 +346,8 @@ function Users(props) {
           <Button onPress={() => setAddModalOpen(true)}>
             <IconFeather
               name="plus-circle"
-              size={sizeOfIcons.large}
-              color={colors.palette.cream}
+              size={globalSizes.icons.large}
+              color={globalColors.palette.cream}
             />
           </Button>
         </FooterTab>
@@ -350,8 +355,8 @@ function Users(props) {
           <Button onPress={() => setIsInstantSearchModalOpen(true)}>
             <IconFeather
               name="search"
-              size={sizeOfIcons.large}
-              color={colors.palette.cream}
+              size={globalSizes.icons.large}
+              color={globalColors.palette.cream}
             />
           </Button>
         </FooterTab>
@@ -360,9 +365,9 @@ function Users(props) {
             <MenuTrigger
               children={
                 <IconFeather
-                  color={colors.palette.cream}
+                  color={globalColors.palette.cream}
                   name={"star"}
-                  size={sizeOfIcons.large}
+                  size={globalSizes.icons.large}
                 />
               }
             />

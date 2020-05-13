@@ -22,9 +22,27 @@ export const globalStyles = StyleSheet.create({
     borderRadius:6,
     marginBottom:15
   },
+  CircleShapeView: {
+    justifyContent:'center',
+    alignItems:'center',
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+},
+
+OvalShapeView: {
+  marginTop: 20,
+  width: 100,
+  height: 100,
+  backgroundColor: '#00BCD4',
+  borderRadius: 50,
+  transform: [
+    {scaleX: 2}
+  ]
+},
 });
 
-export const colors = {
+export const globalColors = {
   palette:{
     seaGreen:'#2a9d8f',
     paleGray:'#e5e5e5',
@@ -40,11 +58,19 @@ export const colors = {
     iconExpand:'#c0c0c0',
     drawerBackground:'#0f4c5c',
     drawerIcon:'#98c1d9',
+    homeBackground:'#292f36',
+    homeIconBackground:'#007ea7',
+    homeIcon:'#F1FAEE',
+    homeIconText:'#F1FAEE',
+    homeSectionHeader:'#F1FAEE',
+
 };
 
-export const sizeOfIcons = {
-  small:16,
-  medium:24,
-  large:32,
-  xLarge:48
-};
+export const globalSizes = {
+  icons : {
+    small:16,
+    medium:24,
+    large:32,
+    xLarge:48
+  },
+}

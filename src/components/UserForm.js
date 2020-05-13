@@ -9,7 +9,7 @@ import {
   TextInput,
   Button,
 } from "react-native";
-import { globalStyles, colors } from "../styles/global";
+import { globalStyles, colors, globalColors } from "../styles/global";
 import { Formik } from "formik";
 
 export default function UserForm({ onSubmit, onCancel, item }) {
@@ -60,13 +60,13 @@ export default function UserForm({ onSubmit, onCancel, item }) {
             />
             <Button
               title="تأیید"
-              color={colors.btnAdd}
+              color={globalColors.btnAdd}
               onPress={props.handleSubmit}
             />
             <View style={{ height: 15 }} />
             <Button
               title="انصراف"
-              color={colors.btnCancel}
+              color={globalColors.btnCancel}
               onPress={onCancel}
             />
           </View>

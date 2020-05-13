@@ -38,7 +38,7 @@ export default class UserItem extends Component {
                     reverse
                     name="edit"
                     // todo: implement update functionality
-                    onPress={() => alert('ویرایش آیتم')}
+                    onPress={() => this.props.onEdit(this.props.item.key)}
                     type='font-awesome'
                     size={sizeOfIcons.small}
                     color={colors.btnUpdate}

@@ -20,7 +20,7 @@ import {
 } from "react-native-popup-menu";
 import { Divider } from "react-native-paper";
 import UserItem from "../components/UserItem";
-import UserAdd from "../components/UserAdd";
+import UserForm from "../components/UserForm";
 import { MaterialIcons } from "@expo/vector-icons";
 import { globalStyles, colors, sizeOfIcons } from "../styles/global";
 import {
@@ -164,6 +164,7 @@ const userList = [
 
 function Users(props) {
   const [addModalOpen, setAddModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState({isOpen:false,item:null});
   const [isAdvancedSearchOpen, setIsAdvancedSearchModalOpen] = useState(false);
   const [isInstantSearchOpen, setIsInstantSearchModalOpen] = useState(false);
   const [items, setItems] = useState(userList);
@@ -173,6 +174,12 @@ function Users(props) {
       return [item, ...currentItems];
     });
     setAddModalOpen(false);
+  };
+  const updateItem = (item) => {
+    // console.log((item.key));
+    // console.log(items.find(i=>i.key==item.key));
+    items[items.findIndex(i=>i.key==item.key)]=item;
+    setEditModalOpen({isOpen:false,item:null});
   };
   const deleteItem = (itemKey) => {
     const index = items.findIndex((i) => i.key === itemKey);
@@ -201,20 +208,20 @@ function Users(props) {
     setItems((currentItems) => {
       return currentItems.filter(
         (c) =>
-        !keyword ||
-        ( String(c.fName).includes(keyword)) ||
-        ( String(c.lName).includes(keyword)) ||
-        ( String(c.jobTitle).includes(keyword)) ||
-        ( String(c.description).includes(keyword))
-        );
-      });
-      // console.log(`${keyword} => ${userList.length} => ${items.length}`)
+          !keyword ||
+          String(c.fName).includes(keyword) ||
+          String(c.lName).includes(keyword) ||
+          String(c.jobTitle).includes(keyword) ||
+          String(c.description).includes(keyword)
+      );
+    });
+    // console.log(`${keyword} => ${userList.length} => ${items.length}`)
   };
 
   const keyExtractor = (item, index) => item.key.toString();
 
   const renderItem = ({ item }) => (
-    <UserItem item={item} onDelete={deleteItem} />
+    <UserItem item={item} onDelete={deleteItem} onEdit={()=>setEditModalOpen({isOpen:true,item:item})}/>
   );
   const renderHeader = () => {
     if (isInstantSearchOpen) {
@@ -234,7 +241,7 @@ function Users(props) {
               autoCorrect={false}
               autoFocus={true}
               maxLength={140}
-              onChangeText={(text)=>performInstantSearch(text)}
+              onChangeText={(text) => performInstantSearch(text)}
             />
             <Icon name={"ios-search"} />
           </Item>
@@ -295,9 +302,20 @@ function Users(props) {
       <Modal visible={addModalOpen} animationType="slide">
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.modalContent}>
-            <UserAdd
+            <UserForm
               onSubmit={addItem}
               onCancel={() => setAddModalOpen(false)}
+            />
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+      <Modal visible={editModalOpen.isOpen} animationType="slide">
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={styles.modalContent}>
+            <UserForm
+              onSubmit={updateItem}
+              onCancel={() => setEditModalOpen({isOpen:false})}
+              item={editModalOpen.item} 
             />
           </View>
         </TouchableWithoutFeedback>
@@ -305,7 +323,7 @@ function Users(props) {
       <Modal visible={isAdvancedSearchOpen} animationType="slide">
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.modalContent}>
-            <UserAdd
+            <UserForm
               onSubmit={performAdvancedSearch}
               onCancel={() => setIsAdvancedSearchModalOpen(false)}
             />

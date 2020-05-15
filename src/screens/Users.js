@@ -162,7 +162,7 @@ const userList = [
   },
 ];
 
-function Users(props) {
+export default function Users(props) {
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState({
     isOpen: false,
@@ -390,8 +390,6 @@ function Users(props) {
     </Container>
   );
 }
-
-export default Users;
 
 const optionsStyles = {
   optionsContainer: {

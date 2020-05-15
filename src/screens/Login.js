@@ -1,4 +1,4 @@
-import React, { Component, useState , useRef } from "react";
+import React, { Component, useState, useRef } from "react";
 import {
   StyleSheet,
   Text,
@@ -6,12 +6,16 @@ import {
   TextInput,
   TouchableOpacity,
   KeyboardAvoidingView,
+  ActivityIndicator,
 } from "react-native";
 import Logo from "../components/Logo";
 import { StackActions } from "@react-navigation/native";
+import { globalColors } from "../styles/global";
 
 export default function Login({ navigation }) {
   const [message, setMessage] = useState("");
+  const [isLoading, setLoading] = useState(false);
+
   const passwordRef = useRef(null);
   const usernameRef = useRef(null);
   let userInfo = {
@@ -20,12 +24,24 @@ export default function Login({ navigation }) {
   };
 
   const submit = () => {
+    setMessage("لطفاً صبر کنید..");
+    setLoading(true);
+    fetch("http://audit.mazmaz.net/Api/WebApi.asmx/Authenticate", {
+      userName: "offline",
+      passPhrase: "offline123",
+      iMEI: "64564646465465454",
+    })
+      .then((response) => console.log(response.json()))
+      .then((json) => setMessage("Success"))
+      .catch((error) => console.log(error))
+      .finally(() => setLoading(false));
+
     //todo: replace with web service call
     // if (this.state.username.toLowerCase() === 'raad' && this.state.password === '11')
-    if (true) {
-      gotoHome();
-      setMessage("");
-    } else setMessage("Wrong pass");
+    // if (true) {
+    // gotoHome();
+    // setMessage("");
+    // } else setMessage("Wrong pass");
   };
 
   const gotoSignUp = () => {
@@ -39,33 +55,40 @@ export default function Login({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <View style={{ flex: 2, justifyContent: "flex-end" }}>
+      <View style={{ flex: 2 }}>
         <Logo />
       </View>
-      <View style={{ flex: 3, justifyContent: "center" }}>
+      <View style={styles.inputContainer}>
         <TextInput
           name="username"
-          style={styles.inputBox}
+          style={styles.input}
           underlineColorAndroid="rgba(0,0,0,0)"
           textAlign="right"
           placeholder="نام کاربری"
           keyboardType="email-address"
           onSubmitEditing={() => passwordRef.current.focus()}
-          onChangeText={(val) => userInfo.username=val}
+          onChangeText={(val) => (userInfo.username = val)}
           ref={usernameRef}
         />
         <TextInput
           name="password"
-          style={styles.inputBox}
+          style={styles.input}
           underlineColorAndroid="rgba(0,0,0,0)"
           textAlign="right"
           secureTextEntry={true}
           placeholder="گذرواژه"
           onSubmitEditing={submit}
-          onChangeText={(val) => userInfo.password=val}
+          onChangeText={(val) => (userInfo.password = val)}
           ref={passwordRef}
         />
-        <Text style={styles.message}>{message}</Text>
+
+        <View style={styles.messageContainer}>
+          <ActivityIndicator
+            size={isLoading ? 24 : 0}
+            style={{ marginHorizontal: 10 }}
+          />
+          <Text style={styles.message}>{message}</Text>
+        </View>
         <TouchableOpacity style={styles.button} onPress={submit}>
           <Text style={styles.buttonText}>ورود به حساب</Text>
         </TouchableOpacity>
@@ -84,12 +107,11 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "#116496",
     flex: 1,
-    alignItems: "center",
-    justifyContent: "space-around",
   },
   signUpTextCont: {
-    alignItems: "flex-end",
-    paddingBottom: 16,
+    alignSelf: "center",
+    paddingBottom: 8,
+    marginTop: 8,
     flexDirection: "row-reverse",
   },
   signUpText: {
@@ -101,35 +123,39 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "500",
   },
-  inputBox: {
-    width: 300,
-    height: 50,
+  inputContainer: { flex: 3, marginHorizontal: 60, justifyContent: "center" },
+  input: {
+    height: 40,
     backgroundColor: "rgba(255,255,255,0.2)",
     borderRadius: 25,
     paddingHorizontal: 16,
     fontSize: 16,
-    color: "rgba(255,255,255,1)",
+    color: globalColors.palette.cream,
     marginVertical: 10,
   },
   button: {
-    width: 300,
-    height: 50,
-    marginVertical: 10,
-    backgroundColor: "#1c313a",
+    height: 40,
+    backgroundColor: globalColors.palette.dirtyNavy,
     borderRadius: 25,
-    paddingVertical: 13,
   },
   buttonText: {
+    flex: 1,
     fontSize: 16,
-    fontWeight: "500",
-    color: "#fff",
+    color: globalColors.palette.cream,
     textAlign: "center",
+    textAlignVertical: "center",
+  },
+  messageContainer: {
+    flexDirection: "row-reverse",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 10,
   },
   message: {
-    fontSize: 20,
+    flexWrap: "wrap",
+    fontSize: 16,
     fontWeight: "500",
-    width: 300,
-    color: "#fff",
-    textAlign: "center",
+    color: globalColors.palette.cream,
+    textAlign: "right",
   },
 });

@@ -48,6 +48,7 @@ export const globalColors = {
     paleGray:'#e5e5e5',
     cream:'#F1FAEE',
     coal:'#111111',
+    dirtyNavy: "#1c313a",
   },
     btnAdd:'#00C49A',
     btnDelete:'#e55934',

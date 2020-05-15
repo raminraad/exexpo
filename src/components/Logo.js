@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
 import {Text, Image, StyleSheet, View} from 'react-native';
+import { Divider } from 'react-native-paper';
 
 export default class Logo extends Component<{}> {
     render() {
         return (
             <View style={styles.container}>
-                <Image style={styles.tinyLogo} source={require('../images/logo-oval-red-en.png')}/>
+                <Image resizeMode='contain' style={styles.tinyLogo} source={require('../images/logo-oval-red-en.png')}/>
                 <Text style={styles.logoText}>
                     اتوماسیون جامع مزمز
                 </Text>
@@ -15,17 +16,18 @@ export default class Logo extends Component<{}> {
 }
 
 const styles = StyleSheet.create({
-    tinyLogo: {
-        width: 354,
-        height: 164,
-    },
     container: {
+        flex:1,
+        justifyContent:'center',
         alignItems: 'center',
     },
+    tinyLogo: {
+        flex:5,
+    },
     logoText: {
-        marginVertical: 8,
+        flex:2,
         fontWeight: 'bold',
-        fontSize: 26,
+        fontSize: 20,
         color: 'rgba(255,255,255,0.7)',
     }
 });

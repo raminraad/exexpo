@@ -55,7 +55,7 @@ export default function Login({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <View style={{ flex: 2 }}>
+      <View style={{ flex: 2,marginTop:150 }}>
         <Logo />
       </View>
       <View style={styles.inputContainer}>
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "500",
   },
-  inputContainer: { flex: 3, marginHorizontal: 60, justifyContent: "center" },
+  inputContainer: { flex: 3, marginHorizontal: 60, justifyContent: "flex-start" },
   input: {
     height: 40,
     backgroundColor: "rgba(255,255,255,0.2)",

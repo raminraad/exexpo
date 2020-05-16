@@ -23,7 +23,7 @@ export default function Login({ navigation }) {
     username: "",
   };
 
-  const submit = () => {
+  const submit2 = () => {
     setMessage("لطفاً صبر کنید..");
     setLoading(true);
     fetch("http://audit.mazmaz.net/Api/WebApi.asmx/Authenticate", {
@@ -31,8 +31,8 @@ export default function Login({ navigation }) {
       passPhrase: "offline123",
       iMEI: "64564646465465454",
     })
-      .then((response) => console.log(response.json()))
-      .then((json) => setMessage("Success"))
+      .then((response) => response.json())
+      .then((jsonData) => console.log(jsonData))
       .catch((error) => console.log(error))
       .finally(() => setLoading(false));
 
@@ -42,6 +42,39 @@ export default function Login({ navigation }) {
     // gotoHome();
     // setMessage("");
     // } else setMessage("Wrong pass");
+  };
+
+  const submit = () => {
+    setMessage("لطفاً تأمل فرمایید..");
+    setLoading(true);
+    var myHeaders = new Headers();
+    myHeaders.append("Accept", "application/json");
+    myHeaders.append("Content-Type", "application/json");
+
+    var raw =
+      '{"userName":"offline","passPhrase":"offline123","iMEI":"offline"}';
+
+    var requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+
+    fetch(
+      "http://audit.mazmaz.net/Api/WebApi.asmx/Authenticate",
+      requestOptions
+    )
+      .then((response) => response.text())
+      .then((result) => console.log(result))
+      .catch((error) => {
+        console.log("error", error);
+        setMessage("failure");
+      })
+      .finally(() => {
+        setLoading(false);
+        setMessage("success");
+      });
   };
 
   const gotoSignUp = () => {
@@ -55,7 +88,7 @@ export default function Login({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <View style={{ flex: 2,marginTop:150 }}>
+      <View style={styles.logoContainer}>
         <Logo />
       </View>
       <View style={styles.inputContainer}>
@@ -81,7 +114,9 @@ export default function Login({ navigation }) {
           onChangeText={(val) => (userInfo.password = val)}
           ref={passwordRef}
         />
-
+        <TouchableOpacity style={styles.button} onPress={submit}>
+          <Text style={styles.buttonText}>ورود به حساب</Text>
+        </TouchableOpacity>
         <View style={styles.messageContainer}>
           <ActivityIndicator
             size={isLoading ? 24 : 0}
@@ -89,9 +124,6 @@ export default function Login({ navigation }) {
           />
           <Text style={styles.message}>{message}</Text>
         </View>
-        <TouchableOpacity style={styles.button} onPress={submit}>
-          <Text style={styles.buttonText}>ورود به حساب</Text>
-        </TouchableOpacity>
       </View>
       <View style={styles.signUpTextCont}>
         <Text style={styles.signUpText}>هنوز حساب کاریری ندارید؟ </Text>
@@ -108,6 +140,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#116496",
     flex: 1,
   },
+  logoContainer: {
+    flex: 3,
+    marginTop: 80,
+  },
   signUpTextCont: {
     alignSelf: "center",
     paddingBottom: 8,
@@ -123,7 +159,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "500",
   },
-  inputContainer: { flex: 3, marginHorizontal: 60, justifyContent: "flex-start" },
+  inputContainer: {
+    flex: 3,
+    marginHorizontal: 60,
+  },
   input: {
     height: 40,
     backgroundColor: "rgba(255,255,255,0.2)",
@@ -137,6 +176,7 @@ const styles = StyleSheet.create({
     height: 40,
     backgroundColor: globalColors.palette.dirtyNavy,
     borderRadius: 25,
+    marginVertical: 10,
   },
   buttonText: {
     flex: 1,
@@ -148,8 +188,7 @@ const styles = StyleSheet.create({
   messageContainer: {
     flexDirection: "row-reverse",
     justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 10,
+    marginVertical: 30,
   },
   message: {
     flexWrap: "wrap",

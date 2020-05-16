@@ -16,32 +16,12 @@ export default function Login({ navigation }) {
   const [message, setMessage] = useState("");
   const [isLoading, setLoading] = useState(false);
 
-  const passwordRef = useRef(null);
-  const usernameRef = useRef(null);
+  const passPhraseRef = useRef(null);
+  const userNameRef = useRef(null);
   let userInfo = {
-    password: "",
-    username: "",
-  };
-
-  const submit2 = () => {
-    setMessage("لطفاً صبر کنید..");
-    setLoading(true);
-    fetch("http://audit.mazmaz.net/Api/WebApi.asmx/Authenticate", {
-      userName: "offline",
-      passPhrase: "offline123",
-      iMEI: "64564646465465454",
-    })
-      .then((response) => response.json())
-      .then((jsonData) => console.log(jsonData))
-      .catch((error) => console.log(error))
-      .finally(() => setLoading(false));
-
-    //todo: replace with web service call
-    // if (this.state.username.toLowerCase() === 'raad' && this.state.password === '11')
-    // if (true) {
-    // gotoHome();
-    // setMessage("");
-    // } else setMessage("Wrong pass");
+    passPhrase: "",
+    userName: "",
+    iMEI: "64564646465465454",
   };
 
   const submit = () => {
@@ -51,13 +31,10 @@ export default function Login({ navigation }) {
     myHeaders.append("Accept", "application/json");
     myHeaders.append("Content-Type", "application/json");
 
-    var raw =
-      '{"userName":"offline","passPhrase":"offline123","iMEI":"offline"}';
-
     var requestOptions = {
       method: "POST",
       headers: myHeaders,
-      body: raw,
+      body: JSON.stringify(userInfo),
       redirect: "follow",
     };
 
@@ -94,31 +71,29 @@ export default function Login({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.logoContainer}>
-        <Logo />
-      </View>
-      <View style={styles.inputContainer}>
+      <View style={{justifyContent:'space-between',flex:1}}>
+        <Logo style={styles.logoContainer}/>
+        <View style={styles.inputContainer}>
+      
         <TextInput
-          name="username"
           style={styles.input}
           underlineColorAndroid="rgba(0,0,0,0)"
           textAlign="right"
           placeholder="نام کاربری"
           keyboardType="email-address"
-          onSubmitEditing={() => passwordRef.current.focus()}
-          onChangeText={(val) => (userInfo.username = val)}
-          ref={usernameRef}
+          onSubmitEditing={() => passPhraseRef.current.focus()}
+          onChangeText={(val) => (userInfo.userName = val)}
+          ref={userNameRef}
         />
         <TextInput
-          name="password"
           style={styles.input}
           underlineColorAndroid="rgba(0,0,0,0)"
           textAlign="right"
           secureTextEntry={true}
           placeholder="گذرواژه"
           onSubmitEditing={submit}
-          onChangeText={(val) => (userInfo.password = val)}
-          ref={passwordRef}
+          onChangeText={(val) => (userInfo.passPhrase = val)}
+          ref={passPhraseRef}
         />
         <TouchableOpacity style={styles.button} onPress={submit}>
           <Text style={styles.buttonText}>ورود به حساب</Text>
@@ -130,8 +105,9 @@ export default function Login({ navigation }) {
           />
           <Text style={styles.message}>{message}</Text>
         </View>
+        </View>
       </View>
-      <View style={styles.signUpTextCont}>
+      <View style={styles.signUpTextContainer}>
         <Text style={styles.signUpText}>هنوز حساب کاریری ندارید؟ </Text>
         <TouchableOpacity onPress={gotoSignUp}>
           <Text style={styles.signUpButton}>ایجاد حساب کاربری</Text>
@@ -143,35 +119,35 @@ export default function Login({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#116496",
+    backgroundColor: globalColors.loginPageBackground,
     flex: 1,
+    justifyContent:'space-around'
   },
   logoContainer: {
-    flex: 3,
-    marginTop: 80,
+    flex:1
   },
-  signUpTextCont: {
+  signUpTextContainer: {
     alignSelf: "center",
     paddingBottom: 8,
     marginTop: 8,
     flexDirection: "row-reverse",
   },
   signUpText: {
-    color: "rgba(255,255,255,0.6)",
+    color: "#FFFB",
     fontSize: 16,
   },
   signUpButton: {
-    color: "#ffffff",
+    color: globalColors.palette.cream,
     fontSize: 16,
     fontWeight: "500",
   },
   inputContainer: {
-    flex: 3,
+    flex: 1,
     marginHorizontal: 60,
   },
   input: {
     height: 40,
-    backgroundColor: "rgba(255,255,255,0.2)",
+    backgroundColor: "#FFF2",
     borderRadius: 25,
     paddingHorizontal: 16,
     fontSize: 16,

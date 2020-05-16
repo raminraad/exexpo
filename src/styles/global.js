@@ -68,6 +68,7 @@ export const globalColors = {
     homeIcon:'#F1FAEE',
     homeIconText:'#F1FAEE',
     homeSectionHeader:'#F1FAEEBA',
+    loginPageBackground:'#2e5266'
 
 };
 

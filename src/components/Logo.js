@@ -6,13 +6,11 @@ export default class Logo extends Component<{}> {
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.imageContainer}>
-          <Image
-            resizeMode="center"
-            style={styles.tinyLogo}
-            source={require("../images/logo-oval-red-en.png")}
-          />
-        </View>
+        <Image
+          style={styles.tinyLogo}
+          source={require("../images/logo-oval-red-en.png")}
+        />
+
         <Text style={styles.logoText}>اتوماسیون جامع مزمز</Text>
       </View>
     );
@@ -22,17 +20,19 @@ export default class Logo extends Component<{}> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "space-around",
     alignItems: "center",
+    justifyContent: "center",
   },
-  imageContainer: { flex: 3 },
   tinyLogo: {
-    flex: 1,
+    width: "40%",
+    // Without height undefined it won't work
+    height: undefined,
+    // figure out your image aspect ratio
+    aspectRatio: 30 / 20,
   },
   logoText: {
-    flex: 3,
     fontWeight: "bold",
-    fontSize: 20,
+    fontSize: 24,
     color: "rgba(255,255,255,0.7)",
   },
 });

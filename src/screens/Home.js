@@ -47,11 +47,11 @@ export default class Menu extends Component {
             },
             {
               key: 2,
-              title: "بازاریابی",
+              title: "محصولات",
               color: globalColors.homeIconBackground1,
               members: 12,
-              icon: "shopping-bag",
-              page: "Order",
+              icon: "package",
+              page: "Products",
             },
             {
               key: 3,
@@ -143,10 +143,11 @@ export default class Menu extends Component {
           pages: [
             {
               key: 12,
-              title: "کالاها",
+              title: "بازاریابی",
               color: globalColors.homeIconBackground3,
               members: 13,
-              icon: "package",
+              icon: "shopping-bag",
+              page:'Order'
             },
             {
               key: 13,

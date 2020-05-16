@@ -67,7 +67,7 @@ export const globalColors = {
     homeIconBackground5:'#577590',
     homeIcon:'#F1FAEE',
     homeIconText:'#F1FAEE',
-    homeSectionHeader:'#F1FAEE',
+    homeSectionHeader:'#F1FAEEBA',
 
 };
 

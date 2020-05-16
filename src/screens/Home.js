@@ -219,7 +219,7 @@ export default class Menu extends Component {
                         >
                           <Feather
                             name={item.icon}
-                            size={globalSizes.icons.large}
+                            size={globalSizes.icons.medium}
                             color={globalColors.homeIcon}
                             
                           />
@@ -256,7 +256,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     textAlignVertical: "center",
     height: 70,
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: "bold",
     color: globalColors.homeSectionHeader,
     backgroundColor: globalColors.homeBackground,
@@ -268,15 +268,15 @@ const styles = StyleSheet.create({
   },
   iconText: {
     textAlign: "center",
-    fontSize: 18,
+    fontSize: 14,
     color: globalColors.homeIconText,
     fontWeight: "bold",
   },
   iconCircle:
   {
-    width: 72,
-    height: 72,
+    width: 64,
+    height: 64,
     marginVertical: 20,
-    marginHorizontal: 25,
+    marginHorizontal: 15,
   },
 });

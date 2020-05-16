@@ -1,42 +1,78 @@
-import React,{useState} from 'react'
-import { StyleSheet, Text, View } from 'react-native'
-import { Button } from 'react-native-paper';
+import React, { useState } from "react";
+import { StyleSheet } from "react-native";
+import { Button } from "react-native-paper";
+import {
+  Container,
+  Card,
+  CardItem,
+  Body,
+  Header,
+  Content,
+  List,
+  ListItem,
+  Text,
+  View,
+} from "native-base";
 
-export default function Products () {
+export default function Products() {
+  const [data, setData] = useState("");
+  const [freshToken, setFreshToken] = useState(
+    "707332fe-b50f-4983-7120-ed2052b619e7"
+  );
 
-    const [data, setData] = useState('')
-    let freshToken = '';
-    
-    const pullData = () => {
-        var myHeaders = new Headers();
-        myHeaders.append("Accept", "application/json");
-        myHeaders.append("Content-Type", "application/json");
-        
-        var raw = {token:"f80ca69e-3a48-51a8-823c-3c3b3e9ab9c3"};
-        
-        var requestOptions = {
-          method: 'POST',
-          headers: myHeaders,
-          body: JSON.stringify(raw),
-          redirect: 'follow'
-        };
-        
-        fetch("http://audit.mazmaz.net/Api/WebApi.asmx/SyncServerData", requestOptions)
-          .then(response => response.text())
-          .then(result => console.log(result))
-          .catch(error => console.log('error', error));
-      };
+  const pullData = () => {
+    var myHeaders = new Headers();
+    myHeaders.append("Accept", "application/json");
+    myHeaders.append("Content-Type", "application/json");
 
-    return (
-        <View>
-            <Button onPress={pullData}>
-            <Text>Pull data</Text>
-            </Button>
-            <Text>Products list</Text>
-        </View>
+    var raw = { token: `${freshToken}` };
+    var requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: JSON.stringify(raw),
+      redirect: "follow",
+    };
+
+    fetch(
+      "http://audit.mazmaz.net/Api/WebApi.asmx/SyncServerData",
+      requestOptions
     )
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result);
+        if (result.d.Response.Token) {
+          setFreshToken(result.d.Response.Token);
+          setData(result.d.DataTables.ProductGroup);
+        } else alert(result.d.Response.Message);
+      })
+      .catch((error) => console.log("error", error));
+  };
+  const keyExtractor = (item, index) => item.key.toString();
+
+  const renderItem = (item) => (
+    <ListItem style={styles.itemContainer}>
+      <Text >{item.Title}</Text>
+  </ListItem>
+  );
+  return (
+    <Container>
+      <Header />
+      <Content>
+        <Button onPress={pullData}>
+          <Text>Pull data</Text>
+        </Button>
+        <Text>فهرست محصولات</Text>
+        <List itemDivider dataArray={data} renderRow={renderItem} />
+      </Content>
+    </Container>
+  );
 }
 
-
-
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  itemContainer: {
+    flexDirection: "row-reverse",
+  },
+  itemText: {
+    fontSize: 20,
+  },
+});

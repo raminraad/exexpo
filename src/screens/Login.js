@@ -25,6 +25,9 @@ export default function Login({ navigation }) {
   };
 
   const submit = () => {
+    // todo: remove following
+    gotoHome();
+
     setMessage("در حال بررسی اطلاعات کاربری..");
     setLoading(true);
     var myHeaders = new Headers();

@@ -10,12 +10,25 @@ import {
   FlatList,
   SectionList,
 } from "react-native";
-import DrawerHeader from "../components/DrawerHeader";
-import { Icon, Container } from "native-base";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { globalStyles, globalSizes, globalColors } from "../styles/global";
-import { Divider } from "react-native-elements";
+import {
+  Container,
+  Header,
+  Content,
+  Footer,
+  FooterTab,
+  Button,
+  Left,
+  Right,
+  Icon,
+  Body,
+  Title,
+  Item,
+  Input,
+} from "native-base";
 
 export default class Menu extends Component {
   menuData = [
@@ -175,23 +188,39 @@ export default class Menu extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <DrawerHeader navigation={this.props.navigation} title={"ماژول ها"} />
+      <Container style={styles.container}>
+        <Header>
+          <Left></Left>
+          <Body
+            style={{
+              flexDirection: "row",
+              justifyContent: "flex-end",
+            }}
+          >
+            <Title>مــــــاژولهـــــــا</Title>
+          </Body>
+          <Right>
+            <Button transparent>
+              <Icon
+                name="menu"
+                onPress={() => this.props.navigation.toggleDrawer()}
+              />
+            </Button>
+          </Right>
+        </Header>
         <SectionList
           sections={this.menuData}
           renderSectionFooter={({ section }) => (
             <View
               style={{
                 borderBottomColor: "rgba(200,200,200,0.3)",
-                borderBottomWidth: 1,
+                borderBottomWidth: 0,
                 marginTop: 50,
               }}
             />
           )}
           renderSectionHeader={({ section }) => (
-            <View>
-              <Text style={styles.sectionHeader}>{section.title}</Text>
-            </View>
+            <Text style={styles.sectionHeader}>{section.title}</Text>
           )}
           renderItem={({ item }) => {
             return (
@@ -204,24 +233,25 @@ export default class Menu extends Component {
                 }}
                 renderItem={({ item }) => {
                   return (
-                    <TouchableOpacity onPress={() => {
-                      if (item.page)
-                        this.props.navigation.navigate(item.page);
-                      else alert("ماژول در حال ساخت میباشد");
-                    }}>
+                    <TouchableOpacity
+                      onPress={() => {
+                        if (item.page)
+                          this.props.navigation.navigate(item.page);
+                        else alert("ماژول در حال ساخت میباشد");
+                      }}
+                    >
                       <View style={styles.iconContainer}>
                         <View
                           style={[
                             globalStyles.CircleShapeView,
                             styles.iconCircle,
-                            {backgroundColor:item.color}
+                            { backgroundColor: item.color },
                           ]}
                         >
                           <Feather
                             name={item.icon}
                             size={globalSizes.icons.medium}
                             color={globalColors.homeIcon}
-                            
                           />
                         </View>
                         <Text style={styles.iconText}>{item.title}</Text>
@@ -236,7 +266,7 @@ export default class Menu extends Component {
             return item.id;
           }}
         />
-      </View>
+      </Container>
     );
   }
 }
@@ -268,15 +298,14 @@ const styles = StyleSheet.create({
   },
   iconText: {
     textAlign: "center",
+    marginTop: 2,
     fontSize: 14,
     color: globalColors.homeIconText,
-    fontWeight: "bold",
   },
-  iconCircle:
-  {
+  iconCircle: {
     width: 64,
     height: 64,
-    marginVertical: 20,
+    marginTop: 20,
     marginHorizontal: 15,
   },
 });

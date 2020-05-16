@@ -60,14 +60,14 @@ export const globalColors = {
     drawerBackground:'#0f4c5c',
     drawerIcon:'#98c1d9',
     homeBackground:'#292f36',
-    homeIconBackground1:'#6a4c93',
-    homeIconBackground2:'#1982c4',
-    homeIconBackground3:'#8ac926',
+    homeIconBackground1:'#7768ae',
+    homeIconBackground2:'#ec9a29',
+    homeIconBackground3:'#3bb273',
     homeIconBackground4:'#43aa8b',
     homeIconBackground5:'#577590',
     homeIcon:'#F1FAEE',
     homeIconText:'#F1FAEE',
-    homeSectionHeader:'#F1FAEEBA',
+    homeSectionHeader:'#F1FAEE66',
     loginPageBackground:'#2e5266'
 
 };

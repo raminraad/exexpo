@@ -45,7 +45,7 @@ export default function Login({ navigation }) {
   };
 
   const submit = () => {
-    setMessage("لطفاً تأمل فرمایید..");
+    setMessage("در حال بررسی اطلاعات کاربری..");
     setLoading(true);
     var myHeaders = new Headers();
     myHeaders.append("Accept", "application/json");
@@ -65,15 +65,21 @@ export default function Login({ navigation }) {
       "http://audit.mazmaz.net/Api/WebApi.asmx/Authenticate",
       requestOptions
     )
-      .then((response) => response.text())
-      .then((result) => console.log(result))
+      .then((response) => response.json())
+      .then((result) => {
+        if (result.d.Token)
+        gotoHome();
+        else
+        setMessage(result.d.Message);
+      })
       .catch((error) => {
         console.log("error", error);
-        setMessage("failure");
+        setMessage(
+          "به دلیل بروز خطا در ارتباط با سرور، لطفاً مجدداً تلاش فرمایید..."
+        );
       })
       .finally(() => {
         setLoading(false);
-        setMessage("success");
       });
   };
 

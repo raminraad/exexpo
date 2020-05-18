@@ -1,242 +1,190 @@
-/*Example of Expandable ListView in React Native*/
-import React, {Component} from 'react';
+/*Example of Collapsible - Accordion - Expandable View in React Native*/
+import React, { Component } from 'react';
 //import react in our project
 import {
-    LayoutAnimation,
-    StyleSheet,
-    View,
-    Text,
-    ScrollView,
-    UIManager,
-    TouchableOpacity,
-    Platform,
+  Switch,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
 } from 'react-native';
-
 //import basic react native components
+import * as Animatable from 'react-native-animatable';
+//import for the animation of Collapse and Expand
+import Collapsible from 'react-native-collapsible';
+//import for the collapsible/Expandable view
+import Accordion from 'react-native-collapsible/Accordion';
+//import for the Accordion view
 
-class ExpandableItemComponent extends Component {
-    //Custom Component for the Expandable List
-    constructor() {
-        super();
-        this.state = {
-            layoutHeight: 0,
-        };
-    }
+//Dummy content to show
+//You can also use dynamic data by calling web service
+const CONTENT = [
+  {
+    title: 'Terms and Conditions',
+    content:
+      'The following terms and conditions, together with any referenced documents (collectively, "Terms of Use") form a legal agreement between you and your employer, employees, agents, contractors and any other entity on whose behalf you accept these terms (collectively, “you” and “your”), and ServiceNow, Inc. (“ServiceNow,” “we,” “us” and “our”).',
+  },
+  {
+    title: 'Privacy Policy',
+    content:
+      'A Privacy Policy agreement is the agreement where you specify if you collect personal data from your users, what kind of personal data you collect and what you do with that data.',
+  },
+  {
+    title: 'Return Policy',
+    content:
+      'Our Return & Refund Policy template lets you get started with a Return and Refund Policy agreement. This template is free to download and use.According to TrueShip study, over 60% of customers review a Return/Refund Policy before they make a purchasing decision.',
+  },
+];
 
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.item.isExpanded) {
-            this.setState(() => {
-                return {
-                    layoutHeight: null,
-                };
-            });
-        } else {
-            this.setState(() => {
-                return {
-                    layoutHeight: 0,
-                };
-            });
-        }
-    }
+//To make the selector (Something like tabs)
+const SELECTORS = [
+  { title: 'T&C', value: 0 },
+  { title: 'Privacy Policy', value: 1 },
+  { title: 'Return Policy', value: 2 },
+  { title: 'Reset all' },
+];
 
-    shouldComponentUpdate(nextProps, nextState) {
-        if (this.state.layoutHeight !== nextState.layoutHeight) {
-            return true;
-        }
-        return false;
-    }
+export default class App extends Component {
+  state = {
+    //default active selector
+    activeSections: [],
+    //collapsed condition for the single collapsible
+    collapsed: true,
+    //multipleSelect is for the Multiple Expand allowed
+    //true: You can expand multiple at a time
+    //false: One can be expand at a time and other will be closed automatically
+    multipleSelect: false,
+  };
 
-    render() {
-        return (
-            <View>
-                {/*Header of the Expandable List Item*/}
-                <TouchableOpacity
-                    activeOpacity={0.8}
-                    onPress={this.props.onClickFunction}
-                    style={styles.header}>
-                    <Text style={styles.headerText}>{this.props.item.category_name}</Text>
-                </TouchableOpacity>
-                <View
-                    style={{
-                        height: this.state.layoutHeight,
-                        overflow: 'hidden',
-                    }}>
-                    {/*Content under the header of the Expandable List Item*/}
-                    {this.props.item.subcategory.map((item, key) => (
-                        <TouchableOpacity
-                            key={key}
-                            style={styles.content}
-                            onPress={() => alert('Id: ' + item.id + ' val: ' + item.val)}>
-                            <Text style={styles.text}>
-                                {key}. {item.val}
-                            </Text>
-                            <View style={styles.separator}/>
-                        </TouchableOpacity>
-                    ))}
-                </View>
-            </View>
-        );
-    }
-}
+  
 
-export default class Order extends Component {
-    //Main View defined under this Class
-    constructor() {
-        super();
-        if (Platform.OS === 'android') {
-            UIManager.setLayoutAnimationEnabledExperimental(true);
-        }
-        this.state = {listDataSource: CONTENT};
-    }
+  setSections = sections => {
+    //setting up a active section state
+    this.setState({
+      activeSections: sections.includes(undefined) ? [] : sections,
+    });
+  };
 
-    updateLayout = index => {
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-        const array = [...this.state.listDataSource];
-        array.map((value, placeindex) =>
-            placeindex === index
-                ? (array[placeindex]['isExpanded'] = !array[placeindex]['isExpanded'])
-                : (array[placeindex]['isExpanded'] = false)
-        );
-        this.setState(() => {
-            return {
-                listDataSource: array,
-            };
-        });
-    };
+  renderHeader = (section, _, isActive) => {
+    //Accordion Header view
+    return (
+      <Animatable.View
+        duration={400}
+        style={[styles.header, isActive ? styles.active : styles.inactive]}
+        transition="backgroundColor">
+        <Text style={styles.headerText}>{section.title}</Text>
+      </Animatable.View>
+    );
+  };
 
-    render() {
-        return (
-            <View style={styles.container}>
-                <Text style={styles.topHeading}>Expandable List View</Text>
-                <ScrollView>
-                    {this.state.listDataSource.map((item, key) => (
-                        <ExpandableItemComponent
-                            key={item.category_name}
-                            onClickFunction={this.updateLayout.bind(this, key)}
-                            item={item}
-                        />
-                    ))}
-                </ScrollView>
-            </View>
-        );
-    }
+  renderContent(section, _, isActive) {
+    //Accordion Content view
+    return (
+      <Animatable.View
+        duration={400}
+        style={[styles.content, isActive ? styles.active : styles.inactive]}
+        transition="backgroundColor">
+        <Animatable.Text
+          animation={isActive ? 'bounceIn' : undefined}
+          style={{ textAlign: 'center' }}>
+          {section.content}
+        </Animatable.Text>
+      </Animatable.View>
+    );
+  }
+
+  render() {
+    const { multipleSelect, activeSections } = this.state;
+    return (
+      <View style={styles.container}>
+        <ScrollView contentContainerStyle={{ paddingTop: 30 }}>
+          
+          <Accordion
+            activeSections={activeSections}
+            //for any default active section
+            sections={CONTENT}
+            //title and content of accordion
+            touchableComponent={TouchableOpacity}
+            //which type of touchable component you want
+            //It can be the following Touchables
+            //TouchableHighlight, TouchableNativeFeedback
+            //TouchableOpacity , TouchableWithoutFeedback
+            expandMultiple={multipleSelect}
+            //Do you want to expand mutiple at a time or single at a time
+            renderHeader={this.renderHeader}
+            //Header Component(View) to render
+            renderContent={this.renderContent}
+            //Content Component(View) to render
+            duration={400}
+            //Duration for Collapse and expand
+            onChange={this.setSections}
+            //setting the state of active sections
+          />
+          {/*Code for Accordion/Expandable List ends here*/}
+        </ScrollView>
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        paddingTop: 30,
-        backgroundColor: '#F5FCFF',
-    },
-    topHeading: {
-        paddingLeft: 10,
-        fontSize: 20,
-    },
-    header: {
-        backgroundColor: '#F5FCFF',
-        padding: 16,
-    },
-    headerText: {
-        fontSize: 16,
-        fontWeight: '500',
-    },
-    separator: {
-        height: 0.5,
-        backgroundColor: '#808080',
-        width: '95%',
-        marginLeft: 16,
-        marginRight: 16,
-    },
-    text: {
-        fontSize: 16,
-        color: '#606070',
-        padding: 10,
-
-    },
-    content: {
-        paddingLeft: 10,
-        paddingRight: 10,
-        backgroundColor: '#fff',
-    },
+  container: {
+    flex: 1,
+    backgroundColor: '#F5FCFF',
+    paddingTop: 30,
+  },
+  title: {
+    textAlign: 'center',
+    fontSize: 18,
+    fontWeight: '300',
+    marginBottom: 20,
+  },
+  header: {
+    backgroundColor: '#F5FCFF',
+    padding: 10,
+  },
+  headerText: {
+    textAlign: 'center',
+    fontSize: 16,
+    fontWeight: '500',
+  },
+  content: {
+    padding: 20,
+    backgroundColor: '#fff',
+  },
+  active: {
+    backgroundColor: 'rgba(255,255,255,1)',
+  },
+  inactive: {
+    backgroundColor: 'rgba(245,252,255,1)',
+  },
+  selectors: {
+    marginBottom: 10,
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  selector: {
+    backgroundColor: '#F5FCFF',
+    padding: 10,
+  },
+  activeSelector: {
+    fontWeight: 'bold',
+  },
+  selectTitle: {
+    fontSize: 14,
+    fontWeight: '500',
+    padding: 10,
+    textAlign: 'center',
+  },
+  multipleToggle: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginVertical: 30,
+    alignItems: 'center',
+  },
+  multipleToggle__title: {
+    fontSize: 16,
+    marginRight: 8,
+  },
 });
-
-//Dummy content to show
-//You can also use dynamic data by calling webservice
-const CONTENT = [
-    {
-        isExpanded: false,
-        category_name: 'Item 1',
-        subcategory: [{id: 1, val: 'Sub Cat 1'}, {id: 3, val: 'Sub Cat 3'}],
-    },
-    {
-        isExpanded: false,
-        category_name: 'Item 2',
-        subcategory: [{id: 4, val: 'Sub Cat 4'}, {id: 5, val: 'Sub Cat 5'}],
-    },
-    {
-        isExpanded: false,
-        category_name: 'Item 3',
-        subcategory: [{id: 7, val: 'Sub Cat 7'}, {id: 9, val: 'Sub Cat 9'}],
-    },
-    {
-        isExpanded: false,
-        category_name: 'Item 4',
-        subcategory: [{id: 10, val: 'Sub Cat 10'}, {id: 12, val: 'Sub Cat 2'}],
-    },
-    {
-        isExpanded: false,
-        category_name: 'Item 5',
-        subcategory: [{id: 13, val: 'Sub Cat 13'}, {id: 15, val: 'Sub Cat 5'}],
-    },
-    {
-        isExpanded: false,
-        category_name: 'Item 6',
-        subcategory: [{id: 17, val: 'Sub Cat 17'}, {id: 18, val: 'Sub Cat 8'}],
-    },
-    {
-        isExpanded: false,
-        category_name: 'Item 7',
-        subcategory: [{id: 20, val: 'Sub Cat 20'}],
-    },
-    {
-        isExpanded: false,
-        category_name: 'Item 8',
-        subcategory: [{id: 22, val: 'Sub Cat 22'}],
-    },
-    {
-        isExpanded: false,
-        category_name: 'Item 9',
-        subcategory: [{id: 26, val: 'Sub Cat 26'}, {id: 27, val: 'Sub Cat 7'}],
-    },
-    {
-        isExpanded: false,
-        category_name: 'Item 10',
-        subcategory: [{id: 28, val: 'Sub Cat 28'}, {id: 30, val: 'Sub Cat 0'}],
-    },
-    {
-        isExpanded: false,
-        category_name: 'Item 11',
-        subcategory: [{id: 31, val: 'Sub Cat 31'}],
-    },
-    {
-        isExpanded: false,
-        category_name: 'Item 12',
-        subcategory: [{id: 34, val: 'Sub Cat 34'}],
-    },
-    {
-        isExpanded: false,
-        category_name: 'Item 13',
-        subcategory: [{id: 38, val: 'Sub Cat 38'}, {id: 39, val: 'Sub Cat 9'}],
-    },
-    {
-        isExpanded: false,
-        category_name: 'Item 14',
-        subcategory: [{id: 40, val: 'Sub Cat 40'}, {id: 42, val: 'Sub Cat 2'}],
-    },
-    {
-        isExpanded: false,
-        category_name: 'Item 15',
-        subcategory: [{id: 43, val: 'Sub Cat 43'}, {id: 44, val: 'Sub Cat 44'}],
-
-    },
-];

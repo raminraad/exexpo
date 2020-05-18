@@ -59,6 +59,7 @@ export default class Menu extends Component {
               color: globalColors.homeIconBackground1,
               members: 6,
               icon: "shopping-cart",
+              page:'Order'
             },
             {
               key: 4,

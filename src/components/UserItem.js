@@ -20,7 +20,7 @@ export default class UserItem extends Component {
 
   renderDetails = () => (
     <View style={styles.detailsContainer}>
-      <Text style={styles.detailsText}>{this.props.item.description}</Text>
+      <Text style={styles.detailsText}>{this.props.item?this.props.item.description:''}</Text>
     </View>
   );
 
@@ -56,10 +56,10 @@ export default class UserItem extends Component {
           <TouchableWithoutFeedback onPress={this.onPerss}>
             <View style={styles.container}>
               <ListItem
-                subtitle={this.props.item.jobTitle}
-                title={`${this.props.item.fName} ${this.props.item.lName}`}
+                subtitle={this.props.item?this.props.item.jobTitle:''}
+                title={this.props.item?`${this.props.item.fName} ${this.props.item.lName}`:''}
                 rightAvatar={{
-                  source: { uri: this.props.item.avatar_url },
+                  source: { uri: this.props.item?this.props.item.avatar_url:'' },
                   size: 48,
                 }}
                 style={{ flex: 0.99, marginVertical: 4, padding: 0 }}

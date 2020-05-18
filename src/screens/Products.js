@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet } from "react-native";
-import { Button } from "react-native-paper";
+import { StyleSheet, FlatList } from "react-native";
 import {
   Container,
   Card,
@@ -11,13 +10,24 @@ import {
   List,
   ListItem,
   Text,
+  Button,
+  Accordion,
   View,
 } from "native-base";
+import { Icon } from "react-native-elements";
+
+import Swipeable from "react-native-gesture-handler/Swipeable";
+import { globalStyles, globalColors, globalSizes } from "../styles/global";
 
 export default function Products() {
-  const [data, setData] = useState("");
+  const dataArray = [
+    { title: "First Element", content: "Lorem ipsum dolor sit amet" },
+    { title: "Second Element", content: "Lorem ipsum dolor sit amet" },
+    { title: "Third Element", content: "Lorem ipsum dolor sit amet" },
+  ];
+  const [data, setData] = useState([]);
   const [freshToken, setFreshToken] = useState(
-    "707332fe-b50f-4983-7120-ed2052b619e7"
+    "d1beb4a3-52d6-c3fa-5b9d-14486ac9cc14"
   );
 
   const pullData = () => {
@@ -32,47 +42,165 @@ export default function Products() {
       body: JSON.stringify(raw),
       redirect: "follow",
     };
-
+    console.log(`Request sent with token: ${freshToken}`);
     fetch(
       "http://audit.mazmaz.net/Api/WebApi.asmx/SyncServerData",
       requestOptions
     )
       .then((response) => response.json())
       .then((result) => {
-        console.log(result);
+        // console.log(result);
         if (result.d.Response.Token) {
           setFreshToken(result.d.Response.Token);
-          setData(result.d.DataTables.ProductGroup);
+          setData(result.d.DataTables.ProductGroup.slice(0, 20));
+          console.log(
+            `fetched ${result.d.DataTables.ProductGroup.length} rows and set ${data.length} rows to data`
+          );
         } else alert(result.d.Response.Message);
       })
       .catch((error) => console.log("error", error));
   };
-  const keyExtractor = (item, index) => item.key.toString();
+  const renderHeader = (item, expanded) => {
+    return (
+      <View
+        style={{
+          flexDirection: "row-reverse",
+          alignItems:'center',
+          height: 50,
+          borderRadius: 2,
+          borderWidth: 1,
+          borderBottomWidth: 0,
+          borderColor: "#AAA",
+          backgroundColor: "#f4f3ee",
+        }}
+        >
+        <Icon
+                reverse
+                name={expanded ? "chevron-up" : "chevron-down"}
+                type="font-awesome"
+                size={8}
+                color={
+                  expanded
+                    ? globalColors.iconCollapse
+                    : globalColors.iconExpand
+                }
+              />
+        <Text
+          style={{
+            textAlignVertical: "center",
+            marginRight: 10,
+            fontSize: 18,
+            fontWeight: "600",
+          }}
+        >
+          {item.Title}
+        </Text>
+      </View>
+    );
+  };
+  const renderContent = (item) => {
+    return (
+      <Text
+        style={{
+          backgroundColor: "#fff",
+          paddingVertical: 10,
+          paddingHorizontal: 20,
+          alignContent: "stretch",
+          borderWidth: 1,
+          borderTopWidth: 0,
+          borderColor: "#AAA",
+        }}
+      >
+        رنگ محصولات کاملا طبیعی و با سطح صاف و صیقلی جهت استفاده آسان مشتری بوده
+        و از مرغوب ترین چوب های صنوبر ایرانی و روسی تهیه شده است. همچنین تولید
+        محصول مطابق با استاندارد تعیین شده بازخورد تلفیق صحیح واحدهای تولید، فنی
+        و کنترل کیفیت می باشد. محصولات تولید شده بر اساس شکل ظاهری، میزان کیفیت
+        و ابعاد به چهار گریدA+ ، A، AB و C تقسیم بندی می شوند.
+      </Text>
+    );
+  };
 
-  const renderItem = (item) => (
-    <ListItem style={styles.itemContainer}>
-      <Text >{item.Title}</Text>
-  </ListItem>
-  );
+  const keyExtractor = (item, index) => item.Id.toString();
+  const renderItem = ({ item }) => {
+    let SwipeLeftAction = () => {
+      return (
+        <View style={styles.leftAction}>
+          <Icon
+            reverse
+            name="trash"
+            type="font-awesome"
+            size={globalSizes.icons.small}
+            color={globalColors.btnDelete}
+          />
+          <Icon
+            reverse
+            name="edit"
+            type="font-awesome"
+            size={globalSizes.icons.small}
+            color={globalColors.btnUpdate}
+          />
+        </View>
+      );
+    };
+    return (
+      <Swipeable renderLeftActions={SwipeLeftAction}>
+        <Accordion
+          dataArray={[item]}
+          renderContent={renderContent}
+          renderHeader={renderHeader}
+        />
+      </Swipeable>
+    );
+  };
+
   return (
     <Container>
-      <Header />
       <Content>
         <Button onPress={pullData}>
           <Text>Pull data</Text>
         </Button>
         <Text>فهرست محصولات</Text>
-        <List itemDivider dataArray={data} renderRow={renderItem} />
+        <FlatList
+          keyExtractor={keyExtractor}
+          data={data}
+          renderItem={renderItem}
+        />
       </Content>
     </Container>
   );
 }
 
 const styles = StyleSheet.create({
-  itemContainer: {
+  container: {
     flexDirection: "row-reverse",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "white",
+    marginHorizontal: 10,
+    marginTop: 5,
+    borderRadius: 15,
+    borderColor: "rgba(3,3,3,0.5)",
+    borderWidth: 0.5,
   },
-  itemText: {
-    fontSize: 20,
+  detailsContainer: {
+    flexDirection: "row-reverse",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    backgroundColor: globalColors.palette.paleGray,
+    marginHorizontal: 10,
+    marginTop: 0,
+    padding: 15,
+    borderRadius: 5,
+  },
+  detailsText: {
+    fontSize: 18,
+    textAlign: "right",
+    paddingHorizontal: 35,
+    color: globalColors.palette.coal,
+  },
+  leftAction: {
+    alignItems: "center",
+    flexDirection: "row",
+    marginLeft: 10,
   },
 });

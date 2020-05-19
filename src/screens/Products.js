@@ -76,8 +76,8 @@ export default function Products() {
                 size={8}
                 color={
                   expanded
-                    ? globalColors.listItemCollapseIcon
-                    : globalColors.listItemExpandIcon
+                    ? globalColors.iconCollapse
+                    : globalColors.iconExpand
                 }
               />
         <Text

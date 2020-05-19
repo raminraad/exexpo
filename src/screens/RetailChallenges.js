@@ -39,8 +39,9 @@ import {
   MenuOptions,
   MenuOption,
 } from "react-native-popup-menu";
+import DefaultHeader from "../components/DefaultHeader";
 
-export default function RetailChallenge({ navigation, route }) {
+export default function RetailChallenges({ navigation, route }) {
   const [data, setData] = useState([]);
   const [freshToken, setFreshToken] = useState(
     "89142b48-8dd0-f6a0-bc15-dff1d8e01d8b"
@@ -87,88 +88,7 @@ export default function RetailChallenge({ navigation, route }) {
   };
 
   const renderPageHeader = (title) => {
-    if (isInstantSearchOpen) {
-      return (
-        <Header searchBar rounded>
-          <Left style={{ flex: 1 }}>
-            <Button
-              transparent
-              onPress={() => setIsInstantSearchModalOpen(false)}
-            >
-              <Feather
-                name={"arrow-left"}
-                color={globalColors.headerIcon}
-                size={globalSizes.headerIcon}
-              />
-            </Button>
-          </Left>
-          <Item style={{ flex: 10 }}>
-            <Input
-              placeholder="جستجو"
-              autoCorrect={false}
-              autoFocus={true}
-              maxLength={140}
-              onChangeText={(text) => performInstantSearch(text)}
-            />
-            <Feather
-              name={"search"}
-              color={globalColors.searchBarIcon}
-              size={globalSizes.searchBarIcon}
-              style={{ marginRight: 5 }}
-            />
-          </Item>
-          <Right style={{ flex: 1 }}>
-            <Button
-              transparent
-              onPress={() => {
-                setIsInstantSearchModalOpen(false);
-                setIsAdvancedSearchModalOpen(true);
-              }}
-            >
-              <Feather
-                name={"filter"}
-                color={globalColors.headerIcon}
-                size={globalSizes.headerIcon}
-              />
-            </Button>
-          </Right>
-        </Header>
-      );
-    } else {
-      return (
-        <Header>
-          <Left>
-            <Button transparent>
-              <Ionicons
-                name="ios-arrow-back"
-                size={globalSizes.icons.medium}
-                color={globalColors.palette.cream}
-                onPress={() => navigation.goBack()}
-              />
-            </Button>
-          </Left>
-          <Body
-            style={{
-              flexDirection: "row-reverse",
-              justifyContent: "center",
-              paddingRight: 100,
-            }}
-          >
-            {/* todo: remove upper Body style after finding out why the fucking title in not being centered! */}
-            <Title>{title}</Title>
-          </Body>
-          <Right>
-            <Button transparent>
-              <Icon
-                name="menu"
-                color={globalColors.palette.cream}
-                onPress={() => navigation.toggleDrawer()}
-              />
-            </Button>
-          </Right>
-        </Header>
-      );
-    }
+    
   };
 
   const keyExtractor = (item, index) => item.Id.toString();
@@ -183,13 +103,12 @@ export default function RetailChallenge({ navigation, route }) {
               
               <Text style={styles.itemHeaderFieldTitle}>تاریخ بازدید:</Text>
               <Text style={styles.itemHeaderFieldData}>
-                {/* TODO: use real date */}
-                {persianLib.toShortDate(new Date())}
+                {persianLib.toShortDate(new Date(item.OperationDate))}
               </Text>
               <Text style={styles.itemHeaderFieldTitle}>تاریخ ثبت:</Text>
               <Text style={styles.itemHeaderFieldData}>
-                {/* XXX: use real date */}
-                {persianLib.toShortDate(new Date())}
+                {/* FIXME: as AAD to fix DateX field and change item.OperationDate to item.DateX */}
+                {persianLib.toShortDate(new Date(item.OperationDate))}
               </Text>
           </View>
           <Feather
@@ -205,7 +124,10 @@ export default function RetailChallenge({ navigation, route }) {
     let renderContent = (item) => {
       return (
         <View style={styles.itemContentContainer}>
-          <Text>{item.Summary}</Text>
+              <Text style={styles.itemContentFieldTitle}>توضیح:</Text>
+          <Text style={styles.itemContentFieldData}>
+            {item.Summary}
+            </Text>
         </View>
       );
     };
@@ -243,7 +165,7 @@ export default function RetailChallenge({ navigation, route }) {
 
   return (
     <Container>
-      {renderPageHeader(title)}
+      <DefaultHeader title={title} isInstantSearchOpen={isInstantSearchOpen} navigation={navigation} />
       <Content>
         {/* <Button
           style={{
@@ -347,8 +269,20 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   itemContentContainer: {
+    flexDirection:'row-reverse',
     paddingVertical: 10,
     paddingHorizontal: 60,
+  },
+  itemContentFieldTitle: {
+    textAlignVertical: "center",
+    fontSize: 14,
+    color: "grey",
+  },
+  itemContentFieldData: {
+    textAlignVertical: "center",
+    marginRight: 5,
+    fontSize: 14,
+    fontWeight: "600",
   },
   leftAction: {
     alignItems: "center",

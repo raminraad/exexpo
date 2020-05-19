@@ -42,6 +42,26 @@ OvalShapeView: {
 },
 });
 
+export const menuOptionsCustomStyles = {
+  optionsContainer: {
+    width: 300,
+    padding: 5,
+    borderRadius: 5,
+  },
+  optionsWrapper: {},
+  optionWrapper: {
+    height: 50,
+    justifyContent: "center",
+  },
+  optionTouchable: {
+    underlayColor: "gold",
+    activeOpacity: 70,
+  },
+  optionText: {
+    fontSize: 16,
+  },
+};
+
 export const globalColors = {
   palette:{
     seaGreen:'#2a9d8f',
@@ -56,8 +76,6 @@ export const globalColors = {
     btnUpdate:'#3DA5D9',
     btnOk:'#3DA5D9',
     btnCancel:'#979DAC',
-    iconCollapse:'#f4afab',
-    iconExpand:'#c0c0c0',
     drawerBackground:'#0f4c5c',
     drawerIcon:'#98c1d9',
     homeBackground:'#292f36',
@@ -66,10 +84,16 @@ export const globalColors = {
     homeIconBackground3:'#3bb273',
     homeIconBackground4:'#43aa8b',
     homeIconBackground5:'#577590',
+    headerIcon:'#F1FAEE',
+    footerIcon:'#F1FAEE',
+    searchBarIcon:'#666',
     homeIcon:'#F1FAEE',
     homeIconText:'#F1FAEE',
     homeSectionHeader:'#F1FAEE66',
-    loginPageBackground:'#2e5266'
+    loginPageBackground:'#2e5266',
+    listItemNavigateIcon:'#6b717e',
+    listItemCollapseIcon:'#8d99ae',
+    listItemExpandIcon:'#8d99ae',
 
 };
 
@@ -80,4 +104,7 @@ export const globalSizes = {
     large:32,
     xLarge:48
   },
+  headerIcon:24,
+  footerIcon:24,
+  searchBarIcon:24,
 }

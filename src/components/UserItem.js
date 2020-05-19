@@ -71,8 +71,8 @@ export default class UserItem extends Component {
                 size={12}
                 color={
                   isSelected
-                    ? globalColors.iconCollapse
-                    : globalColors.iconExpand
+                    ? globalColors.listItemCollapseIcon
+                    : globalColors.listItemExpandIcon
                 }
               />
             </View>

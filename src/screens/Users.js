@@ -11,7 +11,7 @@ import {
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
-import IconFeather from "react-native-vector-icons/Feather";
+import Feather from "react-native-vector-icons/Feather";
 import {
   Menu,
   MenuOptions,
@@ -22,7 +22,7 @@ import { Divider } from "react-native-paper";
 import UserItem from "../components/UserItem";
 import UserForm from "../components/UserForm";
 import { MaterialIcons } from "@expo/vector-icons";
-import { globalStyles, globalColors, globalSizes } from "../styles/global";
+import { globalStyles, globalColors, globalSizes ,menuOptionsCustomStyles} from "../styles/global";
 import {
   Container,
   Header,
@@ -237,7 +237,7 @@ export default function Users(props) {
               transparent
               onPress={() => setIsInstantSearchModalOpen(false)}
             >
-              <Icon name={"arrow-back"} />
+              <Feather name={"arrow-left"} color={globalColors.headerIcon} size={globalSizes.headerIcon}/>
             </Button>
           </Left>
           <Item style={{ flex: 10 }}>
@@ -248,7 +248,7 @@ export default function Users(props) {
               maxLength={140}
               onChangeText={(text) => performInstantSearch(text)}
             />
-            <Icon name={"ios-search"} />
+            <Feather name={"search"} color={globalColors.searchBarIcon} size={globalSizes.searchBarIcon} style={{marginRight:5}}/>
           </Item>
           <Right style={{ flex: 1 }}>
             <Button
@@ -258,11 +258,7 @@ export default function Users(props) {
                 setIsAdvancedSearchModalOpen(true);
               }}
             >
-              <MaterialCommunityIcons
-                name="table-search"
-                size={globalSizes.icons.medium}
-                color="white"
-              />
+              <Feather name={"filter"} color={globalColors.headerIcon} size={globalSizes.headerIcon}/>
             </Button>
           </Right>
         </Header>
@@ -344,7 +340,7 @@ export default function Users(props) {
       <Footer>
         <FooterTab>
           <Button onPress={() => setAddModalOpen(true)}>
-            <IconFeather
+            <Feather
               name="plus-circle"
               size={globalSizes.icons.large}
               color={globalColors.palette.cream}
@@ -353,7 +349,7 @@ export default function Users(props) {
         </FooterTab>
         <FooterTab>
           <Button onPress={() => setIsInstantSearchModalOpen(true)}>
-            <IconFeather
+            <Feather
               name="search"
               size={globalSizes.icons.large}
               color={globalColors.palette.cream}
@@ -364,14 +360,14 @@ export default function Users(props) {
           <Menu>
             <MenuTrigger
               children={
-                <IconFeather
+                <Feather
                   color={globalColors.palette.cream}
                   name={"star"}
                   size={globalSizes.icons.large}
                 />
               }
             />
-            <MenuOptions customStyles={optionsStyles}>
+            <MenuOptions customStyles={menuOptionsCustomStyles}>
               <MenuOption onSelect={() => alert(`Item1`)} text="گزینه 1" />
               <Divider />
               <MenuOption onSelect={() => alert(`Item2`)} text="گزینه 2" />
@@ -391,25 +387,7 @@ export default function Users(props) {
   );
 }
 
-const optionsStyles = {
-  optionsContainer: {
-    width: 300,
-    padding: 5,
-    borderRadius: 5,
-  },
-  optionsWrapper: {},
-  optionWrapper: {
-    height: 50,
-    justifyContent: "center",
-  },
-  optionTouchable: {
-    underlayColor: "gold",
-    activeOpacity: 70,
-  },
-  optionText: {
-    fontSize: 16,
-  },
-};
+
 
 const styles = StyleSheet.create({
   footerContainerStyle: {

@@ -16,22 +16,42 @@ import {
   Button,
   Accordion,
   View,
+  Footer,
+  FooterTab,
+  Item,
+  Input,
+  Spinner,
 } from "native-base";
-import { Icon } from "react-native-elements";
+import { Icon, Divider } from "react-native-elements";
 import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import Swipeable from "react-native-gesture-handler/Swipeable";
-import { globalStyles, globalColors, globalSizes } from "../styles/global";
+import {
+  globalStyles,
+  globalColors,
+  globalSizes,
+  menuOptionsCustomStyles,
+} from "../styles/global";
 import * as persianLib from "../lib/persianLib";
+import {
+  Menu,
+  MenuTrigger,
+  MenuOptions,
+  MenuOption,
+} from "react-native-popup-menu";
 
-export default function RetailChallenge({navigation,route}) {
-    const {title} = route.params;
+export default function RetailChallenge({ navigation, route }) {
   const [data, setData] = useState([]);
   const [freshToken, setFreshToken] = useState(
     "89142b48-8dd0-f6a0-bc15-dff1d8e01d8b"
   );
+  const [isInstantSearchOpen, setIsInstantSearchModalOpen] = useState(false);
+  const [isAdvancedSearchOpen, setIsAdvancedSearchModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
+  const { title } = route.params;
   const pullData = () => {
+    setIsLoading(true);
     var myHeaders = new Headers();
     myHeaders.append("Accept", "application/json");
     myHeaders.append("Content-Type", "application/json");
@@ -59,12 +79,15 @@ export default function RetailChallenge({navigation,route}) {
           );
         } else alert(result.d.Response.Message);
       })
-      .catch((error) => console.log("error", error));
+      .catch((error) => console.log("error", error))
+      .finally(() => setIsLoading(false));
+  };
+  const performInstantSearch = (text) => {
+    //todo: implement instant search
   };
 
   const renderPageHeader = (title) => {
-    //todo: replace false with isInstantSearchOpen
-    if (false) {
+    if (isInstantSearchOpen) {
       return (
         <Header searchBar rounded>
           <Left style={{ flex: 1 }}>
@@ -72,7 +95,11 @@ export default function RetailChallenge({navigation,route}) {
               transparent
               onPress={() => setIsInstantSearchModalOpen(false)}
             >
-              <Icon name={"arrow-back"} />
+              <Feather
+                name={"arrow-left"}
+                color={globalColors.headerIcon}
+                size={globalSizes.headerIcon}
+              />
             </Button>
           </Left>
           <Item style={{ flex: 10 }}>
@@ -83,7 +110,12 @@ export default function RetailChallenge({navigation,route}) {
               maxLength={140}
               onChangeText={(text) => performInstantSearch(text)}
             />
-            <Icon name={"ios-search"} />
+            <Feather
+              name={"search"}
+              color={globalColors.searchBarIcon}
+              size={globalSizes.searchBarIcon}
+              style={{ marginRight: 5 }}
+            />
           </Item>
           <Right style={{ flex: 1 }}>
             <Button
@@ -93,10 +125,10 @@ export default function RetailChallenge({navigation,route}) {
                 setIsAdvancedSearchModalOpen(true);
               }}
             >
-              <MaterialCommunityIcons
-                name="table-search"
-                size={globalSizes.icons.medium}
-                color="white"
+              <Feather
+                name={"filter"}
+                color={globalColors.headerIcon}
+                size={globalSizes.headerIcon}
               />
             </Button>
           </Right>
@@ -138,53 +170,43 @@ export default function RetailChallenge({navigation,route}) {
       );
     }
   };
-  
+
   const keyExtractor = (item, index) => item.Id.toString();
   const renderItem = ({ item, index }) => {
     let renderItemHeader = (item, expanded) => {
       return (
         <View style={styles.itemHeaderContainer}>
-          <Icon
-            reverse
-            name={expanded ? "chevron-up" : "chevron-down"}
-            type="font-awesome"
-            size={8}
-            color={
-              expanded ? globalColors.iconCollapse : globalColors.iconExpand
-            }
-          />
-          <Text style={styles.itemHeaderFieldTitle}>تاریخ بازدید:</Text>
-          <Text style={styles.itemHeaderFieldData}>
-            {/* todo: use real date */}
-            {persianLib.toShortDate(new Date())}
-          </Text>
-          <Text style={styles.itemHeaderFieldTitle}>تاریخ ثبت:</Text>
-          <Text style={styles.itemHeaderFieldData}>
-            {/* todo: use real date */}
-            {persianLib.toShortDate(new Date())}
-          </Text>
+          <Feather name={expanded ? "chevrons-down" : "chevrons-left"} size={24} color={
+              expanded ? globalColors.listItemCollapseIcon : globalColors.listItemExpandIcon
+            } />
+          <View style={styles.itemHeaderInnerText}>
+              
+              <Text style={styles.itemHeaderFieldTitle}>تاریخ بازدید:</Text>
+              <Text style={styles.itemHeaderFieldData}>
+                {/* TODO: use real date */}
+                {persianLib.toShortDate(new Date())}
+              </Text>
+              <Text style={styles.itemHeaderFieldTitle}>تاریخ ثبت:</Text>
+              <Text style={styles.itemHeaderFieldData}>
+                {/* XXX: use real date */}
+                {persianLib.toShortDate(new Date())}
+              </Text>
+          </View>
           <Feather
-            name="chevrons-left"
-            onPress={()=>navigation.navigate('Home')}
-            size={globalSizes.icons.large}
-            color={globalColors.palette.dimBlue}
-            style={{ flex: 1 ,marginHorizontal:5}}
+            name="corner-down-left"
+            // FIXME: navigate to details page
+            onPress={() => navigation.navigate("Home")}
+            size={globalSizes.icons.medium}
+            color={globalColors.listItemNavigateIcon}
           />
         </View>
       );
     };
     let renderContent = (item) => {
       return (
-        <Text
-          style={{
-            backgroundColor: "#fff",
-            paddingVertical: 10,
-            paddingHorizontal: 20,
-            alignContent: "stretch",
-          }}
-        >
-          {item.Summary}
-        </Text>
+        <View style={styles.itemContentContainer}>
+          <Text>{item.Summary}</Text>
+        </View>
       );
     };
 
@@ -219,33 +241,70 @@ export default function RetailChallenge({navigation,route}) {
     );
   };
 
-  let dev = () => {
-    persianLib.toLongDate(new Date(1588534200000));
-  };
   return (
     <Container>
+      {renderPageHeader(title)}
       <Content>
-        {renderPageHeader(title)}
-        <Button onPress={pullData}>
-          <Text>Pull data</Text>
-        </Button>
-        <Button
+        {/* <Button
           style={{
             flexDirection: "row",
             justifyContent: "flex-start",
             paddingHorizontal: 20,
           }}
-          onPress={dev}
+          onPress={() => {
+            persianLib.toLongDate(new Date(1588534200000));
+          }}
         >
           <Feather name="activity" color="white" size={18} />
-          <Text>Test</Text>
-        </Button>
+          <Text>DEBUG</Text>
+        </Button> */}
         <FlatList
           keyExtractor={keyExtractor}
           data={data}
           renderItem={renderItem}
         />
       </Content>
+
+      <Footer>
+        <FooterTab style={{ justifyContent: "center", alignItems: "center" }}>
+          {isLoading ? (
+            <Spinner color="white" />
+          ) : (
+            <Button onPress={pullData}>
+              <Feather
+                name="refresh-ccw"
+                size={globalSizes.icons.large}
+                color={globalColors.palette.cream}
+              />
+            </Button>
+          )}
+        </FooterTab>
+        <FooterTab>
+          <Button onPress={() => setIsInstantSearchModalOpen(true)}>
+            <Feather
+              name="search"
+              size={globalSizes.icons.large}
+              color={globalColors.palette.cream}
+            />
+          </Button>
+        </FooterTab>
+        <FooterTab style={{ alignSelf: "center", justifyContent: "center" }}>
+          <Menu>
+            <MenuTrigger
+              // todo: set items and remove disabled
+              disabled={true}
+              children={
+                <Feather
+                  color={globalColors.palette.cream}
+                  name={"star"}
+                  size={globalSizes.icons.large}
+                />
+              }
+            />
+            <MenuOptions customStyles={menuOptionsCustomStyles}></MenuOptions>
+          </Menu>
+        </FooterTab>
+      </Footer>
     </Container>
   );
 }
@@ -264,9 +323,16 @@ const styles = StyleSheet.create({
   },
   itemHeaderContainer: {
     flexDirection: "row-reverse",
+    justifyContent:'space-between',
     alignItems: "center",
     height: 50,
+    paddingHorizontal:5,
     backgroundColor: "#f4f3ee",
+  },
+  itemHeaderInnerText:{
+      flex:1,
+      flexDirection:'row-reverse'
+
   },
   itemHeaderFieldTitle: {
     textAlignVertical: "center",
@@ -277,24 +343,12 @@ const styles = StyleSheet.create({
   itemHeaderFieldData: {
     textAlignVertical: "center",
     marginRight: 5,
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: "600",
   },
-  detailsContainer: {
-    flexDirection: "row-reverse",
-    justifyContent: "flex-start",
-    alignItems: "center",
-    backgroundColor: globalColors.palette.paleGray,
-    marginHorizontal: 10,
-    marginTop: 0,
-    padding: 15,
-    borderRadius: 5,
-  },
-  detailsText: {
-    fontSize: 18,
-    textAlign: "right",
-    paddingHorizontal: 35,
-    color: globalColors.palette.coal,
+  itemContentContainer: {
+    paddingVertical: 10,
+    paddingHorizontal: 60,
   },
   leftAction: {
     alignItems: "center",

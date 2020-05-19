@@ -13,9 +13,10 @@ import { StackActions } from "@react-navigation/native";
 import { globalColors } from "../styles/global";
 
 export default function Login({ navigation }) {
+  
   const [message, setMessage] = useState("");
   const [isLoading, setLoading] = useState(false);
-
+  
   const passPhraseRef = useRef(null);
   const userNameRef = useRef(null);
   let userInfo = {
@@ -23,34 +24,32 @@ export default function Login({ navigation }) {
     userName: "",
     iMEI: "64564646465465454",
   };
-
+  
   const submit = () => {
     // todo: remove following
     gotoHome();
-
+    
     setMessage("در حال بررسی اطلاعات کاربری..");
     setLoading(true);
     var myHeaders = new Headers();
     myHeaders.append("Accept", "application/json");
     myHeaders.append("Content-Type", "application/json");
-
+    
     var requestOptions = {
       method: "POST",
       headers: myHeaders,
       body: JSON.stringify(userInfo),
       redirect: "follow",
     };
-
+    
     fetch(
       "http://audit.mazmaz.net/Api/WebApi.asmx/Authenticate",
       requestOptions
-    )
+      )
       .then((response) => response.json())
       .then((result) => {
-        if (result.d.Token)
-        gotoHome();
-        else
-        setMessage(result.d.Message);
+        if (result.d.Token) gotoHome();
+        else setMessage(result.d.Message);
       })
       .catch((error) => {
         console.log("error", error);
@@ -71,43 +70,44 @@ export default function Login({ navigation }) {
     //clear the stack and set the Home screen as only screen
     navigation.dispatch(StackActions.replace("Home"));
   };
-
+//#dev
+gotoHome();
+//
   return (
     <View style={styles.container}>
-      <View style={{justifyContent:'space-between',flex:1}}>
-        <Logo style={styles.logoContainer}/>
+      <View style={{ justifyContent: "space-between", flex: 1 }}>
+        <Logo style={styles.logoContainer} />
         <View style={styles.inputContainer}>
-      
-        <TextInput
-          style={styles.input}
-          underlineColorAndroid="rgba(0,0,0,0)"
-          textAlign="right"
-          placeholder="نام کاربری"
-          keyboardType="email-address"
-          onSubmitEditing={() => passPhraseRef.current.focus()}
-          onChangeText={(val) => (userInfo.userName = val)}
-          ref={userNameRef}
-        />
-        <TextInput
-          style={styles.input}
-          underlineColorAndroid="rgba(0,0,0,0)"
-          textAlign="right"
-          secureTextEntry={true}
-          placeholder="گذرواژه"
-          onSubmitEditing={submit}
-          onChangeText={(val) => (userInfo.passPhrase = val)}
-          ref={passPhraseRef}
-        />
-        <TouchableOpacity style={styles.button} onPress={submit}>
-          <Text style={styles.buttonText}>ورود به حساب</Text>
-        </TouchableOpacity>
-        <View style={styles.messageContainer}>
-          <ActivityIndicator
-            size={isLoading ? 24 : 0}
-            style={{ marginHorizontal: 10 }}
+          <TextInput
+            style={styles.input}
+            underlineColorAndroid="rgba(0,0,0,0)"
+            textAlign="right"
+            placeholder="نام کاربری"
+            keyboardType="email-address"
+            onSubmitEditing={() => passPhraseRef.current.focus()}
+            onChangeText={(val) => (userInfo.userName = val)}
+            ref={userNameRef}
           />
-          <Text style={styles.message}>{message}</Text>
-        </View>
+          <TextInput
+            style={styles.input}
+            underlineColorAndroid="rgba(0,0,0,0)"
+            textAlign="right"
+            secureTextEntry={true}
+            placeholder="گذرواژه"
+            onSubmitEditing={submit}
+            onChangeText={(val) => (userInfo.passPhrase = val)}
+            ref={passPhraseRef}
+          />
+          <TouchableOpacity style={styles.button} onPress={submit}>
+            <Text style={styles.buttonText}>ورود به حساب</Text>
+          </TouchableOpacity>
+          <View style={styles.messageContainer}>
+            <ActivityIndicator
+              size={isLoading ? 24 : 0}
+              style={{ marginHorizontal: 10 }}
+            />
+            <Text style={styles.message}>{message}</Text>
+          </View>
         </View>
       </View>
       <View style={styles.signUpTextContainer}>
@@ -124,10 +124,10 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: globalColors.loginPageBackground,
     flex: 1,
-    justifyContent:'space-around'
+    justifyContent: "space-around",
   },
   logoContainer: {
-    flex:1
+    flex: 1,
   },
   signUpTextContainer: {
     alignSelf: "center",

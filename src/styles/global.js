@@ -49,6 +49,7 @@ export const globalColors = {
     cream:'#F1FAEE',
     coal:'#111111',
     dirtyNavy: "#1c313a",
+    dimBlue:'#0582ca',
   },
     btnAdd:'#00C49A',
     btnDelete:'#e55934',

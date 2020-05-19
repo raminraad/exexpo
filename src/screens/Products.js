@@ -20,14 +20,9 @@ import Swipeable from "react-native-gesture-handler/Swipeable";
 import { globalStyles, globalColors, globalSizes } from "../styles/global";
 
 export default function Products() {
-  const dataArray = [
-    { title: "First Element", content: "Lorem ipsum dolor sit amet" },
-    { title: "Second Element", content: "Lorem ipsum dolor sit amet" },
-    { title: "Third Element", content: "Lorem ipsum dolor sit amet" },
-  ];
   const [data, setData] = useState([]);
   const [freshToken, setFreshToken] = useState(
-    "d1beb4a3-52d6-c3fa-5b9d-14486ac9cc14"
+    "98b44dba-213a-f912-03aa-25c769dc9ab7"
   );
 
   const pullData = () => {
@@ -52,7 +47,7 @@ export default function Products() {
         // console.log(result);
         if (result.d.Response.Token) {
           setFreshToken(result.d.Response.Token);
-          setData(result.d.DataTables.ProductGroup.slice(0, 20));
+          setData(result.d.DataTables.ProductGroup);
           console.log(
             `fetched ${result.d.DataTables.ProductGroup.length} rows and set ${data.length} rows to data`
           );

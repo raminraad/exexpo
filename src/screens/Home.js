@@ -63,10 +63,11 @@ export default class Menu extends Component {
             },
             {
               key: 4,
-              title: "دسترسی ها",
+              title: "پویش فروش خرده",
               color: globalColors.homeIconBackground1,
-              icon: "lock",
               members: 56,
+              icon: "credit-card",
+              page:'RetailChallenge'
             },
           ],
         },
@@ -238,7 +239,7 @@ export default class Menu extends Component {
                     <TouchableOpacity
                       onPress={() => {
                         if (item.page)
-                          this.props.navigation.navigate(item.page);
+                          this.props.navigation.navigate(item.page,{title:item.title});
                         else alert("ماژول در حال ساخت میباشد");
                       }}
                     >

@@ -9,6 +9,7 @@ import {createDrawerNavigator} from "@react-navigation/drawer";
 import {StackActions} from '@react-navigation/native';
 import Products from "./Products";
 import VisitPlans from "./VisitPlans";
+import VisitPlanCustomers from "./VisitPlanCustomers";
 
 
 const HomeDrawer = createDrawerNavigator();
@@ -25,6 +26,7 @@ export class HomeDrawerScreen extends Component<{ navigation: any }> {
                 <HomeDrawer.Screen name='Order' component={Order} />
                 <HomeDrawer.Screen name='Profile' component={Profile} />
                 <HomeDrawer.Screen name='RetailChallenge' component={VisitPlans} />
+                <HomeDrawer.Screen name='VisitPlanCustomers' component={VisitPlanCustomers} />
             </HomeDrawer.Navigator>
         );
     }

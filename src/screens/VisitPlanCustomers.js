@@ -41,50 +41,15 @@ import {
 } from "react-native-popup-menu";
 import DefaultHeader from "../components/DefaultHeader";
 
-export default function VisitPlans({ navigation, route }) {
-  const [rawData, setRawData] = useState([]);
+export default function VisitPlans(props) {
+
   const [presentationalData, setPresentationalData] = useState([]);
-  const [freshToken, setFreshToken] = useState(
-    "bd144820-aeb1-7b3c-a2a5-0f730f30aa5f"
-  );
   const [isOnInstantFilter, setIsOnInstantFilter] = useState(false);
   const [isOnAdvancedFilter, setisOnAdvancedFilter] = useState(false);
-  const [instantFilterText, setInstantFilterText] = useState("");
+  const [instantFilterText, setInstantFilterText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const { title } = route.params;
-  const pullData = () => {
-    setIsLoading(true);
-    var myHeaders = new Headers();
-    myHeaders.append("Accept", "application/json");
-    myHeaders.append("Content-Type", "application/json");
-
-    var raw = { token: `${freshToken}` };
-    var requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: JSON.stringify(raw),
-      redirect: "follow",
-    };
-    console.log(`Request sent with token: ${freshToken}`);
-    fetch(
-      "http://audit.mazmaz.net/Api/WebApi.asmx/SyncServerData",
-      requestOptions
-    )
-      .then((response) => response.json())
-      .then((result) => {
-        if (result.d.Response.Token) {
-          setFreshToken(result.d.Response.Token);
-          setRawData(result.d.DataTables.UserVisitPlan);
-          setPresentationalData(result.d.DataTables.UserVisitPlan);
-          console.log(
-            `fetched ${result.d.DataTables.UserVisitPlan.length} rows and set ${rawData.length} rows to data`
-          );
-        } else alert(result.d.Response.Message);
-      })
-      .catch((error) => console.log("error", error))
-      .finally(() => setIsLoading(false));
-  };
+  const { title } = props.route.params;
 
   const keyExtractor = (item, index) => item.Id.toString();
   const renderItem = ({ item, index }) => {
@@ -116,8 +81,8 @@ export default function VisitPlans({ navigation, route }) {
           </View>
           <Feather
             name="corner-down-left"
-            
-            onPress={() => navigation.navigate("VisitPlanCustomers",{title:`مشتریان هدف در تاریخ ${persianLib.toShortDate(new Date(item.OperationDate))}`})}
+            // FIXME: navigate to details page
+            onPress={() => props.navigation.navigate("Home")}
             size={globalSizes.icons.medium}
             color={globalColors.listItemNavigateIcon}
           />
@@ -174,7 +139,7 @@ export default function VisitPlans({ navigation, route }) {
         setIsOnInstantFilter={setIsOnInstantFilter}
         setInstantFilterText={setInstantFilterText}
         setisOnAdvancedFilter={setisOnAdvancedFilter}
-        navigation={navigation}
+        navigation={props.navigation}
       />
       <Content padder>
         <FlatList
@@ -190,7 +155,7 @@ export default function VisitPlans({ navigation, route }) {
           {isLoading ? (
             <Spinner color="white" />
           ) : (
-            <Button onPress={pullData}>
+            <Button >
               <Feather
                 name="refresh-ccw"
                 size={globalSizes.icons.large}

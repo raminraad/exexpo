@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { StyleSheet, FlatList } from "react-native";
 import {
   Container,
@@ -41,64 +41,86 @@ import {
 } from "react-native-popup-menu";
 import DefaultHeader from "../components/DefaultHeader";
 
-export default function VisitPlans(props) {
+export default function VisitPlanCustomers(props) {
 
   const [presentationalData, setPresentationalData] = useState([]);
   const [isOnInstantFilter, setIsOnInstantFilter] = useState(false);
   const [isOnAdvancedFilter, setisOnAdvancedFilter] = useState(false);
   const [instantFilterText, setInstantFilterText] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+
+  useEffect(() => {
+      setIsLoading(true);
+      setPresentationalData(props.route.params.rawData);
+      setIsLoading(false);
+      return ()=>setPresentationalData([]);
+}, [props,isLoading])
 
   const { title } = props.route.params;
 
   const keyExtractor = (item, index) => item.Id.toString();
   const renderItem = ({ item, index }) => {
     let renderItemHeader = (item, expanded) => {
-      return (
-        <View style={globalStyles.listItemHeaderContainer}>
-          <Feather
-            name={expanded ? "chevrons-down" : "chevrons-left"}
-            size={24}
-            color={
-              expanded
-                ? globalColors.listItemCollapseIcon
-                : globalColors.listItemExpandIcon
-            }
-          />
-          <View style={globalStyles.listItemHeaderInnerText}>
+        return (
+          <View style={globalStyles.listItemHeaderContainer}>
+            <Feather
+              name={expanded ? "chevrons-down" : "chevrons-left"}
+              size={24}
+              color={
+                expanded
+                  ? globalColors.listItemCollapseIcon
+                  : globalColors.listItemExpandIcon
+              }
+            />
+            <View style={globalStyles.listItemHeaderInnerText}>
             <Text style={globalStyles.listItemHeaderFieldTitle}>
-              تاریخ بازدید:
-            </Text>
-            <Text style={globalStyles.listItemHeaderFieldData}>
-              {persianLib.toShortDate(new Date(item.OperationDate))}
-            </Text>
-            <Text style={globalStyles.listItemHeaderFieldTitle}>
-              تاریخ ثبت:
-            </Text>
-            <Text style={globalStyles.listItemHeaderFieldData}>
-              {persianLib.toShortDate(new Date(item.DateX))}
+                ID:
+              </Text>
+              <Text style={globalStyles.listItemHeaderFieldData}>
+                {item.Id}
+              </Text>
+
+              <Text style={globalStyles.listItemHeaderFieldTitle}>
+                تاریخ بازدید:
+              </Text>
+              <Text style={globalStyles.listItemHeaderFieldData}>
+                {persianLib.toShortDate(new Date(item.OperationDate))}
+              </Text>
+              <Text style={globalStyles.listItemHeaderFieldTitle}>
+                تاریخ ثبت:
+              </Text>
+              <Text style={globalStyles.listItemHeaderFieldData}>
+                {persianLib.toShortDate(new Date(item.DateX))}
+              </Text>
+            </View>
+            <Button transparent>
+              <Feather
+                name="corner-down-left"
+                onPress={() =>
+                  navigation.navigate("VisitPlanCustomers", {
+                    title: `مشتریان هدف در تاریخ ${persianLib.toShortDate(
+                      new Date(item.OperationDate)
+                    )}`,
+                  })
+                }
+                size={globalSizes.icons.medium}
+                color={globalColors.listItemNavigateIcon}
+              />
+            </Button>
+          </View>
+        );
+      };
+      let renderItemContent = (item) => {
+        return (
+          <View style={globalStyles.listItemContentContainer}>
+            <Text style={globalStyles.listItemContentFieldTitle}>توضیح:</Text>
+            <Text style={globalStyles.listItemContentFieldData}>
+              {item.Summary}
             </Text>
           </View>
-          <Feather
-            name="corner-down-left"
-            // FIXME: navigate to details page
-            onPress={() => props.navigation.navigate("Home")}
-            size={globalSizes.icons.medium}
-            color={globalColors.listItemNavigateIcon}
-          />
-        </View>
-      );
-    };
-    let renderContent = (item) => {
-      return (
-        <View style={globalStyles.listItemContentContainer}>
-          <Text style={globalStyles.listItemContentFieldTitle}>توضیح:</Text>
-          <Text style={globalStyles.listItemContentFieldData}>
-            {item.Summary}
-          </Text>
-        </View>
-      );
-    };
+        );
+      };
 
     let SwipeLeftAction = () => {
       return (
@@ -124,13 +146,12 @@ export default function VisitPlans(props) {
       <Swipeable renderLeftActions={SwipeLeftAction}>
         <Accordion
           dataArray={[item]}
-          renderContent={renderContent}
+          renderContent={renderItemContent}
           renderHeader={renderItemHeader}
         />
       </Swipeable>
     );
   };
-
   return (
     <Container>
       <DefaultHeader
@@ -141,14 +162,18 @@ export default function VisitPlans(props) {
         setisOnAdvancedFilter={setisOnAdvancedFilter}
         navigation={props.navigation}
       />
-      <Content padder>
+      <Content padder >
+      {isLoading ? 
+            <Spinner style={{height:'100%'}} color="grey" size={50} />
+           : 
         <FlatList
           keyExtractor={keyExtractor}
           //TODO: get data from a method that performs instant and advanced filter
           data={presentationalData}
           renderItem={renderItem}
         />
-      </Content>
+          }
+          </Content>
 
       <Footer>
         <FooterTab style={{ justifyContent: "center", alignItems: "center" }}>

@@ -12,6 +12,8 @@ import { AppLoading } from 'expo';
 import { Container, Text } from 'native-base';
 import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
+import VisitPlans from './src/screens/VisitPlans';
+import VisitPlanCustomers from './src/screens/VisitPlanCustomers';
 
 const LoginStack = createStackNavigator();
 
@@ -56,6 +58,8 @@ export default class App extends React.Component {
                     <LoginStack.Screen name="Home" component={HomeDrawerScreen}/>
                     <LoginStack.Screen name="Login" component={Login}/>
                     <LoginStack.Screen name="SignUp" component={SignUp}/>
+                    <LoginStack.Screen name='RetailChallenge' component={VisitPlans} />
+                <LoginStack.Screen name='VisitPlanCustomers' component={VisitPlanCustomers} />
                 </LoginStack.Navigator>
             </NavigationContainer>
         </MenuProvider>

@@ -74,13 +74,18 @@ export default function VisitPlans({ navigation, route }) {
       .then((response) => response.json())
       .then((result) => {
         if (result.d.Response.Token) {
-          setFreshToken(result.d.Response.Token);
-          setRawData(result.d.DataTables.UserVisitPlan);
-          setPresentationalData(result.d.DataTables.UserVisitPlan);
+          setRawData(result.d);
           console.log(
-            `fetched ${result.d.DataTables.UserVisitPlan.length} rows and set ${rawData.length} rows to data`
+            `fetched ${result.d.DataTables.UserVisitPlan.length} rows.`
           );
-        } else alert(result.d.Response.Message);
+          return result.d.DataTables.UserVisitPlan;
+        } else {
+          alert(result.d.Response.Message);
+          return null;
+        }
+      })
+      .then((result) => {
+        if (result) setPresentationalData(result);
       })
       .catch((error) => console.log("error", error))
       .finally(() => setIsLoading(false));
@@ -94,6 +99,7 @@ export default function VisitPlans({ navigation, route }) {
           <Feather
             name={expanded ? "chevrons-down" : "chevrons-left"}
             size={24}
+            style={{marginRight:7}}
             color={
               expanded
                 ? globalColors.listItemCollapseIcon
@@ -114,17 +120,26 @@ export default function VisitPlans({ navigation, route }) {
               {persianLib.toShortDate(new Date(item.DateX))}
             </Text>
           </View>
-          <Feather
-            name="corner-down-left"
-            
-            onPress={() => navigation.navigate("VisitPlanCustomers",{title:`مشتریان هدف در تاریخ ${persianLib.toShortDate(new Date(item.OperationDate))}`})}
-            size={globalSizes.icons.medium}
-            color={globalColors.listItemNavigateIcon}
-          />
+          <Button transparent  style={{paddingHorizontal:7}}
+          onPress={() =>
+            navigation.navigate("VisitPlanCustomers", {
+              title: `مشتریان هدف در تاریخ ${persianLib.toShortDate(
+                new Date(item.OperationDate)
+              )}`,
+              rawData:rawData.DataTables.VisitPlanCustomers.filter(plan=>plan.VisitPlanId==item.Id),
+              visitPlanId:item.Id,
+            })
+          }>
+            <Feather
+              name="corner-down-left"
+              size={globalSizes.icons.medium}
+              color={globalColors.listItemNavigateIcon}
+            />
+          </Button>
         </View>
       );
     };
-    let renderContent = (item) => {
+    let renderItemContent = (item) => {
       return (
         <View style={globalStyles.listItemContentContainer}>
           <Text style={globalStyles.listItemContentFieldTitle}>توضیح:</Text>
@@ -159,7 +174,7 @@ export default function VisitPlans({ navigation, route }) {
       <Swipeable renderLeftActions={SwipeLeftAction}>
         <Accordion
           dataArray={[item]}
-          renderContent={renderContent}
+          renderContent={renderItemContent}
           renderHeader={renderItemHeader}
         />
       </Swipeable>

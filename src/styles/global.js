@@ -92,7 +92,6 @@ export const globalStyles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     height: 50,
-    paddingHorizontal: 5,
     backgroundColor: globalColors.listItemHeaderContainer,
   },
   listItemHeaderInnerText: {

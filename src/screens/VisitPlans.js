@@ -41,10 +41,10 @@ import {
 } from "react-native-popup-menu";
 import DefaultHeader from "../components/DefaultHeader";
 
-export default function RetailChallenges({ navigation, route }) {
+export default function VisitPlans({ navigation, route }) {
   const [data, setData] = useState([]);
   const [freshToken, setFreshToken] = useState(
-    "89142b48-8dd0-f6a0-bc15-dff1d8e01d8b"
+    "bd144820-aeb1-7b3c-a2a5-0f730f30aa5f"
   );
   const [isInstantSearchOpen, setIsInstantSearchModalOpen] = useState(false);
   const [isAdvancedSearchOpen, setIsAdvancedSearchModalOpen] = useState(false);
@@ -85,10 +85,6 @@ export default function RetailChallenges({ navigation, route }) {
   };
   const performInstantSearch = (text) => {
     //todo: implement instant search
-  };
-
-  const renderPageHeader = (title) => {
-    
   };
 
   const keyExtractor = (item, index) => item.Id.toString();
@@ -165,7 +161,7 @@ export default function RetailChallenges({ navigation, route }) {
 
   return (
     <Container>
-      <DefaultHeader title={title} isInstantSearchOpen={isInstantSearchOpen} navigation={navigation} />
+      <DefaultHeader title={title} isInstantSearchOpen={isInstantSearchOpen} navigation={navigation} prop/>
       <Content>
         {/* <Button
           style={{
@@ -249,7 +245,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     height: 50,
     paddingHorizontal:5,
-    backgroundColor: "#f4f3ee",
+    backgroundColor: globalColors.listItemHeaderContainer,
   },
   itemHeaderInnerText:{
       flex:1,
@@ -272,6 +268,7 @@ const styles = StyleSheet.create({
     flexDirection:'row-reverse',
     paddingVertical: 10,
     paddingHorizontal: 60,
+    backgroundColor: globalColors.listItemContentContainer,
   },
   itemContentFieldTitle: {
     textAlignVertical: "center",

@@ -94,6 +94,8 @@ export const globalColors = {
     listItemNavigateIcon:'#6b717e',
     listItemCollapseIcon:'#8d99ae',
     listItemExpandIcon:'#8d99ae',
+    listItemHeaderContainer:"#e1e5ee77",
+    listItemContentContainer:'#e1e5ee00',
 
 };
 

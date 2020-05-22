@@ -25,6 +25,8 @@ import {
 import { Icon, Divider } from "react-native-elements";
 import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
+import { MaterialIcons } from '@expo/vector-icons'; 
+import { FontAwesome } from '@expo/vector-icons';
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import {
   globalStyles,
@@ -44,9 +46,7 @@ import DefaultHeader from "../components/DefaultHeader";
 export default function VisitPlans({ navigation, route }) {
   const [rawData, setRawData] = useState([]);
   const [presentationalData, setPresentationalData] = useState([]);
-  const [freshToken, setFreshToken] = useState(
-    "bd144820-aeb1-7b3c-a2a5-0f730f30aa5f"
-  );
+  const [freshToken, setFreshToken] = useState(global.authToken);
   const [isOnInstantFilter, setIsOnInstantFilter] = useState(false);
   const [isOnAdvancedFilter, setisOnAdvancedFilter] = useState(false);
   const [instantFilterText, setInstantFilterText] = useState("");
@@ -99,37 +99,46 @@ export default function VisitPlans({ navigation, route }) {
           <Feather
             name={expanded ? "chevrons-down" : "chevrons-left"}
             size={24}
-            style={{marginRight:7}}
+            style={globalStyles.listItemHeaderCollapseIcon}
             color={
               expanded
                 ? globalColors.listItemCollapseIcon
                 : globalColors.listItemExpandIcon
             }
           />
-          <View style={globalStyles.listItemHeaderInnerText}>
-            <Text style={globalStyles.listItemHeaderFieldTitle}>
-              تاریخ بازدید:
-            </Text>
-            <Text style={globalStyles.listItemHeaderFieldData}>
-              {persianLib.toShortDate(new Date(item.OperationDate))}
-            </Text>
-            <Text style={globalStyles.listItemHeaderFieldTitle}>
-              تاریخ ثبت:
-            </Text>
-            <Text style={globalStyles.listItemHeaderFieldData}>
-              {persianLib.toShortDate(new Date(item.DateX))}
-            </Text>
+          <View style={globalStyles.listItemHeaderInnerTextContainer}>
+            <View style={{ ...globalStyles.listItemHeaderFieldContainer }}>
+              <Text style={globalStyles.listItemHeaderFieldTitle}>
+                تاریخ بازدید:
+              </Text>
+              <Text style={globalStyles.listItemHeaderFieldData}>
+                {persianLib.toShortDate(new Date(item.OperationDate))}
+              </Text>
+            </View>
+            <View style={{ ...globalStyles.listItemHeaderFieldContainer }}>
+              <Text style={globalStyles.listItemHeaderFieldTitle}>
+                تاریخ ثبت:
+              </Text>
+              <Text style={globalStyles.listItemHeaderFieldData}>
+                {persianLib.toShortDate(new Date(item.DateX))}
+              </Text>
+            </View>
           </View>
-          <Button transparent  style={{paddingHorizontal:7}}
-          onPress={() =>
-            navigation.navigate("VisitPlanCustomers", {
-              title: `مشتریان هدف در تاریخ ${persianLib.toShortDate(
-                new Date(item.OperationDate)
-              )}`,
-              rawData:rawData.DataTables.VisitPlanCustomers.filter(plan=>plan.VisitPlanId==item.Id),
-              visitPlanId:item.Id,
-            })
-          }>
+          <Button
+            transparent
+            style={globalStyles.listItemHeaderNavigateButton}
+            onPress={() =>
+              navigation.push("VisitPlanCustomers", {
+                title: `مشتریان هدف در تاریخ ${persianLib.toShortDate(
+                  new Date(item.OperationDate)
+                )}`,
+                rawData: rawData.DataTables.VisitPlanCustomers.filter(
+                  (plan) => plan.VisitPlanId == item.Id
+                ),
+                visitPlanId: item.Id,
+              })
+            }
+          >
             <Feather
               name="corner-down-left"
               size={globalSizes.icons.medium}
@@ -142,10 +151,12 @@ export default function VisitPlans({ navigation, route }) {
     let renderItemContent = (item) => {
       return (
         <View style={globalStyles.listItemContentContainer}>
-          <Text style={globalStyles.listItemContentFieldTitle}>توضیح:</Text>
-          <Text style={globalStyles.listItemContentFieldData}>
-            {item.Summary}
-          </Text>
+          <View style={globalStyles.listItemContentRow}>
+            <MaterialIcons name="description" size={globalSizes.icons.small} backgroundColor='red' color="grey" />
+            <Text style={globalStyles.listItemContentFieldData}>
+              {item.Summary ? item.Summary : "وارد نشده"}
+            </Text>
+          </View>
         </View>
       );
     };

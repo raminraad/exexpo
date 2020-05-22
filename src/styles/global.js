@@ -1,6 +1,5 @@
 import { StyleSheet } from "react-native";
 
-
 export const globalColors = {
   palette: {
     seaGreen: "#2a9d8f",
@@ -15,8 +14,8 @@ export const globalColors = {
   btnUpdate: "#3DA5D9",
   btnOk: "#3DA5D9",
   btnCancel: "#979DAC",
-  drawerBackground: "#0f4c5c",
-  drawerIcon: "#98c1d9",
+  drawerBackground: "#2f3e46",
+  drawerIcon: "#F1FAEE66",
   homeBackground: "#292f36",
   homeIconBackground1: "#7768ae",
   homeIconBackground2: "#ec9a29",
@@ -29,7 +28,9 @@ export const globalColors = {
   homeIcon: "#F1FAEE",
   homeIconText: "#F1FAEE",
   homeSectionHeader: "#F1FAEE66",
-  loginPageBackground: "#2e5266",
+  loginPageContainerBackground: "#003554",
+  loginPageInputBackground: "#00649465",
+  loginPageSubmitButtonBackground: "#006494ee",
   listItemNavigateIcon: "#6b717e",
   listItemCollapseIcon: "#8d99ae",
   listItemExpandIcon: "#8d99ae",
@@ -50,6 +51,10 @@ export const globalSizes = {
 };
 
 export const globalStyles = StyleSheet.create({
+  drawerContainer: {
+    flex: 1,
+    backgroundColor: globalColors.drawerBackground,
+  },
   titleText: {
     fontSize: 18,
     fontWeight: "bold",
@@ -89,18 +94,23 @@ export const globalStyles = StyleSheet.create({
   },
   listItemHeaderContainer: {
     flexDirection: "row-reverse",
-    justifyContent: "space-between",
+    flexWrap: "wrap",
     alignItems: "center",
-    height: 50,
     backgroundColor: globalColors.listItemHeaderContainer,
   },
-  listItemHeaderInnerText: {
+  listItemHeaderNavigateButton: { paddingLeft: 5, paddingRight: 10 },
+  listItemHeaderCollapseIcon: { paddingRight: 5 },
+  listItemHeaderInnerTextContainer: {
     flex: 1,
     flexDirection: "row-reverse",
   },
+  listItemHeaderFieldContainer: {
+    flex: 1,
+    flexDirection: "row-reverse",
+    marginLeft: 10,
+  },
   listItemHeaderFieldTitle: {
     textAlignVertical: "center",
-    marginRight: 25,
     fontSize: 14,
     color: "grey",
   },
@@ -111,12 +121,14 @@ export const globalStyles = StyleSheet.create({
     fontWeight: "600",
   },
   listItemContentContainer: {
-    flexDirection: "row-reverse",
-    height: 60,
-    paddingHorizontal: 60,
+    paddingRight: 40,
     paddingVertical: 10,
-    alignItems: "flex-start",
+    alignItems: "flex-end",
     backgroundColor: globalColors.listItemContentContainer,
+  },
+  listItemContentRow: {
+    flexDirection: "row-reverse",
+    paddingVertical: 5,
   },
   listItemContentFieldTitle: {
     textAlignVertical: "center",
@@ -125,7 +137,7 @@ export const globalStyles = StyleSheet.create({
   },
   listItemContentFieldData: {
     textAlignVertical: "center",
-    marginRight: 5,
+    marginRight: 10,
     fontSize: 14,
     fontWeight: "600",
   },
@@ -155,4 +167,3 @@ export const menuOptionsCustomStyles = {
     fontSize: 16,
   },
 };
-

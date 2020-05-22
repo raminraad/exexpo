@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, FlatList } from "react-native";
 import {
   Container,
@@ -42,85 +42,101 @@ import {
 import DefaultHeader from "../components/DefaultHeader";
 
 export default function VisitPlanCustomers(props) {
-
   const [presentationalData, setPresentationalData] = useState([]);
   const [isOnInstantFilter, setIsOnInstantFilter] = useState(false);
   const [isOnAdvancedFilter, setisOnAdvancedFilter] = useState(false);
-  const [instantFilterText, setInstantFilterText] = useState('');
+  const [instantFilterText, setInstantFilterText] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
-
   useEffect(() => {
-      setIsLoading(true);
-      setPresentationalData(props.route.params.rawData);
-      setIsLoading(false);
-      return ()=>setPresentationalData([]);
-}, [props,isLoading])
+    setIsLoading(true);
+    setPresentationalData(props.route.params.rawData);
+    setIsLoading(false);
+    return () => setPresentationalData([]);
+  }, [props, isLoading]);
 
   const { title } = props.route.params;
 
   const keyExtractor = (item, index) => item.Id.toString();
   const renderItem = ({ item, index }) => {
     let renderItemHeader = (item, expanded) => {
-        return (
-          <View style={globalStyles.listItemHeaderContainer}>
-            <Feather
-              name={expanded ? "chevrons-down" : "chevrons-left"}
-              size={24}
-              color={
-                expanded
-                  ? globalColors.listItemCollapseIcon
-                  : globalColors.listItemExpandIcon
-              }
-            />
-            <View style={globalStyles.listItemHeaderInnerText}>
-            <Text style={globalStyles.listItemHeaderFieldTitle}>
-                ID:
-              </Text>
+      return (
+        <View style={globalStyles.listItemHeaderContainer}>
+          <Feather
+            name={expanded ? "chevrons-down" : "chevrons-left"}
+            size={24}
+            style={globalStyles.listItemHeaderCollapseIcon}
+            color={
+              expanded
+                ? globalColors.listItemCollapseIcon
+                : globalColors.listItemExpandIcon
+            }
+          />
+          <View style={globalStyles.listItemHeaderInnerTextContainer}>
+            <View style={{ ...globalStyles.listItemHeaderFieldContainer }}>
+              <Text style={globalStyles.listItemHeaderFieldTitle}>شناسه:</Text>
               <Text style={globalStyles.listItemHeaderFieldData}>
-                {item.Id}
-              </Text>
-
-              <Text style={globalStyles.listItemHeaderFieldTitle}>
-                تاریخ بازدید:
-              </Text>
-              <Text style={globalStyles.listItemHeaderFieldData}>
-                {persianLib.toShortDate(new Date(item.OperationDate))}
-              </Text>
-              <Text style={globalStyles.listItemHeaderFieldTitle}>
-                تاریخ ثبت:
-              </Text>
-              <Text style={globalStyles.listItemHeaderFieldData}>
-                {persianLib.toShortDate(new Date(item.DateX))}
+                {item.Code}
               </Text>
             </View>
-            <Button transparent>
-              <Feather
-                name="corner-down-left"
-                onPress={() =>
-                  navigation.navigate("VisitPlanCustomers", {
-                    title: `مشتریان هدف در تاریخ ${persianLib.toShortDate(
-                      new Date(item.OperationDate)
-                    )}`,
-                  })
-                }
-                size={globalSizes.icons.medium}
-                color={globalColors.listItemNavigateIcon}
-              />
-            </Button>
+
+            <View style={{...globalStyles.listItemHeaderFieldContainer,flex:2}}>
+              <Text style={globalStyles.listItemHeaderFieldTitle}>عنوان:</Text>
+              <Text style={[globalStyles.listItemHeaderFieldData, { flex: 1 }]}>
+                {item.Title}
+              </Text>
+            </View>
           </View>
-        );
-      };
-      let renderItemContent = (item) => {
-        return (
-          <View style={globalStyles.listItemContentContainer}>
-            <Text style={globalStyles.listItemContentFieldTitle}>توضیح:</Text>
+          <Button transparent style={globalStyles.listItemHeaderNavigateButton}>
+            <Feather
+              name="corner-down-left"
+              onPress={() =>
+                navigation.navigate("VisitPlanCustomers", {
+                  title: `مشتریان هدف در تاریخ ${persianLib.toShortDate(
+                    new Date(item.OperationDate)
+                  )}`,
+                })
+              }
+              size={globalSizes.icons.medium}
+              color={globalColors.listItemNavigateIcon}
+            />
+          </Button>
+        </View>
+      );
+    };
+    let renderItemContent = (item) => {
+      return (
+        <View style={globalStyles.listItemContentContainer}>
+          <View style={globalStyles.listItemContentRow}>
+            <Feather name="user" size={globalSizes.icons.small} color="grey" />
             <Text style={globalStyles.listItemContentFieldData}>
-              {item.Summary}
+              {item.Owner ? item.Owner : "وارد نشده"}
             </Text>
           </View>
-        );
-      };
+
+          <View style={globalStyles.listItemContentRow}>
+            <Feather name="map-pin" size={globalSizes.icons.small} color="grey" />
+            <Text style={globalStyles.listItemContentFieldData}>
+              {item.Address ? item.Address : "وارد نشده"}
+            </Text>
+          </View>
+
+          <View style={globalStyles.listItemContentRow}>
+            <Feather name="phone" size={globalSizes.icons.small} color="grey" />
+            <Text style={globalStyles.listItemContentFieldData}>
+              {item.Phone ? item.Phone : "وارد نشده"}
+            </Text>
+          </View>
+
+          <View style={globalStyles.listItemContentRow}>
+            <Feather name="smartphone" size={globalSizes.icons.small} color="grey" />
+            <Text style={globalStyles.listItemContentFieldData}>
+              {item.Cell ? item.Cell : "وارد نشده"}
+            </Text>
+          </View>
+        </View>
+      );
+    };
 
     let SwipeLeftAction = () => {
       return (
@@ -162,25 +178,25 @@ export default function VisitPlanCustomers(props) {
         setisOnAdvancedFilter={setisOnAdvancedFilter}
         navigation={props.navigation}
       />
-      <Content padder >
-      {isLoading ? 
-            <Spinner style={{height:'100%'}} color="grey" size={50} />
-           : 
-        <FlatList
-          keyExtractor={keyExtractor}
-          //TODO: get data from a method that performs instant and advanced filter
-          data={presentationalData}
-          renderItem={renderItem}
-        />
-          }
-          </Content>
+      <Content padder>
+        {isLoading ? (
+          <Spinner style={{ height: "100%" }} color="grey" size={50} />
+        ) : (
+          <FlatList
+            keyExtractor={keyExtractor}
+            //TODO: get data from a method that performs instant and advanced filter
+            data={presentationalData}
+            renderItem={renderItem}
+          />
+        )}
+      </Content>
 
       <Footer>
         <FooterTab style={{ justifyContent: "center", alignItems: "center" }}>
           {isLoading ? (
             <Spinner color="white" />
           ) : (
-            <Button >
+            <Button>
               <Feather
                 name="refresh-ccw"
                 size={globalSizes.icons.large}

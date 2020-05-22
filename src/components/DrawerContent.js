@@ -20,7 +20,7 @@ export function DrawerContent(props) {
     };
 
     return (
-        <View style={{ flex: 1, backgroundColor: globalColors.drawerBackground ,borderLeftWidth:3,borderLeftColor:'rgba(5,5,5,0.4)'}}>
+        <View style={globalStyles.drawerContainer}>
             <DrawerContentScrollView {...props}>
                 <View style={styles.drawerContent}>
                     <View style={styles.userInfoSection}>

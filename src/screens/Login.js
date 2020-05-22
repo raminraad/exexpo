@@ -13,10 +13,9 @@ import { StackActions } from "@react-navigation/native";
 import { globalColors } from "../styles/global";
 
 export default function Login({ navigation }) {
-  
   const [message, setMessage] = useState("");
   const [isLoading, setLoading] = useState(false);
-  
+
   const passPhraseRef = useRef(null);
   const userNameRef = useRef(null);
   let userInfo = {
@@ -24,32 +23,31 @@ export default function Login({ navigation }) {
     userName: "",
     iMEI: "64564646465465454",
   };
-  
+
   const submit = () => {
-    // todo: remove following
-    gotoHome();
-    
     setMessage("در حال بررسی اطلاعات کاربری..");
     setLoading(true);
     var myHeaders = new Headers();
     myHeaders.append("Accept", "application/json");
     myHeaders.append("Content-Type", "application/json");
-    
+
     var requestOptions = {
       method: "POST",
       headers: myHeaders,
       body: JSON.stringify(userInfo),
       redirect: "follow",
     };
-    
+
     fetch(
       "http://audit.mazmaz.net/Api/WebApi.asmx/Authenticate",
       requestOptions
-      )
+    )
       .then((response) => response.json())
       .then((result) => {
-        if (result.d.Token) gotoHome();
-        else setMessage(result.d.Message);
+        if (result.d.Token) {
+          gotoHome();
+          global.authToken = result.d.Token;
+        } else setMessage(result.d.Message);
       })
       .catch((error) => {
         console.log("error", error);
@@ -70,9 +68,11 @@ export default function Login({ navigation }) {
     //clear the stack and set the Home screen as only screen
     navigation.dispatch(StackActions.replace("Home"));
   };
-//#dev
-gotoHome();
-//
+
+  // XXX: remove the following
+  // gotoHome();
+  //
+
   return (
     <View style={styles.container}>
       <View style={{ justifyContent: "space-between", flex: 1 }}>
@@ -122,7 +122,7 @@ gotoHome();
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: globalColors.loginPageBackground,
+    backgroundColor: globalColors.loginPageContainerBackground,
     flex: 1,
     justifyContent: "space-around",
   },
@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 40,
-    backgroundColor: "#FFF2",
+    backgroundColor: globalColors.loginPageInputBackground,
     borderRadius: 25,
     paddingHorizontal: 16,
     fontSize: 16,
@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
   },
   button: {
     height: 40,
-    backgroundColor: globalColors.palette.dirtyNavy,
+    backgroundColor: globalColors.loginPageSubmitButtonBackground,
     borderRadius: 25,
     marginVertical: 10,
   },

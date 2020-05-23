@@ -48,31 +48,45 @@ export default function VisitPlanResultForm({ onSubmit, onCancel, item }) {
                 value={props.values.fName}
               />
             </View>
+
             <View style={globalStyles.addModalFieldContainer}>
               <Text style={globalStyles.addModalFieldTitle}>وضعیت</Text>
+              <View style={globalStyles.addModalFieldRadioButtonGroupContainer}>
+                <RadioButton.Group onValueChange={(value) => setVisitResultStatus(value)} value={visitResultStatus}>
+                  <View style={globalStyles.radioItemContainer}>
+                    <Text>پویش نشده</Text>
+                    <RadioButton value='0' />
+                  </View>
+                  <View style={globalStyles.radioItemContainer}>
+                    <Text>عدم همکاری</Text>
+                    <RadioButton value='3' />
+                  </View>
+                  <View style={globalStyles.radioItemContainer}>
+                    <Text>پویش موفق</Text>
+                    <RadioButton value='7' />
+                  </View>
+                  <View style={globalStyles.radioItemContainer}>
+                    <Text>تغییر کاربری</Text>
+                    <RadioButton value='11' />
+                  </View>
+                  <View style={globalStyles.radioItemContainer}>
+                    <Text>یافت نشد</Text>
+                    <RadioButton value='13' />
+                  </View>
+                </RadioButton.Group>
+              </View>
+            </View>
 
-              <RadioButton.Group onValueChange={(value) => setVisitResultStatus(value)} value={visitResultStatus}>
-                <View style={globalStyles.radioItemContainer}>
-                  <Text>پویش نشده</Text>
-                  <RadioButton value='0' />
-                </View>
-                <View style={globalStyles.radioItemContainer}>
-                  <Text>عدم همکاری</Text>
-                  <RadioButton value='3' />
-                </View>
-                <View style={globalStyles.radioItemContainer}>
-                  <Text>پویش موفق</Text>
-                  <RadioButton value='7' />
-                </View>
-                <View style={globalStyles.radioItemContainer}>
-                  <Text>تغییر کاربری</Text>
-                  <RadioButton value='11' />
-                </View>
-                <View style={globalStyles.radioItemContainer}>
-                  <Text>یافت نشد</Text>
-                  <RadioButton value='13' />
-                </View>
-              </RadioButton.Group>
+            <View style={globalStyles.addModalFieldContainer}>
+              <Text style={globalStyles.addModalFieldTitle}>محصولات فروشگاه</Text>
+              <TextInput
+                style={[globalStyles.addModalFieldInput, { height: 100 }]}
+                textAlignVertical='top'
+                placeholder='توضیحات مختصر درباره گزارش پویش'
+                onChangeText={props.handleChange("ResultSummary")}
+                multiline
+                value={props.values.fName}
+              />
             </View>
 
             <TextInput multiline style={globalStyles.input} placeholder='نام خانوادگی' onChangeText={props.handleChange("lName")} value={props.values.lName} />

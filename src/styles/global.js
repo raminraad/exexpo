@@ -149,25 +149,28 @@ export const globalStyles = StyleSheet.create({
   addModalContainer: {
     padding: 50,
   },
-  addModalFieldContainer:
-  {
-    alignItems:'flex-end',
+  addModalFieldContainer: {
+    alignItems: "flex-end",
     marginBottom: 15,
   },
   addModalFieldTitle: {
     fontSize: 18,
     marginBottom: 10,
     fontWeight: "bold",
-    color: "#888",
+    color: "#ABC",
   },
   addModalFieldInput: {
     borderWidth: 1,
-    alignSelf:'stretch',
+    alignSelf: "stretch",
     borderColor: "#ddd",
     padding: 10,
     fontSize: 18,
     borderRadius: 6,
     marginRight: 20,
+  },
+  addModalFieldRadioButtonGroupContainer: {
+    alignItems:'flex-end',
+    paddingHorizontal: 10,
   },
   radioItemContainer: {
     flexDirection: "row",

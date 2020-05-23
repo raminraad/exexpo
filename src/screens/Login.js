@@ -71,6 +71,8 @@ export default function Login({ navigation }) {
 
   // XXX: remove the following
   // gotoHome();
+  global.authToken='05ee48ac-656e-dbfb-26bb-294d5e62d4b8';
+  navigation.dispatch(StackActions.replace("VisitPlans",{title:'dev.visitPlans'}));
   //
 
   return (

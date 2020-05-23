@@ -1,4 +1,4 @@
-import React, { useState , useEffect} from "react";
+import React, { useState } from "react";
 import { StyleSheet, FlatList } from "react-native";
 import {
   Container,
@@ -28,12 +28,22 @@ import { Feather } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import Swipeable from "react-native-gesture-handler/Swipeable";
-import { globalStyles, globalColors, globalSizes, menuOptionsCustomStyles } from "../styles/global";
+import {
+  globalStyles,
+  globalColors,
+  globalSizes,
+  menuOptionsCustomStyles,
+} from "../styles/global";
 import * as persianLib from "../lib/persianLib";
-import { Menu, MenuTrigger, MenuOptions, MenuOption } from "react-native-popup-menu";
+import {
+  Menu,
+  MenuTrigger,
+  MenuOptions,
+  MenuOption,
+} from "react-native-popup-menu";
 import DefaultHeader from "../components/DefaultHeader";
 
-export default function VisitPlans({ navigation, route }) {
+export default function VisitPlanResults({ navigation, route }) {
   const [rawData, setRawData] = useState([]);
   const [presentationalData, setPresentationalData] = useState([]);
   const [freshToken, setFreshToken] = useState(global.authToken);
@@ -41,13 +51,6 @@ export default function VisitPlans({ navigation, route }) {
   const [isOnAdvancedFilter, setisOnAdvancedFilter] = useState(false);
   const [instantFilterText, setInstantFilterText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
-  // xxx: remove this
-  useEffect(() => {
-    if (!(rawData&&rawData.length>0))
-    pullData();
-  }, []);
-/////////////////////
 
   const { title } = route.params;
   const pullData = () => {
@@ -64,12 +67,17 @@ export default function VisitPlans({ navigation, route }) {
       redirect: "follow",
     };
     console.log(`Request sent with token: ${freshToken}`);
-    fetch("http://audit.mazmaz.net/Api/WebApi.asmx/SyncServerData", requestOptions)
+    fetch(
+      "http://audit.mazmaz.net/Api/WebApi.asmx/SyncServerData",
+      requestOptions
+    )
       .then((response) => response.json())
       .then((result) => {
         if (result.d.Response.Token) {
           setRawData(result.d);
-          console.log(`fetched ${result.d.DataTables.UserVisitPlan.length} rows.`);
+          console.log(
+            `fetched ${result.d.DataTables.UserVisitPlan.length} rows.`
+          );
           return result.d.DataTables.UserVisitPlan;
         } else {
           alert(result.d.Response.Message);
@@ -92,16 +100,28 @@ export default function VisitPlans({ navigation, route }) {
             name={expanded ? "chevrons-down" : "chevrons-left"}
             size={24}
             style={globalStyles.listItemHeaderCollapseIcon}
-            color={expanded ? globalColors.listItemCollapseIcon : globalColors.listItemExpandIcon}
+            color={
+              expanded
+                ? globalColors.listItemCollapseIcon
+                : globalColors.listItemExpandIcon
+            }
           />
           <View style={globalStyles.listItemHeaderInnerTextContainer}>
             <View style={{ ...globalStyles.listItemHeaderFieldContainer }}>
-              <Text style={globalStyles.listItemHeaderFieldTitle}>تاریخ بازدید:</Text>
-              <Text style={globalStyles.listItemHeaderFieldData}>{persianLib.toShortDate(new Date(item.OperationDate))}</Text>
+              <Text style={globalStyles.listItemHeaderFieldTitle}>
+                تاریخ بازدید:
+              </Text>
+              <Text style={globalStyles.listItemHeaderFieldData}>
+                {persianLib.toShortDate(new Date(item.OperationDate))}
+              </Text>
             </View>
             <View style={{ ...globalStyles.listItemHeaderFieldContainer }}>
-              <Text style={globalStyles.listItemHeaderFieldTitle}>تاریخ ثبت:</Text>
-              <Text style={globalStyles.listItemHeaderFieldData}>{persianLib.toShortDate(new Date(item.DateX))}</Text>
+              <Text style={globalStyles.listItemHeaderFieldTitle}>
+                تاریخ ثبت:
+              </Text>
+              <Text style={globalStyles.listItemHeaderFieldData}>
+                {persianLib.toShortDate(new Date(item.DateX))}
+              </Text>
             </View>
           </View>
           <Button
@@ -109,12 +129,21 @@ export default function VisitPlans({ navigation, route }) {
             style={globalStyles.listItemHeaderNavigateButton}
             onPress={() =>
               navigation.push("VisitPlanCustomers", {
-                title: `مشتریان هدف در تاریخ ${persianLib.toShortDate(new Date(item.OperationDate))}`,
-                rawData: rawData.DataTables.VisitPlanCustomers.filter((plan) => plan.VisitPlanId == item.Id),
+                title: `مشتریان هدف در تاریخ ${persianLib.toShortDate(
+                  new Date(item.OperationDate)
+                )}`,
+                rawData: rawData.DataTables.VisitPlanCustomers.filter(
+                  (plan) => plan.VisitPlanId == item.Id
+                ),
                 visitPlanId: item.Id,
               })
-            }>
-            <Feather name='users' size={globalSizes.icons.medium} color={globalColors.listItemNavigateIcon} />
+            }
+          >
+            <Feather
+              name="users"
+              size={globalSizes.icons.medium}
+              color={globalColors.listItemNavigateIcon}
+            />
           </Button>
         </View>
       );
@@ -123,8 +152,15 @@ export default function VisitPlans({ navigation, route }) {
       return (
         <View style={globalStyles.listItemContentContainer}>
           <View style={globalStyles.listItemContentRow}>
-            <MaterialIcons name='description' size={globalSizes.icons.small} backgroundColor='red' color='grey' />
-            <Text style={globalStyles.listItemContentFieldData}>{item.Summary ? item.Summary : "وارد نشده"}</Text>
+            <MaterialIcons
+              name="description"
+              size={globalSizes.icons.small}
+              backgroundColor="red"
+              color="grey"
+            />
+            <Text style={globalStyles.listItemContentFieldData}>
+              {item.Summary ? item.Summary : "وارد نشده"}
+            </Text>
           </View>
         </View>
       );
@@ -133,19 +169,33 @@ export default function VisitPlans({ navigation, route }) {
     let SwipeLeftAction = () => {
       return (
         <View style={globalStyles.listItemSwipeLeftContainer}>
-          <Icon reverse name='trash' type='font-awesome' size={globalSizes.icons.small} color={globalColors.btnDelete} />
-          <Icon reverse name='edit' type='font-awesome' size={globalSizes.icons.small} color={globalColors.btnUpdate} />
+          <Icon
+            reverse
+            name="trash"
+            type="font-awesome"
+            size={globalSizes.icons.small}
+            color={globalColors.btnDelete}
+          />
+          <Icon
+            reverse
+            name="edit"
+            type="font-awesome"
+            size={globalSizes.icons.small}
+            color={globalColors.btnUpdate}
+          />
         </View>
       );
     };
     return (
       <Swipeable renderLeftActions={SwipeLeftAction}>
-        <Accordion dataArray={[item]} renderContent={renderItemContent} renderHeader={renderItemHeader} />
+        <Accordion
+          dataArray={[item]}
+          renderContent={renderItemContent}
+          renderHeader={renderItemHeader}
+        />
       </Swipeable>
     );
   };
-
-
 
   return (
     <Container>
@@ -169,16 +219,24 @@ export default function VisitPlans({ navigation, route }) {
       <Footer>
         <FooterTab style={{ justifyContent: "center", alignItems: "center" }}>
           {isLoading ? (
-            <Spinner color='white' />
+            <Spinner color="white" />
           ) : (
             <Button onPress={pullData}>
-              <Feather name='refresh-ccw' size={globalSizes.icons.large} color={globalColors.palette.cream} />
+              <Feather
+                name="refresh-ccw"
+                size={globalSizes.icons.large}
+                color={globalColors.palette.cream}
+              />
             </Button>
           )}
         </FooterTab>
         <FooterTab>
           <Button onPress={() => setIsOnInstantFilter(true)}>
-            <Feather name='search' size={globalSizes.icons.large} color={globalColors.palette.cream} />
+            <Feather
+              name="search"
+              size={globalSizes.icons.large}
+              color={globalColors.palette.cream}
+            />
           </Button>
         </FooterTab>
         <FooterTab style={{ alignSelf: "center", justifyContent: "center" }}>
@@ -186,7 +244,13 @@ export default function VisitPlans({ navigation, route }) {
             <MenuTrigger
               // todo: set items and remove disabled
               disabled={true}
-              children={<Feather color={globalColors.palette.cream} name={"star"} size={globalSizes.icons.large} />}
+              children={
+                <Feather
+                  color={globalColors.palette.cream}
+                  name={"star"}
+                  size={globalSizes.icons.large}
+                />
+              }
             />
             <MenuOptions customStyles={menuOptionsCustomStyles}></MenuOptions>
           </Menu>

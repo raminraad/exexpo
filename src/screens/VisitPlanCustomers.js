@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, FlatList } from "react-native";
+import { StyleSheet, FlatList, Modal, Keyboard } from "react-native";
 import {
   Container,
   Card,
@@ -25,7 +25,7 @@ import {
 import { Icon, Divider } from "react-native-elements";
 import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
-import { AntDesign } from '@expo/vector-icons'; 
+import { AntDesign } from "@expo/vector-icons";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import {
   globalStyles,
@@ -41,11 +41,14 @@ import {
   MenuOption,
 } from "react-native-popup-menu";
 import DefaultHeader from "../components/DefaultHeader";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import  VisitPlanResultForm  from "../components/VisitPlanResultForm";
 
 export default function VisitPlanCustomers(props) {
   const [presentationalData, setPresentationalData] = useState([]);
   const [isOnInstantFilter, setIsOnInstantFilter] = useState(false);
   const [isOnAdvancedFilter, setisOnAdvancedFilter] = useState(false);
+  const [isOnAdd, setIsOnAdd] = useState(false);
   const [instantFilterText, setInstantFilterText] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
@@ -81,7 +84,9 @@ export default function VisitPlanCustomers(props) {
               </Text>
             </View>
 
-            <View style={{...globalStyles.listItemHeaderFieldContainer,flex:2}}>
+            <View
+              style={{ ...globalStyles.listItemHeaderFieldContainer, flex: 2 }}
+            >
               <Text style={globalStyles.listItemHeaderFieldTitle}>عنوان:</Text>
               <Text style={[globalStyles.listItemHeaderFieldData, { flex: 1 }]}>
                 {item.Title}
@@ -92,11 +97,7 @@ export default function VisitPlanCustomers(props) {
             <AntDesign
               name="edit"
               onPress={() =>
-                navigation.navigate("VisitPlanCustomers", {
-                  title: `مشتریان هدف در تاریخ ${persianLib.toShortDate(
-                    new Date(item.OperationDate)
-                  )}`,
-                })
+                setIsOnAdd(true)
               }
               size={globalSizes.icons.medium}
               color={globalColors.listItemNavigateIcon}
@@ -116,7 +117,11 @@ export default function VisitPlanCustomers(props) {
           </View>
 
           <View style={globalStyles.listItemContentRow}>
-            <Feather name="map-pin" size={globalSizes.icons.small} color="grey" />
+            <Feather
+              name="map-pin"
+              size={globalSizes.icons.small}
+              color="grey"
+            />
             <Text style={globalStyles.listItemContentFieldData}>
               {item.Address ? item.Address : "وارد نشده"}
             </Text>
@@ -130,7 +135,11 @@ export default function VisitPlanCustomers(props) {
           </View>
 
           <View style={globalStyles.listItemContentRow}>
-            <Feather name="smartphone" size={globalSizes.icons.small} color="grey" />
+            <Feather
+              name="smartphone"
+              size={globalSizes.icons.small}
+              color="grey"
+            />
             <Text style={globalStyles.listItemContentFieldData}>
               {item.Cell ? item.Cell : "وارد نشده"}
             </Text>
@@ -169,6 +178,13 @@ export default function VisitPlanCustomers(props) {
       </Swipeable>
     );
   };
+  const addItem = (item) => {
+    //fixme: implement this
+    setPresentationalData((currentItems) => {
+      return [item, ...currentItems];
+    });
+    setAddModalOpen(false);
+  };
   return (
     <Container>
       <DefaultHeader
@@ -180,6 +196,16 @@ export default function VisitPlanCustomers(props) {
         navigation={props.navigation}
       />
       <Content padder>
+        <Modal visible={isOnAdd} animationType="slide">
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View style={globalStyles.addModalContent}>
+              <VisitPlanResultForm
+                onSubmit={addItem}
+                onCancel={() => setIsOnAdd(false)}
+              />
+            </View>
+          </TouchableWithoutFeedback>
+        </Modal>
         {isLoading ? (
           <Spinner style={{ height: "100%" }} color="grey" size={50} />
         ) : (

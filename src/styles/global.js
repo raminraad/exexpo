@@ -146,6 +146,33 @@ export const globalStyles = StyleSheet.create({
     flexDirection: "row",
     marginLeft: 10,
   },
+  addModalContainer: {
+    padding: 50,
+  },
+  addModalFieldContainer:
+  {
+    alignItems:'flex-end',
+    marginBottom: 15,
+  },
+  addModalFieldTitle: {
+    fontSize: 18,
+    marginBottom: 10,
+    fontWeight: "bold",
+    color: "#888",
+  },
+  addModalFieldInput: {
+    borderWidth: 1,
+    alignSelf:'stretch',
+    borderColor: "#ddd",
+    padding: 10,
+    fontSize: 18,
+    borderRadius: 6,
+    marginRight: 20,
+  },
+  radioItemContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
 });
 
 export const menuOptionsCustomStyles = {

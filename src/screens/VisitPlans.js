@@ -140,7 +140,7 @@ export default function VisitPlans({ navigation, route }) {
             }
           >
             <Feather
-              name="corner-down-left"
+              name="users"
               size={globalSizes.icons.medium}
               color={globalColors.listItemNavigateIcon}
             />

@@ -31,9 +31,9 @@ export const globalColors = {
   loginPageContainerBackground: "#003554",
   loginPageInputBackground: "#00649465",
   loginPageSubmitButtonBackground: "#006494ee",
-  listItemNavigateIcon: "#6b717e",
-  listItemCollapseIcon: "#8d99ae",
-  listItemExpandIcon: "#8d99ae",
+  listItemNavigateIcon: "#02c39a",
+  listItemCollapseIcon: "#8d99ae55",
+  listItemExpandIcon: "#8d99ae55",
   listItemHeaderContainer: "#f1f5f7",
   listItemContentContainer: "#FFFFFF",
 };

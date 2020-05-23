@@ -124,7 +124,6 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: globalColors.loginPageContainerBackground,
     flex: 1,
-    justifyContent: "space-around",
   },
   logoContainer: {
     flex: 1,

@@ -25,6 +25,7 @@ import {
 import { Icon, Divider } from "react-native-elements";
 import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
+import { AntDesign } from '@expo/vector-icons'; 
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import {
   globalStyles,
@@ -88,8 +89,8 @@ export default function VisitPlanCustomers(props) {
             </View>
           </View>
           <Button transparent style={globalStyles.listItemHeaderNavigateButton}>
-            <Feather
-              name="corner-down-left"
+            <AntDesign
+              name="edit"
               onPress={() =>
                 navigation.navigate("VisitPlanCustomers", {
                   title: `مشتریان هدف در تاریخ ${persianLib.toShortDate(

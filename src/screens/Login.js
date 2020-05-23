@@ -79,7 +79,7 @@ export default function Login({ navigation }) {
         <Logo style={styles.logoContainer} />
         <View style={styles.inputContainer}>
           <TextInput
-            style={styles.input}
+            style={[styles.inputAndButton,styles.input]}
             underlineColorAndroid="rgba(0,0,0,0)"
             textAlign="right"
             placeholder="نام کاربری"
@@ -89,7 +89,7 @@ export default function Login({ navigation }) {
             ref={userNameRef}
           />
           <TextInput
-            style={styles.input}
+            style={[styles.inputAndButton,styles.input]}
             underlineColorAndroid="rgba(0,0,0,0)"
             textAlign="right"
             secureTextEntry={true}
@@ -98,7 +98,7 @@ export default function Login({ navigation }) {
             onChangeText={(val) => (userInfo.passPhrase = val)}
             ref={passPhraseRef}
           />
-          <TouchableOpacity style={styles.button} onPress={submit}>
+          <TouchableOpacity style={[styles.inputAndButton,styles.button]} onPress={submit}>
             <Text style={styles.buttonText}>ورود به حساب</Text>
           </TouchableOpacity>
           <View style={styles.messageContainer}>
@@ -146,22 +146,22 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     flex: 1,
-    marginHorizontal: 60,
+  },
+  inputAndButton:{
+    height: 40,
+    width:300,
+    alignSelf:'center',
+    borderRadius: 25,
+    marginVertical: 10,
   },
   input: {
-    height: 40,
     backgroundColor: globalColors.loginPageInputBackground,
-    borderRadius: 25,
     paddingHorizontal: 16,
     fontSize: 16,
     color: globalColors.palette.cream,
-    marginVertical: 10,
   },
   button: {
-    height: 40,
     backgroundColor: globalColors.loginPageSubmitButtonBackground,
-    borderRadius: 25,
-    marginVertical: 10,
   },
   buttonText: {
     flex: 1,

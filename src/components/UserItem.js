@@ -26,7 +26,7 @@ export default class UserItem extends Component {
 
   LeftAction = () => {
     return (
-      <View style={styles.leftAction}>
+      <View style={globalStyles.listItemSwipeLeftContainer}>
         <Icon
           reverse
           name="trash"
@@ -112,10 +112,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: 35,
     color: globalColors.palette.coal,
   },
-  leftAction: {
-    alignItems: "center",
-    flexDirection: "row",
-    marginTop: 10,
-    marginLeft: 10,
-  },
+  
 });

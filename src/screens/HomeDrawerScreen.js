@@ -10,6 +10,7 @@ import {StackActions} from '@react-navigation/native';
 import Products from "./Products";
 import VisitPlans from "./VisitPlans";
 import VisitPlanCustomers from "./VisitPlanCustomers";
+import VisitPlanResultForm from "../components/VisitPlanResultForm";
 
 
 const HomeDrawer = createDrawerNavigator();
@@ -28,6 +29,7 @@ export class HomeDrawerScreen extends Component<{ navigation: any }> {
                 <HomeDrawer.Screen name='VisitPlans' component={VisitPlans} />
                 <HomeDrawer.Screen name='VisitPlanCustomers' component={VisitPlanCustomers} />
                 <HomeDrawer.Screen name='VisitPlanResults' component={VisitPlanResults} />
+                <HomeDrawer.Screen name='VisitPlanResultForm' component={VisitPlanResultForm} />
             </HomeDrawer.Navigator>
         );
     }

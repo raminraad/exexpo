@@ -1,14 +1,39 @@
 import React, { useState } from "react";
-import { StyleSheet, View, TouchableOpacity, FlatList, Modal, TextInput, Button } from "react-native";
-import { globalStyles, colors, globalColors } from "../styles/global";
+import { StyleSheet, View, TouchableOpacity, FlatList, Modal, TextInput, Button, ScrollView } from "react-native";
 import { Formik } from "formik";
-import { RadioButton, Text } from "react-native-paper";
+import { RadioButton, Text, Divider } from "react-native-paper";
+import { Separator, ListItem, Content } from "native-base";
+import Swipeable from "react-native-gesture-handler/Swipeable";
+import { globalStyles, globalColors, globalSizes } from "../styles/global";
+import { Icon } from "react-native-elements";
+import { AntDesign } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
 
 export default function VisitPlanResultForm({ onSubmit, onCancel, item }) {
   const [visitResultStatus, setVisitResultStatus] = useState(item && item.ResultStatus ? item.ResultStatus : null);
   console.log(visitResultStatus);
+  const LeftAction = () => (
+    <View style={globalStyles.listItemSwipeLeftContainer}>
+      <FontAwesome5
+        name="trash-alt" // todo: implement update functionality
+        onPress={() => console.warn("delete")}
+        size={globalSizes.icons.medium}
+        color={globalColors.btnDelete}
+      />
+      <Separator />
+      <FontAwesome5
+        name="edit"
+        // todo: implement update functionality
+        onPress={() => console.warn("edit")}
+        size={globalSizes.icons.medium}
+        color={globalColors.btnUpdate}
+      />
+    </View>
+  );
   return (
-    <View style={globalStyles.addModalContainer}>
+    <ScrollView style={{ padding: 25 }}>
       <Formik
         initialValues={{
           Id: `${item && item.Id ? item.Id : null}`,
@@ -34,15 +59,16 @@ export default function VisitPlanResultForm({ onSubmit, onCancel, item }) {
         onSubmit={(values, actions) => {
           actions.resetForm();
           onSubmit(values);
-        }}>
+        }}
+      >
         {(props) => (
           <View>
             <View style={globalStyles.addModalFieldContainer}>
               <Text style={globalStyles.addModalFieldTitle}>شرح مختصر</Text>
               <TextInput
                 style={[globalStyles.addModalFieldInput, { height: 100 }]}
-                textAlignVertical='top'
-                placeholder='توضیحات مختصر درباره گزارش پویش'
+                textAlignVertical="top"
+                placeholder="توضیحات مختصر درباره گزارش پویش"
                 onChangeText={props.handleChange("ResultSummary")}
                 multiline
                 value={props.values.fName}
@@ -55,56 +81,71 @@ export default function VisitPlanResultForm({ onSubmit, onCancel, item }) {
                 <RadioButton.Group onValueChange={(value) => setVisitResultStatus(value)} value={visitResultStatus}>
                   <View style={globalStyles.radioItemContainer}>
                     <Text>پویش نشده</Text>
-                    <RadioButton value='0' />
+                    <RadioButton value="0" />
                   </View>
                   <View style={globalStyles.radioItemContainer}>
                     <Text>عدم همکاری</Text>
-                    <RadioButton value='3' />
+                    <RadioButton value="3" />
                   </View>
                   <View style={globalStyles.radioItemContainer}>
                     <Text>پویش موفق</Text>
-                    <RadioButton value='7' />
+                    <RadioButton value="7" />
                   </View>
                   <View style={globalStyles.radioItemContainer}>
                     <Text>تغییر کاربری</Text>
-                    <RadioButton value='11' />
+                    <RadioButton value="11" />
                   </View>
                   <View style={globalStyles.radioItemContainer}>
                     <Text>یافت نشد</Text>
-                    <RadioButton value='13' />
+                    <RadioButton value="13" />
                   </View>
                 </RadioButton.Group>
               </View>
             </View>
 
             <View style={globalStyles.addModalFieldContainer}>
-              <Text style={globalStyles.addModalFieldTitle}>محصولات فروشگاه</Text>
-              <TextInput
-                style={[globalStyles.addModalFieldInput, { height: 100 }]}
-                textAlignVertical='top'
-                placeholder='توضیحات مختصر درباره گزارش پویش'
-                onChangeText={props.handleChange("ResultSummary")}
-                multiline
-                value={props.values.fName}
-              />
+              <View>
+                <Text style={globalStyles.addModalFieldTitle}>محصولات فروشگاه</Text>
+                <FontAwesome5.Button
+                  name="plus-square"
+                  backgroundColor="#00f5d4"
+                  //todo: implement add functioinality
+                  onPress={() => console.warn("add")}
+                >
+                  Login with Facebook
+                </FontAwesome5.Button>
+              </View>
+
+              <View
+                style={{
+                  flexDirection: "row-reverse",
+                  backgroundColor: globalColors.listItemHeaderContainer,
+                  borderRadius: 6,
+                  borderColor: globalColors.inputBorder,
+                  borderWidth: 1,
+                }}
+              >
+                <FlatList
+                  data={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]}
+                  keyExtractor={(item, index) => index.toString()}
+                  renderItem={() => (
+                    <Swipeable renderLeftActions={LeftAction}>
+                      <ListItem style={{ backgroundColor: globalColors.listItemHeaderContainer, marginVertical: 2 }}>
+                        <Text style={{ textAlign: "right", flex: 1 }}>دیزمار</Text>
+                      </ListItem>
+                    </Swipeable>
+                  )}
+                />
+              </View>
             </View>
 
-            <TextInput multiline style={globalStyles.input} placeholder='نام خانوادگی' onChangeText={props.handleChange("lName")} value={props.values.lName} />
-            <TextInput style={globalStyles.input} placeholder='سمت' onChangeText={props.handleChange("jobTitle")} value={props.values.jobTitle} />
-            <TextInput
-              multiline
-              keyboardType='numeric'
-              style={globalStyles.input}
-              placeholder='توضیحات'
-              onChangeText={props.handleChange("description")}
-              value={props.values.description}
-            />
-            <Button title='تأیید' color={globalColors.btnAdd} onPress={props.handleSubmit} />
-            <View style={{ height: 15 }} />
-            <Button title='انصراف' color={globalColors.btnCancel} onPress={onCancel} />
+            <Button title="تأیید" color={globalColors.btnAdd} onPress={onSubmit} />
+            <Separator height={10} />
+            <Button title="انصراف" color={globalColors.btnCancel} onPress={onCancel} />
+            <Separator />
           </View>
         )}
       </Formik>
-    </View>
+    </ScrollView>
   );
 }

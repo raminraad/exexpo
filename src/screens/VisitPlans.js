@@ -44,8 +44,10 @@ export default function VisitPlans({ navigation, route }) {
 
   // xxx: remove this
   useEffect(() => {
-    if (!(rawData&&rawData.length>0))
+    if (!(global.planData&&global.planData.length>0))
     pullData();
+    else
+    setPresentationalData(global.planData);
   }, []);
 /////////////////////
 

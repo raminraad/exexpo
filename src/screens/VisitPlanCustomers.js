@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, FlatList, Modal, Keyboard } from "react-native";
+import { StyleSheet, FlatList, Modal, Keyboard, TouchableWithoutFeedback } from "react-native";
 import {
   Container,
   Card,
@@ -41,7 +41,6 @@ import {
   MenuOption,
 } from "react-native-popup-menu";
 import DefaultHeader from "../components/DefaultHeader";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import  VisitPlanResultForm  from "../components/VisitPlanResultForm";
 
 export default function VisitPlanCustomers(props) {
@@ -97,7 +96,9 @@ export default function VisitPlanCustomers(props) {
             <AntDesign
               name="edit"
               onPress={() =>
-                setIsOnAdd(true)
+                // setIsOnAdd(true)
+                //xxx: uncomment top and remove bottom
+                props.navigation.navigate('VisitPlanResultForm')
               }
               size={globalSizes.icons.medium}
               color={globalColors.listItemNavigateIcon}

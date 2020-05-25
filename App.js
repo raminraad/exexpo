@@ -15,6 +15,7 @@ import { Ionicons } from "@expo/vector-icons";
 import VisitPlans from "./src/screens/VisitPlans";
 import VisitPlanCustomers from "./src/screens/VisitPlanCustomers";
 import VisitPlanResults from "./src/screens/VisitPlanResults";
+import VisitPlanResultForm from "./src/components/VisitPlanResultForm";
 
 const LoginStack = createStackNavigator();
 
@@ -60,18 +61,10 @@ export default class App extends React.Component {
               <LoginStack.Screen name="Home" component={HomeDrawerScreen} />
               <LoginStack.Screen name="Login" component={Login} />
               <LoginStack.Screen name="SignUp" component={SignUp} />
-              <LoginStack.Screen
-                name="VisitPlans"
-                component={VisitPlans}
-              />
-              <LoginStack.Screen
-                name="VisitPlanCustomers"
-                component={VisitPlanCustomers}
-              />
-              <LoginStack.Screen
-                name="VisitPlanResults"
-                component={VisitPlanResults}
-              />
+              <LoginStack.Screen name="VisitPlans" component={VisitPlans} />
+              <LoginStack.Screen name="VisitPlanCustomers" component={VisitPlanCustomers} />
+              <LoginStack.Screen name="VisitPlanResults" component={VisitPlanResults} />
+              <LoginStack.Screen name="VisitPlanResultForm" component={VisitPlanResultForm} />
             </LoginStack.Navigator>
           </NavigationContainer>
         </MenuProvider>

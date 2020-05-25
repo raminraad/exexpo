@@ -27,6 +27,7 @@ export const globalColors = {
   searchBarIcon: "#666",
   homeIcon: "#F1FAEE",
   homeIconText: "#F1FAEE",
+  inputBorder:'#ddd',
   homeSectionHeader: "#F1FAEE66",
   loginPageContainerBackground: "#003554",
   loginPageInputBackground: "#00649465",
@@ -70,7 +71,7 @@ export const globalStyles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: "#ddd",
+    borderColor: globalColors.inputBorder,
     padding: 10,
     fontSize: 18,
     borderRadius: 6,
@@ -162,7 +163,7 @@ export const globalStyles = StyleSheet.create({
   addModalFieldInput: {
     borderWidth: 1,
     alignSelf: "stretch",
-    borderColor: "#ddd",
+    borderColor: globalColors.inputBorder,
     padding: 10,
     fontSize: 18,
     borderRadius: 6,

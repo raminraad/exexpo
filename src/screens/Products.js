@@ -22,7 +22,7 @@ import { globalStyles, globalColors, globalSizes } from "../styles/global";
 export default function Products() {
   const [data, setData] = useState([]);
   const [freshToken, setFreshToken] = useState(
-    "98b44dba-213a-f912-03aa-25c769dc9ab7"
+    "66334ec9-1296-45d1-dd34-716b453bfa32"
   );
 
   const pullData = () => {

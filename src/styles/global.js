@@ -155,8 +155,11 @@ export const globalStyles = StyleSheet.create({
     marginBottom: 15,
   },
   addModalFieldTitle: {
+    flex:1,
+    textAlign:'right',
+    alignSelf:'flex-end',
     fontSize: 18,
-    marginBottom: 10,
+    marginBottom:5,
     fontWeight: "bold",
     color: "#ABC",
   },
@@ -191,7 +194,6 @@ export const menuOptionsCustomStyles = {
     justifyContent: "center",
   },
   optionTouchable: {
-    underlayColor: "gold",
     activeOpacity: 70,
   },
   optionText: {

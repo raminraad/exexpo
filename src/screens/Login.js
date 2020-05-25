@@ -71,38 +71,7 @@ export default function Login({ navigation }) {
 
   // XXX: remove the following
   // gotoHome();
-  global.authToken='7627f5f3-49d8-1aa2-299b-8283f12425a1';
-  const pullData = () => {
-    var myHeaders = new Headers();
-    myHeaders.append("Accept", "application/json");
-    myHeaders.append("Content-Type", "application/json");
-
-    var raw = { token: `${global.authToken}` };
-    var requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: JSON.stringify(raw),
-      redirect: "follow",
-    };
-    console.log(`Request sent with token: ${global.authToken}`);
-    fetch("http://audit.mazmaz.net/Api/WebApi.asmx/SyncServerData", requestOptions)
-      .then((response) => response.json())
-      .then((result) => {
-        if (result.d.Response.Token) {
-          setRawData(result.d);
-          console.log(`fetched ${result.d.DataTables.UserVisitPlan.length} rows.`);
-          return result.d.DataTables.UserVisitPlan;
-        } else {
-          alert(result.d.Response.Message);
-          return null;
-        }
-      })
-      .then((result) => {
-        if (result) global.planData = result;
-      })
-      .catch((error) => console.log("error", error))
-  };
-  pullData();
+  global.authToken='05ee48ac-656e-dbfb-26bb-294d5e62d4b8';
   navigation.dispatch(StackActions.replace("VisitPlans",{title:'dev.visitPlans'}));
   //
 

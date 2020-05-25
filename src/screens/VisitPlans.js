@@ -1,4 +1,4 @@
-import React, { useState , useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, FlatList } from "react-native";
 import {
   Container,
@@ -26,7 +26,7 @@ import { Icon, Divider } from "react-native-elements";
 import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
-import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import { globalStyles, globalColors, globalSizes, menuOptionsCustomStyles } from "../styles/global";
 import * as persianLib from "../lib/persianLib";
@@ -44,12 +44,15 @@ export default function VisitPlans({ navigation, route }) {
 
   // xxx: remove this
   useEffect(() => {
-    if (!(global.planData&&global.planData.length>0))
-    pullData();
-    else
-    setPresentationalData(global.planData);
+    let result = require("../dev/jsonformatter.json");
+    if (result && result.d.DataTables.UserVisitPlan.length) {
+      console.log(`dev data loaded. count: {result.d.DataTables.UserVisitPlan.length}`);
+      setRawData(result.d);
+      setPresentationalData(result.d.DataTables.UserVisitPlan);
+    }
+    else pullData();
   }, []);
-/////////////////////
+  /////////////////////
 
   const { title } = route.params;
   const pullData = () => {
@@ -115,8 +118,9 @@ export default function VisitPlans({ navigation, route }) {
                 rawData: rawData.DataTables.VisitPlanCustomers.filter((plan) => plan.VisitPlanId == item.Id),
                 visitPlanId: item.Id,
               })
-            }>
-            <Feather name='users' size={globalSizes.icons.medium} color={globalColors.listItemNavigateIcon} />
+            }
+          >
+            <Feather name="user" size={globalSizes.icons.medium} color={globalColors.listItemNavigateIcon} />
           </Button>
         </View>
       );
@@ -125,7 +129,7 @@ export default function VisitPlans({ navigation, route }) {
       return (
         <View style={globalStyles.listItemContentContainer}>
           <View style={globalStyles.listItemContentRow}>
-            <MaterialIcons name='description' size={globalSizes.icons.small} backgroundColor='red' color='grey' />
+            <MaterialIcons name="description" size={globalSizes.icons.small} backgroundColor="red" color="grey" />
             <Text style={globalStyles.listItemContentFieldData}>{item.Summary ? item.Summary : "وارد نشده"}</Text>
           </View>
         </View>
@@ -135,8 +139,8 @@ export default function VisitPlans({ navigation, route }) {
     let SwipeLeftAction = () => {
       return (
         <View style={globalStyles.listItemSwipeLeftContainer}>
-          <Icon reverse name='trash' type='font-awesome' size={globalSizes.icons.small} color={globalColors.btnDelete} />
-          <Icon reverse name='edit' type='font-awesome' size={globalSizes.icons.small} color={globalColors.btnUpdate} />
+          <Icon reverse name="trash" type="font-awesome" size={globalSizes.icons.small} color={globalColors.btnDelete} />
+          <Icon reverse name="edit" type="font-awesome" size={globalSizes.icons.small} color={globalColors.btnUpdate} />
         </View>
       );
     };
@@ -146,8 +150,6 @@ export default function VisitPlans({ navigation, route }) {
       </Swipeable>
     );
   };
-
-
 
   return (
     <Container>
@@ -171,16 +173,16 @@ export default function VisitPlans({ navigation, route }) {
       <Footer>
         <FooterTab style={{ justifyContent: "center", alignItems: "center" }}>
           {isLoading ? (
-            <Spinner color='white' />
+            <Spinner color="white" />
           ) : (
             <Button onPress={pullData}>
-              <Feather name='refresh-ccw' size={globalSizes.icons.large} color={globalColors.palette.cream} />
+              <Feather name="refresh-ccw" size={globalSizes.icons.large} color={globalColors.palette.cream} />
             </Button>
           )}
         </FooterTab>
         <FooterTab>
           <Button onPress={() => setIsOnInstantFilter(true)}>
-            <Feather name='search' size={globalSizes.icons.large} color={globalColors.palette.cream} />
+            <Feather name="search" size={globalSizes.icons.large} color={globalColors.palette.cream} />
           </Button>
         </FooterTab>
         <FooterTab style={{ alignSelf: "center", justifyContent: "center" }}>

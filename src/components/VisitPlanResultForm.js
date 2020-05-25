@@ -104,16 +104,18 @@ export default function VisitPlanResultForm({ onSubmit, onCancel, item }) {
             </View>
 
             <View style={globalStyles.addModalFieldContainer}>
-              <View>
+              <View style={{ flexDirection: "row-reverse", justifyContent: "space-between" }}>
                 <Text style={globalStyles.addModalFieldTitle}>محصولات فروشگاه</Text>
-                <FontAwesome5.Button
-                  name="plus-square"
-                  backgroundColor="#00f5d4"
-                  //todo: implement add functioinality
-                  onPress={() => console.warn("add")}
-                >
-                  Login with Facebook
-                </FontAwesome5.Button>
+                <View style={{ marginBottom: 5 }}>
+                  <FontAwesome5.Button
+                    name="plus-square"
+                    backgroundColor={globalColors.btnAdd}
+                    //todo: implement add functioinality
+                    onPress={() => console.warn("add")}
+                  >
+                    افزودن
+                  </FontAwesome5.Button>
+                </View>
               </View>
 
               <View
@@ -130,8 +132,9 @@ export default function VisitPlanResultForm({ onSubmit, onCancel, item }) {
                   keyExtractor={(item, index) => index.toString()}
                   renderItem={() => (
                     <Swipeable renderLeftActions={LeftAction}>
-                      <ListItem style={{ backgroundColor: globalColors.listItemHeaderContainer, marginVertical: 2 }}>
-                        <Text style={{ textAlign: "right", flex: 1 }}>دیزمار</Text>
+                      <ListItem style={{ backgroundColor: globalColors.listItemHeaderContainer, marginVertical: 2, flexDirection: "row-reverse" }}>
+                        <Text style={{ textAlign: "right", flex: 1 }}>محصول شماره n شرکت مزمز</Text>
+                        <Text style={{ textAlign: "right", flex: 1 }}>قیمت فروش:340000ريال</Text>
                       </ListItem>
                     </Swipeable>
                   )}
@@ -140,7 +143,7 @@ export default function VisitPlanResultForm({ onSubmit, onCancel, item }) {
             </View>
 
             <Button title="تأیید" color={globalColors.btnAdd} onPress={onSubmit} />
-            <Separator height={10} />
+            <View style={{ marginVertical: 5 }} />
             <Button title="انصراف" color={globalColors.btnCancel} onPress={onCancel} />
             <Separator />
           </View>

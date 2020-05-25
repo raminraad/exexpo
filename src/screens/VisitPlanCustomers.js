@@ -26,6 +26,7 @@ import { Icon, Divider } from "react-native-elements";
 import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
+import { FontAwesome5 } from '@expo/vector-icons'; 
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import {
   globalStyles,
@@ -93,8 +94,8 @@ export default function VisitPlanCustomers(props) {
             </View>
           </View>
           <Button transparent style={globalStyles.listItemHeaderNavigateButton}>
-            <AntDesign
-              name="edit"
+            <FontAwesome5
+              name="crosshairs"
               onPress={() =>
                 // setIsOnAdd(true)
                 //xxx: uncomment top and remove bottom

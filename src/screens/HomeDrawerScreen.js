@@ -28,7 +28,6 @@ export class HomeDrawerScreen extends Component<{ navigation: any }> {
                 <HomeDrawer.Screen name='Profile' component={Profile} />
                 <HomeDrawer.Screen name='VisitPlans' component={VisitPlans} />
                 <HomeDrawer.Screen name='VisitPlanCustomers' component={VisitPlanCustomers} />
-                <HomeDrawer.Screen name='VisitPlanResults' component={VisitPlanResults} />
                 <HomeDrawer.Screen name='VisitPlanResultForm' component={VisitPlanResultForm} />
             </HomeDrawer.Navigator>
         );

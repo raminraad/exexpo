@@ -44,7 +44,7 @@ export default function VisitPlans({ navigation, route }) {
 
   // xxx: remove this
   useEffect(() => {
-    let result = require("../dev/jsonformatter.json");
+    let result = require("../dev/visitPlanData.json");
     if (result && result.d.DataTables.UserVisitPlan.length) {
       console.log(`dev data loaded. count: {result.d.DataTables.UserVisitPlan.length}`);
       setRawData(result.d);

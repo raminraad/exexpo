@@ -11,7 +11,7 @@ import { Feather } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 
-export default function VisitPlanResultForm({ onSubmit, onCancel, item }) {
+export default function VisitPlanResultProductForm({ onSubmit, onCancel, item }) {
   const [visitResultStatus, setVisitResultStatus] = useState(item && item.ResultStatus ? item.ResultStatus : null);
   console.log(visitResultStatus);
   const swipeLeftAction = () => (
@@ -118,7 +118,7 @@ export default function VisitPlanResultForm({ onSubmit, onCancel, item }) {
                     //todo: implement add functioinality
                     onPress={() => console.warn("add")}
                   >
-                    افزودن محصول
+                    افزودن
                   </FontAwesome5.Button>
                 </View>
               </View>

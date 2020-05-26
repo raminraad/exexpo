@@ -32,11 +32,12 @@ export const globalColors = {
   loginPageContainerBackground: "#003554",
   loginPageInputBackground: "#00649465",
   loginPageSubmitButtonBackground: "#006494ee",
-  listItemNavigateIcon: "#02c39a",
+  listItemNavigateIcon: "#00a8e8",
   listItemCollapseIcon: "#8d99ae55",
   listItemExpandIcon: "#8d99ae55",
   listItemHeaderContainer: "#f1f5f7",
   listItemContentContainer: "#FFFFFF",
+  listItemSwipeLeftContainer:'#e6e6eaaa'
 };
 
 export const globalSizes = {
@@ -143,9 +144,10 @@ export const globalStyles = StyleSheet.create({
     fontWeight: "600",
   },
   listItemSwipeLeftContainer: {
+    backgroundColor:globalColors.listItemSwipeLeftContainer,
     alignItems: "center",
     flexDirection: "row",
-    marginLeft: 10,
+    paddingLeft: 10,
   },
   addModalContainer: {
     padding: 50,

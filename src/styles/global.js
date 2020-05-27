@@ -58,6 +58,7 @@ export const globalStyles = StyleSheet.create({
     backgroundColor: globalColors.drawerBackground,
   },
   titleText: {
+    textAlign:'right',
     fontSize: 18,
     fontWeight: "bold",
     color: "#333",

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, View, TouchableOpacity, FlatList, Modal, TextInput, ScrollView, Button } from "react-native";
-import { Separator, ListItem, Content, Container } from "native-base";
+import { Separator, Content, Container } from "native-base";
+import { Overlay, ListItem, PricingCard } from "react-native-elements";
 import { Formik } from "formik";
 import { RadioButton, Text, Divider } from "react-native-paper";
 import Swipeable from "react-native-gesture-handler/Swipeable";
@@ -10,13 +11,14 @@ import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { Overlay } from "react-native-elements";
 import { KeyboardAvoidingView } from "react-native";
 
-export default function VisitPlanResultForm({ onSubmit, onCancel, item }) {
+export default function VisitPlanResultForm({ onSubmit, onCancel, item , productList}) {
   const [visitResultStatus, setVisitResultStatus] = useState(item && item.ResultStatus ? item.ResultStatus : null);
-  const [ProductSearch, setProductSearch] = useState('')
-  
+  const [productSearchText, setProductSearchText] = useState("");
+const [isOnProductSearch, setisOnProductSearch] = useState(false);
+const [selectedProduct, setSelectedProduc] = useState(null);
+
   const swipeLeftAction = () => (
     <View style={globalStyles.listItemSwipeLeftContainer}>
       <FontAwesome5
@@ -43,41 +45,68 @@ export default function VisitPlanResultForm({ onSubmit, onCancel, item }) {
   const toggleOverlay = () => {
     setVisible(!visible);
   };
-
+  const list = [
+    {
+      title: "چیپس مزمز",
+      icon: "av-timer",
+    },
+    {
+      title: "پفک چی توز",
+      icon: "flight-takeoff",
+    },
+  ];
   return (
     <Container>
       <Content>
-        <View >
-
-      </View>
-        <Overlay isVisible={visible} onBackdropPress={toggleOverlay} overlayStyle={{flex:1 }}>
-
-      <SearchBar
-      platform='default'
-      lightTheme
-      placeholder="جستجوی محصول..."
-      onChangeText={(val)=>{setProductSearch(val); }}
-      value={ProductSearch}
-    />
-        <View style={globalStyles.addModalFieldContainer}>
-          <Text style={{ ...globalStyles.addModalFieldTitle, flex: 0 }}>قیمت فروش</Text>
-          <TextInput style={globalStyles.addModalFieldInput} placeholder='قیمت فروش محصول' />
-        </View>
-        <View style={globalStyles.addModalFieldContainer}>
-          <Text style={{ ...globalStyles.addModalFieldTitle, flex: 0 }}>وزن (گرم) </Text>
-          <TextInput style={globalStyles.addModalFieldInput} placeholder='وزن محصول (گرم) ' />
-        </View>
-        <View style={globalStyles.addModalFieldContainer}>
-          <Text style={{ ...globalStyles.addModalFieldTitle, flex: 0 }}>موجودی قابل مشاهده</Text>
-          <TextInput
-            style={globalStyles.addModalFieldInput}
-            placeholder='موجودی قابل مشاهده'
+        <Overlay isVisible={visible} onBackdropPress={toggleOverlay} overlayStyle={{ flex: 1 }}>
+        <View style={{flex:1}}> 
+          {!isOnProductSearch?
+          <PricingCard
+            containerStyle={{ alignSelf: "center" }}
+            color='#fca311'
+            title={list[0].title}
+            price='18000 ريال'
+            pricingStyle={{ fontSize: 18 }}
+            info={[list[0].title, "Basic Support", "All Core Features"]}
+            button={{ title: "تغییر", icon: "edit"}}
+            onButtonPress={()=>setisOnProductSearch(true)}
           />
-        </View>
-        <Button title='تأیید' color={globalColors.btnAdd} onPress={()=>console.log(ProductSearch)} />
-              <View style={{ marginVertical: 5 }} />
-              <Button title='انصراف' color={globalColors.btnCancel} onPress={onCancel} />
-              
+          :
+            <View style={{ borderWidth: 0.5, marginVertical: 15, borderRadius: 2 }}>
+          <SearchBar
+            platform='default'
+            lightTheme
+            placeholder='جستجوی محصول...'
+            onChangeText={(val) => {
+              setProductSearchText(val);
+            }}
+            value={productSearchText}
+          />
+            {list.map((item, i) => (
+              <ListItem containerStyle={{ backgroundColor: globalColors.listItemHeaderContainer }} key={i} title={item.title} bottomDivider 
+              onPress={()=>setisOnProductSearch(false)}
+              />
+              ))}
+          </View>
+            }
+            </View>
+          <View style={{flex:1}}>
+            <View style={globalStyles.addModalFieldContainer}>
+              <Text style={{ ...globalStyles.addModalFieldTitle, flex: 0 }}>قیمت فروش</Text>
+              <TextInput style={globalStyles.addModalFieldInput} placeholder='قیمت فروش محصول' />
+            </View>
+            <View style={globalStyles.addModalFieldContainer}>
+              <Text style={{ ...globalStyles.addModalFieldTitle, flex: 0 }}>وزن (گرم) </Text>
+              <TextInput style={globalStyles.addModalFieldInput} placeholder='وزن محصول (گرم) ' />
+            </View>
+            <View style={globalStyles.addModalFieldContainer}>
+              <Text style={{ ...globalStyles.addModalFieldTitle, flex: 0 }}>موجودی قابل مشاهده</Text>
+              <TextInput style={globalStyles.addModalFieldInput} placeholder='موجودی قابل مشاهده' />
+            </View>
+          </View>
+          <Button title='تأیید' color={globalColors.btnAdd} onPress={() => console.log(productSearchText)} />
+          <View style={{ marginVertical: 5 }} />
+          <Button title='انصراف' color={globalColors.btnCancel} onPress={onCancel} />
         </Overlay>
 
         <ScrollView style={{ padding: 25 }}>
@@ -172,10 +201,7 @@ export default function VisitPlanResultForm({ onSubmit, onCancel, item }) {
                       keyExtractor={(item, index) => index.toString()}
                       renderItem={() => (
                         <Swipeable renderLeftActions={swipeLeftAction}>
-                          <ListItem style={{ backgroundColor: globalColors.listItemHeaderContainer, paddingVertical: 2, flexDirection: "row-reverse" }}>
-                            <Text style={{ textAlign: "right", flex: 1 }}>محصول شماره n شرکت مزمز</Text>
-                            <Text style={{ textAlign: "right", flex: 1 }}>قیمت فروش:340000ريال</Text>
-                          </ListItem>
+                          <ListItem containerStyle={{ backgroundColor: globalColors.listItemHeaderContainer }} title='محصول شماره یک مزمز' bottomDivider />
                         </Swipeable>
                       )}
                     />

@@ -33,6 +33,9 @@ import * as persianLib from "../lib/persianLib";
 import { Menu, MenuTrigger, MenuOptions, MenuOption } from "react-native-popup-menu";
 import DefaultHeader from "../components/DefaultHeader";
 import * as dp from "../lib/sqliteDp";
+import * as visitPlanDp from "../lib/visitPlanSqliteDb";
+import { openDatabase } from "expo-sqlite";
+
 
 export default function VisitPlans({ navigation, route }) {
   const [rawData, setRawData] = useState([]);
@@ -43,17 +46,44 @@ export default function VisitPlans({ navigation, route }) {
   const [instantFilterText, setInstantFilterText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  // xxx: remove this
   useEffect(() => {
-    let result = require("../dev/visitPlanData.json");
-    if (result && result.d.DataTables.UserVisitPlan.length) {
-      console.log(`dev data loaded. count: {result.d.DataTables.UserVisitPlan.length}`);
-      setRawData(result.d);
-      setPresentationalData(result.d.DataTables.UserVisitPlan);
-    }
-    else pullData();
+    // dp.renewTables();
+
+    
+    
+    // const db = openDatabase("db");
+    // db.transaction((tx) => {
+    //   tx.executeSql(
+    //     "select * from ProductGroup",
+    //     [],
+    //     (_, { rows: { _array } }) => {
+          
+    //       console.log(_array);
+
+    //     },
+    //     (transaction, error) => console.log(error)
+    //   );
+    // });
+
+
+
+    //xxx: remove this
+    // if (global.xxx) {
+    //   let result = require("../dev/visitPlanData.json");
+    //   if (result && result.d.DataTables.UserVisitPlan.length) {
+    //     console.log(`dev data loaded. count: {result.d.DataTables.UserVisitPlan.length}`);
+    //     setRawData(result.d);
+    //     setPresentationalData(result.d.DataTables.UserVisitPlan);
+    //   }
+    // } 
+    // else pullData();
+
+
+
+
+    dp.getJoinedProducts();
+    /////////////////////
   }, []);
-  /////////////////////
 
   const { title } = route.params;
   const pullData = () => {
@@ -76,6 +106,74 @@ export default function VisitPlans({ navigation, route }) {
         if (result.d.Response.Token) {
           setRawData(result.d);
           console.log(`fetched ${result.d.DataTables.UserVisitPlan.length} rows.`);
+
+          
+
+          for (const item of result.d.DataTables.ProductGroup)
+              dp.insertProductGroup(item.Id, item.ParentId, item.ProductGroupCode, item.Title, item.LastModifiedDate, item.SyncStatus);
+
+          for (const item of result.d.DataTables.Product)
+            dp.insertProduct(item.Id, item.ProductGroupId, item.ProductCode, item.Taste, item.LastModifiedDate, item.SyncStatus);
+
+          for (const item of result.d.DataTables.ProductSub)
+            dp.insertProductSub(
+              item.Id,
+              item.ProductId,
+              item.BarCode,
+              item.IranCode,
+              item.Color,
+              item.Language,
+              item.PriceType,
+              item.PriceValue,
+              item.MeasurmentType,
+              item.MeasurmentScale,
+              item.LastModifiedDate,
+              item.SyncStatus
+            );
+
+          for (const item of result.d.DataTables.UserVisitPlan)
+            dp.insertUserVisitPlan(item.Id, item.Summary, item.OperationDate, item.DateX, item.LastModifiedDate, item.SyncStatus);
+
+          for (const item of result.d.DataTables.VisitPlanCustomers)
+            dp.insertVisitPlanCustomers(
+              item.Id,
+              item.VisitPlanId,
+              item.CustomerId,
+              item.Code,
+              item.Title,
+              item.Owner,
+              item.Long,
+              item.Lat,
+              item.Type,
+              item.Address,
+              item.Phone,
+              item.Cell,
+              item.Vol,
+              item.ResultAttachedFileTitle,
+              item.ResultSummary,
+              item.ResultStatus,
+              item.ResultVisitedDate,
+              item.LastModifiedDate,
+              item.SyncStatus
+            );
+
+          for (const item of result.d.DataTables.VisitPlanResults)
+            dp.insertVisitPlanResults(
+              item.Id,
+              item.VisitPlanCustomerId,
+              item.ProductSubId,
+              item.SellPrice,
+              item.Weight,
+              item.HasInventory,
+              item.ShelfInventoryCount,
+              item.ShelfVisibleCount,
+              item.WarehouseInventoryCount,
+              item.VerbalPurchaseCount,
+              item.FactorPurchaseCount,
+              item.LastModifiedDate,
+              item.SyncStatus
+            );
+
           return result.d.DataTables.UserVisitPlan;
         } else {
           alert(result.d.Response.Message);
@@ -119,9 +217,8 @@ export default function VisitPlans({ navigation, route }) {
                 rawData: rawData.DataTables.VisitPlanCustomers.filter((plan) => plan.VisitPlanId == item.Id),
                 visitPlanId: item.Id,
               })
-            }
-          >
-            <Feather name="user" size={globalSizes.icons.medium} color={globalColors.listItemNavigateIcon} />
+            }>
+            <Feather name='user' size={globalSizes.icons.medium} color={globalColors.listItemNavigateIcon} />
           </Button>
         </View>
       );
@@ -130,7 +227,7 @@ export default function VisitPlans({ navigation, route }) {
       return (
         <View style={globalStyles.listItemContentContainer}>
           <View style={globalStyles.listItemContentRow}>
-            <MaterialIcons name="description" size={globalSizes.icons.small} backgroundColor="red" color="grey" />
+            <MaterialIcons name='description' size={globalSizes.icons.small} backgroundColor='red' color='grey' />
             <Text style={globalStyles.listItemContentFieldData}>{item.Summary ? item.Summary : "وارد نشده"}</Text>
           </View>
         </View>
@@ -140,8 +237,8 @@ export default function VisitPlans({ navigation, route }) {
     let SwipeLeftAction = () => {
       return (
         <View style={globalStyles.listItemSwipeLeftContainer}>
-          <Icon reverse name="trash" type="font-awesome" size={globalSizes.icons.small} color={globalColors.btnDelete} />
-          <Icon reverse name="edit" type="font-awesome" size={globalSizes.icons.small} color={globalColors.btnUpdate} />
+          <Icon reverse name='trash' type='font-awesome' size={globalSizes.icons.small} color={globalColors.btnDelete} />
+          <Icon reverse name='edit' type='font-awesome' size={globalSizes.icons.small} color={globalColors.btnUpdate} />
         </View>
       );
     };
@@ -174,16 +271,16 @@ export default function VisitPlans({ navigation, route }) {
       <Footer>
         <FooterTab style={{ justifyContent: "center", alignItems: "center" }}>
           {isLoading ? (
-            <Spinner color="white" />
+            <Spinner color='white' />
           ) : (
             <Button onPress={pullData}>
-              <Feather name="refresh-ccw" size={globalSizes.icons.large} color={globalColors.palette.cream} />
+              <Feather name='refresh-ccw' size={globalSizes.icons.large} color={globalColors.palette.cream} />
             </Button>
           )}
         </FooterTab>
         <FooterTab>
           <Button onPress={() => setIsOnInstantFilter(true)}>
-            <Feather name="search" size={globalSizes.icons.large} color={globalColors.palette.cream} />
+            <Feather name='search' size={globalSizes.icons.large} color={globalColors.palette.cream} />
           </Button>
         </FooterTab>
         <FooterTab style={{ alignSelf: "center", justifyContent: "center" }}>

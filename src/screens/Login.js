@@ -71,7 +71,8 @@ export default function Login({ navigation }) {
 
   // XXX: remove the following
   // gotoHome();
-  global.authToken='05ee48ac-656e-dbfb-26bb-294d5e62d4b8';
+  global.xxx = false;
+  global.authToken='e6492e26-feaa-0338-c075-410edb46eeae';
   navigation.dispatch(StackActions.replace("VisitPlans",{title:'dev.visitPlans'}));
   //
 
@@ -88,6 +89,7 @@ export default function Login({ navigation }) {
             keyboardType="email-address"
             onSubmitEditing={() => passPhraseRef.current.focus()}
             onChangeText={(val) => (userInfo.userName = val)}
+            value='offline'
             ref={userNameRef}
           />
           <TextInput
@@ -98,6 +100,7 @@ export default function Login({ navigation }) {
             placeholder="گذرواژه"
             onSubmitEditing={submit}
             onChangeText={(val) => (userInfo.passPhrase = val)}
+            value='offline123'
             ref={passPhraseRef}
           />
           <TouchableOpacity style={[styles.inputAndButton,styles.button]} onPress={submit}>

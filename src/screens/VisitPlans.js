@@ -46,6 +46,7 @@ export default function VisitPlans({ navigation, route }) {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    ctor();
     //xxx START
     // dp.getJoinedProducts();
     // const db = openDatabase("db");
@@ -75,14 +76,16 @@ export default function VisitPlans({ navigation, route }) {
     } else await pullData();
   };
 
-  const commitData = (DataTables) => {
+  const commitData = async (DataTables) => {
+    console.log('** commit started..');
+    
     for (const item of DataTables.ProductGroup)
-      dp.insertProductGroup(item.Id, item.ParentId, item.ProductGroupCode, item.Title, item.LastModifiedDate, item.SyncStatus);
+      await dp.insertProductGroup(item.Id, item.ParentId, item.ProductGroupCode, item.Title, item.LastModifiedDate, item.SyncStatus);
 
-    for (const item of DataTables.Product) dp.insertProduct(item.Id, item.ProductGroupId, item.ProductCode, item.Taste, item.LastModifiedDate, item.SyncStatus);
+    for (const item of DataTables.Product) await  dp.insertProduct(item.Id, item.ProductGroupId, item.ProductCode, item.Taste, item.LastModifiedDate, item.SyncStatus);
 
     for (const item of DataTables.ProductSub)
-      dp.insertProductSub(
+      await dp.insertProductSub(
         item.Id,
         item.ProductId,
         item.BarCode,
@@ -98,10 +101,10 @@ export default function VisitPlans({ navigation, route }) {
       );
 
     for (const item of DataTables.UserVisitPlan)
-      dp.insertUserVisitPlan(item.Id, item.Summary, item.OperationDate, item.DateX, item.LastModifiedDate, item.SyncStatus);
+      await dp.insertUserVisitPlan(item.Id, item.Summary, item.OperationDate, item.DateX, item.LastModifiedDate, item.SyncStatus);
 
     for (const item of DataTables.VisitPlanCustomers)
-      dp.insertVisitPlanCustomers(
+      await dp.insertVisitPlanCustomers(
         item.Id,
         item.VisitPlanId,
         item.CustomerId,
@@ -124,7 +127,7 @@ export default function VisitPlans({ navigation, route }) {
       );
 
     for (const item of DataTables.VisitPlanResults)
-      dp.insertVisitPlanResults(
+      await dp.insertVisitPlanResults(
         item.Id,
         item.VisitPlanCustomerId,
         item.ProductSubId,
@@ -142,6 +145,7 @@ export default function VisitPlans({ navigation, route }) {
     console.log("** last line of commit executed");
   };
   const pullData = () => {
+    console.log('** pull data started');
     setIsLoading(true);
     var myHeaders = new Headers();
     myHeaders.append("Accept", "application/json");
@@ -162,7 +166,7 @@ export default function VisitPlans({ navigation, route }) {
           setRawData(result.d);
           console.log(`*** pulled ${result.d.DataTables.UserVisitPlan.length} rows.`);
           return result;
-        } else throw new Error(`*** error on data pull: ${result.d.Response.Message}`);
+        } else throw new Error(result.d.Response.Message);
       })
       .then((result) => {
         setPresentationalData(result.d.DataTables.UserVisitPlan);
@@ -178,7 +182,7 @@ export default function VisitPlans({ navigation, route }) {
       .then((result) => {
         console.log("** last then executed");
       })
-      .catch((error) => console.log(error))
+      .catch((error) => alert(error))
       .finally(() => setIsLoading(false));
   };
 

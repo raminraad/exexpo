@@ -58,6 +58,7 @@ export default function Login({ navigation }) {
       .finally(() => {
         setLoading(false);
       });
+      
   };
 
   const gotoSignUp = () => {

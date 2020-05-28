@@ -11,7 +11,7 @@ export const renewTables = () => {
 
   console.log("creating all tables..");
   let queryArray = [
-    `create table if not exists productGroup (key integer primary key not null, Id,ParentId,ProductGroupCode,Title,LastModifiedDate,SyncStatus)`,
+    `create table if not exists ProductGroup (key integer primary key not null, Id,ParentId,ProductGroupCode,Title,LastModifiedDate,SyncStatus)`,
     `create table if not exists Product (key integer primary key not null,Id,ProductGroupId,ProductCode,Taste,LastModifiedDate,SyncStatus)`,
     `create table if not exists ProductSub (key integer primary key not null,Id,ProductId,BarCode,IranCode,Color,Language,PriceType,PriceValue,MeasurmentType,MeasurmentScale,LastModifiedDate,SyncStatus)`,
     `create table if not exists UserVisitPlan (key integer primary key not null,Id,Summary,OperationDate,DateX,LastModifiedDate,SyncStatus)`,
@@ -24,15 +24,15 @@ export const renewTables = () => {
 
 export const insertProductGroup = (...parameters) => {
   // let params = [Id, ParentId, ProductGroupCode, Title, LastModifiedDate, SyncStatus];
-  let query = `insert into productGroup (Id,ParentId,ProductGroupCode,Title,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?)`;
+  let query = `insert into ProductGroup (Id,ParentId,ProductGroupCode,Title,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?)`;
 
   db.exec([{ sql: `${query};`, args: parameters }], false, () => console.log(`success: ${query}`));
 };
 
 export const insertProduct = (...parameters) => {
   // let params = [Id, ProductGroupId, ProductCode, Taste, LastModifiedDate, SyncStatus];
-  let query = `insert into product (Id,ProductGroupId,ProductCode,Taste,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?)`;
-  db.exec([{ sql: `${query};`, args: parameters }], false, () => console.log(`insertion done successfully into product..`));
+  let query = `insert into Product (Id,ProductGroupId,ProductCode,Taste,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?)`;
+  db.exec([{ sql: `${query};`, args: parameters }], false, () => console.log(`insertion done successfully into Product..`));
 };
 
 export const insertProductSub = (...parameters) => {
@@ -93,21 +93,30 @@ export const insertVisitPlanResults = (...parameters) => {
 };
 
 export const getJoinedProducts=()=>{
-  let query = `select p.Taste as product_title , g.Title as group_title from Product p join productGroup g on p.ProductGroupId = g.Id `;
-  let query0 = `select count(*) from Product`;
-  let result = null;
+  let queries=[];
+  queries[0] = `select p.Taste as Product_title , g.Title as group_title from Product p join ProductGroup g on p.ProductGroupId = g.Id `;
+  queries[1] = `select * from ProductGroup`;
+  queries[2] = `select * from Product`;
+  queries[3] = `select * from ProductSub`;
+  queries[4] = `select * from UserVisitPlan`;
+  queries[5] = `select * from VisitPlanCustomers`;
+  queries[6] = `select * from VisitPlanResults`;
+
+  
   db.transaction((tx) => {
-    tx.executeSql(
-      query,
-      [],
-      (_, { rows: { _array } }) => {
-        result = _array;
-        console.log(_array);
-      },
-      (transaction, error) => console.log(`joining product and productGroup failed.. error: ${error}`)
-    );
+    for (const query of queries) {
+      
+      tx.executeSql(
+        query,
+        [],
+        (_, { rows: { _array } }) => {
+          console.log(`☺☺ ${query} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
+        },
+        (transaction, error) => console.log(`☻☻ ${query} =>=> ${error}`)
+        );
+      }
   });
-  return result;
+  
 }
 // todo: following are unused methods 
 

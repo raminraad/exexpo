@@ -46,20 +46,10 @@ export default function VisitPlans({ navigation, route }) {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    ctor();
+    // ctor();
+    
     //xxx START
-    // dp.getJoinedProducts();
-    // const db = openDatabase("db");
-    // db.transaction((tx) => {
-    //   tx.executeSql(
-    //     "select * from ProductGroup",
-    //     [],
-    //     (_, { rows: { _array } }) => {
-    //       console.log(_array);
-    //     },
-    //     (transaction, error) => console.log(error)
-    //   );
-    // });
+    dp.getJoinedProducts();
     //xxx END
   }, []);
 
@@ -77,15 +67,26 @@ export default function VisitPlans({ navigation, route }) {
   };
 
   const commitData = async (DataTables) => {
-    console.log('** commit started..');
-    
-    for (const item of DataTables.ProductGroup)
-      await dp.insertProductGroup(item.Id, item.ParentId, item.ProductGroupCode, item.Title, item.LastModifiedDate, item.SyncStatus);
+    console.log("** commit started..");
+    const db = openDatabase("db");
 
-    for (const item of DataTables.Product) await  dp.insertProduct(item.Id, item.ProductGroupId, item.ProductCode, item.Taste, item.LastModifiedDate, item.SyncStatus);
+    let queries = [];
+    for (const item of DataTables.ProductGroup) {
+      let parameters = [item.Id, item.ParentId, item.ProductGroupCode, item.Title, item.LastModifiedDate, item.SyncStatus];
+      let query = `insert into ProductGroup (Id,ParentId,ProductGroupCode,Title,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?)`;
+      queries.push({ sql: `${query};`, args: parameters });
+      // await dp.insertProductGroup(item.Id, item.ParentId, item.ProductGroupCode, item.Title, item.LastModifiedDate, item.SyncStatus);
+    }
 
-    for (const item of DataTables.ProductSub)
-      await dp.insertProductSub(
+    for (const item of DataTables.Product) {
+      let parameters = [item.Id, item.ProductGroupId, item.ProductCode, item.Taste, item.LastModifiedDate, item.SyncStatus];
+      let query = `insert into Product (Id,ProductGroupId,ProductCode,Taste,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?)`;
+      queries.push({ sql: `${query};`, args: parameters });
+    }
+    // await dp.insertProduct(item.Id, item.ProductGroupId, item.ProductCode, item.Taste, item.LastModifiedDate, item.SyncStatus);
+
+    for (const item of DataTables.ProductSub) {
+      let parameters = [
         item.Id,
         item.ProductId,
         item.BarCode,
@@ -97,14 +98,36 @@ export default function VisitPlans({ navigation, route }) {
         item.MeasurmentType,
         item.MeasurmentScale,
         item.LastModifiedDate,
-        item.SyncStatus
-      );
+        item.SyncStatus,
+      ];
+      let query = `insert into ProductSub (Id,ProductId,BarCode,IranCode,Color,Language,PriceType,PriceValue,MeasurmentType,MeasurmentScale,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?,?,?,?,?,?,?)`;
 
-    for (const item of DataTables.UserVisitPlan)
-      await dp.insertUserVisitPlan(item.Id, item.Summary, item.OperationDate, item.DateX, item.LastModifiedDate, item.SyncStatus);
+      queries.push({ sql: `${query};`, args: parameters });
+    }
+    // await dp.insertProductSub(
+    //   item.Id,
+    //   item.ProductId,
+    //   item.BarCode,
+    //   item.IranCode,
+    //   item.Color,
+    //   item.Language,
+    //   item.PriceType,
+    //   item.PriceValue,
+    //   item.MeasurmentType,
+    //   item.MeasurmentScale,
+    //   item.LastModifiedDate,
+    //   item.SyncStatus
+    // );
 
-    for (const item of DataTables.VisitPlanCustomers)
-      await dp.insertVisitPlanCustomers(
+    for (const item of DataTables.UserVisitPlan) {
+      let parameters = [item.Id, item.Summary, item.OperationDate, item.DateX, item.LastModifiedDate, item.SyncStatus];
+      let query = `insert into UserVisitPlan (Id,Summary,OperationDate,DateX,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?)`;
+      queries.push({ sql: `${query};`, args: parameters });
+    }
+    // await dp.insertUserVisitPlan(item.Id, item.Summary, item.OperationDate, item.DateX, item.LastModifiedDate, item.SyncStatus);
+
+    for (const item of DataTables.VisitPlanCustomers) {
+      let parameters = [
         item.Id,
         item.VisitPlanId,
         item.CustomerId,
@@ -123,11 +146,36 @@ export default function VisitPlans({ navigation, route }) {
         item.ResultStatus,
         item.ResultVisitedDate,
         item.LastModifiedDate,
-        item.SyncStatus
-      );
+        item.SyncStatus,
+      ];
 
-    for (const item of DataTables.VisitPlanResults)
-      await dp.insertVisitPlanResults(
+      let query = `insert into VisitPlanCustomers (Id,VisitPlanId,CustomerId,Code,Title,Owner,Long,Lat,Type,Address,Phone,Cell,Vol,ResultAttachedFileTitle,ResultSummary,ResultStatus,ResultVisitedDate,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
+      queries.push({ sql: `${query};`, args: parameters });
+    }
+    // await dp.insertVisitPlanCustomers(
+    //   item.Id,
+    //   item.VisitPlanId,
+    //   item.CustomerId,
+    //   item.Code,
+    //   item.Title,
+    //   item.Owner,
+    //   item.Long,
+    //   item.Lat,
+    //   item.Type,
+    //   item.Address,
+    //   item.Phone,
+    //   item.Cell,
+    //   item.Vol,
+    //   item.ResultAttachedFileTitle,
+    //   item.ResultSummary,
+    //   item.ResultStatus,
+    //   item.ResultVisitedDate,
+    //   item.LastModifiedDate,
+    //   item.SyncStatus
+    // );
+
+    for (const item of DataTables.VisitPlanResults) {
+      let parameters = [
         item.Id,
         item.VisitPlanCustomerId,
         item.ProductSubId,
@@ -140,12 +188,32 @@ export default function VisitPlans({ navigation, route }) {
         item.VerbalPurchaseCount,
         item.FactorPurchaseCount,
         item.LastModifiedDate,
-        item.SyncStatus
-      );
+        item.SyncStatus,
+      ];
+      let query = `insert into VisitPlanResults (Id,VisitPlanCustomerId,ProductSubId,SellPrice,Weight,HasInventory,ShelfInventoryCount,ShelfVisibleCount,WarehouseInventoryCount,VerbalPurchaseCount,FactorPurchaseCount,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?,?,?,?,?,?,?,?)`;
+      queries.push({ sql: `${query};`, args: parameters });
+    }
+    // await dp.insertVisitPlanResults(
+    //   item.Id,
+    //   item.VisitPlanCustomerId,
+    //   item.ProductSubId,
+    //   item.SellPrice,
+    //   item.Weight,
+    //   item.HasInventory,
+    //   item.ShelfInventoryCount,
+    //   item.ShelfVisibleCount,
+    //   item.WarehouseInventoryCount,
+    //   item.VerbalPurchaseCount,
+    //   item.FactorPurchaseCount,
+    //   item.LastModifiedDate,
+    //   item.SyncStatus
+    // );
+    db.exec(queries, false, () => console.log(`success: ${queries}`));
+
     console.log("** last line of commit executed");
   };
   const pullData = () => {
-    console.log('** pull data started');
+    console.log("** pull data started");
     setIsLoading(true);
     var myHeaders = new Headers();
     myHeaders.append("Accept", "application/json");

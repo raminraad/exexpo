@@ -59,7 +59,7 @@ export default function VisitPlans({ navigation, route }) {
     if (global.xxx) {
       let result = require("../dev/visitPlanData.json");
       if (result && result.d.DataTables.UserVisitPlan.length) {
-        console.log(`dev data loaded. count: {result.d.DataTables.UserVisitPlan.length}`);
+        console.log(`☺☺ dev data loaded. count: {result.d.DataTables.UserVisitPlan.length}`);
         await setRawData(result.d);
         await setPresentationalData(result.d.DataTables.UserVisitPlan);
       }
@@ -67,7 +67,7 @@ export default function VisitPlans({ navigation, route }) {
   };
 
   const commitData = async (DataTables) => {
-    console.log("** commit started..");
+    console.log("☺☺ commit started..");
     const db = openDatabase("db");
 
     let queries = [];
@@ -208,12 +208,12 @@ export default function VisitPlans({ navigation, route }) {
     //   item.LastModifiedDate,
     //   item.SyncStatus
     // );
-    db.exec(queries, false, () => console.log(`success: ${queries}`));
+    db.exec(queries, false, () => console.log(`☺☺ insert queries executed successfully..`));
 
-    console.log("** last line of commit executed");
+    console.log("☺☺ last line of commit executed");
   };
   const pullData = () => {
-    console.log("** pull data started");
+    console.log("☺☺ pull data started");
     setIsLoading(true);
     var myHeaders = new Headers();
     myHeaders.append("Accept", "application/json");
@@ -226,13 +226,12 @@ export default function VisitPlans({ navigation, route }) {
       body: JSON.stringify(raw),
       redirect: "follow",
     };
-    console.log(`Request sent with token: ${freshToken}`);
+    console.log(`☺☺ request sent with token: ${freshToken}`);
     fetch("http://audit.mazmaz.net/Api/WebApi.asmx/SyncServerData", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         if (result.d.Response.Token) {
           setRawData(result.d);
-          console.log(`*** pulled ${result.d.DataTables.UserVisitPlan.length} rows.`);
           return result;
         } else throw new Error(result.d.Response.Message);
       })
@@ -241,14 +240,14 @@ export default function VisitPlans({ navigation, route }) {
         return result;
       })
       .then((result) => {
-        dp.renewTables();
-        return result;
+        let renewPromise = new Promise((resolve,reject)=>{dp.renewTables(resolve,reject,result);})
+        return renewPromise.then(result);
       })
       .then((result) => {
         commitData(result.d.DataTables);
       })
       .then((result) => {
-        console.log("** last then executed");
+        console.log(`☺☺ last "then" executed`);
       })
       .catch((error) => alert(error))
       .finally(() => setIsLoading(false));

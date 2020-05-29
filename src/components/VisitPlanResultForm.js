@@ -17,26 +17,44 @@ import { openDatabase } from "expo-sqlite";
 
 export default function VisitPlanResultForm(props) {
   const db = openDatabase("db");
+  let navigation = props.navigation;
   let item = props.route.params.item;
+  let onSubmit = props.route.params.onSubmit;
+  let onCancel = props.route.params.onCancel;
+  const [productsRawData, setProductsRawData] = useState([]);
   const [visitResultStatus, setVisitResultStatus] = useState(item && item.ResultStatus ? item.ResultStatus : null);
   const [rawData, setRawData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
+const addVisitPlanResult = (item)=>{
+  setRawData([...rawData,item]);
+  setProductModalIsVisible(false);
+}
   useEffect(() => {
-    let query = `select * from VisitPlanResults res
+    let rawDataQuery = `select * from VisitPlanResults res
      inner join ProductSub sub on res.ProductSubId = sub.Id
      inner join Product prd on prd.Id = sub.ProductId
      inner join ProductGroup grp on grp.Id =  prd.ProductGroupId
      where VisitPlanCustomerId = ${props.route.params.item.Id}`;
+    let productsRawDataQuery = `select *,sub.Id as ProductSubId from ProductSub sub 
+     inner join Product prd on prd.Id = sub.ProductId
+     inner join ProductGroup grp on grp.Id =  prd.ProductGroupId`;
     db.transaction((tx) => {
       tx.executeSql(
-        query,
+        rawDataQuery,
         [],
         (_, { rows: { _array } }) => {
-          console.log(`☺☺ ${query} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
           setRawData(_array);
         },
-        (transaction, error) => console.log(`☻☻ ${query} =>=> ${error}`)
+        (transaction, error) => console.log(`☻☻ ${rawDataQuery} =>=> ${error}`)
+      );
+      tx.executeSql(
+        productsRawDataQuery,
+        [],
+        (_, { rows: { _array } }) => {
+          console.log(`☺☺ ${productsRawDataQuery} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
+          setProductsRawData(_array);
+        },
+        (transaction, error) => console.log(`☻☻ ${productsRawDataQuery} =>=> ${error}`)
       );
     });
 
@@ -67,79 +85,19 @@ export default function VisitPlanResultForm(props) {
 
   const [productModalIsVisible, setProductModalIsVisible] = useState(false);
 
-  //xxx START
-  const list = [
-    {
-      title: "chips",
-      icon: "av-timer",
-    },
-    {
-      title: "pofak",
-      icon: "flight-takeoff",
-    },
-    {
-      title: "lollipop",
-      icon: "flight-takeoff",
-    },
-    {
-      title: "nuts",
-      icon: "flight-takeoff",
-    },
-    {
-      title: "ajil",
-      icon: "flight-takeoff",
-    },
-    {
-      title: "xbadam",
-      icon: "flight-takeoff",
-    },
-    {
-      title: "gerdoo",
-      icon: "flight-takeoff",
-    },
-    {
-      title: "fandoq",
-      icon: "flight-takeoff",
-    },
-    {
-      title: "carnaval",
-      icon: "flight-takeoff",
-    },
-    {
-      title: "bastani",
-      icon: "flight-takeoff",
-    },
-  ];
-  // XXX END
   return (
     <View>
       <ScrollView style={{ padding: 25 }} keyboardShouldPersistTaps='never'>
         <View>
           <Formik
             initialValues={{
-              Id: `${item && item.Id ? item.Id : null}`,
-              VisitPlanCustomerId: `${item && item.VisitPlanCustomerId ? item.VisitPlanCustomerId : null}`,
-              ProductSubId: `${item && item.ProductSubId ? item.ProductSubId : null}`,
-              SellPrice: `${item && item.SellPrice ? item.SellPrice : ""}`,
-              Weight: `${item && item.Weight ? item.Weight : ""}`,
-              HasInventory: `${item && item.HasInventory ? item.HasInventory : ""}`,
-              ShelfInventoryCount: `${item && item.ShelfInventoryCount ? item.ShelfInventoryCount : ""}`,
-              ShelfVisibleCount: `${item && item.ShelfVisibleCount ? item.ShelfVisibleCount : ""}`,
-              WarehouseInventoryCount: `${item && item.WarehouseInventoryCount ? item.WarehouseInventoryCount : ""}`,
-              VerbalPurchaseCount: `${item && item.VerbalPurchaseCount ? item.VerbalPurchaseCount : ""}`,
-              FactorPurchaseCount: `${item && item.FactorPurchaseCount ? item.FactorPurchaseCount : ""}`,
-              LastModifiedDate: `${item && item.LastModifiedDate ? item.LastModifiedDate : ""}`,
-              SyncStatus: `${item && item.SyncStatus ? item.SyncStatus : ""}`,
-
-              ResultSummary: `${item && item.ResultSummary ? item.ResultSummary : ""}`,
-              ResultStatus: `${item && item.ResultStatus ? item.ResultStatus : ""}`,
-              SyncStatus: `${item && item.SyncStatus ? item.SyncStatus : ""}`,
-              SyncStatus: `${item && item.SyncStatus ? item.SyncStatus : ""}`,
-              SyncStatus: `${item && item.SyncStatus ? item.SyncStatus : ""}`,
+              ResultSummary: `${item?.ResultSummary ? item.ResultSummary : ""}`,
+              ResultStatus: `${item?.ResultStatus ? item.ResultStatus : ""}`,
             }}
             onSubmit={(values, actions) => {
+              values.ResultStatus = visitResultStatus;
               actions.resetForm();
-              props.onSubmit(values);
+              onSubmit(values);
             }}>
             {(props) => (
               <View>
@@ -149,9 +107,9 @@ export default function VisitPlanResultForm(props) {
                     style={[globalStyles.addModalFieldInput, { height: 100 }]}
                     textAlignVertical='top'
                     placeholder='توضیحات مختصر درباره گزارش پویش'
-                    onChangeText={props.handleChange("ResultSummary")}
                     multiline
-                    value={props.values.fName}
+                    onChangeText={props.handleChange("ResultSummary")}
+                    value={props.values.ResultSummary}
                   />
                 </View>
 
@@ -184,7 +142,7 @@ export default function VisitPlanResultForm(props) {
                 </View>
                 <View style={globalStyles.container}>
                   <Modal visible={productModalIsVisible} animationType='slide'>
-                    <VisitPlanResultProductForm rawData={list} />
+                    <VisitPlanResultProductForm productsRawData={productsRawData} onSubmit={addVisitPlanResult} onCancel={() => setProductModalIsVisible(false)} />
                   </Modal>
                 </View>
                 <View>
@@ -209,7 +167,7 @@ export default function VisitPlanResultForm(props) {
                       rawData.map((item, index) => (
                         <Swipeable renderLeftActions={swipeLeftAction}>
                           <ListItem
-                            key={index}
+                            key={index.toString()}
                             containerStyle={{ backgroundColor: globalColors.listItemHeaderContainer, alignSelf: "stretch" }}
                             // fixme: fix productGroup multi layering
                             title={`${item.Title}  ⟸  ${item.Taste}  ⟸  ${item.Weight} گرمی`}
@@ -222,9 +180,9 @@ export default function VisitPlanResultForm(props) {
                   </View>
                 </View>
 
-                <Button title='تأیید' color={globalColors.btnAdd} onPress={props.onSubmit} />
+                <Button title='تأیید' color={globalColors.btnAdd} onPress={onSubmit} />
                 <View style={{ marginVertical: 5 }} />
-                <Button title='انصراف' color={globalColors.btnCancel} onPress={props.onCancel} />
+                <Button title='انصراف' color={globalColors.btnCancel} onPress={navigation.goBack} />
                 <View style={{ marginVertical: 20 }} />
               </View>
             )}

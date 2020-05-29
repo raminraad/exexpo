@@ -26,53 +26,43 @@ import { Icon, Divider } from "react-native-elements";
 import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
-import { FontAwesome5 } from '@expo/vector-icons'; 
+import { FontAwesome5 } from "@expo/vector-icons";
 import Swipeable from "react-native-gesture-handler/Swipeable";
-import {
-  globalStyles,
-  globalColors,
-  globalSizes,
-  menuOptionsCustomStyles,
-} from "../styles/global";
+import { globalStyles, globalColors, globalSizes, menuOptionsCustomStyles } from "../styles/global";
 import * as persianLib from "../lib/persianLib";
-import {
-  Menu,
-  MenuTrigger,
-  MenuOptions,
-  MenuOption,
-} from "react-native-popup-menu";
+import { Menu, MenuTrigger, MenuOptions, MenuOption } from "react-native-popup-menu";
 import DefaultHeader from "../components/DefaultHeader";
-import  VisitPlanResultForm  from "../components/VisitPlanResultForm";
+import VisitPlanResultForm from "../components/VisitPlanResultForm";
 import * as dp from "../lib/sqliteDp";
 import { openDatabase } from "expo-sqlite";
-
 
 export default function VisitPlanCustomers(props) {
   const db = openDatabase("db");
   const [presentationalData, setPresentationalData] = useState([]);
-  const [rawData, setRawData] = useState([])
+  const [rawData, setRawData] = useState([]);
   const [isOnInstantFilter, setIsOnInstantFilter] = useState(false);
   const [isOnAdvancedFilter, setisOnAdvancedFilter] = useState(false);
   const [isOnAdd, setIsOnAdd] = useState(false);
   const [instantFilterText, setInstantFilterText] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     setIsLoading(true);
     console.log(JSON.stringify(props));
     let query = `select * from VisitPlanCustomers where VisitPlanId = ${props.route.params.item.Id}`;
     db.transaction((tx) => {
-        tx.executeSql(
-          query,
-          [],
-          (_, { rows: { _array } }) => {
-            console.log(`☺☺ ${query} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
-            setRawData(_array);
-            setPresentationalData(_array);
-          },
-          (transaction, error) => console.log(`☻☻ ${query} =>=> ${error}`)
-        );
+      tx.executeSql(
+        query,
+        [],
+        (_, { rows: { _array } }) => {
+          console.log(`☺☺ ${query} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
+          setRawData(_array);
+          setPresentationalData(_array);
+        },
+        (transaction, error) => console.log(`☻☻ ${query} =>=> ${error}`)
+      );
     });
-    
+
     setIsLoading(false);
     return () => setPresentationalData([]);
   }, [props, isLoading]);
@@ -88,38 +78,29 @@ export default function VisitPlanCustomers(props) {
             name={expanded ? "chevrons-down" : "chevrons-left"}
             size={24}
             style={globalStyles.listItemHeaderCollapseIcon}
-            color={
-              expanded
-                ? globalColors.listItemCollapseIcon
-                : globalColors.listItemExpandIcon
-            }
+            color={expanded ? globalColors.listItemCollapseIcon : globalColors.listItemExpandIcon}
           />
           <View style={globalStyles.listItemHeaderInnerTextContainer}>
             <View style={{ ...globalStyles.listItemHeaderFieldContainer }}>
               <Text style={globalStyles.listItemHeaderFieldTitle}>شناسه:</Text>
-              <Text style={globalStyles.listItemHeaderFieldData}>
-                {item.Code}
-              </Text>
+              <Text style={globalStyles.listItemHeaderFieldData}>{item.Code}</Text>
             </View>
 
-            <View
-              style={{ ...globalStyles.listItemHeaderFieldContainer, flex: 2 }}
-            >
+            <View style={{ ...globalStyles.listItemHeaderFieldContainer, flex: 2 }}>
               <Text style={globalStyles.listItemHeaderFieldTitle}>عنوان:</Text>
-              <Text style={[globalStyles.listItemHeaderFieldData, { flex: 1 }]}>
-                {item.Title}
-              </Text>
+              <Text style={[globalStyles.listItemHeaderFieldData, { flex: 1 }]}>{item.Title}</Text>
             </View>
           </View>
           <Button transparent style={globalStyles.listItemHeaderNavigateButton}>
             <FontAwesome5
-              name="crosshairs"
+              name='crosshairs'
               onPress={() =>
                 // setIsOnAdd(true)
                 //xxx: uncomment top and remove bottom
-                props.navigation.push('VisitPlanResultForm',{
+                props.navigation.push("VisitPlanResultForm", {
                   title: `فروشگاه ${item.Title}`,
                   item: item,
+                  xxx:null
                   // item:props.navigation.route.params.visitPlanResultsRawData.filter(v=>v.VisitPlanCustomerId==item.Id),
                   // productsRawData : dp.getJoinedProducts(),
                   // visitPlanCustomerId: item.Id,
@@ -136,39 +117,23 @@ export default function VisitPlanCustomers(props) {
       return (
         <View style={globalStyles.listItemContentContainer}>
           <View style={globalStyles.listItemContentRow}>
-            <Feather name="user" size={globalSizes.icons.small} color="grey" />
-            <Text style={globalStyles.listItemContentFieldData}>
-              {item.Owner ? item.Owner : "وارد نشده"}
-            </Text>
+            <Feather name='user' size={globalSizes.icons.small} color='grey' />
+            <Text style={globalStyles.listItemContentFieldData}>{item.Owner ? item.Owner : "وارد نشده"}</Text>
           </View>
 
           <View style={globalStyles.listItemContentRow}>
-            <Feather
-              name="map-pin"
-              size={globalSizes.icons.small}
-              color="grey"
-            />
-            <Text style={globalStyles.listItemContentFieldData}>
-              {item.Address ? item.Address : "وارد نشده"}
-            </Text>
+            <Feather name='map-pin' size={globalSizes.icons.small} color='grey' />
+            <Text style={globalStyles.listItemContentFieldData}>{item.Address ? item.Address : "وارد نشده"}</Text>
           </View>
 
           <View style={globalStyles.listItemContentRow}>
-            <Feather name="phone" size={globalSizes.icons.small} color="grey" />
-            <Text style={globalStyles.listItemContentFieldData}>
-              {item.Phone ? item.Phone : "وارد نشده"}
-            </Text>
+            <Feather name='phone' size={globalSizes.icons.small} color='grey' />
+            <Text style={globalStyles.listItemContentFieldData}>{item.Phone ? item.Phone : "وارد نشده"}</Text>
           </View>
 
           <View style={globalStyles.listItemContentRow}>
-            <Feather
-              name="smartphone"
-              size={globalSizes.icons.small}
-              color="grey"
-            />
-            <Text style={globalStyles.listItemContentFieldData}>
-              {item.Cell ? item.Cell : "وارد نشده"}
-            </Text>
+            <Feather name='smartphone' size={globalSizes.icons.small} color='grey' />
+            <Text style={globalStyles.listItemContentFieldData}>{item.Cell ? item.Cell : "وارد نشده"}</Text>
           </View>
         </View>
       );
@@ -177,30 +142,14 @@ export default function VisitPlanCustomers(props) {
     let SwipeLeftAction = () => {
       return (
         <View style={globalStyles.listItemSwipeLeftContainer}>
-          <Icon
-            reverse
-            name="trash"
-            type="font-awesome"
-            size={globalSizes.icons.small}
-            color={globalColors.btnDelete}
-          />
-          <Icon
-            reverse
-            name="edit"
-            type="font-awesome"
-            size={globalSizes.icons.small}
-            color={globalColors.btnUpdate}
-          />
+          <Icon reverse name='trash' type='font-awesome' size={globalSizes.icons.small} color={globalColors.btnDelete} />
+          <Icon reverse name='edit' type='font-awesome' size={globalSizes.icons.small} color={globalColors.btnUpdate} />
         </View>
       );
     };
     return (
       <Swipeable renderLeftActions={SwipeLeftAction}>
-        <Accordion
-          dataArray={[item]}
-          renderContent={renderItemContent}
-          renderHeader={renderItemHeader}
-        />
+        <Accordion dataArray={[item]} renderContent={renderItemContent} renderHeader={renderItemHeader} />
       </Swipeable>
     );
   };
@@ -221,19 +170,16 @@ export default function VisitPlanCustomers(props) {
         setisOnAdvancedFilter={setisOnAdvancedFilter}
         navigation={props.navigation}
       />
-      
-      <Modal visible={isOnAdd} animationType="slide">
+
+      <Modal visible={isOnAdd} animationType='slide'>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={globalStyles.addModalContent}>
-            <VisitPlanResultForm
-              onSubmit={addItem}
-              onCancel={() => setIsOnAdd(false)}
-            />
+            <VisitPlanResultForm onSubmit={addItem} onCancel={() => setIsOnAdd(false)} />
           </View>
         </TouchableWithoutFeedback>
       </Modal>
       {isLoading ? (
-        <Spinner style={{ height: "100%" }} color="grey" size={50} />
+        <Spinner style={{ height: "100%" }} color='grey' size={50} />
       ) : (
         <FlatList
           keyExtractor={keyExtractor}
@@ -242,29 +188,20 @@ export default function VisitPlanCustomers(props) {
           renderItem={renderItem}
         />
       )}
-    
 
       <Footer>
         <FooterTab style={{ justifyContent: "center", alignItems: "center" }}>
           {isLoading ? (
-            <Spinner color="white" />
+            <Spinner color='white' />
           ) : (
             <Button>
-              <Feather
-                name="refresh-ccw"
-                size={globalSizes.icons.large}
-                color={globalColors.palette.cream}
-              />
+              <Feather name='refresh-ccw' size={globalSizes.icons.large} color={globalColors.palette.cream} />
             </Button>
           )}
         </FooterTab>
         <FooterTab>
           <Button onPress={() => setIsOnInstantFilter(true)}>
-            <Feather
-              name="search"
-              size={globalSizes.icons.large}
-              color={globalColors.palette.cream}
-            />
+            <Feather name='search' size={globalSizes.icons.large} color={globalColors.palette.cream} />
           </Button>
         </FooterTab>
         <FooterTab style={{ alignSelf: "center", justifyContent: "center" }}>
@@ -272,13 +209,7 @@ export default function VisitPlanCustomers(props) {
             <MenuTrigger
               // todo: set items and remove disabled
               disabled={true}
-              children={
-                <Feather
-                  color={globalColors.palette.cream}
-                  name={"star"}
-                  size={globalSizes.icons.large}
-                />
-              }
+              children={<Feather color={globalColors.palette.cream} name={"star"} size={globalSizes.icons.large} />}
             />
             <MenuOptions customStyles={menuOptionsCustomStyles}></MenuOptions>
           </Menu>

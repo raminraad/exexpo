@@ -12,12 +12,10 @@ import { Feather } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { KeyboardAvoidingView } from "react-native";
+import VisitPlanResultProductForm from "./VisitPlanResultProductForm";
 
-export default function VisitPlanResultForm({ onSubmit, onCancel, item, productList }) {
+export default function VisitPlanResultForm({ onSubmit, onCancel, item, productListRawData }) {
   const [visitResultStatus, setVisitResultStatus] = useState(item && item.ResultStatus ? item.ResultStatus : null);
-  const [productSearchText, setProductSearchText] = useState("");
-  const [isOnProductSearch, setisOnProductSearch] = useState(false);
-  const [selectedProduct, setSelectedProduc] = useState(null);
 
   const swipeLeftAction = () => (
     <View style={globalStyles.listItemSwipeLeftContainer}>
@@ -40,78 +38,35 @@ export default function VisitPlanResultForm({ onSubmit, onCancel, item, productL
     </View>
   );
 
-  const [visible, setVisible] = useState(false);
+  const [productModalIsVisible, setProductModalIsVisible] = useState(false);
 
   const toggleOverlay = () => {
-    setVisible(!visible);
+    setProductModalIsVisible(!productModalIsVisible);
   };
+  //xxx START
   const list = [
     {
-      title: "چیپس مزمز",
+      title: "chips",
       icon: "av-timer",
     },
     {
-      title: "پفک چی توز",
+      title: "pofak",
+      icon: "flight-takeoff",
+    },
+    {
+      title: "lollipop",
+      icon: "flight-takeoff",
+    },
+    {
+      title: "nuts",
       icon: "flight-takeoff",
     },
   ];
+  // XXX END
   return (
     <Container>
       
-      <Overlay isVisible={visible} onBackdropPress={toggleOverlay} overlayStyle={{ flex: 1 }}>
-        <View style={{ flex: 1 }}>
-          {!isOnProductSearch ? (
-            <PricingCard
-              containerStyle={{ alignSelf: "center" }}
-              color='#fca311'
-              title={list[0].title}
-              price='18000 ريال'
-              pricingStyle={{ fontSize: 18 }}
-              info={[list[0].title, "Basic Support", "All Core Features"]}
-              button={{ title: "تغییر", icon: "edit" }}
-              onButtonPress={() => setisOnProductSearch(true)}
-            />
-          ) : (
-            <View style={{ borderWidth: 0.5, marginVertical: 15, borderRadius: 2 }}>
-              <SearchBar
-                platform='default'
-                lightTheme
-                placeholder='جستجوی محصول...'
-                onChangeText={(val) => {
-                  setProductSearchText(val);
-                }}
-                value={productSearchText}
-              />
-              {list.map((item, i) => (
-                <ListItem
-                  containerStyle={{ backgroundColor: globalColors.listItemHeaderContainer }}
-                  key={i}
-                  title={item.title}
-                  bottomDivider
-                  onPress={() => setisOnProductSearch(false)}
-                />
-              ))}
-            </View>
-          )}
-        </View>
-        <View style={{ flex: 1 }}>
-          <View style={globalStyles.addModalFieldContainer}>
-            <Text style={{ ...globalStyles.addModalFieldTitle, flex: 0 }}>قیمت فروش</Text>
-            <TextInput style={globalStyles.addModalFieldInput} placeholder='قیمت فروش محصول' />
-          </View>
-          <View style={globalStyles.addModalFieldContainer}>
-            <Text style={{ ...globalStyles.addModalFieldTitle, flex: 0 }}>وزن (گرم) </Text>
-            <TextInput style={globalStyles.addModalFieldInput} placeholder='وزن محصول (گرم) ' />
-          </View>
-          <View style={globalStyles.addModalFieldContainer}>
-            <Text style={{ ...globalStyles.addModalFieldTitle, flex: 0 }}>موجودی قابل مشاهده</Text>
-            <TextInput style={globalStyles.addModalFieldInput} placeholder='موجودی قابل مشاهده' />
-          </View>
-        </View>
-        <Button title='تأیید' color={globalColors.btnAdd} onPress={() => console.log(productSearchText)} />
-        <View style={{ marginVertical: 5 }} />
-        <Button title='انصراف' color={globalColors.btnCancel} onPress={onCancel} />
-      </Overlay>
+      <VisitPlanResultProductForm isVisible={productModalIsVisible} rawData={list}/>
 
       <ScrollView style={{ padding: 25 }}>
         <View>

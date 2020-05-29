@@ -59,7 +59,7 @@ export default function VisitPlanCustomers(props) {
   useEffect(() => {
     setIsLoading(true);
     console.log(JSON.stringify(props));
-    let query = `select * from VisitPlanCustomers where VisitPlanId = ${props.route.params.itemId}`;
+    let query = `select * from VisitPlanCustomers where VisitPlanId = ${props.route.params.item.Id}`;
     db.transaction((tx) => {
         tx.executeSql(
           query,
@@ -119,7 +119,7 @@ export default function VisitPlanCustomers(props) {
                 //xxx: uncomment top and remove bottom
                 props.navigation.push('VisitPlanResultForm',{
                   title: `فروشگاه ${item.Title}`,
-                  itemId: item.Id,
+                  item: item,
                   // item:props.navigation.route.params.visitPlanResultsRawData.filter(v=>v.VisitPlanCustomerId==item.Id),
                   // productsRawData : dp.getJoinedProducts(),
                   // visitPlanCustomerId: item.Id,

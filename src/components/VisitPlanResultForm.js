@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { StyleSheet, View, TouchableOpacity, FlatList, TextInput, ScrollView, Button ,Modal} from "react-native";
-import { Separator, Content, Container } from "native-base";
+import React, { useState, useEffect } from "react";
+import { StyleSheet, View, TouchableOpacity, FlatList, TextInput, ScrollView, Button, Modal } from "react-native";
+import { Separator, Content, Container, Spinner } from "native-base";
 import { Overlay, ListItem, PricingCard } from "react-native-elements";
 import { Formik } from "formik";
 import { RadioButton, Text, Divider } from "react-native-paper";
@@ -13,9 +13,32 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { KeyboardAvoidingView } from "react-native";
 import VisitPlanResultProductForm from "./VisitPlanResultProductForm";
+import { openDatabase } from "expo-sqlite";
 
-export default function VisitPlanResultForm({ onSubmit, onCancel, item, productListRawData }) {
+export default function VisitPlanResultForm(props) {
+  const db = openDatabase("db");
+  let item = props.route.params.item;
   const [visitResultStatus, setVisitResultStatus] = useState(item && item.ResultStatus ? item.ResultStatus : null);
+  const [rawData, setRawData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    let query = `select * from VisitPlanResults where VisitPlanCustomerId = ${props.route.params.item.Id}`;
+    db.transaction((tx) => {
+      tx.executeSql(
+        query,
+        [],
+        (_, { rows: { _array } }) => {
+          console.log(`☺☺ ${query} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
+          setRawData(_array);
+        },
+        (transaction, error) => console.log(`☻☻ ${query} =>=> ${error}`)
+      );
+    });
+
+    setIsLoading(false);
+    return () => setRawData([]);
+  }, []);
 
   const swipeLeftAction = () => (
     <View style={globalStyles.listItemSwipeLeftContainer}>
@@ -88,112 +111,120 @@ export default function VisitPlanResultForm({ onSubmit, onCancel, item, productL
     <View>
       <ScrollView style={{ padding: 25 }} keyboardShouldPersistTaps='never'>
         <View>
-        <Formik
-          initialValues={{
-            Id: `${item && item.Id ? item.Id : null}`,
-            VisitPlanCustomerId: `${item && item.VisitPlanCustomerId ? item.VisitPlanCustomerId : null}`,
-            ProductSubId: `${item && item.ProductSubId ? item.ProductSubId : null}`,
-            SellPrice: `${item && item.SellPrice ? item.SellPrice : ""}`,
-            Weight: `${item && item.Weight ? item.Weight : ""}`,
-            HasInventory: `${item && item.HasInventory ? item.HasInventory : ""}`,
-            ShelfInventoryCount: `${item && item.ShelfInventoryCount ? item.ShelfInventoryCount : ""}`,
-            ShelfVisibleCount: `${item && item.ShelfVisibleCount ? item.ShelfVisibleCount : ""}`,
-            WarehouseInventoryCount: `${item && item.WarehouseInventoryCount ? item.WarehouseInventoryCount : ""}`,
-            VerbalPurchaseCount: `${item && item.VerbalPurchaseCount ? item.VerbalPurchaseCount : ""}`,
-            FactorPurchaseCount: `${item && item.FactorPurchaseCount ? item.FactorPurchaseCount : ""}`,
-            LastModifiedDate: `${item && item.LastModifiedDate ? item.LastModifiedDate : ""}`,
-            SyncStatus: `${item && item.SyncStatus ? item.SyncStatus : ""}`,
+          <Formik
+            initialValues={{
+              Id: `${item && item.Id ? item.Id : null}`,
+              VisitPlanCustomerId: `${item && item.VisitPlanCustomerId ? item.VisitPlanCustomerId : null}`,
+              ProductSubId: `${item && item.ProductSubId ? item.ProductSubId : null}`,
+              SellPrice: `${item && item.SellPrice ? item.SellPrice : ""}`,
+              Weight: `${item && item.Weight ? item.Weight : ""}`,
+              HasInventory: `${item && item.HasInventory ? item.HasInventory : ""}`,
+              ShelfInventoryCount: `${item && item.ShelfInventoryCount ? item.ShelfInventoryCount : ""}`,
+              ShelfVisibleCount: `${item && item.ShelfVisibleCount ? item.ShelfVisibleCount : ""}`,
+              WarehouseInventoryCount: `${item && item.WarehouseInventoryCount ? item.WarehouseInventoryCount : ""}`,
+              VerbalPurchaseCount: `${item && item.VerbalPurchaseCount ? item.VerbalPurchaseCount : ""}`,
+              FactorPurchaseCount: `${item && item.FactorPurchaseCount ? item.FactorPurchaseCount : ""}`,
+              LastModifiedDate: `${item && item.LastModifiedDate ? item.LastModifiedDate : ""}`,
+              SyncStatus: `${item && item.SyncStatus ? item.SyncStatus : ""}`,
 
-            ResultSummary: `${item && item.ResultSummary ? item.ResultSummary : ""}`,
-            ResultStatus: `${item && item.ResultStatus ? item.ResultStatus : ""}`,
-            SyncStatus: `${item && item.SyncStatus ? item.SyncStatus : ""}`,
-            SyncStatus: `${item && item.SyncStatus ? item.SyncStatus : ""}`,
-            SyncStatus: `${item && item.SyncStatus ? item.SyncStatus : ""}`,
-          }}
-          onSubmit={(values, actions) => {
-            actions.resetForm();
-            onSubmit(values);
-          }}>
-          {(props) => (
-            <View>
-              <View style={globalStyles.addModalFieldContainer}>
-                <Text style={globalStyles.addModalFieldTitle}>شرح مختصر</Text>
-                <TextInput
-                  style={[globalStyles.addModalFieldInput, { height: 100 }]}
-                  textAlignVertical='top'
-                  placeholder='توضیحات مختصر درباره گزارش پویش'
-                  onChangeText={props.handleChange("ResultSummary")}
-                  multiline
-                  value={props.values.fName}
-                />
-              </View>
-
-              <View style={globalStyles.addModalFieldContainer}>
-                <Text style={globalStyles.addModalFieldTitle}>وضعیت</Text>
-                <View style={globalStyles.addModalFieldRadioButtonGroupContainer}>
-                  <RadioButton.Group onValueChange={(value) => setVisitResultStatus(value)} value={visitResultStatus}>
-                    <View style={globalStyles.radioItemContainer}>
-                      <Text>پویش نشده</Text>
-                      <RadioButton value='0' />
-                    </View>
-                    <View style={globalStyles.radioItemContainer}>
-                      <Text>عدم همکاری</Text>
-                      <RadioButton value='3' />
-                    </View>
-                    <View style={globalStyles.radioItemContainer}>
-                      <Text>پویش موفق</Text>
-                      <RadioButton value='7' />
-                    </View>
-                    <View style={globalStyles.radioItemContainer}>
-                      <Text>تغییر کاربری</Text>
-                      <RadioButton value='11' />
-                    </View>
-                    <View style={globalStyles.radioItemContainer}>
-                      <Text>یافت نشد</Text>
-                      <RadioButton value='13' />
-                    </View>
-                  </RadioButton.Group>
-                </View>
-              </View>
-              <View style={globalStyles.container}>
-        
-        <Modal visible={productModalIsVisible} animationType="slide">
-          <VisitPlanResultProductForm rawData={list}/>
-          
-        </Modal>
-        </View>
+              ResultSummary: `${item && item.ResultSummary ? item.ResultSummary : ""}`,
+              ResultStatus: `${item && item.ResultStatus ? item.ResultStatus : ""}`,
+              SyncStatus: `${item && item.SyncStatus ? item.SyncStatus : ""}`,
+              SyncStatus: `${item && item.SyncStatus ? item.SyncStatus : ""}`,
+              SyncStatus: `${item && item.SyncStatus ? item.SyncStatus : ""}`,
+            }}
+            onSubmit={(values, actions) => {
+              actions.resetForm();
+              props.onSubmit(values);
+            }}>
+            {(props) => (
               <View>
-                <View style={{ flexDirection: "row-reverse", justifyContent: "space-between" }}>
-                  <Text style={globalStyles.addModalFieldTitle}>محصولات فروشگاه</Text>
-                  <View style={{ marginBottom: 5 }}>
-                    <FontAwesome5.Button name='plus-square' backgroundColor={globalColors.btnAdd} 
-                    onPress={()=>{setProductModalIsVisible(true);console.log(productModalIsVisible);}
-                    }>
-                      افزودن محصول
-                    </FontAwesome5.Button>
+                <View style={globalStyles.addModalFieldContainer}>
+                  <Text style={globalStyles.addModalFieldTitle}>شرح مختصر</Text>
+                  <TextInput
+                    style={[globalStyles.addModalFieldInput, { height: 100 }]}
+                    textAlignVertical='top'
+                    placeholder='توضیحات مختصر درباره گزارش پویش'
+                    onChangeText={props.handleChange("ResultSummary")}
+                    multiline
+                    value={props.values.fName}
+                  />
+                </View>
+
+                <View style={globalStyles.addModalFieldContainer}>
+                  <Text style={globalStyles.addModalFieldTitle}>وضعیت</Text>
+                  <View style={globalStyles.addModalFieldRadioButtonGroupContainer}>
+                    <RadioButton.Group onValueChange={(value) => setVisitResultStatus(value)} value={visitResultStatus}>
+                      <View style={globalStyles.radioItemContainer}>
+                        <Text>پویش نشده</Text>
+                        <RadioButton value='0' />
+                      </View>
+                      <View style={globalStyles.radioItemContainer}>
+                        <Text>عدم همکاری</Text>
+                        <RadioButton value='3' />
+                      </View>
+                      <View style={globalStyles.radioItemContainer}>
+                        <Text>پویش موفق</Text>
+                        <RadioButton value='7' />
+                      </View>
+                      <View style={globalStyles.radioItemContainer}>
+                        <Text>تغییر کاربری</Text>
+                        <RadioButton value='11' />
+                      </View>
+                      <View style={globalStyles.radioItemContainer}>
+                        <Text>یافت نشد</Text>
+                        <RadioButton value='13' />
+                      </View>
+                    </RadioButton.Group>
                   </View>
                 </View>
+                <View style={globalStyles.container}>
+                  <Modal visible={productModalIsVisible} animationType='slide'>
+                    <VisitPlanResultProductForm rawData={list} />
+                  </Modal>
+                </View>
                 <View>
+                  <View style={{ flexDirection: "row-reverse", justifyContent: "space-between" }}>
+                    <Text style={globalStyles.addModalFieldTitle}>محصولات فروشگاه</Text>
+                    <View style={{ marginBottom: 5 }}>
+                      <FontAwesome5.Button
+                        name='plus-square'
+                        backgroundColor={globalColors.btnAdd}
+                        onPress={() => {
+                          setProductModalIsVisible(true);
+                          console.log(productModalIsVisible);
+                        }}>
+                        افزودن محصول
+                      </FontAwesome5.Button>
+                    </View>
+                  </View>
+                  <View>
+                    {isLoading ? (
+                      <Spinner style={{ height: "100%" }} color='grey' size={50} />
+                    ) : (
+                      rawData.map((value, index) => (
+                        <Swipeable renderLeftActions={swipeLeftAction}>
+                          <ListItem
+                            key={index}
+                            containerStyle={{ backgroundColor: globalColors.listItemHeaderContainer, alignSelf: "stretch" }}
+                            title={value.ProductSubId?value.ProductSubId.toString():'وارد نشده'}
+                            bottomDivider
+                          />
+                        </Swipeable>
+                      ))
+                    )}
+                  </View>
+                </View>
 
-                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].map((value,index)=>(
-                
-                      <Swipeable renderLeftActions={swipeLeftAction}>
-                        <ListItem key={index} containerStyle={{ backgroundColor: globalColors.listItemHeaderContainer ,alignSelf:'stretch'}} title='محصول شماره یک مزمز' bottomDivider />
-                      </Swipeable>
-                    ))}
+                <Button title='تأیید' color={globalColors.btnAdd} onPress={props.onSubmit} />
+                <View style={{ marginVertical: 5 }} />
+                <Button title='انصراف' color={globalColors.btnCancel} onPress={props.onCancel} />
+                <View style={{ marginVertical: 20 }} />
               </View>
-              </View>
-
-              <Button title='تأیید' color={globalColors.btnAdd} onPress={onSubmit} />
-              <View style={{ marginVertical: 5 }} />
-              <Button title='انصراف' color={globalColors.btnCancel} onPress={onCancel}/>
-              <View style={{ marginVertical: 20 }} />
-            </View>
-          )}
-        </Formik>
+            )}
+          </Formik>
         </View>
       </ScrollView>
-    
     </View>
   );
 }

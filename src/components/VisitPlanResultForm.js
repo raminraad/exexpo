@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, View, TouchableOpacity, FlatList, Modal, TextInput, ScrollView, Button } from "react-native";
+import { StyleSheet, View, TouchableOpacity, FlatList, TextInput, ScrollView, Button ,Modal} from "react-native";
 import { Separator, Content, Container } from "native-base";
 import { Overlay, ListItem, PricingCard } from "react-native-elements";
 import { Formik } from "formik";
@@ -40,9 +40,6 @@ export default function VisitPlanResultForm({ onSubmit, onCancel, item, productL
 
   const [productModalIsVisible, setProductModalIsVisible] = useState(false);
 
-  const toggleOverlay = () => {
-    setProductModalIsVisible(!productModalIsVisible);
-  };
   //xxx START
   const list = [
     {
@@ -64,9 +61,14 @@ export default function VisitPlanResultForm({ onSubmit, onCancel, item, productL
   ];
   // XXX END
   return (
-    <Container>
-      
-      <VisitPlanResultProductForm isVisible={productModalIsVisible} rawData={list}/>
+    <View>
+      <View style={globalStyles.container}>
+        
+      <Modal visible={productModalIsVisible} animationType="slide">
+        <VisitPlanResultProductForm rawData={list}/>
+        
+      </Modal>
+      </View>
 
       <ScrollView style={{ padding: 25 }}>
         <View>
@@ -142,7 +144,9 @@ export default function VisitPlanResultForm({ onSubmit, onCancel, item, productL
                 <View style={{ flexDirection: "row-reverse", justifyContent: "space-between" }}>
                   <Text style={globalStyles.addModalFieldTitle}>محصولات فروشگاه</Text>
                   <View style={{ marginBottom: 5 }}>
-                    <FontAwesome5.Button name='plus-square' backgroundColor={globalColors.btnAdd} onPress={toggleOverlay}>
+                    <FontAwesome5.Button name='plus-square' backgroundColor={globalColors.btnAdd} 
+                    onPress={()=>{setProductModalIsVisible(true);console.log(productModalIsVisible);}
+                    }>
                       افزودن محصول
                     </FontAwesome5.Button>
                   </View>
@@ -168,6 +172,6 @@ export default function VisitPlanResultForm({ onSubmit, onCancel, item, productL
         </View>
       </ScrollView>
     
-    </Container>
+    </View>
   );
 }

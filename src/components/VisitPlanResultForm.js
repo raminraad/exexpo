@@ -62,14 +62,6 @@ export default function VisitPlanResultForm({ onSubmit, onCancel, item, productL
   // XXX END
   return (
     <View>
-      <View style={globalStyles.container}>
-        
-      <Modal visible={productModalIsVisible} animationType="slide">
-        <VisitPlanResultProductForm rawData={list}/>
-        
-      </Modal>
-      </View>
-
       <ScrollView style={{ padding: 25 }}>
         <View>
         <Formik
@@ -139,7 +131,13 @@ export default function VisitPlanResultForm({ onSubmit, onCancel, item, productL
                   </RadioButton.Group>
                 </View>
               </View>
-
+              <View style={globalStyles.container}>
+        
+        <Modal visible={productModalIsVisible} animationType="slide">
+          <VisitPlanResultProductForm rawData={list}/>
+          
+        </Modal>
+        </View>
               <View>
                 <View style={{ flexDirection: "row-reverse", justifyContent: "space-between" }}>
                   <Text style={globalStyles.addModalFieldTitle}>محصولات فروشگاه</Text>
@@ -156,7 +154,7 @@ export default function VisitPlanResultForm({ onSubmit, onCancel, item, productL
                     {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].map((value,index)=>(
                 
                       <Swipeable renderLeftActions={swipeLeftAction}>
-                        <ListItem key={index.toString()} containerStyle={{ backgroundColor: globalColors.listItemHeaderContainer ,alignSelf:'stretch'}} title='محصول شماره یک مزمز' bottomDivider />
+                        <ListItem key={index} containerStyle={{ backgroundColor: globalColors.listItemHeaderContainer ,alignSelf:'stretch'}} title='محصول شماره یک مزمز' bottomDivider />
                       </Swipeable>
                     ))}
               </View>

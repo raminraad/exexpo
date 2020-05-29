@@ -1,5 +1,5 @@
 import React, { useState ,useEffect} from "react";
-import { StyleSheet, View, TouchableOpacity, FlatList, TextInput, Button, ScrollView, KeyboardAvoidingView } from "react-native";
+import { StyleSheet, View, TouchableOpacity, FlatList, TextInput, Button, ScrollView, KeyboardAvoidingView, Keyboard } from "react-native";
 import { Formik } from "formik";
 import { RadioButton, Text, Divider } from "react-native-paper";
 import { Separator, Content, Container } from "native-base";
@@ -29,7 +29,7 @@ export default function VisitPlanResultProductForm({ onSubmit, onCancel, initial
   return (
     <View style={globalStyles.container}>
       
-        <View style={{ flex: 1 }}>
+        <View style={{ minHeight:'50%' }}>
           {isOnProductSearch || !selectedItem ? (
             <View style={{ borderWidth: 0.5, marginVertical: 15, borderRadius: 2 }}>
               <SearchBar
@@ -47,13 +47,17 @@ export default function VisitPlanResultProductForm({ onSubmit, onCancel, initial
                   key={i}
                   title={item.title}
                   bottomDivider
-                  onPress={() => setisOnProductSearch(false)}
+                  onPress={() => {
+                    Keyboard.dismiss();
+                    setisOnProductSearch(false);
+                    setSelectedItem(item);
+                  }}
                 />
               ))}
             </View>
           ) : (
             <PricingCard
-              containerStyle={{ alignSelf: "center" }}
+              containerStyle={{ alignSelf: "stretch" ,marginHorizontal:50}}
               color='#fca311'
               title={selectedItem.title}
               price='18000 ريال'
@@ -65,29 +69,25 @@ export default function VisitPlanResultProductForm({ onSubmit, onCancel, initial
           )}
         </View>
         
-      {!isOnProductSearch?
-      null
-      :
-      (<View>
-        <View style={globalStyles.addModalFieldContainer}>
-          <Text style={{ ...globalStyles.addModalFieldTitle, flex: 0 }}>قیمت فروش</Text>
-          <TextInput style={globalStyles.addModalFieldInput} placeholder='قیمت فروش محصول' />
-        </View>
-        <View style={globalStyles.addModalFieldContainer}>
-          <Text style={{ ...globalStyles.addModalFieldTitle, flex: 0 }}>وزن (گرم) </Text>
-          <TextInput style={globalStyles.addModalFieldInput} placeholder='وزن محصول (گرم) ' />
-        </View>
-        <View style={globalStyles.addModalFieldContainer}>
-          <Text style={{ ...globalStyles.addModalFieldTitle, flex: 0 }}>موجودی قابل مشاهده</Text>
-          <TextInput style={globalStyles.addModalFieldInput} placeholder='موجودی قابل مشاهده' />
-        </View>
       
+      <View style={globalStyles.addModalFieldContainer}>
+        <Text style={{ ...globalStyles.addModalFieldTitle, flex: 0 }}>قیمت فروش</Text>
+        <TextInput style={globalStyles.addModalFieldInput} placeholder='قیمت فروش محصول' />
+      </View>
+      <View style={globalStyles.addModalFieldContainer}>
+        <Text style={{ ...globalStyles.addModalFieldTitle, flex: 0 }}>وزن (گرم) </Text>
+        <TextInput style={globalStyles.addModalFieldInput} placeholder='وزن محصول (گرم) ' />
+      </View>
+      <View style={globalStyles.addModalFieldContainer}>
+        <Text style={{ ...globalStyles.addModalFieldTitle, flex: 0 }}>موجودی قابل مشاهده</Text>
+        <TextInput style={globalStyles.addModalFieldInput} placeholder='موجودی قابل مشاهده' />
+      </View>
     
-        <Button title='تأیید' color={globalColors.btnAdd} onPress={() => console.log(searchText)} />
-        <View style={{ marginVertical: 5 }} />
-        <Button title='انصراف' color={globalColors.btnCancel} onPress={onCancel} />
-      </View>)
-      }
+  
+      <Button title='تأیید' color={globalColors.btnAdd} onPress={() => console.log(searchText)} />
+      <View style={{ marginVertical: 5 }} />
+      <Button title='انصراف' color={globalColors.btnCancel} onPress={onCancel} />
+    
     </View>
   );
 }

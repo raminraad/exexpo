@@ -43,18 +43,36 @@ import {
 } from "react-native-popup-menu";
 import DefaultHeader from "../components/DefaultHeader";
 import  VisitPlanResultForm  from "../components/VisitPlanResultForm";
+import * as dp from "../lib/sqliteDp";
+import { openDatabase } from "expo-sqlite";
+
 
 export default function VisitPlanCustomers(props) {
+  const db = openDatabase("db");
   const [presentationalData, setPresentationalData] = useState([]);
+  const [rawData, setRawData] = useState([])
   const [isOnInstantFilter, setIsOnInstantFilter] = useState(false);
   const [isOnAdvancedFilter, setisOnAdvancedFilter] = useState(false);
   const [isOnAdd, setIsOnAdd] = useState(false);
   const [instantFilterText, setInstantFilterText] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-
   useEffect(() => {
     setIsLoading(true);
-    setPresentationalData(props.route.params.customersRawData);
+    console.log(JSON.stringify(props));
+    let query = `select * from VisitPlanCustomers where VisitPlanId = ${props.route.params.itemId}`;
+    db.transaction((tx) => {
+        tx.executeSql(
+          query,
+          [],
+          (_, { rows: { _array } }) => {
+            console.log(`☺☺ ${query} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
+            setRawData(_array);
+            setPresentationalData(_array);
+          },
+          (transaction, error) => console.log(`☻☻ ${query} =>=> ${error}`)
+        );
+    });
+    
     setIsLoading(false);
     return () => setPresentationalData([]);
   }, [props, isLoading]);
@@ -101,10 +119,10 @@ export default function VisitPlanCustomers(props) {
                 //xxx: uncomment top and remove bottom
                 props.navigation.push('VisitPlanResultForm',{
                   title: `فروشگاه ${item.Title}`,
-                  item:props.navigation.route.parama.visitPlanResultsRawData.filter(v=>v.VisitPlanCustomerId==item.Id),
-                  productsRawData : dp.getJoinedProducts(),
-                  visitPlanCustomerId: item.Id,
-                  itemVisitPlanResults=
+                  itemId: item.Id,
+                  // item:props.navigation.route.params.visitPlanResultsRawData.filter(v=>v.VisitPlanCustomerId==item.Id),
+                  // productsRawData : dp.getJoinedProducts(),
+                  // visitPlanCustomerId: item.Id,
                 })
               }
               size={globalSizes.icons.medium}

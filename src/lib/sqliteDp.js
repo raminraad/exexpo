@@ -7,27 +7,27 @@ export const renewTables = (resolve,reject,result) => {
     console.log("creating all tables..");
     let createQueries = [
       {
-        sql: `create table if not exists ProductGroup (key integer primary key not null, Id,ParentId,ProductGroupCode,Title,LastModifiedDate,SyncStatus)`,
+        sql: `create table if not exists ProductGroup (key integer primary key not null, Id integer,ParentId integer,ProductGroupCode,Title,LastModifiedDate,SyncStatus)`,
         args: [],
       },
       {
-        sql: `create table if not exists Product (key integer primary key not null,Id,ProductGroupId,ProductCode,Taste,LastModifiedDate,SyncStatus)`,
+        sql: `create table if not exists Product (key integer primary key not null,Id integer,ProductGroupId integer,ProductCode,Taste,LastModifiedDate,SyncStatus)`,
         args: [],
       },
       {
-        sql: `create table if not exists ProductSub (key integer primary key not null,Id,ProductId,BarCode,IranCode,Color,Language,PriceType,PriceValue,MeasurmentType,MeasurmentScale,LastModifiedDate,SyncStatus)`,
+        sql: `create table if not exists ProductSub (key integer primary key not null,Id integer,ProductId integer,BarCode,IranCode,Color,Language,PriceType,PriceValue,MeasurmentType,MeasurmentScale,LastModifiedDate,SyncStatus)`,
         args: [],
       },
       {
-        sql: `create table if not exists UserVisitPlan (key integer primary key not null,Id,Summary,OperationDate,DateX,LastModifiedDate,SyncStatus)`,
+        sql: `create table if not exists UserVisitPlan (key integer primary key not null,Id integer,Summary,OperationDate,DateX,LastModifiedDate,SyncStatus)`,
         args: [],
       },
       {
-        sql: `create table if not exists VisitPlanCustomers (key integer primary key not null,Id,VisitPlanId,CustomerId,Code,Title,Owner,Long,Lat,Type,Address,Phone,Cell,Vol,ResultAttachedFileTitle,ResultSummary,ResultStatus,ResultVisitedDate,LastModifiedDate,SyncStatus)`,
+        sql: `create table if not exists VisitPlanCustomers (key integer primary key not null,Id integer,VisitPlanId integer,CustomerId integer,Code,Title,Owner,Long,Lat,Type,Address,Phone,Cell,Vol,ResultAttachedFileTitle,ResultSummary,ResultStatus,ResultVisitedDate,LastModifiedDate,SyncStatus)`,
         args: [],
       },
       {
-        sql: `create table if not exists VisitPlanResults (key integer primary key not null,Id,VisitPlanCustomerId,ProductSubId,SellPrice,Weight,HasInventory,ShelfInventoryCount,ShelfVisibleCount,WarehouseInventoryCount,VerbalPurchaseCount,FactorPurchaseCount,LastModifiedDate,SyncStatus)`,
+        sql: `create table if not exists VisitPlanResults (key integer primary key not null,Id integer,VisitPlanCustomerId integer,ProductSubId integer,SellPrice,Weight,HasInventory,ShelfInventoryCount,ShelfVisibleCount,WarehouseInventoryCount,VerbalPurchaseCount,FactorPurchaseCount,LastModifiedDate,SyncStatus)`,
         args: [],
       },
     ];

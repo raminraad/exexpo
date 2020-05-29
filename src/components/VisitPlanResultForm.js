@@ -150,7 +150,7 @@ const addVisitPlanResult = (item)=>{
                     <Text style={globalStyles.addModalFieldTitle}>محصولات فروشگاه</Text>
                     <View style={{ marginBottom: 5 }}>
                       <FontAwesome5.Button
-                        name='plus-square'
+                        name='plus'
                         backgroundColor={globalColors.btnAdd}
                         onPress={() => {
                           setProductModalIsVisible(true);

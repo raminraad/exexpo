@@ -21,6 +21,7 @@ import {
   Item,
   Input,
   Spinner,
+  Separator,
 } from "native-base";
 import { Icon, Divider } from "react-native-elements";
 import { Ionicons } from "@expo/vector-icons";
@@ -47,7 +48,7 @@ export default function VisitPlans({ navigation, route }) {
 
   useEffect(() => {
     ctor();
-    
+
     //xxx START
     // dp.getJoinedProducts();
     //xxx END
@@ -187,7 +188,9 @@ export default function VisitPlans({ navigation, route }) {
         return result;
       })
       .then((result) => {
-        let renewPromise = new Promise((resolve,reject)=>{dp.renewTables(resolve,reject,result);})
+        let renewPromise = new Promise((resolve, reject) => {
+          dp.renewTables(resolve, reject, result);
+        });
         return renewPromise.then(result);
       })
       .then((result) => {
@@ -221,9 +224,9 @@ export default function VisitPlans({ navigation, route }) {
               <Text style={globalStyles.listItemHeaderFieldData}>{persianLib.toShortDate(new Date(item.DateX))}</Text>
             </View>
           </View>
-          <Button
-            transparent
-            style={globalStyles.listItemHeaderNavigateButton}
+          <FontAwesome5.Button
+            name='user'
+            backgroundColor={globalColors.listItemNavigateIcon}
             onPress={() =>
               navigation.push("VisitPlanCustomers", {
                 title: `مشتریان هدف در تاریخ ${persianLib.toShortDate(new Date(item.OperationDate))}`,
@@ -231,10 +234,9 @@ export default function VisitPlans({ navigation, route }) {
                 // customersRawData: rawData.DataTables.VisitPlanCustomers.filter((plan) => plan.VisitPlanId == item.Id),
                 // visitPlanResultsRawData : rawData.DataTables.VisitPlanResults,
               })
-            }
-          >
-            <Feather name="user" size={globalSizes.icons.medium} color={globalColors.listItemNavigateIcon} />
-          </Button>
+            }>
+            مشتریان
+          </FontAwesome5.Button>
         </View>
       );
     };
@@ -242,7 +244,7 @@ export default function VisitPlans({ navigation, route }) {
       return (
         <View style={globalStyles.listItemContentContainer}>
           <View style={globalStyles.listItemContentRow}>
-            <MaterialIcons name="description" size={globalSizes.icons.small} backgroundColor="red" color="grey" />
+            <MaterialIcons name='description' size={globalSizes.icons.small} backgroundColor='red' color='grey' />
             <Text style={globalStyles.listItemContentFieldData}>{item.Summary ? item.Summary : "وارد نشده"}</Text>
           </View>
         </View>
@@ -252,8 +254,22 @@ export default function VisitPlans({ navigation, route }) {
     let SwipeLeftAction = () => {
       return (
         <View style={globalStyles.listItemSwipeLeftContainer}>
-          <Icon reverse name="trash" type="font-awesome" size={globalSizes.icons.small} color={globalColors.btnDelete} />
-          <Icon reverse name="edit" type="font-awesome" size={globalSizes.icons.small} color={globalColors.btnUpdate} />
+          <FontAwesome5
+            name='trash-alt'
+            // todo: implement update functionality
+            onPress={() => console.warn("delete")}
+            size={globalSizes.icons.medium}
+            color={globalColors.btnDelete}
+          />
+          <Separator backgroundColor={globalColors.listItemSwipeLeftContainer} />
+          <FontAwesome5
+            name='edit'
+            // todo: implement update functionality
+            onPress={() => console.warn("edit")}
+            size={globalSizes.icons.medium}
+            color={globalColors.btnUpdate}
+          />
+          <Separator backgroundColor={globalColors.listItemSwipeLeftContainer} />
         </View>
       );
     };
@@ -263,56 +279,54 @@ export default function VisitPlans({ navigation, route }) {
       </Swipeable>
     );
   };
-const renderHeader = ()=>(
-  <DefaultHeader
-        title={title}
-        isOnInstantFilter={isOnInstantFilter}
-        setIsOnInstantFilter={setIsOnInstantFilter}
-        setInstantFilterText={setInstantFilterText}
-        setisOnAdvancedFilter={setisOnAdvancedFilter}
-        navigation={navigation}
-      />
-);
-const renderFooter =()=>(
-  <Footer>
-        <FooterTab style={{ justifyContent: "center", alignItems: "center" }}>
-          {isLoading ? (
-            <Spinner color="white" />
-          ) : (
-            <Button onPress={pullData}>
-              <Feather name="refresh-ccw" size={globalSizes.icons.large} color={globalColors.palette.cream} />
-            </Button>
-          )}
-        </FooterTab>
-        <FooterTab>
-          <Button onPress={() => setIsOnInstantFilter(true)}>
-            <Feather name="search" size={globalSizes.icons.large} color={globalColors.palette.cream} />
+  const renderHeader = () => (
+    <DefaultHeader
+      title={title}
+      isOnInstantFilter={isOnInstantFilter}
+      setIsOnInstantFilter={setIsOnInstantFilter}
+      setInstantFilterText={setInstantFilterText}
+      setisOnAdvancedFilter={setisOnAdvancedFilter}
+      navigation={navigation}
+    />
+  );
+  const renderFooter = () => (
+    <Footer>
+      <FooterTab style={{ justifyContent: "center", alignItems: "center" }}>
+        {isLoading ? (
+          <Spinner color='white' />
+        ) : (
+          <Button onPress={pullData}>
+            <Feather name='refresh-ccw' size={globalSizes.icons.large} color={globalColors.palette.cream} />
           </Button>
-        </FooterTab>
-        <FooterTab style={{ alignSelf: "center", justifyContent: "center" }}>
-          <Menu>
-            <MenuTrigger
-              // todo: set items and remove disabled
-              disabled={true}
-              children={<Feather color={globalColors.palette.cream} name={"star"} size={globalSizes.icons.large} />}
-            />
-            <MenuOptions customStyles={menuOptionsCustomStyles}></MenuOptions>
-          </Menu>
-        </FooterTab>
-      </Footer>
-);
+        )}
+      </FooterTab>
+      <FooterTab>
+        <Button onPress={() => setIsOnInstantFilter(true)}>
+          <Feather name='search' size={globalSizes.icons.large} color={globalColors.palette.cream} />
+        </Button>
+      </FooterTab>
+      <FooterTab style={{ alignSelf: "center", justifyContent: "center" }}>
+        <Menu>
+          <MenuTrigger
+            // todo: set items and remove disabled
+            disabled={true}
+            children={<Feather color={globalColors.palette.cream} name={"star"} size={globalSizes.icons.large} />}
+          />
+          <MenuOptions customStyles={menuOptionsCustomStyles}></MenuOptions>
+        </Menu>
+      </FooterTab>
+    </Footer>
+  );
   return (
     <Container>
       {renderHeader()}
-        <FlatList
-          keyExtractor={keyExtractor}
-          //TODO: get data from a method that performs instant and advanced filter
-          data={presentationalData}
-          renderItem={renderItem}
-          />
-          {renderFooter()}
-
-      
+      <FlatList
+        keyExtractor={keyExtractor}
+        //TODO: get data from a method that performs instant and advanced filter
+        data={presentationalData}
+        renderItem={renderItem}
+      />
+      {renderFooter()}
     </Container>
   );
 }

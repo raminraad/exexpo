@@ -21,6 +21,7 @@ import {
   Item,
   Input,
   Spinner,
+  Separator,
 } from "native-base";
 import { Icon, Divider } from "react-native-elements";
 import { Ionicons } from "@expo/vector-icons";
@@ -91,25 +92,23 @@ export default function VisitPlanCustomers(props) {
               <Text style={[globalStyles.listItemHeaderFieldData, { flex: 1 }]}>{item.Title}</Text>
             </View>
           </View>
-          <Button transparent style={globalStyles.listItemHeaderNavigateButton}>
-            <FontAwesome5
-              name='crosshairs'
-              onPress={() =>
-                // setIsOnAdd(true)
-                //xxx: uncomment top and remove bottom
-                props.navigation.push("VisitPlanResultForm", {
-                  title: `فروشگاه ${item.Title}`,
-                  item: item,
-                  xxx:null
-                  // item:props.navigation.route.params.visitPlanResultsRawData.filter(v=>v.VisitPlanCustomerId==item.Id),
-                  // productsRawData : dp.getJoinedProducts(),
-                  // visitPlanCustomerId: item.Id,
-                })
-              }
-              size={globalSizes.icons.medium}
-              color={globalColors.listItemNavigateIcon}
-            />
-          </Button>
+          <FontAwesome5.Button
+            name='long-arrow-alt-left'
+            backgroundColor={globalColors.listItemNavigateIcon}
+            onPress={() =>
+              // setIsOnAdd(true)
+              //xxx: uncomment top and remove bottom
+              props.navigation.push("VisitPlanResultForm", {
+                title: `فروشگاه ${item.Title}`,
+                item: item,
+                xxx: null,
+                // item:props.navigation.route.params.visitPlanResultsRawData.filter(v=>v.VisitPlanCustomerId==item.Id),
+                // productsRawData : dp.getJoinedProducts(),
+                // visitPlanCustomerId: item.Id,
+              })
+            }>
+            پویش
+          </FontAwesome5.Button>
         </View>
       );
     };
@@ -142,8 +141,22 @@ export default function VisitPlanCustomers(props) {
     let SwipeLeftAction = () => {
       return (
         <View style={globalStyles.listItemSwipeLeftContainer}>
-          <Icon reverse name='trash' type='font-awesome' size={globalSizes.icons.small} color={globalColors.btnDelete} />
-          <Icon reverse name='edit' type='font-awesome' size={globalSizes.icons.small} color={globalColors.btnUpdate} />
+          <FontAwesome5
+            name='trash-alt'
+            // todo: implement update functionality
+            onPress={() => console.warn("delete")}
+            size={globalSizes.icons.medium}
+            color={globalColors.btnDelete}
+          />
+          <Separator backgroundColor={globalColors.listItemSwipeLeftContainer} />
+          <FontAwesome5
+            name='edit'
+            // todo: implement update functionality
+            onPress={() => console.warn("edit")}
+            size={globalSizes.icons.medium}
+            color={globalColors.btnUpdate}
+          />
+          <Separator backgroundColor={globalColors.listItemSwipeLeftContainer} />
         </View>
       );
     };

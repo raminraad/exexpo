@@ -32,7 +32,7 @@ export const globalColors = {
   loginPageContainerBackground: "#003554",
   loginPageInputBackground: "#00649465",
   loginPageSubmitButtonBackground: "#006494ee",
-  listItemNavigateIcon: "#00a8e8",
+  listItemNavigateIcon: "#00C49A",
   listItemCollapseIcon: "#8d99ae55",
   listItemExpandIcon: "#8d99ae55",
   listItemHeaderContainer: "#f1f5f7",
@@ -100,6 +100,7 @@ export const globalStyles = StyleSheet.create({
     flexWrap: "wrap",
     alignItems: "center",
     backgroundColor: globalColors.listItemHeaderContainer,
+    paddingVertical:5
   },
   listItemHeaderNavigateButton: { paddingLeft: 5, paddingRight: 10 },
   listItemHeaderCollapseIcon: { paddingRight: 5 },

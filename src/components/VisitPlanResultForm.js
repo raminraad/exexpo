@@ -23,7 +23,11 @@ export default function VisitPlanResultForm(props) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    let query = `select * from VisitPlanResults where VisitPlanCustomerId = ${props.route.params.item.Id}`;
+    let query = `select * from VisitPlanResults res
+     inner join ProductSub sub on res.ProductSubId = sub.Id
+     inner join Product prd on prd.Id = sub.ProductId
+     inner join ProductGroup grp on grp.Id =  prd.ProductGroupId
+     where VisitPlanCustomerId = ${props.route.params.item.Id}`;
     db.transaction((tx) => {
       tx.executeSql(
         query,
@@ -202,12 +206,14 @@ export default function VisitPlanResultForm(props) {
                     {isLoading ? (
                       <Spinner style={{ height: "100%" }} color='grey' size={50} />
                     ) : (
-                      rawData.map((value, index) => (
+                      rawData.map((item, index) => (
                         <Swipeable renderLeftActions={swipeLeftAction}>
                           <ListItem
                             key={index}
                             containerStyle={{ backgroundColor: globalColors.listItemHeaderContainer, alignSelf: "stretch" }}
-                            title={value.ProductSubId?value.ProductSubId.toString():'وارد نشده'}
+                            // fixme: fix productGroup multi layering
+                            title={`${item.Title}  ⟸  ${item.Taste}  ⟸  ${item.Weight} گرمی`}
+                            // todo: place other properties in subtitle
                             bottomDivider
                           />
                         </Swipeable>

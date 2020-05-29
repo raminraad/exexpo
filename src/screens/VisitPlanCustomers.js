@@ -197,28 +197,28 @@ export default function VisitPlanCustomers(props) {
         setisOnAdvancedFilter={setisOnAdvancedFilter}
         navigation={props.navigation}
       />
-      <Content padder>
-        <Modal visible={isOnAdd} animationType="slide">
-          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={globalStyles.addModalContent}>
-              <VisitPlanResultForm
-                onSubmit={addItem}
-                onCancel={() => setIsOnAdd(false)}
-              />
-            </View>
-          </TouchableWithoutFeedback>
-        </Modal>
-        {isLoading ? (
-          <Spinner style={{ height: "100%" }} color="grey" size={50} />
-        ) : (
-          <FlatList
-            keyExtractor={keyExtractor}
-            //TODO: get data from a method that performs instant and advanced filter
-            data={presentationalData}
-            renderItem={renderItem}
-          />
-        )}
-      </Content>
+      
+      <Modal visible={isOnAdd} animationType="slide">
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={globalStyles.addModalContent}>
+            <VisitPlanResultForm
+              onSubmit={addItem}
+              onCancel={() => setIsOnAdd(false)}
+            />
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+      {isLoading ? (
+        <Spinner style={{ height: "100%" }} color="grey" size={50} />
+      ) : (
+        <FlatList
+          keyExtractor={keyExtractor}
+          //TODO: get data from a method that performs instant and advanced filter
+          data={presentationalData}
+          renderItem={renderItem}
+        />
+      )}
+    
 
       <Footer>
         <FooterTab style={{ justifyContent: "center", alignItems: "center" }}>

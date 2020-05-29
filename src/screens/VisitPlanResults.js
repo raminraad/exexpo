@@ -207,14 +207,12 @@ export default function VisitPlanResults({ navigation, route }) {
         setisOnAdvancedFilter={setisOnAdvancedFilter}
         navigation={navigation}
       />
-      <Content padder>
         <FlatList
           keyExtractor={keyExtractor}
           //TODO: get data from a method that performs instant and advanced filter
           data={presentationalData}
           renderItem={renderItem}
         />
-      </Content>
 
       <Footer>
         <FooterTab style={{ justifyContent: "center", alignItems: "center" }}>

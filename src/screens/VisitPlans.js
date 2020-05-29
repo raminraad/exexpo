@@ -46,10 +46,10 @@ export default function VisitPlans({ navigation, route }) {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    // ctor();
+    ctor();
     
     //xxx START
-    dp.getJoinedProducts();
+    // dp.getJoinedProducts();
     //xxx END
   }, []);
 
@@ -75,7 +75,6 @@ export default function VisitPlans({ navigation, route }) {
       let parameters = [item.Id, item.ParentId, item.ProductGroupCode, item.Title, item.LastModifiedDate, item.SyncStatus];
       let query = `insert into ProductGroup (Id,ParentId,ProductGroupCode,Title,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?)`;
       queries.push({ sql: `${query};`, args: parameters });
-      // await dp.insertProductGroup(item.Id, item.ParentId, item.ProductGroupCode, item.Title, item.LastModifiedDate, item.SyncStatus);
     }
 
     for (const item of DataTables.Product) {
@@ -83,7 +82,6 @@ export default function VisitPlans({ navigation, route }) {
       let query = `insert into Product (Id,ProductGroupId,ProductCode,Taste,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?)`;
       queries.push({ sql: `${query};`, args: parameters });
     }
-    // await dp.insertProduct(item.Id, item.ProductGroupId, item.ProductCode, item.Taste, item.LastModifiedDate, item.SyncStatus);
 
     for (const item of DataTables.ProductSub) {
       let parameters = [
@@ -104,27 +102,12 @@ export default function VisitPlans({ navigation, route }) {
 
       queries.push({ sql: `${query};`, args: parameters });
     }
-    // await dp.insertProductSub(
-    //   item.Id,
-    //   item.ProductId,
-    //   item.BarCode,
-    //   item.IranCode,
-    //   item.Color,
-    //   item.Language,
-    //   item.PriceType,
-    //   item.PriceValue,
-    //   item.MeasurmentType,
-    //   item.MeasurmentScale,
-    //   item.LastModifiedDate,
-    //   item.SyncStatus
-    // );
 
     for (const item of DataTables.UserVisitPlan) {
       let parameters = [item.Id, item.Summary, item.OperationDate, item.DateX, item.LastModifiedDate, item.SyncStatus];
       let query = `insert into UserVisitPlan (Id,Summary,OperationDate,DateX,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?)`;
       queries.push({ sql: `${query};`, args: parameters });
     }
-    // await dp.insertUserVisitPlan(item.Id, item.Summary, item.OperationDate, item.DateX, item.LastModifiedDate, item.SyncStatus);
 
     for (const item of DataTables.VisitPlanCustomers) {
       let parameters = [
@@ -152,27 +135,6 @@ export default function VisitPlans({ navigation, route }) {
       let query = `insert into VisitPlanCustomers (Id,VisitPlanId,CustomerId,Code,Title,Owner,Long,Lat,Type,Address,Phone,Cell,Vol,ResultAttachedFileTitle,ResultSummary,ResultStatus,ResultVisitedDate,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
       queries.push({ sql: `${query};`, args: parameters });
     }
-    // await dp.insertVisitPlanCustomers(
-    //   item.Id,
-    //   item.VisitPlanId,
-    //   item.CustomerId,
-    //   item.Code,
-    //   item.Title,
-    //   item.Owner,
-    //   item.Long,
-    //   item.Lat,
-    //   item.Type,
-    //   item.Address,
-    //   item.Phone,
-    //   item.Cell,
-    //   item.Vol,
-    //   item.ResultAttachedFileTitle,
-    //   item.ResultSummary,
-    //   item.ResultStatus,
-    //   item.ResultVisitedDate,
-    //   item.LastModifiedDate,
-    //   item.SyncStatus
-    // );
 
     for (const item of DataTables.VisitPlanResults) {
       let parameters = [
@@ -193,21 +155,6 @@ export default function VisitPlans({ navigation, route }) {
       let query = `insert into VisitPlanResults (Id,VisitPlanCustomerId,ProductSubId,SellPrice,Weight,HasInventory,ShelfInventoryCount,ShelfVisibleCount,WarehouseInventoryCount,VerbalPurchaseCount,FactorPurchaseCount,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?,?,?,?,?,?,?,?)`;
       queries.push({ sql: `${query};`, args: parameters });
     }
-    // await dp.insertVisitPlanResults(
-    //   item.Id,
-    //   item.VisitPlanCustomerId,
-    //   item.ProductSubId,
-    //   item.SellPrice,
-    //   item.Weight,
-    //   item.HasInventory,
-    //   item.ShelfInventoryCount,
-    //   item.ShelfVisibleCount,
-    //   item.WarehouseInventoryCount,
-    //   item.VerbalPurchaseCount,
-    //   item.FactorPurchaseCount,
-    //   item.LastModifiedDate,
-    //   item.SyncStatus
-    // );
     db.exec(queries, false, () => console.log(`☺☺ insert queries executed successfully..`));
 
     console.log("☺☺ last line of commit executed");
@@ -315,10 +262,8 @@ export default function VisitPlans({ navigation, route }) {
       </Swipeable>
     );
   };
-
-  return (
-    <Container>
-      <DefaultHeader
+const renderHeader = ()=>(
+  <DefaultHeader
         title={title}
         isOnInstantFilter={isOnInstantFilter}
         setIsOnInstantFilter={setIsOnInstantFilter}
@@ -326,16 +271,9 @@ export default function VisitPlans({ navigation, route }) {
         setisOnAdvancedFilter={setisOnAdvancedFilter}
         navigation={navigation}
       />
-      <Content padder>
-        <FlatList
-          keyExtractor={keyExtractor}
-          //TODO: get data from a method that performs instant and advanced filter
-          data={presentationalData}
-          renderItem={renderItem}
-        />
-      </Content>
-
-      <Footer>
+);
+const renderFooter =()=>(
+  <Footer>
         <FooterTab style={{ justifyContent: "center", alignItems: "center" }}>
           {isLoading ? (
             <Spinner color="white" />
@@ -361,6 +299,19 @@ export default function VisitPlans({ navigation, route }) {
           </Menu>
         </FooterTab>
       </Footer>
+);
+  return (
+    <Container>
+      {renderHeader()}
+        <FlatList
+          keyExtractor={keyExtractor}
+          //TODO: get data from a method that performs instant and advanced filter
+          data={presentationalData}
+          renderItem={renderItem}
+          />
+          {renderFooter()}
+
+      
     </Container>
   );
 }

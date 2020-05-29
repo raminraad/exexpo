@@ -57,169 +57,162 @@ export default function VisitPlanResultForm({ onSubmit, onCancel, item, productL
   ];
   return (
     <Container>
-      <Content>
-        <Overlay isVisible={visible} onBackdropPress={toggleOverlay} overlayStyle={{ flex: 1 }}>
-          <View style={{ flex: 1 }}>
-            {!isOnProductSearch ? (
-              <PricingCard
-                containerStyle={{ alignSelf: "center" }}
-                color='#fca311'
-                title={list[0].title}
-                price='18000 ريال'
-                pricingStyle={{ fontSize: 18 }}
-                info={[list[0].title, "Basic Support", "All Core Features"]}
-                button={{ title: "تغییر", icon: "edit" }}
-                onButtonPress={() => setisOnProductSearch(true)}
+      
+      <Overlay isVisible={visible} onBackdropPress={toggleOverlay} overlayStyle={{ flex: 1 }}>
+        <View style={{ flex: 1 }}>
+          {!isOnProductSearch ? (
+            <PricingCard
+              containerStyle={{ alignSelf: "center" }}
+              color='#fca311'
+              title={list[0].title}
+              price='18000 ريال'
+              pricingStyle={{ fontSize: 18 }}
+              info={[list[0].title, "Basic Support", "All Core Features"]}
+              button={{ title: "تغییر", icon: "edit" }}
+              onButtonPress={() => setisOnProductSearch(true)}
+            />
+          ) : (
+            <View style={{ borderWidth: 0.5, marginVertical: 15, borderRadius: 2 }}>
+              <SearchBar
+                platform='default'
+                lightTheme
+                placeholder='جستجوی محصول...'
+                onChangeText={(val) => {
+                  setProductSearchText(val);
+                }}
+                value={productSearchText}
               />
-            ) : (
-              <View style={{ borderWidth: 0.5, marginVertical: 15, borderRadius: 2 }}>
-                <SearchBar
-                  platform='default'
-                  lightTheme
-                  placeholder='جستجوی محصول...'
-                  onChangeText={(val) => {
-                    setProductSearchText(val);
-                  }}
-                  value={productSearchText}
+              {list.map((item, i) => (
+                <ListItem
+                  containerStyle={{ backgroundColor: globalColors.listItemHeaderContainer }}
+                  key={i}
+                  title={item.title}
+                  bottomDivider
+                  onPress={() => setisOnProductSearch(false)}
                 />
-                {list.map((item, i) => (
-                  <ListItem
-                    containerStyle={{ backgroundColor: globalColors.listItemHeaderContainer }}
-                    key={i}
-                    title={item.title}
-                    bottomDivider
-                    onPress={() => setisOnProductSearch(false)}
-                  />
-                ))}
+              ))}
+            </View>
+          )}
+        </View>
+        <View style={{ flex: 1 }}>
+          <View style={globalStyles.addModalFieldContainer}>
+            <Text style={{ ...globalStyles.addModalFieldTitle, flex: 0 }}>قیمت فروش</Text>
+            <TextInput style={globalStyles.addModalFieldInput} placeholder='قیمت فروش محصول' />
+          </View>
+          <View style={globalStyles.addModalFieldContainer}>
+            <Text style={{ ...globalStyles.addModalFieldTitle, flex: 0 }}>وزن (گرم) </Text>
+            <TextInput style={globalStyles.addModalFieldInput} placeholder='وزن محصول (گرم) ' />
+          </View>
+          <View style={globalStyles.addModalFieldContainer}>
+            <Text style={{ ...globalStyles.addModalFieldTitle, flex: 0 }}>موجودی قابل مشاهده</Text>
+            <TextInput style={globalStyles.addModalFieldInput} placeholder='موجودی قابل مشاهده' />
+          </View>
+        </View>
+        <Button title='تأیید' color={globalColors.btnAdd} onPress={() => console.log(productSearchText)} />
+        <View style={{ marginVertical: 5 }} />
+        <Button title='انصراف' color={globalColors.btnCancel} onPress={onCancel} />
+      </Overlay>
+
+      <ScrollView style={{ padding: 25 }}>
+        <View>
+        <Formik
+          initialValues={{
+            Id: `${item && item.Id ? item.Id : null}`,
+            VisitPlanCustomerId: `${item && item.VisitPlanCustomerId ? item.VisitPlanCustomerId : null}`,
+            ProductSubId: `${item && item.ProductSubId ? item.ProductSubId : null}`,
+            SellPrice: `${item && item.SellPrice ? item.SellPrice : ""}`,
+            Weight: `${item && item.Weight ? item.Weight : ""}`,
+            HasInventory: `${item && item.HasInventory ? item.HasInventory : ""}`,
+            ShelfInventoryCount: `${item && item.ShelfInventoryCount ? item.ShelfInventoryCount : ""}`,
+            ShelfVisibleCount: `${item && item.ShelfVisibleCount ? item.ShelfVisibleCount : ""}`,
+            WarehouseInventoryCount: `${item && item.WarehouseInventoryCount ? item.WarehouseInventoryCount : ""}`,
+            VerbalPurchaseCount: `${item && item.VerbalPurchaseCount ? item.VerbalPurchaseCount : ""}`,
+            FactorPurchaseCount: `${item && item.FactorPurchaseCount ? item.FactorPurchaseCount : ""}`,
+            LastModifiedDate: `${item && item.LastModifiedDate ? item.LastModifiedDate : ""}`,
+            SyncStatus: `${item && item.SyncStatus ? item.SyncStatus : ""}`,
+
+            ResultSummary: `${item && item.ResultSummary ? item.ResultSummary : ""}`,
+            ResultStatus: `${item && item.ResultStatus ? item.ResultStatus : ""}`,
+            SyncStatus: `${item && item.SyncStatus ? item.SyncStatus : ""}`,
+            SyncStatus: `${item && item.SyncStatus ? item.SyncStatus : ""}`,
+            SyncStatus: `${item && item.SyncStatus ? item.SyncStatus : ""}`,
+          }}
+          onSubmit={(values, actions) => {
+            actions.resetForm();
+            onSubmit(values);
+          }}>
+          {(props) => (
+            <View>
+              <View style={globalStyles.addModalFieldContainer}>
+                <Text style={globalStyles.addModalFieldTitle}>شرح مختصر</Text>
+                <TextInput
+                  style={[globalStyles.addModalFieldInput, { height: 100 }]}
+                  textAlignVertical='top'
+                  placeholder='توضیحات مختصر درباره گزارش پویش'
+                  onChangeText={props.handleChange("ResultSummary")}
+                  multiline
+                  value={props.values.fName}
+                />
               </View>
-            )}
-          </View>
-          <View style={{ flex: 1 }}>
-            <View style={globalStyles.addModalFieldContainer}>
-              <Text style={{ ...globalStyles.addModalFieldTitle, flex: 0 }}>قیمت فروش</Text>
-              <TextInput style={globalStyles.addModalFieldInput} placeholder='قیمت فروش محصول' />
-            </View>
-            <View style={globalStyles.addModalFieldContainer}>
-              <Text style={{ ...globalStyles.addModalFieldTitle, flex: 0 }}>وزن (گرم) </Text>
-              <TextInput style={globalStyles.addModalFieldInput} placeholder='وزن محصول (گرم) ' />
-            </View>
-            <View style={globalStyles.addModalFieldContainer}>
-              <Text style={{ ...globalStyles.addModalFieldTitle, flex: 0 }}>موجودی قابل مشاهده</Text>
-              <TextInput style={globalStyles.addModalFieldInput} placeholder='موجودی قابل مشاهده' />
-            </View>
-          </View>
-          <Button title='تأیید' color={globalColors.btnAdd} onPress={() => console.log(productSearchText)} />
-          <View style={{ marginVertical: 5 }} />
-          <Button title='انصراف' color={globalColors.btnCancel} onPress={onCancel} />
-        </Overlay>
 
-        <ScrollView style={{ padding: 25 }}>
-          <Formik
-            initialValues={{
-              Id: `${item && item.Id ? item.Id : null}`,
-              VisitPlanCustomerId: `${item && item.VisitPlanCustomerId ? item.VisitPlanCustomerId : null}`,
-              ProductSubId: `${item && item.ProductSubId ? item.ProductSubId : null}`,
-              SellPrice: `${item && item.SellPrice ? item.SellPrice : ""}`,
-              Weight: `${item && item.Weight ? item.Weight : ""}`,
-              HasInventory: `${item && item.HasInventory ? item.HasInventory : ""}`,
-              ShelfInventoryCount: `${item && item.ShelfInventoryCount ? item.ShelfInventoryCount : ""}`,
-              ShelfVisibleCount: `${item && item.ShelfVisibleCount ? item.ShelfVisibleCount : ""}`,
-              WarehouseInventoryCount: `${item && item.WarehouseInventoryCount ? item.WarehouseInventoryCount : ""}`,
-              VerbalPurchaseCount: `${item && item.VerbalPurchaseCount ? item.VerbalPurchaseCount : ""}`,
-              FactorPurchaseCount: `${item && item.FactorPurchaseCount ? item.FactorPurchaseCount : ""}`,
-              LastModifiedDate: `${item && item.LastModifiedDate ? item.LastModifiedDate : ""}`,
-              SyncStatus: `${item && item.SyncStatus ? item.SyncStatus : ""}`,
-
-              ResultSummary: `${item && item.ResultSummary ? item.ResultSummary : ""}`,
-              ResultStatus: `${item && item.ResultStatus ? item.ResultStatus : ""}`,
-              SyncStatus: `${item && item.SyncStatus ? item.SyncStatus : ""}`,
-              SyncStatus: `${item && item.SyncStatus ? item.SyncStatus : ""}`,
-              SyncStatus: `${item && item.SyncStatus ? item.SyncStatus : ""}`,
-            }}
-            onSubmit={(values, actions) => {
-              actions.resetForm();
-              onSubmit(values);
-            }}>
-            {(props) => (
-              <View>
-                <View style={globalStyles.addModalFieldContainer}>
-                  <Text style={globalStyles.addModalFieldTitle}>شرح مختصر</Text>
-                  <TextInput
-                    style={[globalStyles.addModalFieldInput, { height: 100 }]}
-                    textAlignVertical='top'
-                    placeholder='توضیحات مختصر درباره گزارش پویش'
-                    onChangeText={props.handleChange("ResultSummary")}
-                    multiline
-                    value={props.values.fName}
-                  />
-                </View>
-
-                <View style={globalStyles.addModalFieldContainer}>
-                  <Text style={globalStyles.addModalFieldTitle}>وضعیت</Text>
-                  <View style={globalStyles.addModalFieldRadioButtonGroupContainer}>
-                    <RadioButton.Group onValueChange={(value) => setVisitResultStatus(value)} value={visitResultStatus}>
-                      <View style={globalStyles.radioItemContainer}>
-                        <Text>پویش نشده</Text>
-                        <RadioButton value='0' />
-                      </View>
-                      <View style={globalStyles.radioItemContainer}>
-                        <Text>عدم همکاری</Text>
-                        <RadioButton value='3' />
-                      </View>
-                      <View style={globalStyles.radioItemContainer}>
-                        <Text>پویش موفق</Text>
-                        <RadioButton value='7' />
-                      </View>
-                      <View style={globalStyles.radioItemContainer}>
-                        <Text>تغییر کاربری</Text>
-                        <RadioButton value='11' />
-                      </View>
-                      <View style={globalStyles.radioItemContainer}>
-                        <Text>یافت نشد</Text>
-                        <RadioButton value='13' />
-                      </View>
-                    </RadioButton.Group>
-                  </View>
-                </View>
-
-                <View style={globalStyles.addModalFieldContainer}>
-                  <View style={{ flexDirection: "row-reverse", justifyContent: "space-between" }}>
-                    <Text style={globalStyles.addModalFieldTitle}>محصولات فروشگاه</Text>
-                    <View style={{ marginBottom: 5 }}>
-                      <FontAwesome5.Button name='plus-square' backgroundColor={globalColors.btnAdd} onPress={toggleOverlay}>
-                        افزودن محصول
-                      </FontAwesome5.Button>
+              <View style={globalStyles.addModalFieldContainer}>
+                <Text style={globalStyles.addModalFieldTitle}>وضعیت</Text>
+                <View style={globalStyles.addModalFieldRadioButtonGroupContainer}>
+                  <RadioButton.Group onValueChange={(value) => setVisitResultStatus(value)} value={visitResultStatus}>
+                    <View style={globalStyles.radioItemContainer}>
+                      <Text>پویش نشده</Text>
+                      <RadioButton value='0' />
                     </View>
-                  </View>
+                    <View style={globalStyles.radioItemContainer}>
+                      <Text>عدم همکاری</Text>
+                      <RadioButton value='3' />
+                    </View>
+                    <View style={globalStyles.radioItemContainer}>
+                      <Text>پویش موفق</Text>
+                      <RadioButton value='7' />
+                    </View>
+                    <View style={globalStyles.radioItemContainer}>
+                      <Text>تغییر کاربری</Text>
+                      <RadioButton value='11' />
+                    </View>
+                    <View style={globalStyles.radioItemContainer}>
+                      <Text>یافت نشد</Text>
+                      <RadioButton value='13' />
+                    </View>
+                  </RadioButton.Group>
+                </View>
+              </View>
 
-                  <View
-                    style={{
-                      flexDirection: "row-reverse",
-                      backgroundColor: globalColors.listItemHeaderContainer,
-                      borderRadius: 6,
-                      borderColor: globalColors.inputBorder,
-                      borderWidth: 1,
-                    }}>
-                    <FlatList
-                      data={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]}
-                      keyExtractor={(item, index) => index.toString()}
-                      renderItem={() => (
-                        <Swipeable renderLeftActions={swipeLeftAction}>
-                          <ListItem containerStyle={{ backgroundColor: globalColors.listItemHeaderContainer }} title='محصول شماره یک مزمز' bottomDivider />
-                        </Swipeable>
-                      )}
-                    />
+              <View>
+                <View style={{ flexDirection: "row-reverse", justifyContent: "space-between" }}>
+                  <Text style={globalStyles.addModalFieldTitle}>محصولات فروشگاه</Text>
+                  <View style={{ marginBottom: 5 }}>
+                    <FontAwesome5.Button name='plus-square' backgroundColor={globalColors.btnAdd} onPress={toggleOverlay}>
+                      افزودن محصول
+                    </FontAwesome5.Button>
                   </View>
                 </View>
+                <View>
 
-                <Button title='تأیید' color={globalColors.btnAdd} onPress={onSubmit} />
-                <View style={{ marginVertical: 5 }} />
-                <Button title='انصراف' color={globalColors.btnCancel} onPress={onCancel} />
+                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].map((value,index)=>(
+                
+                      <Swipeable renderLeftActions={swipeLeftAction}>
+                        <ListItem key={index.toString()} containerStyle={{ backgroundColor: globalColors.listItemHeaderContainer ,alignSelf:'stretch'}} title='محصول شماره یک مزمز' bottomDivider />
+                      </Swipeable>
+                    ))}
               </View>
-            )}
-          </Formik>
-        </ScrollView>
-      </Content>
+              </View>
+
+              <Button title='تأیید' color={globalColors.btnAdd} onPress={onSubmit} />
+              <View style={{ marginVertical: 5 }} />
+              <Button title='انصراف' color={globalColors.btnCancel} onPress={onCancel}/>
+              <View style={{ marginVertical: 20 }} />
+            </View>
+          )}
+        </Formik>
+        </View>
+      </ScrollView>
+    
     </Container>
   );
 }

@@ -5,7 +5,7 @@ import { RadioButton, Text, Divider } from "react-native-paper";
 import { Separator, Content, Container } from "native-base";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import { globalStyles, globalColors, globalSizes } from "../styles/global";
-import { Icon, ListItem, PricingCard, SearchBar } from "react-native-elements";
+import { Icon,  PricingCard, SearchBar ,ListItem} from "react-native-elements";
 import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -16,6 +16,7 @@ export default function VisitPlanResultProductForm({ onSubmit, onCancel, initial
   const [searchText, setSearchText] = useState("");
   const [presentationData, setPresentationData] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
+const [isSearchBarFocused, setIsSearchBarFocused] = useState(false);
 
   useEffect(() => {
     setSelectedItem(initialSelectedItem);
@@ -29,11 +30,14 @@ export default function VisitPlanResultProductForm({ onSubmit, onCancel, initial
   return (
     <View style={globalStyles.container}>
       
-        <View style={{ minHeight:'50%' }}>
+        <ScrollView style={isSearchBarFocused?styles.productListOnSearching:styles.productListOnNotSearching} keyboardShouldPersistTaps='never'>
           {isOnProductSearch || !selectedItem ? (
             <View style={{ borderWidth: 0.5, marginVertical: 15, borderRadius: 2 }}>
               <SearchBar
-                platform='default'
+              onFocus={()=>setIsSearchBarFocused(true)}
+              onBlur={()=>setIsSearchBarFocused(false)}
+              cancelIcon={<FontAwesome5 name="arrow-left" size={24} color={globalColors.searchBarIcon} />}
+                platform='android'
                 lightTheme
                 placeholder='جستجوی محصول...'
                 onChangeText={(val) => {
@@ -41,17 +45,24 @@ export default function VisitPlanResultProductForm({ onSubmit, onCancel, initial
                 }}
                 value={searchText}
               />
-              {presentationData.map((item, i) => (
-                <ListItem
+              { presentationData.map((item, i) => (
+                <ListItem 
                   containerStyle={{ backgroundColor: globalColors.listItemHeaderContainer }}
                   key={i}
                   title={item.title}
                   bottomDivider
-                  onPress={() => {
-                    Keyboard.dismiss();
-                    setisOnProductSearch(false);
-                    setSelectedItem(item);
-                  }}
+                  leftElement={
+                    (<Button
+                    title='انتخاب'
+                      onPress={() => {
+                        console.log(selectedItem);
+                        setSelectedItem(item);
+                        Keyboard.dismiss();
+                        setIsSearchBarFocused(false)
+                        setisOnProductSearch(false);
+                      }}
+                    ></Button>)
+                  }
                 />
               ))}
             </View>
@@ -67,7 +78,7 @@ export default function VisitPlanResultProductForm({ onSubmit, onCancel, initial
               onButtonPress={() => setisOnProductSearch(true)}
             />
           )}
-        </View>
+        </ScrollView>
         
       
       <View style={globalStyles.addModalFieldContainer}>
@@ -83,11 +94,15 @@ export default function VisitPlanResultProductForm({ onSubmit, onCancel, initial
         <TextInput style={globalStyles.addModalFieldInput} placeholder='موجودی قابل مشاهده' />
       </View>
     
-  
-      <Button title='تأیید' color={globalColors.btnAdd} onPress={() => console.log(searchText)} />
+      <Button title='تأیید' color={globalColors.btnAdd} onPress={() => console.log(isSearchBarFocused)} />
       <View style={{ marginVertical: 5 }} />
       <Button title='انصراف' color={globalColors.btnCancel} onPress={onCancel} />
     
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  productListOnSearching:{ minHeight:'70%',marginBottom:50},
+  productListOnNotSearching:{maxHeight:'40%' ,marginBottom:50},
+})

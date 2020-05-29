@@ -54,7 +54,7 @@ export default function VisitPlanCustomers(props) {
 
   useEffect(() => {
     setIsLoading(true);
-    setPresentationalData(props.route.params.rawData);
+    setPresentationalData(props.route.params.customersRawData);
     setIsLoading(false);
     return () => setPresentationalData([]);
   }, [props, isLoading]);
@@ -99,7 +99,13 @@ export default function VisitPlanCustomers(props) {
               onPress={() =>
                 // setIsOnAdd(true)
                 //xxx: uncomment top and remove bottom
-                props.navigation.navigate('VisitPlanResultForm')
+                props.navigation.push('VisitPlanResultForm',{
+                  title: `فروشگاه ${item.Title}`,
+                  item:props.navigation.route.parama.visitPlanResultsRawData.filter(v=>v.VisitPlanCustomerId==item.Id),
+                  productsRawData : dp.getJoinedProducts(),
+                  visitPlanCustomerId: item.Id,
+                  itemVisitPlanResults=
+                })
               }
               size={globalSizes.icons.medium}
               color={globalColors.listItemNavigateIcon}

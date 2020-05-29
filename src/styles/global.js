@@ -37,7 +37,7 @@ export const globalColors = {
   listItemExpandIcon: "#8d99ae55",
   listItemHeaderContainer: "#f1f5f7",
   listItemContentContainer: "#FFFFFF",
-  listItemSwipeLeftContainer:'#e6e6eaaa'
+  listItemSwipeLeftContainer:'#e6e6eaaa',
 };
 
 export const globalSizes = {

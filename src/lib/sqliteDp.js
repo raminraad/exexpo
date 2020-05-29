@@ -119,6 +119,7 @@ export const insertVisitPlanResults = (...parameters) => {
 };
 
 export const getJoinedProducts = () => {
+  //fixme: return real data
   let queries = [];
   queries[0] = `select p.Taste as Product_title , g.Title as group_title from Product p join ProductGroup g on p.ProductGroupId = g.Id `;
   queries[1] = `select * from ProductGroup`;

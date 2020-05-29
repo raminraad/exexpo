@@ -227,7 +227,8 @@ export default function VisitPlans({ navigation, route }) {
             onPress={() =>
               navigation.push("VisitPlanCustomers", {
                 title: `مشتریان هدف در تاریخ ${persianLib.toShortDate(new Date(item.OperationDate))}`,
-                rawData: rawData.DataTables.VisitPlanCustomers.filter((plan) => plan.VisitPlanId == item.Id),
+                customersRawData: rawData.DataTables.VisitPlanCustomers.filter((plan) => plan.VisitPlanId == item.Id),
+                visitPlanResultsRawData : rawData.DataTables.VisitPlanResults,
                 visitPlanId: item.Id,
               })
             }

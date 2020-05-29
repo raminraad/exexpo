@@ -58,11 +58,35 @@ export default function VisitPlanResultForm({ onSubmit, onCancel, item, productL
       title: "nuts",
       icon: "flight-takeoff",
     },
+    {
+      title: "ajil",
+      icon: "flight-takeoff",
+    },
+    {
+      title: "xbadam",
+      icon: "flight-takeoff",
+    },
+    {
+      title: "gerdoo",
+      icon: "flight-takeoff",
+    },
+    {
+      title: "fandoq",
+      icon: "flight-takeoff",
+    },
+    {
+      title: "carnaval",
+      icon: "flight-takeoff",
+    },
+    {
+      title: "bastani",
+      icon: "flight-takeoff",
+    },
   ];
   // XXX END
   return (
     <View>
-      <ScrollView style={{ padding: 25 }}>
+      <ScrollView style={{ padding: 25 }} keyboardShouldPersistTaps='never'>
         <View>
         <Formik
           initialValues={{

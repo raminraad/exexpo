@@ -23,7 +23,7 @@ export const renewTables = (resolve,reject,result) => {
         args: [],
       },
       {
-        sql: `create table if not exists VisitPlanCustomers (key integer primary key not null,Id integer,VisitPlanId integer,CustomerId integer,Code,Title,Owner,Long,Lat,Type,Address,Phone,Cell,Vol,ResultAttachedFileTitle,ResultSummary,ResultStatus,ResultVisitedDate,LastModifiedDate,SyncStatus integer)`,
+        sql: `create table if not exists VisitPlanCustomers (key integer primary key not null,Id integer,VisitPlanId integer,CustomerId integer,Code,Title,Owner,Long integer,Lat integer,Type integer,Address,Phone,Cell,Vol integer,ResultAttachedFileTitle,ResultSummary,ResultStatus integer,ResultVisitedDate,LastModifiedDate,SyncStatus integer)`,
         args: [],
       },
       {
@@ -118,31 +118,31 @@ export const insertVisitPlanResults = (...parameters) => {
   db.exec([{ sql: `${query};`, args: parameters }], false, () => console.log(`☺☺ insertion done successfully into VisitPlanResults..`));
 };
 
-export const getJoinedProducts = () => {
-  //fixme: return real data
-  let queries = [];
-  queries[0] = `select p.Taste as Product_title , g.Title as group_title from Product p join ProductGroup g on p.ProductGroupId = g.Id `;
-  queries[1] = `select * from ProductGroup`;
-  queries[2] = `select * from Product`;
-  queries[3] = `select * from ProductSub`;
-  queries[4] = `select * from UserVisitPlan`;
-  queries[5] = `select * from VisitPlanCustomers`;
-  queries[6] = `select * from VisitPlanResults`;
-
-  db.transaction((tx) => {
-    for (const query of queries) {
-      tx.executeSql(
-        query,
-        [],
-        (_, { rows: { _array } }) => {
-          console.log(`☺☺ ${query} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
-        },
-        (transaction, error) => console.log(`☻☻ ${query} =>=> ${error}`)
-      );
-    }
-  });
-};
 // todo: following are unused methods
+
+  export const getJoinedProducts = () => {
+    let queries = [];
+    queries[0] = `select p.Taste as Product_title , g.Title as group_title from Product p join ProductGroup g on p.ProductGroupId = g.Id `;
+    queries[1] = `select * from ProductGroup`;
+    queries[2] = `select * from Product`;
+    queries[3] = `select * from ProductSub`;
+    queries[4] = `select * from UserVisitPlan`;
+    queries[5] = `select * from VisitPlanCustomers`;
+    queries[6] = `select * from VisitPlanResults`;
+  
+    db.transaction((tx) => {
+      for (const query of queries) {
+        tx.executeSql(
+          query,
+          [],
+          (_, { rows: { _array } }) => {
+            console.log(`☺☺ ${query} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
+          },
+          (transaction, error) => console.log(`☻☻ ${query} =>=> ${error}`)
+        );
+      }
+    });
+  };
 
 export const executeParameterless = (...queries) => {
   console.log(`starting to execute queries as on transactioin..`);

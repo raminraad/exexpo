@@ -40,12 +40,7 @@ let onSubmit=props.onSubmit;
 
   return (
     <Formik
-      initialValues={{
-        ProductSubId: selectedItem?.ProductSubId,
-        SellPrice: `${selectedItem?.SellPrice ? selectedItem.SellPrice : ""}`,
-        Weight: `${selectedItem?.Weight ? selectedItem.Weight : ""}`,
-        ShelfVisibleCount: `${selectedItem?.ShelfVisibleCount ? selectedItem.ShelfVisibleCount : ""}`,
-      }}
+      initialValues={selectedItem}
       onSubmit={(values, actions) => {
 
         values.ProductSubId = selectedItem.ProductSubId;
@@ -59,7 +54,7 @@ let onSubmit=props.onSubmit;
       {(props) => (
         <View style={globalStyles.container}>
           <ScrollView style={isSearchBarFocused ? styles.productListOnSearching : styles.productListOnNotSearching} keyboardShouldPersistTaps='never'>
-            {isOnProductSearch || !selectedItem ? (
+            {isOnProductSearch || !selectedItem?.ProductSubId ? (
               <View style={{ borderWidth: 0.5, marginVertical: 15, borderRadius: 2 }}>
                 <SearchBar
                   onFocus={() => setIsSearchBarFocused(true)}
@@ -114,7 +109,7 @@ let onSubmit=props.onSubmit;
               placeholder='قیمت فروش محصول'
               keyboardType='number-pad'
               onChangeText={props.handleChange("SellPrice")}
-              value={props.values.SellPrice}
+              value={props.values?.SellPrice?.toString()}
             />
           </View>
           <View style={globalStyles.addModalFieldContainer}>
@@ -124,7 +119,7 @@ let onSubmit=props.onSubmit;
               placeholder='وزن محصول (گرم) '
               keyboardType='number-pad'
               onChangeText={props.handleChange("Weight")}
-              value={props.values.Weight}
+              value={props.values?.Weight?.toString()}
             />
           </View>
           <View style={globalStyles.addModalFieldContainer}>
@@ -134,7 +129,7 @@ let onSubmit=props.onSubmit;
               placeholder='موجودی قابل مشاهده'
               keyboardType='number-pad'
               onChangeText={props.handleChange("ShelfVisibleCount")}
-              value={props.values.ShelfVisibleCount}
+              value={props.values?.ShelfVisibleCount?.toString()}
             />
           </View>
           <Button title='تأیید' color={globalColors.btnAdd} onPress={props.handleSubmit} />

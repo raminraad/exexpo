@@ -18,37 +18,54 @@ import { openDatabase } from "expo-sqlite";
 export default function VisitPlanResultForm(props) {
   const db = openDatabase("db");
   let navigation = props.navigation;
-  let item = props.route.params.item;
+  let initialItem = props.route.params.initialItem;
   let onSubmit = props.route.params.onSubmit;
   let onCancel = props.route.params.onCancel;
   const [productsRawData, setProductsRawData] = useState([]);
-  const [visitResultStatus, setVisitResultStatus] = useState(item && item.ResultStatus ? item.ResultStatus : null);
+  const [visitResultStatus, setVisitResultStatus] = useState(initialItem?.ResultStatus ?? null);
   const [rawData, setRawData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [productModalItem, setProductModalItem] = useState(null);
+
   const onProductModalSubmit = (item) => {
     //fixme implement add edit
-    if (item.Id) console.log("update");
+    
+    let rawClone = [...rawData];
+    if (item.VisitPlanResultId) 
+    {
+      item.rxSync=1;
+      rawClone.find(r=>r.VisitPlanResultId===item.VisitPlanResultId)[0]=item;
+    }
     else console.log("insert");
-    // setRawData([...rawData, item]);
+    {
+      item.rxSync=2;
+      rawClone.push(item);
+    }
+    setRawData(rawClone);
+    console.log(rawData);
     setProductModalIsVisible(false);
   };
+
   useEffect(() => {
-    let rawDataQuery = `select * from VisitPlanResults res
+    let rawDataQuery = `select *,res.Id as VisitPlanResultId from VisitPlanResults res
      inner join ProductSub sub on res.ProductSubId = sub.Id
      inner join Product prd on prd.Id = sub.ProductId
      inner join ProductGroup grp on grp.Id =  prd.ProductGroupId
-     where VisitPlanCustomerId = ${props.route.params.item.Id}`;
+     where VisitPlanCustomerId = ${initialItem.Id}`;
+
     let productsRawDataQuery = `select *,sub.Id as ProductSubId from ProductSub sub 
      inner join Product prd on prd.Id = sub.ProductId
      inner join ProductGroup grp on grp.Id =  prd.ProductGroupId`;
+console.log("###########################################");
+console.log(initialItem);
+
     db.transaction((tx) => {
       tx.executeSql(
         rawDataQuery,
         [],
         (_, { rows: { _array } }) => {
           setRawData(_array);
-          console.log(`☺☺ RAW_DATA: ${rawDataQuery} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
+          // console.log(`☺☺ RAW_DATA: ${rawDataQuery} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
         },
         (transaction, error) => console.log(`☻☻ ${rawDataQuery} =>=> ${error}`)
       );
@@ -56,7 +73,7 @@ export default function VisitPlanResultForm(props) {
         productsRawDataQuery,
         [],
         (_, { rows: { _array } }) => {
-          console.log(`☺☺ PRODUCTS_RAW_DATA: ${productsRawDataQuery} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
+          // console.log(`☺☺ PRODUCTS_RAW_DATA: ${productsRawDataQuery} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
           setProductsRawData(_array);
         },
         (transaction, error) => console.log(`☻☻ ${productsRawDataQuery} =>=> ${error}`)
@@ -98,10 +115,7 @@ export default function VisitPlanResultForm(props) {
       <ScrollView style={{ padding: 25 }} keyboardShouldPersistTaps='never'>
         <View>
           <Formik
-            initialValues={{
-              ResultSummary: `${item?.ResultSummary ? item.ResultSummary : ""}`,
-              ResultStatus: `${item?.ResultStatus ? item.ResultStatus : ""}`,
-            }}
+            initialValues={initialItem}
             onSubmit={(values, actions) => {
               values.ResultStatus = visitResultStatus;
               actions.resetForm();
@@ -117,33 +131,33 @@ export default function VisitPlanResultForm(props) {
                     placeholder='توضیحات مختصر درباره گزارش پویش'
                     multiline
                     onChangeText={props.handleChange("ResultSummary")}
-                    value={props.values.ResultSummary}
+                    value={props.values?.ResultSummary}
                   />
                 </View>
-
                 <View style={globalStyles.addModalFieldContainer}>
                   <Text style={globalStyles.addModalFieldTitle}>وضعیت</Text>
                   <View style={globalStyles.addModalFieldRadioButtonGroupContainer}>
-                    <RadioButton.Group onValueChange={(value) => setVisitResultStatus(value)} value={visitResultStatus}>
+                    <RadioButton.Group onValueChange={(value) => props.setFieldValue('ResultStatus',value)} value={props.values.ResultStatus}>
                       <View style={globalStyles.radioItemContainer}>
                         <Text>پویش نشده</Text>
-                        <RadioButton value='0' />
+                        {/* fixme : ask the enum value of 2} */}
+                        <RadioButton value={2} />
                       </View>
                       <View style={globalStyles.radioItemContainer}>
                         <Text>عدم همکاری</Text>
-                        <RadioButton value='3' />
+                        <RadioButton value={3} />
                       </View>
                       <View style={globalStyles.radioItemContainer}>
                         <Text>پویش موفق</Text>
-                        <RadioButton value='7' />
+                        <RadioButton value={7} />
                       </View>
                       <View style={globalStyles.radioItemContainer}>
                         <Text>تغییر کاربری</Text>
-                        <RadioButton value='11' />
+                        <RadioButton value={11} />
                       </View>
                       <View style={globalStyles.radioItemContainer}>
                         <Text>یافت نشد</Text>
-                        <RadioButton value='13' />
+                        <RadioButton value={13} />
                       </View>
                     </RadioButton.Group>
                   </View>
@@ -165,8 +179,8 @@ export default function VisitPlanResultForm(props) {
                       name='plus'
                       backgroundColor={globalColors.btnAdd}
                       onPress={() => {
+                        setProductModalItem({});
                         setProductModalIsVisible(true);
-                        console.log(productModalIsVisible);
                       }}>
                       افزودن محصول
                     </FontAwesome5.Button>
@@ -181,7 +195,8 @@ export default function VisitPlanResultForm(props) {
                         key={index.toString()}
                         containerStyle={{ backgroundColor: globalColors.listItemHeaderContainer, alignSelf: "stretch" }}
                         // fixme: fix productGroup multi layering
-                        title={`${item.Title}  ⟸  ${item.Taste}  ⟸  ${item.Weight} گرمی`}
+                        title={`${item.Title}  ⟸  ${item.Taste}`}
+                        subtitle={`     قیمت فروش ${item.SellPrice}ريال      وزن محصول (گرم) ${item.Weight}      موجودی قابل مشاهده ${item.ShelfVisibleCount}`}
                         // todo: place other properties in subtitle
                         bottomDivider
                       />

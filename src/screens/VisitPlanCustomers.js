@@ -96,18 +96,12 @@ export default function VisitPlanCustomers(props) {
             <FontAwesome5.Button
               name='long-arrow-alt-left'
               backgroundColor={globalColors.listItemNavigateIcon}
-              onPress={() =>
-                // setIsOnAdd(true)
-                //xxx: uncomment top and remove bottom
+              onPress={() =>{
                 props.navigation.push("VisitPlanResultForm", {
                   title: `فروشگاه ${item.Title}`,
-                  item: item,
-                  xxx: null,
-                  // item:props.navigation.route.params.visitPlanResultsRawData.filter(v=>v.VisitPlanCustomerId==item.Id),
-                  // productsRawData : dp.getJoinedProducts(),
-                  // visitPlanCustomerId: item.Id,
+                  initialItem: item,
                 })
-              }>
+              }}>
               پویش
             </FontAwesome5.Button>
           </View>

@@ -12,19 +12,20 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 
 export default function VisitPlanResultProductForm(props) {
-  let item = props.item;
+  let initialItem = props.initialItem;
 let onCancel=props.onCancel;
 let onSubmit=props.onSubmit;
   const [isOnProductSearch, setisOnProductSearch] = useState(false);
   const [searchText, setSearchText] = useState("");
-  const [presentationData, setPresentationData] = useState([]);
-  const [selectedItem, setSelectedItem] = useState(null);
+  const [presentationData, setPresentationData] = useState(props.productsRawData);
+  const [selectedItem, setSelectedItem] = useState(initialItem);
   const [isSearchBarFocused, setIsSearchBarFocused] = useState(false);
 
   useEffect(() => {
-    setSelectedItem(props.initialSelectedItem);
-    setPresentationData(props.productsRawData);
-    console.log(JSON.stringify(props.productsRawData));
+    // setSelectedItem(props.initialItem);
+    // setPresentationData(props.productsRawData);
+    // console.log(JSON.stringify(props.productsRawData));
+    console.log(initialItem);
   }, []);
 
   useEffect(() => {
@@ -40,10 +41,10 @@ let onSubmit=props.onSubmit;
   return (
     <Formik
       initialValues={{
-        ProductSubId: item?.ProductSubId,
-        SellPrice: `${item?.SellPrice ? item.SellPrice : ""}`,
-        Weight: `${item?.Weight ? item.Weight : ""}`,
-        ShelfVisibleCount: `${item?.ShelfVisibleCount ? item.ShelfVisibleCount : ""}`,
+        ProductSubId: selectedItem?.ProductSubId,
+        SellPrice: `${selectedItem?.SellPrice ? selectedItem.SellPrice : ""}`,
+        Weight: `${selectedItem?.Weight ? selectedItem.Weight : ""}`,
+        ShelfVisibleCount: `${selectedItem?.ShelfVisibleCount ? selectedItem.ShelfVisibleCount : ""}`,
       }}
       onSubmit={(values, actions) => {
 
@@ -96,7 +97,7 @@ let onSubmit=props.onSubmit;
               <PricingCard
                 containerStyle={{ alignSelf: "stretch", marginHorizontal: 50 }}
                 color='#feb019'
-                title={`${selectedItem.Title} ${selectedItem.Taste}`}
+                title={`${selectedItem.Title} ⟸ ${selectedItem.Taste}`}
                 price={`${selectedItem.PriceValue} ريال`}
                 pricingStyle={{ fontSize: 18 }}
                 info={[`کد گروه ${selectedItem.ProductGroupCode}`, `کد کالا ${selectedItem.ProductCode}`]}
@@ -111,6 +112,7 @@ let onSubmit=props.onSubmit;
             <TextInput
               style={globalStyles.addModalFieldInput}
               placeholder='قیمت فروش محصول'
+              keyboardType='number-pad'
               onChangeText={props.handleChange("SellPrice")}
               value={props.values.SellPrice}
             />
@@ -120,6 +122,7 @@ let onSubmit=props.onSubmit;
             <TextInput
               style={globalStyles.addModalFieldInput}
               placeholder='وزن محصول (گرم) '
+              keyboardType='number-pad'
               onChangeText={props.handleChange("Weight")}
               value={props.values.Weight}
             />
@@ -129,6 +132,7 @@ let onSubmit=props.onSubmit;
             <TextInput
               style={globalStyles.addModalFieldInput}
               placeholder='موجودی قابل مشاهده'
+              keyboardType='number-pad'
               onChangeText={props.handleChange("ShelfVisibleCount")}
               value={props.values.ShelfVisibleCount}
             />

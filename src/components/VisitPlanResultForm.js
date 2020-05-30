@@ -25,10 +25,14 @@ export default function VisitPlanResultForm(props) {
   const [visitResultStatus, setVisitResultStatus] = useState(item && item.ResultStatus ? item.ResultStatus : null);
   const [rawData, setRawData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-const addVisitPlanResult = (item)=>{
-  setRawData([...rawData,item]);
-  setProductModalIsVisible(false);
-}
+  const [productModalItem, setProductModalItem] = useState(null);
+  const onProductModalSubmit = (item) => {
+    //fixme implement add edit
+    if (item.Id) console.log("update");
+    else console.log("insert");
+    // setRawData([...rawData, item]);
+    setProductModalIsVisible(false);
+  };
   useEffect(() => {
     let rawDataQuery = `select * from VisitPlanResults res
      inner join ProductSub sub on res.ProductSubId = sub.Id
@@ -44,6 +48,7 @@ const addVisitPlanResult = (item)=>{
         [],
         (_, { rows: { _array } }) => {
           setRawData(_array);
+          console.log(`☺☺ RAW_DATA: ${rawDataQuery} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
         },
         (transaction, error) => console.log(`☻☻ ${rawDataQuery} =>=> ${error}`)
       );
@@ -51,7 +56,7 @@ const addVisitPlanResult = (item)=>{
         productsRawDataQuery,
         [],
         (_, { rows: { _array } }) => {
-          console.log(`☺☺ ${productsRawDataQuery} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
+          console.log(`☺☺ PRODUCTS_RAW_DATA: ${productsRawDataQuery} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
           setProductsRawData(_array);
         },
         (transaction, error) => console.log(`☻☻ ${productsRawDataQuery} =>=> ${error}`)
@@ -62,7 +67,7 @@ const addVisitPlanResult = (item)=>{
     return () => setRawData([]);
   }, []);
 
-  const swipeLeftAction = () => (
+  const swipeLeftAction = (item) => (
     <View style={globalStyles.listItemSwipeLeftContainer}>
       <FontAwesome5
         name='trash-alt'
@@ -75,7 +80,10 @@ const addVisitPlanResult = (item)=>{
       <FontAwesome5
         name='edit'
         // todo: implement update functionality
-        onPress={() => console.warn("edit")}
+        onPress={() => {
+          setProductModalItem(item);
+          setProductModalIsVisible(true);
+        }}
         size={globalSizes.icons.medium}
         color={globalColors.btnUpdate}
       />
@@ -140,13 +148,17 @@ const addVisitPlanResult = (item)=>{
                     </RadioButton.Group>
                   </View>
                 </View>
-                
+
                 <Modal visible={productModalIsVisible} animationType='slide'>
-                  <VisitPlanResultProductForm productsRawData={productsRawData} onSubmit={addVisitPlanResult} onCancel={() => setProductModalIsVisible(false)} />
+                  <VisitPlanResultProductForm
+                    productsRawData={productsRawData}
+                    onSubmit={onProductModalSubmit}
+                    onCancel={() => setProductModalIsVisible(false)}
+                    initialItem={productModalItem}
+                  />
                 </Modal>
-              
-                
-                <View style={{ flexDirection: "row-reverse", justifyContent: "space-between"}}>
+
+                <View style={{ flexDirection: "row-reverse", justifyContent: "space-between" }}>
                   <Text style={globalStyles.addModalFieldTitle}>محصولات فروشگاه</Text>
                   <View style={globalStyles.shadowedContainer}>
                     <FontAwesome5.Button
@@ -160,12 +172,11 @@ const addVisitPlanResult = (item)=>{
                     </FontAwesome5.Button>
                   </View>
                 </View>
-                
                 {isLoading ? (
                   <Spinner style={{ height: "100%" }} color='grey' size={50} />
                 ) : (
                   rawData.map((item, index) => (
-                    <Swipeable renderLeftActions={swipeLeftAction} key={index.toString()}>
+                    <Swipeable renderLeftActions={() => swipeLeftAction(item)} key={index.toString()}>
                       <ListItem
                         key={index.toString()}
                         containerStyle={{ backgroundColor: globalColors.listItemHeaderContainer, alignSelf: "stretch" }}

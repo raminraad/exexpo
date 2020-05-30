@@ -187,6 +187,7 @@ export const globalStyles = StyleSheet.create({
     fontSize: 18,
     borderRadius: 6,
     marginRight: 20,
+    textAlign:'right',
   },
   addModalFieldRadioButtonGroupContainer: {
     alignItems: "flex-end",

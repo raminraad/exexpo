@@ -27,7 +27,7 @@ export const renewTables = (resolve,reject,result) => {
         args: [],
       },
       {
-        sql: `create table if not exists VisitPlanResults (key integer primary key not null,Id integer,VisitPlanCustomerId integer,ProductSubId integer,SellPrice,Weight integer,HasInventory,ShelfInventoryCount,ShelfVisibleCount,WarehouseInventoryCount,VerbalPurchaseCount,FactorPurchaseCount,LastModifiedDate,SyncStatus integer)`,
+        sql: `create table if not exists VisitPlanResults (key integer primary key not null,Id integer,VisitPlanCustomerId integer,ProductSubId integer,SellPrice integer,Weight integer,HasInventory,ShelfInventoryCount integer,ShelfVisibleCount integer,WarehouseInventoryCount,VerbalPurchaseCount,FactorPurchaseCount,LastModifiedDate,SyncStatus integer)`,
         args: [],
       },
     ];

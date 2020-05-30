@@ -92,23 +92,25 @@ export default function VisitPlanCustomers(props) {
               <Text style={[globalStyles.listItemHeaderFieldData, { flex: 1 }]}>{item.Title}</Text>
             </View>
           </View>
-          <FontAwesome5.Button
-            name='long-arrow-alt-left'
-            backgroundColor={globalColors.listItemNavigateIcon}
-            onPress={() =>
-              // setIsOnAdd(true)
-              //xxx: uncomment top and remove bottom
-              props.navigation.push("VisitPlanResultForm", {
-                title: `فروشگاه ${item.Title}`,
-                item: item,
-                xxx: null,
-                // item:props.navigation.route.params.visitPlanResultsRawData.filter(v=>v.VisitPlanCustomerId==item.Id),
-                // productsRawData : dp.getJoinedProducts(),
-                // visitPlanCustomerId: item.Id,
-              })
-            }>
-            پویش
-          </FontAwesome5.Button>
+          <View style={globalStyles.shadowedContainer}>
+            <FontAwesome5.Button
+              name='long-arrow-alt-left'
+              backgroundColor={globalColors.listItemNavigateIcon}
+              onPress={() =>
+                // setIsOnAdd(true)
+                //xxx: uncomment top and remove bottom
+                props.navigation.push("VisitPlanResultForm", {
+                  title: `فروشگاه ${item.Title}`,
+                  item: item,
+                  xxx: null,
+                  // item:props.navigation.route.params.visitPlanResultsRawData.filter(v=>v.VisitPlanCustomerId==item.Id),
+                  // productsRawData : dp.getJoinedProducts(),
+                  // visitPlanCustomerId: item.Id,
+                })
+              }>
+              پویش
+            </FontAwesome5.Button>
+          </View>
         </View>
       );
     };

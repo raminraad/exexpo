@@ -140,45 +140,43 @@ const addVisitPlanResult = (item)=>{
                     </RadioButton.Group>
                   </View>
                 </View>
-                <View style={globalStyles.container}>
-                  <Modal visible={productModalIsVisible} animationType='slide'>
-                    <VisitPlanResultProductForm productsRawData={productsRawData} onSubmit={addVisitPlanResult} onCancel={() => setProductModalIsVisible(false)} />
-                  </Modal>
-                </View>
-                <View>
-                  <View style={{ flexDirection: "row-reverse", justifyContent: "space-between" }}>
-                    <Text style={globalStyles.addModalFieldTitle}>محصولات فروشگاه</Text>
-                    <View style={{ marginBottom: 5 }}>
-                      <FontAwesome5.Button
-                        name='plus'
-                        backgroundColor={globalColors.btnAdd}
-                        onPress={() => {
-                          setProductModalIsVisible(true);
-                          console.log(productModalIsVisible);
-                        }}>
-                        افزودن محصول
-                      </FontAwesome5.Button>
-                    </View>
-                  </View>
-                  <View>
-                    {isLoading ? (
-                      <Spinner style={{ height: "100%" }} color='grey' size={50} />
-                    ) : (
-                      rawData.map((item, index) => (
-                        <Swipeable renderLeftActions={swipeLeftAction}>
-                          <ListItem
-                            key={index.toString()}
-                            containerStyle={{ backgroundColor: globalColors.listItemHeaderContainer, alignSelf: "stretch" }}
-                            // fixme: fix productGroup multi layering
-                            title={`${item.Title}  ⟸  ${item.Taste}  ⟸  ${item.Weight} گرمی`}
-                            // todo: place other properties in subtitle
-                            bottomDivider
-                          />
-                        </Swipeable>
-                      ))
-                    )}
+                
+                <Modal visible={productModalIsVisible} animationType='slide'>
+                  <VisitPlanResultProductForm productsRawData={productsRawData} onSubmit={addVisitPlanResult} onCancel={() => setProductModalIsVisible(false)} />
+                </Modal>
+              
+                
+                <View style={{ flexDirection: "row-reverse", justifyContent: "space-between"}}>
+                  <Text style={globalStyles.addModalFieldTitle}>محصولات فروشگاه</Text>
+                  <View style={globalStyles.shadowedContainer}>
+                    <FontAwesome5.Button
+                      name='plus'
+                      backgroundColor={globalColors.btnAdd}
+                      onPress={() => {
+                        setProductModalIsVisible(true);
+                        console.log(productModalIsVisible);
+                      }}>
+                      افزودن محصول
+                    </FontAwesome5.Button>
                   </View>
                 </View>
+                
+                {isLoading ? (
+                  <Spinner style={{ height: "100%" }} color='grey' size={50} />
+                ) : (
+                  rawData.map((item, index) => (
+                    <Swipeable renderLeftActions={swipeLeftAction} key={index.toString()}>
+                      <ListItem
+                        key={index.toString()}
+                        containerStyle={{ backgroundColor: globalColors.listItemHeaderContainer, alignSelf: "stretch" }}
+                        // fixme: fix productGroup multi layering
+                        title={`${item.Title}  ⟸  ${item.Taste}  ⟸  ${item.Weight} گرمی`}
+                        // todo: place other properties in subtitle
+                        bottomDivider
+                      />
+                    </Swipeable>
+                  ))
+                )}
 
                 <Button title='تأیید' color={globalColors.btnAdd} onPress={onSubmit} />
                 <View style={{ marginVertical: 5 }} />

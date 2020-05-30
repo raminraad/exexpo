@@ -27,7 +27,7 @@ export const globalColors = {
   searchBarIcon: "#666",
   homeIcon: "#F1FAEE",
   homeIconText: "#F1FAEE",
-  inputBorder:'#ddd',
+  inputBorder: "#ddd",
   homeSectionHeader: "#F1FAEE66",
   loginPageContainerBackground: "#003554",
   loginPageInputBackground: "#00649465",
@@ -37,7 +37,7 @@ export const globalColors = {
   listItemExpandIcon: "#8d99ae55",
   listItemHeaderContainer: "#f1f5f7",
   listItemContentContainer: "#FFFFFF",
-  listItemSwipeLeftContainer:'#e6e6eaaa',
+  listItemSwipeLeftContainer: "#e6e6eaaa",
 };
 
 export const globalSizes = {
@@ -58,7 +58,7 @@ export const globalStyles = StyleSheet.create({
     backgroundColor: globalColors.drawerBackground,
   },
   titleText: {
-    textAlign:'right',
+    textAlign: "right",
     fontSize: 18,
     fontWeight: "bold",
     color: "#333",
@@ -100,7 +100,7 @@ export const globalStyles = StyleSheet.create({
     flexWrap: "wrap",
     alignItems: "center",
     backgroundColor: globalColors.listItemHeaderContainer,
-    paddingVertical:5
+    paddingVertical: 5,
   },
   listItemHeaderNavigateButton: { paddingLeft: 5, paddingRight: 10 },
   listItemHeaderCollapseIcon: { paddingRight: 5 },
@@ -146,10 +146,22 @@ export const globalStyles = StyleSheet.create({
     fontWeight: "600",
   },
   listItemSwipeLeftContainer: {
-    backgroundColor:globalColors.listItemSwipeLeftContainer,
+    backgroundColor: globalColors.listItemSwipeLeftContainer,
     alignItems: "center",
     flexDirection: "row",
     paddingLeft: 10,
+  },
+  shadowedContainer: {
+      borderRadius: 2,
+      borderColor: '#ddd',
+      borderBottomWidth: 0,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.8,
+      shadowRadius: 2,
+      elevation: 6,
+      marginHorizontal:5,
+      marginVertical:2
   },
   addModalContainer: {
     padding: 50,
@@ -159,11 +171,11 @@ export const globalStyles = StyleSheet.create({
     marginBottom: 15,
   },
   addModalFieldTitle: {
-    flex:1,
-    textAlign:'right',
-    alignSelf:'flex-end',
+    flex: 1,
+    textAlign: "right",
+    alignSelf: "flex-end",
     fontSize: 18,
-    marginBottom:5,
+    marginBottom: 5,
     fontWeight: "bold",
     color: "#ABC",
   },
@@ -177,7 +189,7 @@ export const globalStyles = StyleSheet.create({
     marginRight: 20,
   },
   addModalFieldRadioButtonGroupContainer: {
-    alignItems:'flex-end',
+    alignItems: "flex-end",
     paddingHorizontal: 10,
   },
   radioItemContainer: {

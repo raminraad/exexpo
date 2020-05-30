@@ -47,11 +47,8 @@ export default function VisitPlans({ navigation, route }) {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    //xxx: uncomment ctor
     ctor();
-
-    //xxx START
-    // dp.getJoinedProducts();
-    //xxx END
   }, []);
 
   const { title } = route.params;
@@ -224,19 +221,21 @@ export default function VisitPlans({ navigation, route }) {
               <Text style={globalStyles.listItemHeaderFieldData}>{persianLib.toShortDate(new Date(item.DateX))}</Text>
             </View>
           </View>
-          <FontAwesome5.Button
-            name='user'
-            backgroundColor={globalColors.listItemNavigateIcon}
-            onPress={() =>
-              navigation.push("VisitPlanCustomers", {
-                title: `مشتریان هدف در تاریخ ${persianLib.toShortDate(new Date(item.OperationDate))}`,
-                item: item,
-                // customersRawData: rawData.DataTables.VisitPlanCustomers.filter((plan) => plan.VisitPlanId == item.Id),
-                // visitPlanResultsRawData : rawData.DataTables.VisitPlanResults,
-              })
-            }>
-            مشتریان
-          </FontAwesome5.Button>
+          <View style={globalStyles.shadowedContainer}>
+            <FontAwesome5.Button
+              name='user'
+              backgroundColor={globalColors.listItemNavigateIcon}
+              onPress={() =>
+                navigation.push("VisitPlanCustomers", {
+                  title: `مشتریان هدف در تاریخ ${persianLib.toShortDate(new Date(item.OperationDate))}`,
+                  item: item,
+                  // customersRawData: rawData.DataTables.VisitPlanCustomers.filter((plan) => plan.VisitPlanId == item.Id),
+                  // visitPlanResultsRawData : rawData.DataTables.VisitPlanResults,
+                })
+              }>
+              مشتریان
+            </FontAwesome5.Button>
+          </View>
         </View>
       );
     };

@@ -28,22 +28,37 @@ export default function VisitPlanResultForm(props) {
   const [productModalItem, setProductModalItem] = useState(null);
 
   const onProductModalSubmit = (item) => {
-    //fixme implement add edit
-    
     let rawClone = [...rawData];
-    if (item.VisitPlanResultId) 
-    {
-      item.rxSync=1;
-      rawClone.find(r=>r.VisitPlanResultId===item.VisitPlanResultId)[0]=item;
-    }
-    else console.log("insert");
-    {
-      item.rxSync=2;
+    if (item.rxSync === 0 || item.rxSync === 2) {
+      item.rxSync = 2;
+      rawClone.find((r) => r.rxKey === item.rxKey)[0] = item;
+    } else {
+      if (!item.rxKey)
+        item.rxKey =
+          Math.max.apply(
+            Math,
+            rawClone.map(function (o) {
+              return o.rxKey;
+            })
+          ) + 1;
+      item.rxSync = 1;
       rawClone.push(item);
     }
     setRawData(rawClone);
     console.log(rawData);
     setProductModalIsVisible(false);
+  };
+
+  const onListItemDelete = (item) => {
+    let rawClone = [...rawData];
+    let index = rawClone.findIndex((r) => r.rxKey === item.rxKey);
+    if (item.rxSync === 0 || item.rxSync === 2) {
+      item.rxSync = -1;
+      rawClone[index] = item;
+    } else {
+      rawClone.splice(index, 1);
+    }
+    setRawData(rawClone);
   };
 
   useEffect(() => {
@@ -56,14 +71,16 @@ export default function VisitPlanResultForm(props) {
     let productsRawDataQuery = `select *,sub.Id as ProductSubId from ProductSub sub 
      inner join Product prd on prd.Id = sub.ProductId
      inner join ProductGroup grp on grp.Id =  prd.ProductGroupId`;
-console.log("###########################################");
-console.log(initialItem);
+
+    console.log(initialItem);
 
     db.transaction((tx) => {
       tx.executeSql(
         rawDataQuery,
         [],
         (_, { rows: { _array } }) => {
+          for (let i = 0; i < _array.length; i++) _array[i].rxKey = i++;
+
           setRawData(_array);
           // console.log(`☺☺ RAW_DATA: ${rawDataQuery} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
         },
@@ -74,6 +91,8 @@ console.log(initialItem);
         [],
         (_, { rows: { _array } }) => {
           // console.log(`☺☺ PRODUCTS_RAW_DATA: ${productsRawDataQuery} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
+          for (let i = 0; i < _array.length; i++) _array[i].rxKey = i++;
+
           setProductsRawData(_array);
         },
         (transaction, error) => console.log(`☻☻ ${productsRawDataQuery} =>=> ${error}`)
@@ -86,17 +105,10 @@ console.log(initialItem);
 
   const swipeLeftAction = (item) => (
     <View style={globalStyles.listItemSwipeLeftContainer}>
-      <FontAwesome5
-        name='trash-alt'
-        // todo: implement update functionality
-        onPress={() => console.warn("delete")}
-        size={globalSizes.icons.medium}
-        color={globalColors.btnDelete}
-      />
+      <FontAwesome5 name='trash-alt' onPress={() => onListItemDelete(item)} size={globalSizes.icons.medium} color={globalColors.btnDelete} />
       <Separator backgroundColor={globalColors.listItemSwipeLeftContainer} />
       <FontAwesome5
         name='edit'
-        // todo: implement update functionality
         onPress={() => {
           setProductModalItem(item);
           setProductModalIsVisible(true);
@@ -137,7 +149,7 @@ console.log(initialItem);
                 <View style={globalStyles.addModalFieldContainer}>
                   <Text style={globalStyles.addModalFieldTitle}>وضعیت</Text>
                   <View style={globalStyles.addModalFieldRadioButtonGroupContainer}>
-                    <RadioButton.Group onValueChange={(value) => props.setFieldValue('ResultStatus',value)} value={props.values.ResultStatus}>
+                    <RadioButton.Group onValueChange={(value) => props.setFieldValue("ResultStatus", value)} value={props.values.ResultStatus}>
                       <View style={globalStyles.radioItemContainer}>
                         <Text>پویش نشده</Text>
                         {/* fixme : ask the enum value of 2} */}

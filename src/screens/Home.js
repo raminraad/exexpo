@@ -61,14 +61,7 @@ export default class Menu extends Component {
               icon: "shopping-cart",
               page:'Order'
             },
-            {
-              key: 4,
-              title: "پویش فروش خرده",
-              color: globalColors.homeIconBackground1,
-              members: 56,
-              icon: "credit-card",
-              page:'VisitPlans'
-            },
+            
           ],
         },
       ],
@@ -80,24 +73,25 @@ export default class Menu extends Component {
           pages: [
             {
               key: 4,
+              title: "پویش فروش خرده",
+              color: globalColors.homeIconBackground2,
+              members: 56,
+              icon: "credit-card",
+              page:'VisitPlans'
+            },
+            {
+              key: 5,
               title: "آموزش",
               color: globalColors.homeIconBackground2,
               icon: "pen-tool",
               members: 7,
             },
             {
-              key: 5,
+              key: 6,
               title: "بازار بین المللی",
               color: globalColors.homeIconBackground2,
               icon: "globe",
               members: 23,
-            },
-            {
-              key: 6,
-              title: "کلمات کلیدی",
-              color: globalColors.homeIconBackground2,
-              icon: "hash",
-              members: 12,
             },
             {
               key: 7,

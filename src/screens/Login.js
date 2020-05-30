@@ -90,7 +90,6 @@ export default function Login({ navigation }) {
             keyboardType="email-address"
             onSubmitEditing={() => passPhraseRef.current.focus()}
             onChangeText={(val) => (userInfo.userName = val)}
-            value='offline'
             ref={userNameRef}
           />
           <TextInput
@@ -101,7 +100,6 @@ export default function Login({ navigation }) {
             placeholder="گذرواژه"
             onSubmitEditing={submit}
             onChangeText={(val) => (userInfo.passPhrase = val)}
-            value='offline123'
             ref={passPhraseRef}
           />
           <TouchableOpacity style={[styles.inputAndButton,styles.button]} onPress={submit}>

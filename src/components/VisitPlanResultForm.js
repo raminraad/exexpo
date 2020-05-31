@@ -46,7 +46,7 @@ export default function VisitPlanResultForm(props) {
     }
     setRawData(rawClone);
     console.log(rawData);
-    setProductModalIsVisible(false);
+    setIsProductModalVisible(false);
   };
 
   const onListItemDelete = (item) => {
@@ -111,7 +111,7 @@ export default function VisitPlanResultForm(props) {
         name='edit'
         onPress={() => {
           setProductModalItem(item);
-          setProductModalIsVisible(true);
+          setIsProductModalVisible(true);
         }}
         size={globalSizes.icons.medium}
         color={globalColors.btnUpdate}
@@ -120,7 +120,7 @@ export default function VisitPlanResultForm(props) {
     </View>
   );
 
-  const [productModalIsVisible, setProductModalIsVisible] = useState(false);
+  const [isProductModalVisible, setIsProductModalVisible] = useState(false);
 
   return (
     <View>
@@ -129,7 +129,8 @@ export default function VisitPlanResultForm(props) {
           <Formik
             initialValues={initialItem}
             onSubmit={(values, actions) => {
-              values.ResultStatus = visitResultStatus;
+              // values.ResultStatus = visitResultStatus;
+              alert('dizmar');
               actions.resetForm();
               onSubmit(values);
             }}>
@@ -175,11 +176,11 @@ export default function VisitPlanResultForm(props) {
                   </View>
                 </View>
 
-                <Modal visible={productModalIsVisible} animationType='slide'>
+                <Modal visible={isProductModalVisible} animationType='slide'>
                   <VisitPlanResultProductForm
                     productsRawData={productsRawData}
                     onSubmit={onProductModalSubmit}
-                    onCancel={() => setProductModalIsVisible(false)}
+                    onCancel={() => setIsProductModalVisible(false)}
                     initialItem={productModalItem}
                   />
                 </Modal>
@@ -197,7 +198,7 @@ export default function VisitPlanResultForm(props) {
                           Weight: '',
                           ShelfVisibleCount: '',
                         });
-                        setProductModalIsVisible(true);
+                        setIsProductModalVisible(true);
                       }}>
                       افزودن محصول
                     </FontAwesome5.Button>
@@ -221,7 +222,7 @@ export default function VisitPlanResultForm(props) {
                   ))
                 )}
 
-                <Button title='تأیید' color={globalColors.btnAdd} onPress={onSubmit} />
+                <Button title='تأیید' color={globalColors.btnAdd} onPress={props.handleSubmit} />
                 <View style={{ marginVertical: 5 }} />
                 <Button title='انصراف' color={globalColors.btnCancel} onPress={navigation.goBack} />
                 <View style={{ marginVertical: 20 }} />

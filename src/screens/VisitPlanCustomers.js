@@ -43,7 +43,7 @@ export default function VisitPlanCustomers(props) {
   const [rawData, setRawData] = useState([]);
   const [isOnInstantFilter, setIsOnInstantFilter] = useState(false);
   const [isOnAdvancedFilter, setisOnAdvancedFilter] = useState(false);
-  const [isOnAdd, setIsOnAdd] = useState(false);
+  const [isVisitModalVisible, SetIsVisitModalVisible] = useState(false);
   const [instantFilterText, setInstantFilterText] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
@@ -91,11 +91,11 @@ export default function VisitPlanCustomers(props) {
             <FontAwesome5.Button
               name='long-arrow-alt-left'
               backgroundColor={globalColors.listItemNavigateIcon}
-              onPress={() =>{
+              onPress={() => {
                 props.navigation.push("VisitPlanResultForm", {
                   title: `فروشگاه ${item.Title}`,
                   initialItem: item,
-                })
+                });
               }}>
               پویش
             </FontAwesome5.Button>
@@ -162,12 +162,12 @@ export default function VisitPlanCustomers(props) {
       </Swipeable>
     );
   };
-  const addItem = (item) => {
+  const onVisitModalSubmit = (item) => {
     //fixme: implement this
+    SetIsVisitModalVisible(false);
     setPresentationalData((currentItems) => {
       return [item, ...currentItems];
     });
-    setAddModalOpen(false);
   };
   return (
     <Container>
@@ -180,13 +180,13 @@ export default function VisitPlanCustomers(props) {
         navigation={props.navigation}
       />
 
-      <Modal visible={isOnAdd} animationType='slide'>
+      {/* <Modal visible={isVisitModalVisible} animationType='slide'>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={globalStyles.addModalContent}>
-            <VisitPlanResultForm onSubmit={addItem} onCancel={() => setIsOnAdd(false)} />
+          <View style={globalStyles.addModalContainer}>
+            <VisitPlanResultForm onSubmit={onVisitModalSubmit} onCancel={() => SetIsVisitModalVisible(false)} />
           </View>
         </TouchableWithoutFeedback>
-      </Modal>
+      </Modal> */}
       {isLoading ? (
         <Spinner style={{ height: "100%" }} color='grey' size={50} />
       ) : (

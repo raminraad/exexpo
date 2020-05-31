@@ -213,12 +213,8 @@ export default function VisitPlans({ navigation, route }) {
           />
           <View style={globalStyles.listItemHeaderInnerTextContainer}>
             <View style={{ ...globalStyles.listItemHeaderFieldContainer }}>
-              <Text style={globalStyles.listItemHeaderFieldTitle}>تاریخ بازدید:</Text>
+              <Text style={globalStyles.listItemHeaderFieldTitle}>برنامه پویش</Text>
               <Text style={globalStyles.listItemHeaderFieldData}>{persianLib.toShortDate(new Date(item.OperationDate))}</Text>
-            </View>
-            <View style={{ ...globalStyles.listItemHeaderFieldContainer }}>
-              <Text style={globalStyles.listItemHeaderFieldTitle}>تاریخ ثبت:</Text>
-              <Text style={globalStyles.listItemHeaderFieldData}>{persianLib.toShortDate(new Date(item.DateX))}</Text>
             </View>
           </View>
           <View style={globalStyles.shadowedContainer}>

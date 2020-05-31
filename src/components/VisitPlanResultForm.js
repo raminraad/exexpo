@@ -191,7 +191,12 @@ export default function VisitPlanResultForm(props) {
                       name='plus'
                       backgroundColor={globalColors.btnAdd}
                       onPress={() => {
-                        setProductModalItem({});
+                        setProductModalItem({
+                          ProductSubId:'',
+                          SellPrice: '',
+                          Weight: '',
+                          ShelfVisibleCount: '',
+                        });
                         setProductModalIsVisible(true);
                       }}>
                       افزودن محصول

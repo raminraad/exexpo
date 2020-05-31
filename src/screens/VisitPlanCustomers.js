@@ -82,11 +82,6 @@ export default function VisitPlanCustomers(props) {
             color={expanded ? globalColors.listItemCollapseIcon : globalColors.listItemExpandIcon}
           />
           <View style={globalStyles.listItemHeaderInnerTextContainer}>
-            <View style={{ ...globalStyles.listItemHeaderFieldContainer }}>
-              <Text style={globalStyles.listItemHeaderFieldTitle}>شناسه:</Text>
-              <Text style={globalStyles.listItemHeaderFieldData}>{item.Code}</Text>
-            </View>
-
             <View style={{ ...globalStyles.listItemHeaderFieldContainer, flex: 2 }}>
               <Text style={globalStyles.listItemHeaderFieldTitle}>عنوان:</Text>
               <Text style={[globalStyles.listItemHeaderFieldData, { flex: 1 }]}>{item.Title}</Text>
@@ -111,6 +106,11 @@ export default function VisitPlanCustomers(props) {
     let renderItemContent = (item) => {
       return (
         <View style={globalStyles.listItemContentContainer}>
+          <View style={globalStyles.listItemContentRow}>
+            <Feather name='hash' size={globalSizes.icons.small} color='grey' />
+            <Text style={globalStyles.listItemContentFieldData}>{item?.Code ?? "وارد نشده"}</Text>
+          </View>
+
           <View style={globalStyles.listItemContentRow}>
             <Feather name='user' size={globalSizes.icons.small} color='grey' />
             <Text style={globalStyles.listItemContentFieldData}>{item.Owner ? item.Owner : "وارد نشده"}</Text>

@@ -38,6 +38,7 @@ export const globalColors = {
   listItemHeaderContainer: "#f1f5f7",
   listItemContentContainer: "#FFFFFF",
   listItemSwipeLeftContainer: "#e6e6eaaa",
+  addModalFieldValidationErrorText: "#e71d36",
 };
 
 export const globalSizes = {
@@ -152,16 +153,16 @@ export const globalStyles = StyleSheet.create({
     paddingLeft: 10,
   },
   shadowedContainer: {
-      borderRadius: 2,
-      borderColor: '#ddd',
-      borderBottomWidth: 0,
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.8,
-      shadowRadius: 2,
-      elevation: 6,
-      marginHorizontal:5,
-      marginVertical:2
+    borderRadius: 2,
+    borderColor: "#ddd",
+    borderBottomWidth: 0,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 6,
+    marginHorizontal: 5,
+    marginVertical: 2,
   },
   addModalContainer: {
     padding: 50,
@@ -187,7 +188,12 @@ export const globalStyles = StyleSheet.create({
     fontSize: 18,
     borderRadius: 6,
     marginRight: 20,
+    textAlign: "right",
+  },
+  addModalFieldValidationError: {
     textAlign:'right',
+    color: globalColors.addModalFieldValidationErrorText,
+    marginRight: 20,
   },
   addModalFieldRadioButtonGroupContainer: {
     alignItems: "flex-end",
@@ -215,5 +221,12 @@ export const menuOptionsCustomStyles = {
   },
   optionText: {
     fontSize: 16,
+  },
+};
+
+export const globalLiterals = {
+  validationErrors: {
+    required: "وارد کردن این فیلد الزامیست",
+    notNumber: "مقدار این فیلد میبایست عددی باشد",
   },
 };

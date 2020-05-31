@@ -29,7 +29,7 @@ import { Feather } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import Swipeable from "react-native-gesture-handler/Swipeable";
-import { globalStyles, globalColors, globalSizes, menuOptionsCustomStyles } from "../styles/global";
+import { globalStyles, globalColors, globalSizes, menuOptionsCustomStyles } from "../lib/rxGlobal";
 import * as persianLib from "../lib/persianLib";
 import { Menu, MenuTrigger, MenuOptions, MenuOption } from "react-native-popup-menu";
 import DefaultHeader from "../components/DefaultHeader";

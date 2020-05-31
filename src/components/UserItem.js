@@ -5,7 +5,7 @@ import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import IconFeather from "react-native-vector-icons/Feather";
 import { Icon } from "react-native-elements";
 import Swipeable from "react-native-gesture-handler/Swipeable";
-import { globalStyles, globalColors, globalSizes } from "../styles/global";
+import { globalStyles, globalColors, globalSizes } from "../lib/rxGlobal";
 
 export default class UserItem extends Component {
   state = {

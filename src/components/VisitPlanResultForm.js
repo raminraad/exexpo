@@ -5,7 +5,7 @@ import { Overlay, ListItem, PricingCard } from "react-native-elements";
 import { Formik } from "formik";
 import { RadioButton, Text, Divider } from "react-native-paper";
 import Swipeable from "react-native-gesture-handler/Swipeable";
-import { globalStyles, globalColors, globalSizes } from "../styles/global";
+import { globalStyles, globalColors, globalSizes } from "../lib/rxGlobal";
 import { Icon, SearchBar } from "react-native-elements";
 import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
@@ -72,7 +72,7 @@ export default function VisitPlanResultForm(props) {
      inner join Product prd on prd.Id = sub.ProductId
      inner join ProductGroup grp on grp.Id =  prd.ProductGroupId`;
 
-    console.log(initialItem);
+    // console.log(initialItem);
 
     db.transaction((tx) => {
       tx.executeSql(

@@ -4,7 +4,7 @@ import { Formik, ErrorMessage } from "formik";
 import { RadioButton, Text, Divider } from "react-native-paper";
 import { Separator, Content, Container } from "native-base";
 import Swipeable from "react-native-gesture-handler/Swipeable";
-import { globalStyles, globalColors, globalSizes, globalLiterals } from "../styles/global";
+import { globalStyles, globalColors, globalSizes, globalLiterals } from "../lib/rxGlobal";
 import { Icon, PricingCard, SearchBar, ListItem } from "react-native-elements";
 import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
@@ -25,7 +25,7 @@ export default function VisitPlanResultProductForm(props) {
   let onSubmit = props.onSubmit;
   const [isOnProductSearch, setisOnProductSearch] = useState(false);
   const [searchText, setSearchText] = useState("");
-  const [presentationData, setPresentationData] = useState(props.productsRawData);
+  const [presentationData, setPresentationData] = useState([]);
   const [selectedItem, setSelectedItem] = useState(initialItem);
   const [isSearchBarFocused, setIsSearchBarFocused] = useState(false);
 

@@ -9,7 +9,7 @@ import {
   TextInput,
   Button,
 } from "react-native";
-import { globalStyles, colors, globalColors } from "../styles/global";
+import { globalStyles, colors, globalColors } from "../lib/rxGlobal";
 import { Formik } from "formik";
 
 export default function UserForm({ onSubmit, onCancel, item }) {

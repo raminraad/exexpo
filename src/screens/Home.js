@@ -13,7 +13,7 @@ import {
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
-import { globalStyles, globalSizes, globalColors } from "../styles/global";
+import { globalStyles, globalSizes, globalColors } from "../lib/rxGlobal";
 import {
   Container,
   Header,

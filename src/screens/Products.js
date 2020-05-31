@@ -17,7 +17,7 @@ import {
 import { Icon } from "react-native-elements";
 
 import Swipeable from "react-native-gesture-handler/Swipeable";
-import { globalStyles, globalColors, globalSizes } from "../styles/global";
+import { globalStyles, globalColors, globalSizes } from "../lib/rxGlobal";
 
 export default function Products() {
   const [data, setData] = useState([]);

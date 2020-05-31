@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import Logo from "../components/Logo";
 import { StackActions } from "@react-navigation/native";
-import { globalColors } from "../styles/global";
+import { globalColors } from "../lib/rxGlobal";
 
 export default function Login({ navigation }) {
   const [message, setMessage] = useState("");

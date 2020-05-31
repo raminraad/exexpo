@@ -30,7 +30,7 @@ import {
   globalColors,
   globalSizes,
   menuOptionsCustomStyles,
-} from "../styles/global";
+} from "../lib/rxGlobal";
 
 const DefaultHeader = ({
   title,

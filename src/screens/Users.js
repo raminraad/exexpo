@@ -22,7 +22,7 @@ import { Divider } from "react-native-paper";
 import UserItem from "../components/UserItem";
 import UserForm from "../components/UserForm";
 import { MaterialIcons } from "@expo/vector-icons";
-import { globalStyles, globalColors, globalSizes ,menuOptionsCustomStyles} from "../styles/global";
+import { globalStyles, globalColors, globalSizes ,menuOptionsCustomStyles} from "../lib/rxGlobal";
 import {
   Container,
   Header,

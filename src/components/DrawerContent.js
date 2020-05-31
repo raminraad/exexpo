@@ -4,7 +4,7 @@ import {Avatar,Title,Caption,Paragraph,Drawer,Text,TouchableRipple,Switch} from 
 import {DrawerContentScrollView,DrawerItem} from '@react-navigation/drawer';
 import IconCommunity from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconMaterial from 'react-native-vector-icons/MaterialIcons';
-import { globalStyles, globalColors, globalSizes } from '../styles/global';
+import { globalStyles, globalColors, globalSizes } from '../lib/rxGlobal';
 
 
 // import{ AuthContext } from '../components/context';

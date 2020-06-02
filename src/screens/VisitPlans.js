@@ -220,7 +220,7 @@ export default function VisitPlans({ navigation, route }) {
           <View style={globalStyles.shadowedContainer}>
             <FontAwesome5.Button
               name='user'
-              backgroundColor={globalColors.listItemNavigateIcon}
+              backgroundColor={globalColors.listItemNavigateIconUndone}
               onPress={() =>
                 navigation.push("VisitPlanCustomers", {
                   title: `مشتریان هدف در تاریخ ${persianLib.toShortDate(new Date(item.OperationDate))}`,

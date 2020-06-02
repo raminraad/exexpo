@@ -174,6 +174,7 @@ export default function VisitPlanResultForm(props) {
             initialValues={initialItem}
             onSubmit={(values, actions) => {
               actions.resetForm();
+              values.details=rawData;
               navigation.navigate('VisitPlanCustomers',{yoyo:values});
             }}>
             {(props) => (

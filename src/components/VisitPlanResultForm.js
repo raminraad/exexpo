@@ -28,41 +28,49 @@ export default function VisitPlanResultForm(props) {
   const [productModalItem, setProductModalItem] = useState(null);
 
   const onProductModalSubmit = (item) => {
+    console.log('****************** ITEM ************************')
+    console.log(item)
     let rawClone = [...rawData];
     if (item.rxSync === 0 || item.rxSync === 2) {
       item.rxSync = 2;
-      rawClone.find((r) => r.rxKey === item.rxKey)[0] = item;
+      rawClone[rawClone.findIndex((r) => r.rxKey === item.rxKey)] = item;
+      
     } else {
       if (!item.rxKey)
-        item.rxKey =
-          Math.max.apply(
-            Math,
-            rawClone.map(function (o) {
-              return o.rxKey;
-            })
-          ) + 1;
-      item.rxSync = 1;
-      rawClone.push(item);
-    }
-    setRawData(rawClone);
-    console.log(rawData);
-    setIsProductModalVisible(false);
-  };
-
-  const onListItemDelete = (item) => {
-    let rawClone = [...rawData];
-    let index = rawClone.findIndex((r) => r.rxKey === item.rxKey);
-    if (item.rxSync === 0 || item.rxSync === 2) {
-      item.rxSync = -1;
-      rawClone[index] = item;
-    } else {
-      rawClone.splice(index, 1);
-    }
-    setRawData(rawClone);
+      item.rxKey =
+      Math.max.apply(
+        Math,
+        rawClone.map(function (o) {
+          return o.rxKey;
+        })
+        ) + 1;
+        rawClone.push(item);
+      }
+      setRawData(rawClone);
+      setIsProductModalVisible(false);
+      console.log('****************** RAW CLONE ************************')
+      console.log(JSON.stringify(rawData))
+      console.log('****************** RAW DATA ************************')
+      console.log(JSON.stringify(rawClone))
+    };
+    
+    const onListItemDelete = (item) => {
+      let rawClone = [...rawData];
+      let index = rawClone.findIndex((r) => r.rxKey === item.rxKey);
+      if (item.rxSync === 0 || item.rxSync === 2) {
+        item.rxSync = -1;
+        rawClone[index] = item;
+      } else {
+        rawClone.splice(index, 1);
+      }
+      setRawData(rawClone);
+      
   };
 
   useEffect(() => {
-    let rawDataQuery = `select *,res.Id as VisitPlanResultId from VisitPlanResults res
+
+    
+    let rawDataQuery = `select *,res.Id as VisitPlanResultId, 0 as rxSync from VisitPlanResults res
      inner join ProductSub sub on res.ProductSubId = sub.Id
      inner join Product prd on prd.Id = sub.ProductId
      inner join ProductGroup grp on grp.Id =  prd.ProductGroupId
@@ -79,10 +87,11 @@ export default function VisitPlanResultForm(props) {
         rawDataQuery,
         [],
         (_, { rows: { _array } }) => {
-          for (let i = 0; i < _array.length; i++) _array[i].rxKey = i++;
+          //todo: replace with sql side indexing
+          for (let i = 0; i < _array.length; i++) _array[i].rxKey = i+1;
 
           setRawData(_array);
-          // console.log(`☺☺ RAW_DATA: ${rawDataQuery} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
+          console.log(`☺☺ RAW_DATA: ${rawDataQuery} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
         },
         (transaction, error) => console.log(`☻☻ ${rawDataQuery} =>=> ${error}`)
       );
@@ -91,7 +100,8 @@ export default function VisitPlanResultForm(props) {
         [],
         (_, { rows: { _array } }) => {
           // console.log(`☺☺ PRODUCTS_RAW_DATA: ${productsRawDataQuery} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
-          for (let i = 0; i < _array.length; i++) _array[i].rxKey = i++;
+          //todo: replace with sql side indexing
+          for (let i = 0; i < _array.length; i++) _array[i].rxKey = i+1;
 
           setProductsRawData(_array);
         },
@@ -126,11 +136,54 @@ export default function VisitPlanResultForm(props) {
     <View>
       <ScrollView style={{ padding: 25 }} keyboardShouldPersistTaps='never'>
         <View>
+        <Modal visible={isProductModalVisible} animationType='slide'>
+                  <VisitPlanResultProductForm
+                    productsRawData={productsRawData}
+                    onSubmit={onProductModalSubmit}
+                    onCancel={() => setIsProductModalVisible(false)}
+                    initialItem={productModalItem}
+                  />
+                </Modal>
+
+                <View style={{ flexDirection: "row-reverse", justifyContent: "space-between" }}>
+                  <Text style={globalStyles.addModalFieldTitle}>محصولات فروشگاه</Text>
+                  <View style={globalStyles.shadowedContainer}>
+                    <FontAwesome5.Button
+                      name='plus'
+                      backgroundColor={globalColors.btnAdd}
+                      onPress={() => {
+                        setProductModalItem({
+                          rxSync : 1,
+                          ProductSubId: "",
+                          SellPrice: "",
+                          Weight: "",
+                          ShelfVisibleCount: "",
+                        });
+                        setIsProductModalVisible(true);
+                      }}>
+                      افزودن محصول
+                    </FontAwesome5.Button>
+                  </View>
+                </View>
+                {isLoading ? (
+                  <Spinner style={{ height: "100%" }} color='grey' size={50} />
+                ) : (
+                  rawData.map((item, index) => (
+                    <Swipeable renderLeftActions={() => swipeLeftAction(item)} key={index.toString()}>
+                      <ListItem
+                        key={index.toString()}
+                        containerStyle={{ backgroundColor: globalColors.listItemHeaderContainer, alignSelf: "stretch" }}
+                        // fixme: fix productGroup multi layering
+                        title={`${item.Title}  ⟸  ${item.Taste}`}
+                        subtitle={`     قیمت فروش ${item.SellPrice}ريال      وزن محصول (گرم) ${item.Weight}      موجودی قابل مشاهده ${item.ShelfVisibleCount}`}
+                        bottomDivider
+                      />
+                    </Swipeable>
+                  ))
+                )}
           <Formik
             initialValues={initialItem}
             onSubmit={(values, actions) => {
-              // values.ResultStatus = visitResultStatus;
-              alert('dizmar');
               actions.resetForm();
               onSubmit(values);
             }}>
@@ -175,52 +228,6 @@ export default function VisitPlanResultForm(props) {
                     </RadioButton.Group>
                   </View>
                 </View>
-
-                <Modal visible={isProductModalVisible} animationType='slide'>
-                  <VisitPlanResultProductForm
-                    productsRawData={productsRawData}
-                    onSubmit={onProductModalSubmit}
-                    onCancel={() => setIsProductModalVisible(false)}
-                    initialItem={productModalItem}
-                  />
-                </Modal>
-
-                <View style={{ flexDirection: "row-reverse", justifyContent: "space-between" }}>
-                  <Text style={globalStyles.addModalFieldTitle}>محصولات فروشگاه</Text>
-                  <View style={globalStyles.shadowedContainer}>
-                    <FontAwesome5.Button
-                      name='plus'
-                      backgroundColor={globalColors.btnAdd}
-                      onPress={() => {
-                        setProductModalItem({
-                          ProductSubId:'',
-                          SellPrice: '',
-                          Weight: '',
-                          ShelfVisibleCount: '',
-                        });
-                        setIsProductModalVisible(true);
-                      }}>
-                      افزودن محصول
-                    </FontAwesome5.Button>
-                  </View>
-                </View>
-                {isLoading ? (
-                  <Spinner style={{ height: "100%" }} color='grey' size={50} />
-                ) : (
-                  rawData.map((item, index) => (
-                    <Swipeable renderLeftActions={() => swipeLeftAction(item)} key={index.toString()}>
-                      <ListItem
-                        key={index.toString()}
-                        containerStyle={{ backgroundColor: globalColors.listItemHeaderContainer, alignSelf: "stretch" }}
-                        // fixme: fix productGroup multi layering
-                        title={`${item.Title}  ⟸  ${item.Taste}`}
-                        subtitle={`     قیمت فروش ${item.SellPrice}ريال      وزن محصول (گرم) ${item.Weight}      موجودی قابل مشاهده ${item.ShelfVisibleCount}`}
-                        // todo: place other properties in subtitle
-                        bottomDivider
-                      />
-                    </Swipeable>
-                  ))
-                )}
 
                 <Button title='تأیید' color={globalColors.btnAdd} onPress={props.handleSubmit} />
                 <View style={{ marginVertical: 5 }} />

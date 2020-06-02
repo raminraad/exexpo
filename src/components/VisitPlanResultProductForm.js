@@ -30,13 +30,6 @@ export default function VisitPlanResultProductForm(props) {
   const [isSearchBarFocused, setIsSearchBarFocused] = useState(false);
 
   useEffect(() => {
-    // setSelectedItem(props.initialItem);
-    // setPresentationData(props.productsRawData);
-    // console.log(JSON.stringify(props.productsRawData));
-    console.log(initialItem);
-  }, []);
-
-  useEffect(() => {
     setPresentationData(
       props.productsRawData.filter((item) => {
         let trimmedSearchText = searchText.trim();
@@ -53,7 +46,6 @@ export default function VisitPlanResultProductForm(props) {
       onSubmit={(values, actions) => {
         actions.resetForm();
         onSubmit(values);
-        console.log(values);
       }}>
       {(props) => (
         <View style={globalStyles.container}>

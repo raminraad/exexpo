@@ -69,7 +69,8 @@ export default function Login({ navigation }) {
     //clear the stack and set the Home screen as only screen
     navigation.dispatch(StackActions.replace("Home"));
   };
-
+  
+  global.AcceptableDistanceForVisitor=200;
   // XXX: remove the following
   // gotoHome();
   global.xxx = false;

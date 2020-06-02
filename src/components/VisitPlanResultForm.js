@@ -5,7 +5,7 @@ import { Overlay, ListItem, PricingCard } from "react-native-elements";
 import { Formik } from "formik";
 import { RadioButton, Text, Divider } from "react-native-paper";
 import Swipeable from "react-native-gesture-handler/Swipeable";
-import { globalStyles, globalColors, globalSizes } from "../lib/rxGlobal";
+import { globalStyles, globalColors, globalSizes , globalLiterals} from "../lib/rxGlobal";
 import { Icon, SearchBar } from "react-native-elements";
 import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
@@ -14,6 +14,8 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { KeyboardAvoidingView } from "react-native";
 import VisitPlanResultProductForm from "./VisitPlanResultProductForm";
 import { openDatabase } from "expo-sqlite";
+import * as Location from "expo-location";
+import { getDistance, getPreciseDistance } from "geolib";
 
 export default function VisitPlanResultForm(props) {
   const db = openDatabase("db");
@@ -25,42 +27,58 @@ export default function VisitPlanResultForm(props) {
   const [isLoading, setIsLoading] = useState(true);
   const [productModalItem, setProductModalItem] = useState(null);
 
+  const isGeoLocationAcceptable = async (lat, long) => {
+    let { status } = await Location.requestPermissionsAsync();
+    if (status !== "granted") {
+      return false;
+    }
+
+    let userLocation = await Location.getCurrentPositionAsync({});
+
+    let p1 = { latitude: userLocation.coords.latitude, longitude: userLocation.coords.longitude };
+    let p2 = { latitude: lat, longitude: long };
+    console.log(p1);
+    console.log(p2);
+    let distance = await getPreciseDistance(p1, p2, 1);
+
+    console.log(distance);
+    
+    return (userLocation && distance <= global.AcceptableDistanceForVisitor) ;
+  };
+
   const onProductModalSubmit = (item) => {
     let rawClone = [...rawData];
     if (item.rxSync === 0 || item.rxSync === 2) {
       item.rxSync = 2;
       rawClone[rawClone.findIndex((r) => r.rxKey === item.rxKey)] = item;
-      
     } else {
       if (!item.rxKey)
-      item.rxKey =
-      Math.max.apply(
-        Math,
-        rawClone.map(function (o) {
-          return o.rxKey;
-        })
-        ) + 1;
-        rawClone.push(item);
-      }
-      setRawData(rawClone);
-      setIsProductModalVisible(false);
-    };
-    
-    const onListItemDelete = (item) => {
-      let rawClone = [...rawData];
-      let index = rawClone.findIndex((r) => r.rxKey === item.rxKey);
-      if (item.rxSync === 0 || item.rxSync === 2) {
-        item.rxSync = -1;
-        rawClone[index] = item;
-      } else {
-        rawClone.splice(index, 1);
-      }
-      setRawData(rawClone);
-      
+        item.rxKey =
+          Math.max.apply(
+            Math,
+            rawClone.map(function (o) {
+              return o.rxKey;
+            })
+          ) + 1;
+      rawClone.push(item);
+    }
+    setRawData(rawClone);
+    setIsProductModalVisible(false);
+  };
+
+  const onListItemDelete = (item) => {
+    let rawClone = [...rawData];
+    let index = rawClone.findIndex((r) => r.rxKey === item.rxKey);
+    if (item.rxSync === 0 || item.rxSync === 2) {
+      item.rxSync = -1;
+      rawClone[index] = item;
+    } else {
+      rawClone.splice(index, 1);
+    }
+    setRawData(rawClone);
   };
 
   useEffect(() => {
-    
     let rawDataQuery = `select *,res.Id as VisitPlanResultId, 0 as rxSync from VisitPlanResults res
      inner join ProductSub sub on res.ProductSubId = sub.Id
      inner join Product prd on prd.Id = sub.ProductId
@@ -77,7 +95,7 @@ export default function VisitPlanResultForm(props) {
         [],
         (_, { rows: { _array } }) => {
           //todo: replace with sql side indexing
-          for (let i = 0; i < _array.length; i++) _array[i].rxKey = i+1;
+          for (let i = 0; i < _array.length; i++) _array[i].rxKey = i + 1;
 
           setRawData(_array);
           // console.log(`☺☺ RAW_DATA: ${rawDataQuery} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
@@ -90,7 +108,7 @@ export default function VisitPlanResultForm(props) {
         (_, { rows: { _array } }) => {
           // console.log(`☺☺ PRODUCTS_RAW_DATA: ${productsRawDataQuery} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
           //todo: replace with sql side indexing
-          for (let i = 0; i < _array.length; i++) _array[i].rxKey = i+1;
+          for (let i = 0; i < _array.length; i++) _array[i].rxKey = i + 1;
 
           setProductsRawData(_array);
         },
@@ -125,57 +143,67 @@ export default function VisitPlanResultForm(props) {
     <View>
       <ScrollView style={{ padding: 25 }} keyboardShouldPersistTaps='never'>
         <View>
-        <Modal visible={isProductModalVisible} animationType='slide'>
-                  <VisitPlanResultProductForm
-                    productsRawData={productsRawData}
-                    onSubmit={onProductModalSubmit}
-                    onCancel={() => setIsProductModalVisible(false)}
-                    initialItem={productModalItem}
-                  />
-                </Modal>
+          <Modal visible={isProductModalVisible} animationType='slide'>
+            <VisitPlanResultProductForm
+              productsRawData={productsRawData}
+              onSubmit={onProductModalSubmit}
+              onCancel={() => setIsProductModalVisible(false)}
+              initialItem={productModalItem}
+            />
+          </Modal>
 
-                <View style={{ flexDirection: "row-reverse", justifyContent: "space-between" }}>
-                  <Text style={globalStyles.addModalFieldTitle}>محصولات فروشگاه</Text>
-                  <View style={globalStyles.shadowedContainer}>
-                    <FontAwesome5.Button
-                      name='plus'
-                      backgroundColor={globalColors.btnAdd}
-                      onPress={() => {
-                        setProductModalItem({
-                          rxSync : 1,
-                          ProductSubId: "",
-                          SellPrice: "",
-                          Weight: "",
-                          ShelfVisibleCount: "",
-                        });
-                        setIsProductModalVisible(true);
-                      }}>
-                      افزودن محصول
-                    </FontAwesome5.Button>
-                  </View>
-                </View>
-                {isLoading ? (
-                  <Spinner style={{ height: "100%" }} color='grey' size={50} />
-                ) : (
-                  rawData.map((item, index) => (
-                    <Swipeable renderLeftActions={() => swipeLeftAction(item)} key={index.toString()}>
-                      <ListItem
-                        key={index.toString()}
-                        containerStyle={{ backgroundColor: globalColors.listItemHeaderContainer, alignSelf: "stretch" }}
-                        // fixme: fix productGroup multi layering
-                        title={`${item.Title}  ⟸  ${item.Taste}`}
-                        subtitle={`     قیمت فروش ${item.SellPrice}ريال      وزن محصول (گرم) ${item.Weight}      موجودی قابل مشاهده ${item.ShelfVisibleCount}`}
-                        bottomDivider
-                      />
-                    </Swipeable>
-                  ))
-                )}
+          <View style={{ flexDirection: "row-reverse", justifyContent: "space-between" }}>
+            <Text style={globalStyles.addModalFieldTitle}>محصولات فروشگاه</Text>
+            <View style={globalStyles.shadowedContainer}>
+              <FontAwesome5.Button
+                name='plus'
+                backgroundColor={globalColors.btnAdd}
+                onPress={() => {
+                  setProductModalItem({
+                    rxSync: 1,
+                    ProductSubId: "",
+                    SellPrice: "",
+                    Weight: "",
+                    ShelfVisibleCount: "",
+                  });
+                  setIsProductModalVisible(true);
+                }}>
+                افزودن محصول
+              </FontAwesome5.Button>
+            </View>
+          </View>
+          {isLoading ? (
+            <Spinner style={{ height: "100%" }} color='grey' size={50} />
+          ) : (
+            rawData.map((item, index) => (
+              <Swipeable renderLeftActions={() => swipeLeftAction(item)} key={index.toString()}>
+                <ListItem
+                  key={index.toString()}
+                  containerStyle={{ backgroundColor: globalColors.listItemHeaderContainer, alignSelf: "stretch" }}
+                  // fixme: fix productGroup multi layering
+                  title={`${item.Title}  ⟸  ${item.Taste}`}
+                  subtitle={`     قیمت فروش ${item.SellPrice}ريال      وزن محصول (گرم) ${item.Weight}      موجودی قابل مشاهده ${item.ShelfVisibleCount}`}
+                  bottomDivider
+                />
+              </Swipeable>
+            ))
+          )}
           <Formik
             initialValues={initialItem}
-            onSubmit={(values, actions) => {
-              actions.resetForm();
-              values.details=rawData;
-              navigation.navigate('VisitPlanCustomers',{yoyo:values});
+            onSubmit={async (values, actions) => {
+              
+              
+              
+              if (!global.AcceptableDistanceForVisitor || await isGeoLocationAcceptable(initialItem.Lat, initialItem.Long)) {
+                console.log('submitting')
+                actions.resetForm();
+                values.details = rawData;
+                navigation.navigate("VisitPlanCustomers", { yoyo: values });
+              } else {
+                //fixme: replace alert with a nice one
+                alert(globalLiterals.validationErrors.notInGeoRange);
+              }
+
             }}>
             {(props) => (
               <View>

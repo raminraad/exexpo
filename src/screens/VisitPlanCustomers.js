@@ -48,44 +48,38 @@ export default function VisitPlanCustomers(props) {
   const [instantFilterText, setInstantFilterText] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
-const refresh =async ()=>{
-  let query = `select * from VisitPlanCustomers where VisitPlanId = ${props.route.params.initialItem.Id}`;
-    await db.transaction((tx) => {
+  const refresh = () => {
+    let query = `select * from VisitPlanCustomers where VisitPlanId = ${props.route.params.initialItem.Id}`;
+    db.transaction((tx) => {
       tx.executeSql(
         query,
         [],
         (_, { rows: { _array } }) => {
           console.log(`☺☺ ${query} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
-          for (let i = 0; i < _array.length; i++) _array[i].rxKey = i+1;
+          for (let i = 0; i < _array.length; i++) _array[i].rxKey = i + 1;
           setRawData(_array);
           setPresentationalData(_array);
         },
         (transaction, error) => console.log(`☻☻ ${query} => ${error}`)
       );
     });
-
-}
+  };
 
   useEffect(() => {
-          console.log(JSON.stringify('EFFECT START'));
-          setIsLoading(true);
+    setIsLoading(true);
     setIsLoading(false);
     if (yoyo) handleYoyo(yoyo);
     else refresh();
     SetIsVisitModalVisible(false);
-    console.log(JSON.stringify('EFFECT END'));
-    
   }, [props]);
 
   const { title } = props.route.params;
 
   const handleYoyo = (yoyo) => {
-          console.log(JSON.stringify('YOYO START'));
-          let rawClone = [...rawData];
+    let rawClone = [...rawData];
     rawClone[rawClone.findIndex((r) => r.rxKey === yoyo.rxKey)] = yoyo;
     setRawData(rawClone);
     setPresentationalData(rawClone);
-    console.log(JSON.stringify('YOYO END'));
   };
 
   const keyExtractor = (item, index) => item.Id.toString();
@@ -108,7 +102,7 @@ const refresh =async ()=>{
           <View style={globalStyles.shadowedContainer}>
             <FontAwesome5.Button
               name='long-arrow-alt-left'
-              backgroundColor={(item.ResultSummary===2||!item.ResultSummary)? globalColors.listItemNavigateIconUndone:globalColors.listItemNavigateIconDone}
+              backgroundColor={item.ResultStatus === 2 || !item.ResultStatus ? globalColors.listItemNavigateIconUndone : globalColors.listItemNavigateIconDone}
               onPress={() => {
                 item.rxSync = 2;
                 props.navigation.push("VisitPlanResultForm", {
@@ -125,13 +119,6 @@ const refresh =async ()=>{
     let renderItemContent = (item) => {
       return (
         <View style={globalStyles.listItemContentContainer}>
-          {/* //xxx */}
-          <View style={globalStyles.listItemContentRow}>
-            <Feather name='hash' size={globalSizes.icons.small} color='grey' />
-            <Text style={globalStyles.listItemContentFieldData}>{item?.ResultStatus ?? "وارد نشده"}</Text>
-          </View>
-          {/* //xxx
-           */}
           <View style={globalStyles.listItemContentRow}>
             <Feather name='hash' size={globalSizes.icons.small} color='grey' />
             <Text style={globalStyles.listItemContentFieldData}>{item?.Code ?? "وارد نشده"}</Text>

@@ -39,6 +39,7 @@ import { openDatabase } from "expo-sqlite";
 
 export default function VisitPlanCustomers(props) {
   const db = openDatabase("db");
+  const yoyo = props.route.params.yoyo;
   const [presentationalData, setPresentationalData] = useState([]);
   const [rawData, setRawData] = useState([]);
   const [isOnInstantFilter, setIsOnInstantFilter] = useState(false);
@@ -50,7 +51,7 @@ export default function VisitPlanCustomers(props) {
   useEffect(() => {
     setIsLoading(true);
     console.log(JSON.stringify(props));
-    let query = `select * from VisitPlanCustomers where VisitPlanId = ${props.route.params.item.Id}`;
+    let query = `select * from VisitPlanCustomers where VisitPlanId = ${props.route.params.initialItem.Id}`;
     db.transaction((tx) => {
       tx.executeSql(
         query,
@@ -65,10 +66,23 @@ export default function VisitPlanCustomers(props) {
     });
 
     setIsLoading(false);
+    if (yoyo) handleYoyo(yoyo);
+    SetIsVisitModalVisible(false);
     return () => setPresentationalData([]);
   }, [props, isLoading]);
 
   const { title } = props.route.params;
+
+  const handleYoyo = (item) => {
+    console.log('------------------------------------------------');
+    console.log(item);
+    console.log('------------------------------------------------');
+
+    let rawClone = [...rawData];
+    rawClone[rawClone.findIndex((r) => r.rxKey === item.rxKey)] = item;
+    setRawData(rawClone);
+    setPresentationalData(rawClone);
+  };
 
   const keyExtractor = (item, index) => item.Id.toString();
   const renderItem = ({ item, index }) => {
@@ -92,6 +106,7 @@ export default function VisitPlanCustomers(props) {
               name='long-arrow-alt-left'
               backgroundColor={globalColors.listItemNavigateIcon}
               onPress={() => {
+                item.rxSync = 2;
                 props.navigation.push("VisitPlanResultForm", {
                   title: `فروشگاه ${item.Title}`,
                   initialItem: item,
@@ -162,13 +177,7 @@ export default function VisitPlanCustomers(props) {
       </Swipeable>
     );
   };
-  const onVisitModalSubmit = (item) => {
-    //fixme: implement this
-    SetIsVisitModalVisible(false);
-    setPresentationalData((currentItems) => {
-      return [item, ...currentItems];
-    });
-  };
+
   return (
     <Container>
       <DefaultHeader

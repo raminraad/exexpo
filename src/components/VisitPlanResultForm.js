@@ -19,8 +19,6 @@ export default function VisitPlanResultForm(props) {
   const db = openDatabase("db");
   let navigation = props.navigation;
   let initialItem = props.route.params.initialItem;
-  let onSubmit = props.route.params.onSubmit;
-  let onCancel = props.route.params.onCancel;
   const [productsRawData, setProductsRawData] = useState([]);
   const [visitResultStatus, setVisitResultStatus] = useState(initialItem?.ResultStatus ?? null);
   const [rawData, setRawData] = useState([]);
@@ -28,8 +26,6 @@ export default function VisitPlanResultForm(props) {
   const [productModalItem, setProductModalItem] = useState(null);
 
   const onProductModalSubmit = (item) => {
-    console.log('****************** ITEM ************************')
-    console.log(item)
     let rawClone = [...rawData];
     if (item.rxSync === 0 || item.rxSync === 2) {
       item.rxSync = 2;
@@ -48,10 +44,6 @@ export default function VisitPlanResultForm(props) {
       }
       setRawData(rawClone);
       setIsProductModalVisible(false);
-      console.log('****************** RAW CLONE ************************')
-      console.log(JSON.stringify(rawData))
-      console.log('****************** RAW DATA ************************')
-      console.log(JSON.stringify(rawClone))
     };
     
     const onListItemDelete = (item) => {
@@ -68,7 +60,6 @@ export default function VisitPlanResultForm(props) {
   };
 
   useEffect(() => {
-
     
     let rawDataQuery = `select *,res.Id as VisitPlanResultId, 0 as rxSync from VisitPlanResults res
      inner join ProductSub sub on res.ProductSubId = sub.Id
@@ -80,8 +71,6 @@ export default function VisitPlanResultForm(props) {
      inner join Product prd on prd.Id = sub.ProductId
      inner join ProductGroup grp on grp.Id =  prd.ProductGroupId`;
 
-    // console.log(initialItem);
-
     db.transaction((tx) => {
       tx.executeSql(
         rawDataQuery,
@@ -91,7 +80,7 @@ export default function VisitPlanResultForm(props) {
           for (let i = 0; i < _array.length; i++) _array[i].rxKey = i+1;
 
           setRawData(_array);
-          console.log(`☺☺ RAW_DATA: ${rawDataQuery} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
+          // console.log(`☺☺ RAW_DATA: ${rawDataQuery} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
         },
         (transaction, error) => console.log(`☻☻ ${rawDataQuery} =>=> ${error}`)
       );
@@ -185,7 +174,7 @@ export default function VisitPlanResultForm(props) {
             initialValues={initialItem}
             onSubmit={(values, actions) => {
               actions.resetForm();
-              onSubmit(values);
+              navigation.navigate('VisitPlanCustomers',{yoyo:values});
             }}>
             {(props) => (
               <View>

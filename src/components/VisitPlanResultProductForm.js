@@ -75,7 +75,6 @@ export default function VisitPlanResultProductForm(props) {
                         <Button
                           title='انتخاب'
                           onPress={() => {
-                            console.log(selectedItem);
                             setSelectedItem(item);
                             props.values.ProductSubId = item.ProductSubId;
                             props.values.Title = item.Title;

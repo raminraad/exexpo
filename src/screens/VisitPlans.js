@@ -40,11 +40,11 @@ import { openDatabase } from "expo-sqlite";
 export default function VisitPlans({ navigation, route }) {
   const [rawData, setRawData] = useState([]);
   const [presentationalData, setPresentationalData] = useState([]);
-  const [freshToken, setFreshToken] = useState(global.authToken);
   const [isOnInstantFilter, setIsOnInstantFilter] = useState(false);
   const [isOnAdvancedFilter, setisOnAdvancedFilter] = useState(false);
   const [instantFilterText, setInstantFilterText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const authToken=global.authToken;
 
   useEffect(() => {
     //xxx: uncomment ctor
@@ -164,14 +164,14 @@ export default function VisitPlans({ navigation, route }) {
     myHeaders.append("Accept", "application/json");
     myHeaders.append("Content-Type", "application/json");
 
-    var raw = { token: `${freshToken}` };
+    var raw = { token: `${authToken}` };
     var requestOptions = {
       method: "POST",
       headers: myHeaders,
       body: JSON.stringify(raw),
       redirect: "follow",
     };
-    console.log(`☺☺ request sent with token: ${freshToken}`);
+    console.log(`☺☺ request sent with token: ${authToken}`);
     fetch("http://audit.mazmaz.net/Api/WebApi.asmx/SyncServerData", requestOptions)
       .then((response) => response.json())
       .then((result) => {

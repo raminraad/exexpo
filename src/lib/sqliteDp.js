@@ -1,11 +1,16 @@
 import { openDatabase } from "expo-sqlite";
 
 const db = openDatabase("db");
+const tableNames = ["Announcement","Product", "ProductGroup", "ProductSub", "UserVisitPlan", "VisitPlanCustomers", "VisitPlanResults"];
 
 export const renewTables = (resolve,reject,result) => {
   let createTables = () => {
     console.log("creating all tables..");
     let createQueries = [
+      {
+        sql: `create table if not exists Announcement (rxId integer primary key not null, Id integer,Title,Summary,Description,DateX,SyncStatus integer,LastModifiedDate)`,
+        args: [],
+      },
       {
         sql: `create table if not exists ProductGroup (rxId integer primary key not null, Id integer,ParentId integer,ProductGroupCode,Title,LastModifiedDate,SyncStatus integer)`,
         args: [],
@@ -35,7 +40,7 @@ export const renewTables = (resolve,reject,result) => {
     db.exec(createQueries, false, () => {console.log(`☺☺ creating tables done successfully..`);resolve(result);});
   };
 
-  let tableNames = ["Product", "ProductGroup", "ProductSub", "UserVisitPlan", "VisitPlanCustomers", "VisitPlanResults"];
+  
   let dropQueries = [];
   for (const table of tableNames) {
     dropQueries.push({ sql: `drop table if exists ${table};`, args: [] });
@@ -159,11 +164,72 @@ export const pullAndCommitVisitPlanData =async  () => {
     
 };
 
+export const syncVisitPlanData =async  () => {
+  console.log("☺☺ sync visit plan data started");
+  let authToken = global.authToken;
+  let myHeaders = new Headers();
+  // myHeaders.append("Accept", "application/json");
+  // myHeaders.append("Content-Type", "application/json");
+
+  let dbData = {};
+  for (const tbl of tableNames) {
+    let selectedContent = await select(tbl);
+    // console.log(`SELECTED ${tbl}`);
+    // console.log(`${JSON.stringify(selectedContent)}`);
+    dbData[`${tbl}`] = selectedContent;
+  }
+
+  
+  let raw = { token: authToken,
+  syncDataTables:dbData };
+  console.log('********************************************************');
+  console.log(raw);
+  console.log('********************************************************');
+  let requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: JSON.stringify(raw),
+    redirect: "follow",
+  };
+  console.log(`☺☺ request sent with token: ${authToken}`);
+  return fetch("http://audit.mazmaz.net/Api/WebApi.asmx/SyncServerData", requestOptions)
+    .then((response) => response.json())
+    .then((result) => {
+      if (result.d.Response.Token) {
+        // setRawData(result.d);
+        return result;
+      } else throw new Error(result.d.Response.Message);
+    })
+    // .then((result) => {
+      // setPresentationalData(result.d.DataTables.UserVisitPlan);
+      // return result;
+    // })
+    .then((result) => {
+      let renewPromise = new Promise((resolve, reject) => {
+        renewTables(resolve, reject, result);
+      });
+      return renewPromise.then(result);
+    })
+    .then((result) => {
+      commitVisitPlanData(result.d.DataTables);
+      console.log(`☺☺ last "then" executed`);
+    })
+    .catch((error) => alert(error))
+    
+};
+
 const commitVisitPlanData = async (DataTables) => {
   console.log("☺☺ commit started..");
   const db = openDatabase("db");
 
   let queries = [];
+
+  for (const item of DataTables.Announcement) {
+    let parameters = [item.Id, item.Title, item.Summary, item.Description, item.DateX, item.SyncStatus,item.LastModifiedDate];
+    let query = `insert into Announcement (Id,Title,Summary,Description,DateX,SyncStatus,LastModifiedDate) values (?,?,?,?,?,?)`;
+    queries.push({ sql: `${query};`, args: parameters });
+  }
+
   for (const item of DataTables.ProductGroup) {
     let parameters = [item.Id, item.ParentId, item.ProductGroupCode, item.Title, item.LastModifiedDate, item.SyncStatus];
     let query = `insert into ProductGroup (Id,ParentId,ProductGroupCode,Title,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?)`;
@@ -253,7 +319,29 @@ const commitVisitPlanData = async (DataTables) => {
   console.log("☺☺ last line of commit executed");
 };
 
+export const select = async (tableName) => {
+    const db = openDatabase("db");
 
+    let pr = new Promise((resolve, reject) => {
+      let query = `select * from UserVisitPlan `;
+      db.transaction((tx) => {
+        tx.executeSql(
+          query,
+          [],
+          (_, { rows: { _array } }) => {
+            console.log(`☺☺ ${query} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
+            resolve(_array);
+          },
+          (transaction, error) => {
+            console.log(`☻☻ ${query} => ${error}`);
+            reject(error);
+          }
+        );
+      });
+    });
+
+    return pr;
+  };
 // todo: following are unused methods
 
   export const getJoinedProducts = () => {

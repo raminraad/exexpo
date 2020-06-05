@@ -65,6 +65,11 @@ export default function VisitPlanCustomers(props) {
     });
   };
 
+  const syncData = ()=>{
+    
+  }
+
+
   useEffect(() => {
     setIsLoading(true);
     setIsLoading(false);
@@ -210,7 +215,7 @@ export default function VisitPlanCustomers(props) {
           {isLoading ? (
             <Spinner color='white' />
           ) : (
-            <Button>
+            <Button onPress={syncData}>
               <Feather name='refresh-ccw' size={globalSizes.icons.large} color={globalColors.palette.cream} />
             </Button>
           )}

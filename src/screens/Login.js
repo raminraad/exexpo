@@ -26,6 +26,15 @@ export default function Login({ navigation }) {
     iMEI: "64564646465465454",
   };
 
+  global.AcceptableDistanceForVisitor=200;
+  dp.syncVisitPlanData();
+  // XXX: start
+  // global.xxx = false;
+  // global.authToken='7110f60d-431a-ee4a-73fe-2921fa1e1e72';
+  // navigation.dispatch(StackActions.replace("VisitPlans",{title:'dev.visitPlans'}));
+  //xxx: end
+
+
   const submit = () => {
     setMessage("در حال بررسی اطلاعات کاربری..");
     setIsLoading(true);
@@ -72,16 +81,6 @@ export default function Login({ navigation }) {
     //clear the stack and set the Home screen as only screen
     navigation.dispatch(StackActions.replace("Home"));
   };
-  
-  global.AcceptableDistanceForVisitor=200;
-  // XXX: start
-  // global.xxx = false;
-  // global.authToken='7110f60d-431a-ee4a-73fe-2921fa1e1e72';
-  // navigation.dispatch(StackActions.replace("VisitPlans",{title:'dev.visitPlans'}));
-  //xxx: end
-
-  
-  
 
   return (
     <View style={styles.container}>

@@ -44,7 +44,7 @@ export default function VisitPlans({ navigation, route }) {
   const [isOnAdvancedFilter, setisOnAdvancedFilter] = useState(false);
   const [instantFilterText, setInstantFilterText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const authToken=global.authToken;
+  const authToken = global.authToken;
 
   useEffect(() => {
     //xxx: uncomment ctor
@@ -64,27 +64,30 @@ export default function VisitPlans({ navigation, route }) {
     } else await reload();
   };
 
-  const reload =async () => {
+  const reload = async () => {
     setIsLoading(true);
-  const db = openDatabase("db");
-    let pr = new Promise((resolve,reject)=>{
+    const db = openDatabase("db");
+    let pr = new Promise((resolve, reject) => {
       let query = `select * from UserVisitPlan `;
-    db.transaction((tx) => {
-      tx.executeSql(
-        query,
-        [],
-        (_, { rows: { _array } }) => {
-          console.log(`☺☺ ${query} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
-          for (let i = 0; i < _array.length; i++) _array[i].rxKey = i + 1;
-          setPresentationalData(_array);
-          resolve();
-        },
-        (transaction, error) => {alert(`☻☻ ${query} => ${error}`);reject();}
-      );
-    });
+      db.transaction((tx) => {
+        tx.executeSql(
+          query,
+          [],
+          (_, { rows: { _array } }) => {
+            console.log(`☺☺ ${query} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
+            for (let i = 0; i < _array.length; i++) _array[i].rxKey = i + 1;
+            setPresentationalData(_array);
+            resolve();
+          },
+          (transaction, error) => {
+            alert(`☻☻ ${query} => ${error}`);
+            reject();
+          }
+        );
+      });
     });
 
-    return pr.finally(()=>setIsLoading(false));
+    return pr.finally(() => setIsLoading(false));
   };
 
   const keyExtractor = (item, index) => item.Id.toString();
@@ -112,8 +115,6 @@ export default function VisitPlans({ navigation, route }) {
                 navigation.push("VisitPlanCustomers", {
                   title: `مشتریان هدف در تاریخ ${persianLib.toShortDate(new Date(item.OperationDate))}`,
                   initialItem: item,
-                  // customersRawData: rawData.DataTables.VisitPlanCustomers.filter((plan) => plan.VisitPlanId == item.Id),
-                  // visitPlanResultsRawData : rawData.DataTables.VisitPlanResults,
                 })
               }>
               مشتریان

@@ -118,6 +118,142 @@ export const insertVisitPlanResults = (...parameters) => {
   db.exec([{ sql: `${query};`, args: parameters }], false, () => console.log(`☺☺ insertion done successfully into VisitPlanResults..`));
 };
 
+export const pullAndCommitVisitPlanData =async  () => {
+  console.log("☺☺ pull visit plan data started");
+  let authToken = global.authToken;
+  let myHeaders = new Headers();
+  myHeaders.append("Accept", "application/json");
+  myHeaders.append("Content-Type", "application/json");
+
+  let raw = { token: `${authToken}` };
+  let requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: JSON.stringify(raw),
+    redirect: "follow",
+  };
+  console.log(`☺☺ request sent with token: ${authToken}`);
+  return fetch("http://audit.mazmaz.net/Api/WebApi.asmx/SyncServerData", requestOptions)
+    .then((response) => response.json())
+    .then((result) => {
+      if (result.d.Response.Token) {
+        // setRawData(result.d);
+        return result;
+      } else throw new Error(result.d.Response.Message);
+    })
+    // .then((result) => {
+      // setPresentationalData(result.d.DataTables.UserVisitPlan);
+      // return result;
+    // })
+    .then((result) => {
+      let renewPromise = new Promise((resolve, reject) => {
+        renewTables(resolve, reject, result);
+      });
+      return renewPromise.then(result);
+    })
+    .then((result) => {
+      commitVisitPlanData(result.d.DataTables);
+      console.log(`☺☺ last "then" executed`);
+    })
+    .catch((error) => alert(error))
+    
+};
+
+const commitVisitPlanData = async (DataTables) => {
+  console.log("☺☺ commit started..");
+  const db = openDatabase("db");
+
+  let queries = [];
+  for (const item of DataTables.ProductGroup) {
+    let parameters = [item.Id, item.ParentId, item.ProductGroupCode, item.Title, item.LastModifiedDate, item.SyncStatus];
+    let query = `insert into ProductGroup (Id,ParentId,ProductGroupCode,Title,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?)`;
+    queries.push({ sql: `${query};`, args: parameters });
+  }
+
+  for (const item of DataTables.Product) {
+    let parameters = [item.Id, item.ProductGroupId, item.ProductCode, item.Taste, item.LastModifiedDate, item.SyncStatus];
+    let query = `insert into Product (Id,ProductGroupId,ProductCode,Taste,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?)`;
+    queries.push({ sql: `${query};`, args: parameters });
+  }
+
+  for (const item of DataTables.ProductSub) {
+    let parameters = [
+      item.Id,
+      item.ProductId,
+      item.BarCode,
+      item.IranCode,
+      item.Color,
+      item.Language,
+      item.PriceType,
+      item.PriceValue,
+      item.MeasurmentType,
+      item.MeasurmentScale,
+      item.LastModifiedDate,
+      item.SyncStatus,
+    ];
+    let query = `insert into ProductSub (Id,ProductId,BarCode,IranCode,Color,Language,PriceType,PriceValue,MeasurmentType,MeasurmentScale,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?,?,?,?,?,?,?)`;
+
+    queries.push({ sql: `${query};`, args: parameters });
+  }
+
+  for (const item of DataTables.UserVisitPlan) {
+    let parameters = [item.Id, item.Summary, item.OperationDate, item.DateX, item.LastModifiedDate, item.SyncStatus];
+    let query = `insert into UserVisitPlan (Id,Summary,OperationDate,DateX,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?)`;
+    queries.push({ sql: `${query};`, args: parameters });
+  }
+
+  for (const item of DataTables.VisitPlanCustomers) {
+    let parameters = [
+      item.Id,
+      item.VisitPlanId,
+      item.CustomerId,
+      item.Code,
+      item.Title,
+      item.Owner,
+      item.Long,
+      item.Lat,
+      item.Type,
+      item.Address,
+      item.Phone,
+      item.Cell,
+      item.Vol,
+      item.ResultAttachedFileTitle,
+      item.ResultSummary,
+      item.ResultStatus,
+      item.ResultVisitedDate,
+      item.LastModifiedDate,
+      item.SyncStatus,
+    ];
+
+    let query = `insert into VisitPlanCustomers (Id,VisitPlanId,CustomerId,Code,Title,Owner,Long,Lat,Type,Address,Phone,Cell,Vol,ResultAttachedFileTitle,ResultSummary,ResultStatus,ResultVisitedDate,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
+    queries.push({ sql: `${query};`, args: parameters });
+  }
+
+  for (const item of DataTables.VisitPlanResults) {
+    let parameters = [
+      item.Id,
+      item.VisitPlanCustomerId,
+      item.ProductSubId,
+      item.SellPrice,
+      item.Weight,
+      item.HasInventory,
+      item.ShelfInventoryCount,
+      item.ShelfVisibleCount,
+      item.WarehouseInventoryCount,
+      item.VerbalPurchaseCount,
+      item.FactorPurchaseCount,
+      item.LastModifiedDate,
+      item.SyncStatus,
+    ];
+    let query = `insert into VisitPlanResults (Id,VisitPlanCustomerId,ProductSubId,SellPrice,Weight,HasInventory,ShelfInventoryCount,ShelfVisibleCount,WarehouseInventoryCount,VerbalPurchaseCount,FactorPurchaseCount,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?,?,?,?,?,?,?,?)`;
+    queries.push({ sql: `${query};`, args: parameters });
+  }
+  db.exec(queries, false, () => console.log(`☺☺ insert queries executed successfully..`));
+
+  console.log("☺☺ last line of commit executed");
+};
+
+
 // todo: following are unused methods
 
   export const getJoinedProducts = () => {

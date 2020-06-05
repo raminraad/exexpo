@@ -11,10 +11,12 @@ import {
 import Logo from "../components/Logo";
 import { StackActions } from "@react-navigation/native";
 import { globalColors } from "../lib/rxGlobal";
+import * as dp from "../lib/sqliteDp";
+
 
 export default function Login({ navigation }) {
   const [message, setMessage] = useState("");
-  const [isLoading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const passPhraseRef = useRef(null);
   const userNameRef = useRef(null);
@@ -26,7 +28,7 @@ export default function Login({ navigation }) {
 
   const submit = () => {
     setMessage("در حال بررسی اطلاعات کاربری..");
-    setLoading(true);
+    setIsLoading(true);
     var myHeaders = new Headers();
     myHeaders.append("Accept", "application/json");
     myHeaders.append("Content-Type", "application/json");
@@ -45,10 +47,11 @@ export default function Login({ navigation }) {
       .then((response) => response.json())
       .then((result) => {
         if (result.d.Token) {
-          gotoHome();
           global.authToken = result.d.Token;
+          setMessage('تأیید کاربری، در حال بروزرسانی اطلاعات..');
+          return dp.pullAndCommitVisitPlanData();
         } else setMessage(result.d.Message);
-      })
+      }).then(gotoHome)
       .catch((error) => {
         console.log("error", error);
         setMessage(
@@ -56,7 +59,7 @@ export default function Login({ navigation }) {
         );
       })
       .finally(() => {
-        setLoading(false);
+        setIsLoading(false);
       });
       
   };
@@ -71,12 +74,14 @@ export default function Login({ navigation }) {
   };
   
   global.AcceptableDistanceForVisitor=200;
-  // XXX: remove the following
-  // gotoHome();
-  global.xxx = false;
-  global.authToken='7110f60d-431a-ee4a-73fe-2921fa1e1e72';
-  navigation.dispatch(StackActions.replace("VisitPlans",{title:'dev.visitPlans'}));
-  //
+  // XXX: start
+  // global.xxx = false;
+  // global.authToken='7110f60d-431a-ee4a-73fe-2921fa1e1e72';
+  // navigation.dispatch(StackActions.replace("VisitPlans",{title:'dev.visitPlans'}));
+  //xxx: end
+
+  
+  
 
   return (
     <View style={styles.container}>

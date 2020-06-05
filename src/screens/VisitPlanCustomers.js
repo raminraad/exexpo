@@ -48,7 +48,7 @@ export default function VisitPlanCustomers(props) {
   const [instantFilterText, setInstantFilterText] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
-  const refresh = () => {
+  const reload = () => {
     let query = `select * from VisitPlanCustomers where VisitPlanId = ${props.route.params.initialItem.Id}`;
     db.transaction((tx) => {
       tx.executeSql(
@@ -69,7 +69,7 @@ export default function VisitPlanCustomers(props) {
     setIsLoading(true);
     setIsLoading(false);
     if (yoyo) handleYoyo(yoyo);
-    else refresh();
+    else reload();
     SetIsVisitModalVisible(false);
   }, [props]);
 

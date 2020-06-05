@@ -61,143 +61,30 @@ export default function VisitPlans({ navigation, route }) {
         await setRawData(result.d);
         await setPresentationalData(result.d.DataTables.UserVisitPlan);
       }
-    } else await pullData();
+    } else await reload();
   };
 
-  const commitData = async (DataTables) => {
-    console.log("☺☺ commit started..");
-    const db = openDatabase("db");
-
-    let queries = [];
-    for (const item of DataTables.ProductGroup) {
-      let parameters = [item.Id, item.ParentId, item.ProductGroupCode, item.Title, item.LastModifiedDate, item.SyncStatus];
-      let query = `insert into ProductGroup (Id,ParentId,ProductGroupCode,Title,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?)`;
-      queries.push({ sql: `${query};`, args: parameters });
-    }
-
-    for (const item of DataTables.Product) {
-      let parameters = [item.Id, item.ProductGroupId, item.ProductCode, item.Taste, item.LastModifiedDate, item.SyncStatus];
-      let query = `insert into Product (Id,ProductGroupId,ProductCode,Taste,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?)`;
-      queries.push({ sql: `${query};`, args: parameters });
-    }
-
-    for (const item of DataTables.ProductSub) {
-      let parameters = [
-        item.Id,
-        item.ProductId,
-        item.BarCode,
-        item.IranCode,
-        item.Color,
-        item.Language,
-        item.PriceType,
-        item.PriceValue,
-        item.MeasurmentType,
-        item.MeasurmentScale,
-        item.LastModifiedDate,
-        item.SyncStatus,
-      ];
-      let query = `insert into ProductSub (Id,ProductId,BarCode,IranCode,Color,Language,PriceType,PriceValue,MeasurmentType,MeasurmentScale,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?,?,?,?,?,?,?)`;
-
-      queries.push({ sql: `${query};`, args: parameters });
-    }
-
-    for (const item of DataTables.UserVisitPlan) {
-      let parameters = [item.Id, item.Summary, item.OperationDate, item.DateX, item.LastModifiedDate, item.SyncStatus];
-      let query = `insert into UserVisitPlan (Id,Summary,OperationDate,DateX,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?)`;
-      queries.push({ sql: `${query};`, args: parameters });
-    }
-
-    for (const item of DataTables.VisitPlanCustomers) {
-      let parameters = [
-        item.Id,
-        item.VisitPlanId,
-        item.CustomerId,
-        item.Code,
-        item.Title,
-        item.Owner,
-        item.Long,
-        item.Lat,
-        item.Type,
-        item.Address,
-        item.Phone,
-        item.Cell,
-        item.Vol,
-        item.ResultAttachedFileTitle,
-        item.ResultSummary,
-        item.ResultStatus,
-        item.ResultVisitedDate,
-        item.LastModifiedDate,
-        item.SyncStatus,
-      ];
-
-      let query = `insert into VisitPlanCustomers (Id,VisitPlanId,CustomerId,Code,Title,Owner,Long,Lat,Type,Address,Phone,Cell,Vol,ResultAttachedFileTitle,ResultSummary,ResultStatus,ResultVisitedDate,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
-      queries.push({ sql: `${query};`, args: parameters });
-    }
-
-    for (const item of DataTables.VisitPlanResults) {
-      let parameters = [
-        item.Id,
-        item.VisitPlanCustomerId,
-        item.ProductSubId,
-        item.SellPrice,
-        item.Weight,
-        item.HasInventory,
-        item.ShelfInventoryCount,
-        item.ShelfVisibleCount,
-        item.WarehouseInventoryCount,
-        item.VerbalPurchaseCount,
-        item.FactorPurchaseCount,
-        item.LastModifiedDate,
-        item.SyncStatus,
-      ];
-      let query = `insert into VisitPlanResults (Id,VisitPlanCustomerId,ProductSubId,SellPrice,Weight,HasInventory,ShelfInventoryCount,ShelfVisibleCount,WarehouseInventoryCount,VerbalPurchaseCount,FactorPurchaseCount,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?,?,?,?,?,?,?,?)`;
-      queries.push({ sql: `${query};`, args: parameters });
-    }
-    db.exec(queries, false, () => console.log(`☺☺ insert queries executed successfully..`));
-
-    console.log("☺☺ last line of commit executed");
-  };
-  const pullData = () => {
-    console.log("☺☺ pull data started");
+  const reload =async () => {
     setIsLoading(true);
-    var myHeaders = new Headers();
-    myHeaders.append("Accept", "application/json");
-    myHeaders.append("Content-Type", "application/json");
+  const db = openDatabase("db");
+    let pr = new Promise((resolve,reject)=>{
+      let query = `select * from UserVisitPlan `;
+    db.transaction((tx) => {
+      tx.executeSql(
+        query,
+        [],
+        (_, { rows: { _array } }) => {
+          console.log(`☺☺ ${query} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
+          for (let i = 0; i < _array.length; i++) _array[i].rxKey = i + 1;
+          setPresentationalData(_array);
+          resolve();
+        },
+        (transaction, error) => {alert(`☻☻ ${query} => ${error}`);reject();}
+      );
+    });
+    });
 
-    var raw = { token: `${authToken}` };
-    var requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: JSON.stringify(raw),
-      redirect: "follow",
-    };
-    console.log(`☺☺ request sent with token: ${authToken}`);
-    fetch("http://audit.mazmaz.net/Api/WebApi.asmx/SyncServerData", requestOptions)
-      .then((response) => response.json())
-      .then((result) => {
-        if (result.d.Response.Token) {
-          setRawData(result.d);
-          return result;
-        } else throw new Error(result.d.Response.Message);
-      })
-      .then((result) => {
-        setPresentationalData(result.d.DataTables.UserVisitPlan);
-        return result;
-      })
-      .then((result) => {
-        let renewPromise = new Promise((resolve, reject) => {
-          dp.renewTables(resolve, reject, result);
-        });
-        return renewPromise.then(result);
-      })
-      .then((result) => {
-        commitData(result.d.DataTables);
-      })
-      .then((result) => {
-        console.log(`☺☺ last "then" executed`);
-      })
-      .catch((error) => alert(error))
-      .finally(() => setIsLoading(false));
+    return pr.finally(()=>setIsLoading(false));
   };
 
   const keyExtractor = (item, index) => item.Id.toString();
@@ -290,7 +177,7 @@ export default function VisitPlans({ navigation, route }) {
         {isLoading ? (
           <Spinner color='white' />
         ) : (
-          <Button onPress={pullData}>
+          <Button onPress={reload}>
             <Feather name='refresh-ccw' size={globalSizes.icons.large} color={globalColors.palette.cream} />
           </Button>
         )}

@@ -66,7 +66,7 @@ export default function VisitPlanCustomers(props) {
   };
 
   const syncData = ()=>{
-    
+
   }
 
 
@@ -82,6 +82,9 @@ export default function VisitPlanCustomers(props) {
 
   const handleYoyo = (yoyo) => {
     let rawClone = [...rawData];
+
+// fixme: update database here
+
     rawClone[rawClone.findIndex((r) => r.rxKey === yoyo.rxKey)] = yoyo;
     setRawData(rawClone);
     setPresentationalData(rawClone);

@@ -27,13 +27,13 @@ export default function Login({ navigation }) {
   };
 
   global.AcceptableDistanceForVisitor=200;
-  dp.syncVisitPlanData();
   // XXX: start
   // global.xxx = false;
-  // global.authToken='7110f60d-431a-ee4a-73fe-2921fa1e1e72';
+  global.authToken='0cf88527-515e-5cb9-7d50-d79f3693c644';
   // navigation.dispatch(StackActions.replace("VisitPlans",{title:'dev.visitPlans'}));
   //xxx: end
-
+  dp.syncVisitPlanData();
+  
 
   const submit = () => {
     setMessage("در حال بررسی اطلاعات کاربری..");

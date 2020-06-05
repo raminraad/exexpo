@@ -16,6 +16,7 @@ import VisitPlanResultProductForm from "./VisitPlanResultProductForm";
 import { openDatabase } from "expo-sqlite";
 import * as Location from "expo-location";
 import { getDistance, getPreciseDistance } from "geolib";
+import Moment from 'moment';
 
 export default function VisitPlanResultForm(props) {
   const db = openDatabase("db");
@@ -198,6 +199,10 @@ export default function VisitPlanResultForm(props) {
                 console.log('submitting')
                 actions.resetForm();
                 values.details = rawData;
+                values.LastModifiedDate=Moment(new Date()).format('YYYY/MM/DD HH:mm:ss');
+                values.ResultVisitedDate=Moment(new Date()).format('YYYY/MM/DD HH:mm:ss');
+                values.SyncStatus=2;
+                values.rxSync=2;
                 navigation.navigate("VisitPlanCustomers", { yoyo: values });
               } else {
                 //fixme: replace alert with a nice one

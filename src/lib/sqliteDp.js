@@ -142,14 +142,10 @@ export const pullAndCommitVisitPlanData =async  () => {
     .then((response) => response.json())
     .then((result) => {
       if (result.d.Response.Token) {
-        // setRawData(result.d);
+        global.LastSyncAtDate=result.d.LastSyncAtDate;
         return result;
       } else throw new Error(result.d.Response.Message);
     })
-    // .then((result) => {
-      // setPresentationalData(result.d.DataTables.UserVisitPlan);
-      // return result;
-    // })
     .then((result) => {
       let renewPromise = new Promise((resolve, reject) => {
         renewTables(resolve, reject, result);
@@ -160,7 +156,7 @@ export const pullAndCommitVisitPlanData =async  () => {
       commitVisitPlanData(result.d.DataTables);
       console.log(`☺☺ last "then" executed`);
     })
-    .catch((error) => alert(error))
+    .catch((error) => console.log(error))
     
 };
 
@@ -168,8 +164,8 @@ export const syncVisitPlanData =async  () => {
   console.log("☺☺ sync visit plan data started");
   let authToken = global.authToken;
   let myHeaders = new Headers();
-  // myHeaders.append("Accept", "application/json");
-  // myHeaders.append("Content-Type", "application/json");
+  myHeaders.append("Accept", "application/json");
+  myHeaders.append("Content-Type", "application/json");
 
   let dbData = {};
   for (const tbl of tableNames) {
@@ -179,11 +175,10 @@ export const syncVisitPlanData =async  () => {
     dbData[`${tbl}`] = selectedContent;
   }
 
+  let raw = { token: `${authToken}` , syncDataTables:dbData};
   
-  let raw = { token: authToken,
-  syncDataTables:dbData };
   console.log('********************************************************');
-  console.log(raw);
+  console.log(JSON.stringify(raw));
   console.log('********************************************************');
   let requestOptions = {
     method: "POST",
@@ -192,10 +187,13 @@ export const syncVisitPlanData =async  () => {
     redirect: "follow",
   };
   console.log(`☺☺ request sent with token: ${authToken}`);
-  return fetch("http://audit.mazmaz.net/Api/WebApi.asmx/SyncServerData", requestOptions)
-    .then((response) => response.json())
+  return fetch("http://audit.mazmaz.net/Api/WebApi.asmx/SyncClientData", requestOptions)
+    .then((response) => {console.log(JSON.stringify(response));return response.json()})
     .then((result) => {
-      if (result.d.Response.Token) {
+  console.log('-------------------------------------------------------------');
+  console.log(result)
+  console.log('-------------------------------------------------------------');
+  if (result.d.Response.Token) {
         // setRawData(result.d);
         return result;
       } else throw new Error(result.d.Response.Message);
@@ -214,7 +212,7 @@ export const syncVisitPlanData =async  () => {
       commitVisitPlanData(result.d.DataTables);
       console.log(`☺☺ last "then" executed`);
     })
-    .catch((error) => alert(error))
+    .catch((error) => console.log(error))
     
 };
 

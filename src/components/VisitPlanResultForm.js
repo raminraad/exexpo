@@ -166,6 +166,7 @@ export default function VisitPlanResultForm(props) {
                     SellPrice: "",
                     Weight: "",
                     ShelfVisibleCount: "",
+                    VisitPlanCustomerId:initialItem.Id
                   });
                   setIsProductModalVisible(true);
                 }}>

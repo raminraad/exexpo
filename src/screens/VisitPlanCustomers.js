@@ -48,46 +48,62 @@ export default function VisitPlanCustomers(props) {
   const [instantFilterText, setInstantFilterText] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
-  const reload = () => {
-    let query = `select * from VisitPlanCustomers where VisitPlanId = ${props.route.params.initialItem.Id}`;
-    db.transaction((tx) => {
-      tx.executeSql(
-        query,
-        [],
-        (_, { rows: { _array } }) => {
-          console.log(`☺☺ ${query} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
-          for (let i = 0; i < _array.length; i++) _array[i].rxKey = i + 1;
-          setRawData(_array);
-          setPresentationalData(_array);
-        },
-        (transaction, error) => console.log(`☻☻ ${query} => ${error}`)
-      );
+
+  const reload = async () => {
+    console.log('reload started')
+    let pr = new Promise((resolve, reject) => {
+      let query = `select * from VisitPlanCustomers where VisitPlanId = ${props.route.params.initialItem.Id}`;
+      db.transaction((tx) => {
+        tx.executeSql(
+          query,
+          [],
+          (_, { rows: { _array } }) => {
+            console.log(`☺☺ ${query} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
+            for (let i = 0; i < _array.length; i++) _array[i].rxKey = i + 1;
+            console.log('set raw data')
+            setRawData(_array);
+            console.log('set presentation data')
+            setPresentationalData(_array);
+            resolve('reload done');
+          },
+          (transaction, error) => {
+            alert(`☻☻ ${query} => ${error}`);
+            reject();
+          }
+        );
+      });
     });
+    return pr;
   };
 
-  const syncData = ()=>{
-
+  const syncData = async ()=>{
+    dp.syncVisitPlanData();
+    await reload();
   }
 
 
   useEffect(() => {
-    setIsLoading(true);
-    setIsLoading(false);
-    if (yoyo) handleYoyo(yoyo);
-    else reload();
+ (async ()=>  { setIsLoading(true);
+    if (yoyo) await handleYoyo(yoyo);
+    console.log(await reload());
     SetIsVisitModalVisible(false);
+    setIsLoading(false);
+  })()
   }, [props]);
-
+  
   const { title } = props.route.params;
-
-  const handleYoyo = (yoyo) => {
-    let rawClone = [...rawData];
-
-// fixme: update database here
-
-    rawClone[rawClone.findIndex((r) => r.rxKey === yoyo.rxKey)] = yoyo;
-    setRawData(rawClone);
-    setPresentationalData(rawClone);
+  
+  const handleYoyo =async (yoyo) => {
+    console.log('handle yoyo : 1')
+    console.log(await dp.commitVisitPlanResult(yoyo));
+    console.log('handle yoyo : 2')
+    console.log('handle yoyo : 3')
+    
+    
+    // let rawClone = [...rawData];
+    // rawClone[rawClone.findIndex((r) => r.rxKey === yoyo.rxKey)] = yoyo;
+    // setRawData(rawClone);
+    // setPresentationalData(rawClone);
   };
 
   const keyExtractor = (item, index) => item.Id.toString();

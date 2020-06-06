@@ -26,13 +26,19 @@ export default function Login({ navigation }) {
     iMEI: "64564646465465454",
   };
 
-  global.AcceptableDistanceForVisitor=200;
+  global.AcceptableDistanceForVisitor=null;
   // XXX: start
+  userInfo = {
+    "userName":"offline",
+    "passPhrase":"offline123",
+    "iMEI":"offline"
+    
+  }
   // global.xxx = false;
-  global.authToken='0cf88527-515e-5cb9-7d50-d79f3693c644';
+  // global.authToken='0cf88527-515e-5cb9-7d50-d79f3693c644';
   // navigation.dispatch(StackActions.replace("VisitPlans",{title:'dev.visitPlans'}));
+  
   //xxx: end
-  dp.syncVisitPlanData();
   
 
   const submit = () => {
@@ -58,14 +64,12 @@ export default function Login({ navigation }) {
         if (result.d.Token) {
           global.authToken = result.d.Token;
           setMessage('تأیید کاربری، در حال بروزرسانی اطلاعات..');
-          return dp.pullAndCommitVisitPlanData();
-        } else setMessage(result.d.Message);
-      }).then(gotoHome)
+        } else {
+          throw (result.d.Message);
+        }
+      }).then(dp.pullAndCommitVisitPlanData).then(gotoHome)
       .catch((error) => {
-        console.log("error", error);
-        setMessage(
-          "به دلیل بروز خطا در ارتباط با سرور، لطفاً مجدداً تلاش فرمایید..."
-        );
+        setMessage(error);
       })
       .finally(() => {
         setIsLoading(false);

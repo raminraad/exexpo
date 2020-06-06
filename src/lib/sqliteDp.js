@@ -1,9 +1,9 @@
 import { openDatabase } from "expo-sqlite";
 
 const db = openDatabase("db");
-const tableNames = ["Announcement","Product", "ProductGroup", "ProductSub", "UserVisitPlan", "VisitPlanCustomers", "VisitPlanResults"];
+const tableNames = ["Announcement", "Product", "ProductGroup", "ProductSub", "UserVisitPlan", "VisitPlanCustomers", "VisitPlanResults"];
 
-export const renewTables = (resolve,reject,result) => {
+export const renewTables = (resolve, reject, result) => {
   let createTables = () => {
     console.log("creating all tables..");
     let createQueries = [
@@ -37,19 +37,24 @@ export const renewTables = (resolve,reject,result) => {
       },
     ];
 
-    db.exec(createQueries, false, () => {console.log(`☺☺ creating tables done successfully..`);resolve(result);});
+    db.exec(createQueries, false, () => {
+      console.log(`☺☺ creating tables done successfully..`);
+      resolve(result);
+    });
   };
 
-  
   let dropQueries = [];
   for (const table of tableNames) {
     dropQueries.push({ sql: `drop table if exists ${table};`, args: [] });
   }
   console.log(`dropping table(s) ${tableNames}..`);
   try {
-    db.exec(dropQueries, false, () => {console.log(`dropping tables done successfully..`);createTables();});
+    db.exec(dropQueries, false, () => {
+      console.log(`dropping tables done successfully..`);
+      createTables();
+    });
   } catch (error) {
-    reject (error);
+    reject(error);
   }
 };
 
@@ -123,7 +128,7 @@ export const insertVisitPlanResults = (...parameters) => {
   db.exec([{ sql: `${query};`, args: parameters }], false, () => console.log(`☺☺ insertion done successfully into VisitPlanResults..`));
 };
 
-export const pullAndCommitVisitPlanData =async  () => {
+export const pullAndCommitVisitPlanData = async () => {
   console.log("☺☺ pull visit plan data started");
   let authToken = global.authToken;
   let myHeaders = new Headers();
@@ -142,7 +147,7 @@ export const pullAndCommitVisitPlanData =async  () => {
     .then((response) => response.json())
     .then((result) => {
       if (result.d.Response.Token) {
-        global.LastSyncAtDate=result.d.LastSyncAtDate;
+        global.LastSyncAtDate = result.d.LastSyncAtDate;
         return result;
       } else throw new Error(result.d.Response.Message);
     })
@@ -156,11 +161,10 @@ export const pullAndCommitVisitPlanData =async  () => {
       commitVisitPlanData(result.d.DataTables);
       console.log(`☺☺ last "then" executed`);
     })
-    .catch((error) => console.log(error))
-    
+    .catch((error) => console.log(error));
 };
 
-export const syncVisitPlanData =async  () => {
+export const syncVisitPlanData = async () => {
   console.log("☺☺ sync visit plan data started");
   let authToken = global.authToken;
   let myHeaders = new Headers();
@@ -175,11 +179,11 @@ export const syncVisitPlanData =async  () => {
     dbData[`${tbl}`] = selectedContent;
   }
 
-  let raw = { token: `${authToken}` , syncDataTables:dbData};
-  
-  console.log('********************************************************');
+  let raw = { token: `${authToken}`, syncDataTables: dbData };
+
+  console.log("********************************************************");
   console.log(JSON.stringify(raw));
-  console.log('********************************************************');
+  console.log("********************************************************");
   let requestOptions = {
     method: "POST",
     headers: myHeaders,
@@ -187,33 +191,38 @@ export const syncVisitPlanData =async  () => {
     redirect: "follow",
   };
   console.log(`☺☺ request sent with token: ${authToken}`);
-  return fetch("http://audit.mazmaz.net/Api/WebApi.asmx/SyncClientData", requestOptions)
-    .then((response) => {console.log(JSON.stringify(response));return response.json()})
-    .then((result) => {
-  console.log('-------------------------------------------------------------');
-  console.log(result)
-  console.log('-------------------------------------------------------------');
-  if (result.d.Response.Token) {
-        // setRawData(result.d);
-        return result;
-      } else throw new Error(result.d.Response.Message);
-    })
-    // .then((result) => {
+  return (
+    fetch("http://audit.mazmaz.net/Api/WebApi.asmx/SyncClientData", requestOptions)
+      .then((response) => {
+        console.log(JSON.stringify(response));
+        return response.json();
+      })
+      .then((result) => {
+        console.log("-------------------------------------------------------------");
+        console.log(result);
+        console.log("-------------------------------------------------------------");
+        if (result.d.Response.Token) {
+          // setRawData(result.d);
+          return result;
+        } else throw new Error(result.d.Response.Message);
+      })
+      // .then((result) => {
       // setPresentationalData(result.d.DataTables.UserVisitPlan);
       // return result;
-    // })
-    .then((result) => {
-      let renewPromise = new Promise((resolve, reject) => {
-        renewTables(resolve, reject, result);
-      });
-      return renewPromise.then(result);
-    })
-    .then((result) => {
-      commitVisitPlanData(result.d.DataTables);
-      console.log(`☺☺ last "then" executed`);
-    })
-    .catch((error) => console.log(error))
-    
+      // })
+      .then((result) => {
+        global.LastSyncAtDate = result.d.LastSyncAtDate;
+        let renewPromise = new Promise((resolve, reject) => {
+          renewTables(resolve, reject, result);
+        });
+        return renewPromise.then(result);
+      })
+      .then((result) => {
+        commitVisitPlanData(result.d.DataTables);
+        console.log(`☺☺ last "then" executed`);
+      })
+      .catch((error) => alert("خطا در ارتباط با سرور.."))
+  );
 };
 
 const commitVisitPlanData = async (DataTables) => {
@@ -223,7 +232,7 @@ const commitVisitPlanData = async (DataTables) => {
   let queries = [];
 
   for (const item of DataTables.Announcement) {
-    let parameters = [item.Id, item.Title, item.Summary, item.Description, item.DateX, item.SyncStatus,item.LastModifiedDate];
+    let parameters = [item.Id, item.Title, item.Summary, item.Description, item.DateX, item.SyncStatus, item.LastModifiedDate];
     let query = `insert into Announcement (Id,Title,Summary,Description,DateX,SyncStatus,LastModifiedDate) values (?,?,?,?,?,?)`;
     queries.push({ sql: `${query};`, args: parameters });
   }
@@ -318,53 +327,125 @@ const commitVisitPlanData = async (DataTables) => {
 };
 
 export const select = async (tableName) => {
-    const db = openDatabase("db");
+  const db = openDatabase("db");
 
-    let pr = new Promise((resolve, reject) => {
-      let query = `select * from UserVisitPlan `;
-      db.transaction((tx) => {
-        tx.executeSql(
-          query,
-          [],
-          (_, { rows: { _array } }) => {
-            console.log(`☺☺ ${query} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
-            resolve(_array);
-          },
-          (transaction, error) => {
-            console.log(`☻☻ ${query} => ${error}`);
-            reject(error);
-          }
-        );
-      });
+  let pr = new Promise((resolve, reject) => {
+    let query = `select * from UserVisitPlan `;
+    db.transaction((tx) => {
+      tx.executeSql(
+        query,
+        [],
+        (_, { rows: { _array } }) => {
+          console.log(`☺☺ ${query} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
+          resolve(_array);
+        },
+        (transaction, error) => {
+          console.log(`☻☻ ${query} => ${error}`);
+          reject(error);
+        }
+      );
     });
+  });
 
-    return pr;
-  };
+  return pr;
+};
+
+export const commitVisitPlanResult = async (VisitPlanCustomer) => {
+
+  let pr = new Promise((resolve,reject)=>{
+
+  
+
+  try {
+    console.log("☺☺ commit started..");
+    const db = openDatabase("db");
+  
+    let queries = [];
+  
+      let parameters = [
+        VisitPlanCustomer.ResultSummary,
+        VisitPlanCustomer.ResultStatus,
+        VisitPlanCustomer.ResultVisitedDate,
+        VisitPlanCustomer.LastModifiedDate,
+        VisitPlanCustomer.SyncStatus,
+        VisitPlanCustomer.Id,
+      ];
+  
+      let query = `UPDATE VisitPlanCustomers SET ResultSummary = ? , ResultStatus = ? , ResultVisitedDate = ? , LastModifiedDate = ? , SyncStatus = ?) WHERE ID = ?`;
+      queries.push({ sql: `${query};`, args: parameters });
+  
+      for (const item of VisitPlanCustomer.details) {
+        if (item.rxSync === 2) {
+          console.log('rxSync === 2')
+          let query = `UPDATE VisitPlanResults SET ProductSubId = ? , SellPrice = ? , Weight = ? , ShelfVisibleCount = ?, LastModifiedDate = ? , SyncStatus = ?) WHERE ID = ?`;
+          let parameters = [item.Id, item.ProductSubId, item.SellPrice, item.Weight, item.ShelfVisibleCount, item.LastModifiedDate, item.SyncStatus];
+        queries.push({ sql: `${query};`, args: parameters });
+  
+        } else if (item.rxSync === 1) {
+          console.log('rxSync === 1')
+  
+          let parameters = [
+            item.Id,
+            item.VisitPlanCustomerId,
+            item.ProductSubId,
+            item.SellPrice,
+            item.Weight,
+            item.HasInventory,
+            item.ShelfInventoryCount,
+            item.ShelfVisibleCount,
+            item.WarehouseInventoryCount,
+            item.VerbalPurchaseCount,
+            item.FactorPurchaseCount,
+            item.LastModifiedDate,
+            item.SyncStatus,
+          ];
+          let query = `insert into VisitPlanResults (Id,VisitPlanCustomerId,ProductSubId,SellPrice,Weight,HasInventory,ShelfInventoryCount,ShelfVisibleCount,WarehouseInventoryCount,VerbalPurchaseCount,FactorPurchaseCount,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?,?,?,?,?,?,?,?)`;
+        queries.push({ sql: `${query};`, args: parameters });
+          
+        }
+        else if (item.rxSync === -1) {
+          console.log('rxSync === -1')
+  
+          let query = `DELETE FROM VisitPlanResults WHERE ID = ?`;
+          let parameters = [item.Id];
+        queries.push({ sql: `${query};`, args: parameters });
+  
+        }
+      }
+  
+      db.exec(queries, false, () => {resolve('☺☺ commit queries executed successfully..');});
+  } catch (err) {
+    reject(err);
+  }
+  })
+  return pr;
+};
+
 // todo: following are unused methods
 
-  export const getJoinedProducts = () => {
-    let queries = [];
-    queries[0] = `select p.Taste as Product_title , g.Title as group_title from Product p join ProductGroup g on p.ProductGroupId = g.Id `;
-    queries[1] = `select * from ProductGroup`;
-    queries[2] = `select * from Product`;
-    queries[3] = `select * from ProductSub`;
-    queries[4] = `select * from UserVisitPlan`;
-    queries[5] = `select * from VisitPlanCustomers`;
-    queries[6] = `select * from VisitPlanResults`;
-  
-    db.transaction((tx) => {
-      for (const query of queries) {
-        tx.executeSql(
-          query,
-          [],
-          (_, { rows: { _array } }) => {
-            console.log(`☺☺ ${query} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
-          },
-          (transaction, error) => console.log(`☻☻ ${query} =>=> ${error}`)
-        );
-      }
-    });
-  };
+export const getJoinedProducts = () => {
+  let queries = [];
+  queries[0] = `select p.Taste as Product_title , g.Title as group_title from Product p join ProductGroup g on p.ProductGroupId = g.Id `;
+  queries[1] = `select * from ProductGroup`;
+  queries[2] = `select * from Product`;
+  queries[3] = `select * from ProductSub`;
+  queries[4] = `select * from UserVisitPlan`;
+  queries[5] = `select * from VisitPlanCustomers`;
+  queries[6] = `select * from VisitPlanResults`;
+
+  db.transaction((tx) => {
+    for (const query of queries) {
+      tx.executeSql(
+        query,
+        [],
+        (_, { rows: { _array } }) => {
+          console.log(`☺☺ ${query} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
+        },
+        (transaction, error) => console.log(`☻☻ ${query} =>=> ${error}`)
+      );
+    }
+  });
+};
 
 export const executeParameterless = (...queries) => {
   console.log(`starting to execute queries as on transactioin..`);

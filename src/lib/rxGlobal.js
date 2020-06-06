@@ -246,5 +246,8 @@ export const globalLiterals = {
   Confirmations:{
     syncData:'ارسال و بروزرسانی داده ها انجام شود؟',
     deleteProduct:'کالای انتخاب شده حذف شود؟',
+  },
+  alerts:{
+    syncDone:'ارسال و بروزرسانی داده ها با موفقیت انجام شد.',
   }
 };

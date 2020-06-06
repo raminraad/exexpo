@@ -81,6 +81,16 @@ export default function VisitPlanCustomers(props) {
     await dp.syncVisitPlanData();
     await reload();
     setIsLoading(false);
+    Alert.alert(
+      '',
+      globalLiterals.alerts.syncDone,
+      [
+        {
+          text: globalLiterals.ButtonTexts.ok,
+        },
+      ],
+      { cancelable: true }
+    );
   }
 
   const confirmAndSyncData=()=>{
@@ -242,16 +252,13 @@ export default function VisitPlanCustomers(props) {
           </View>
         </TouchableWithoutFeedback>
       </Modal> */}
-      {isLoading ? (
-        <Spinner style={{ height: "100%" }} color='grey' size={50} />
-      ) : (
         <FlatList
           keyExtractor={keyExtractor}
           //TODO: get data from a method that performs instant and advanced filter
-          data={presentationalData}
+          data={isLoading?null:presentationalData}
           renderItem={renderItem}
         />
-      )}
+      
 
       <Footer>
         <FooterTab style={{ justifyContent: "center", alignItems: "center" }}>

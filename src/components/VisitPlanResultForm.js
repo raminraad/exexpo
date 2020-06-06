@@ -79,6 +79,7 @@ export default function VisitPlanResultForm(props) {
     setRawData(rawClone);
   };
 
+
   useEffect(() => {
     let rawDataQuery = `select *,res.Id as Id, 0 as rxSync from VisitPlanResults res
      inner join ProductSub sub on res.ProductSubId = sub.Id
@@ -177,7 +178,7 @@ export default function VisitPlanResultForm(props) {
           {isLoading ? (
             <Spinner style={{ height: "100%" }} color='grey' size={50} />
           ) : (
-            rawData.map((item, index) => (
+            rawData.filter(r=>r.rxSync!==-1).map((item, index) => (
               <Swipeable renderLeftActions={() => swipeLeftAction(item)} key={index.toString()}>
                 <ListItem
                   key={index.toString()}

@@ -371,13 +371,13 @@ export const commitVisitPlanResult = async (VisitPlanCustomer) => {
         VisitPlanCustomer.Id,
       ];
   
-      let query = `UPDATE VisitPlanCustomers SET ResultSummary = ? , ResultStatus = ? , ResultVisitedDate = ? , LastModifiedDate = ? , SyncStatus = ?) WHERE ID = ?`;
+      let query = `UPDATE VisitPlanCustomers SET ResultSummary = ? , ResultStatus = ? , ResultVisitedDate = ? , LastModifiedDate = ? , SyncStatus = ? WHERE ID = ?`;
       queries.push({ sql: `${query};`, args: parameters });
   
       for (const item of VisitPlanCustomer.details) {
         if (item.rxSync === 2) {
           console.log('rxSync === 2')
-          let query = `UPDATE VisitPlanResults SET ProductSubId = ? , SellPrice = ? , Weight = ? , ShelfVisibleCount = ?, LastModifiedDate = ? , SyncStatus = ?) WHERE ID = ?`;
+          let query = `UPDATE VisitPlanResults SET ProductSubId = ? , SellPrice = ? , Weight = ? , ShelfVisibleCount = ?, LastModifiedDate = ? , SyncStatus = ? WHERE ID = ?`;
           let parameters = [item.Id, item.ProductSubId, item.SellPrice, item.Weight, item.ShelfVisibleCount, item.LastModifiedDate, item.SyncStatus];
         queries.push({ sql: `${query};`, args: parameters });
   
@@ -413,7 +413,26 @@ export const commitVisitPlanResult = async (VisitPlanCustomer) => {
         }
       }
   
-      db.exec(queries, false, () => {resolve('☺☺ commit queries executed successfully..');});
+      // db.exec(queries, false, () => {resolve('☺☺ commit queries executed successfully..');});
+
+      db.transaction((tx) => {
+        for (const query of queries) {
+          // console.log('#############################################');
+          // console.log(JSON.stringify(query));
+          // console.log(query.sql);
+          // console.log(query.args);
+
+          tx.executeSql(
+            query.sql,
+            query.args,
+            (_, resultSet) => {
+              resolve(`☺☺ QUERY: ${JSON.stringify(query)} =>  RESULT: ${JSON.stringify(resultSet)}`);
+            },
+            (transaction, error) => console.log(`☻☻ ${JSON.stringify(query)} =>=> ${error}`)
+          );
+        }
+      });
+
   } catch (err) {
     reject(err);
   }

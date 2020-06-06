@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, FlatList, Modal, Keyboard, TouchableWithoutFeedback } from "react-native";
+import { StyleSheet, FlatList, Modal, Keyboard, TouchableWithoutFeedback, Alert } from "react-native";
 import {
   Container,
   Card,
@@ -77,8 +77,27 @@ export default function VisitPlanCustomers(props) {
   };
 
   const syncData = async ()=>{
-    dp.syncVisitPlanData();
+    setIsLoading(true);
+    await dp.syncVisitPlanData();
     await reload();
+    setIsLoading(false);
+  }
+
+  const confirmAndSyncData=()=>{
+    Alert.alert(
+      '',
+      globalLiterals.Confirmations.syncData,
+      [
+        {
+          text: globalLiterals.ButtonTexts.yes,
+          onPress: syncData
+        },
+        {
+          text: globalLiterals.ButtonTexts.no,
+        },
+      ],
+      { cancelable: true }
+    );
   }
 
 
@@ -239,7 +258,7 @@ export default function VisitPlanCustomers(props) {
           {isLoading ? (
             <Spinner color='white' />
           ) : (
-            <Button onPress={syncData}>
+            <Button onPress={confirmAndSyncData}>
               <Feather name='refresh-ccw' size={globalSizes.icons.large} color={globalColors.palette.cream} />
             </Button>
           )}

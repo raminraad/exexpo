@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, FlatList } from "react-native";
+import { StyleSheet, FlatList, Alert } from "react-native";
 import {
   Container,
   Card,
@@ -29,7 +29,7 @@ import { Feather } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import Swipeable from "react-native-gesture-handler/Swipeable";
-import { globalStyles, globalColors, globalSizes, menuOptionsCustomStyles } from "../lib/rxGlobal";
+import { globalStyles, globalColors, globalSizes, menuOptionsCustomStyles, globalLiterals } from "../lib/rxGlobal";
 import * as persianLib from "../lib/persianLib";
 import { Menu, MenuTrigger, MenuOptions, MenuOption } from "react-native-popup-menu";
 import DefaultHeader from "../components/DefaultHeader";
@@ -54,6 +54,7 @@ export default function VisitPlans({ navigation, route }) {
   const { title } = route.params;
 
   const ctor = async () => {
+    setIsLoading(true);
     if (global.xxx) {
       let result = require("../dev/visitPlanData.json");
       if (result && result.d.DataTables.UserVisitPlan.length) {
@@ -62,10 +63,11 @@ export default function VisitPlans({ navigation, route }) {
         await setPresentationalData(result.d.DataTables.UserVisitPlan);
       }
     } else await reload();
+    setIsLoading(false);
   };
 
   const reload = async () => {
-    setIsLoading(true);
+    
     const db = openDatabase("db");
     let pr = new Promise((resolve, reject) => {
       let query = `select * from UserVisitPlan `;
@@ -87,8 +89,32 @@ export default function VisitPlans({ navigation, route }) {
       });
     });
 
-    return pr.finally(() => setIsLoading(false));
+    return pr;
   };
+
+  const syncData = async ()=>{
+    setIsLoading(true);
+    await dp.syncVisitPlanData();
+    await reload();
+    setIsLoading(false);
+  }
+
+  const confirmAndSyncData=()=>{
+    Alert.alert(
+      '',
+      globalLiterals.Confirmations.syncData,
+      [
+        {
+          text: globalLiterals.ButtonTexts.yes,
+          onPress: syncData
+        },
+        {
+          text: globalLiterals.ButtonTexts.no,
+        },
+      ],
+      { cancelable: true }
+    );
+  }
 
   const keyExtractor = (item, index) => item.Id.toString();
   const renderItem = ({ item, index }) => {
@@ -178,7 +204,7 @@ export default function VisitPlans({ navigation, route }) {
         {isLoading ? (
           <Spinner color='white' />
         ) : (
-          <Button onPress={reload}>
+          <Button onPress={confirmAndSyncData}>
             <Feather name='refresh-ccw' size={globalSizes.icons.large} color={globalColors.palette.cream} />
           </Button>
         )}

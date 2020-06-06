@@ -226,6 +226,15 @@ export const menuOptionsCustomStyles = {
 };
 
 export const globalLiterals = {
+  ButtonTexts:{
+    yes:'بلی',
+    no:'خیر',
+    ok:'تأیید',
+    cancel:'انصراف',
+  },
+  Titles:{
+    syncData:'بروزرسانی داده ها',
+  },
   validationErrors: {
     required: "وارد کردن این فیلد الزامیست",
     notNumber: "مقدار این فیلد میبایست عددی باشد",
@@ -233,5 +242,9 @@ export const globalLiterals = {
   },
   actionErrors:{
     saveError:"ذخیره اطلاعات با خطا مواجه شد. لطفاً دوباره تلاش نمایید"
+  },
+  Confirmations:{
+    syncData:'ارسال و بروزرسانی داده ها انجام شود؟',
+    deleteProduct:'کالای انتخاب شده حذف شود؟',
   }
 };

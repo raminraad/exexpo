@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, TouchableOpacity, FlatList, TextInput, ScrollView, Button, Modal } from "react-native";
+import { StyleSheet, View, TouchableOpacity, FlatList, TextInput, ScrollView, Button, Modal, Alert } from "react-native";
 import { Separator, Content, Container, Spinner } from "native-base";
 import { Overlay, ListItem, PricingCard } from "react-native-elements";
 import { Formik } from "formik";
@@ -67,6 +67,23 @@ export default function VisitPlanResultForm(props) {
     setIsProductModalVisible(false);
   };
 
+  const confirmAndDelete = (item) => {
+    Alert.alert(
+      '',
+      globalLiterals.Confirmations.deleteProduct,
+      [
+        {
+          text: globalLiterals.ButtonTexts.yes,
+          onPress: ()=>onListItemDelete(item)
+        },
+        {
+          text: globalLiterals.ButtonTexts.no,
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+  
   const onListItemDelete = (item) => {
     let rawClone = [...rawData];
     let index = rawClone.findIndex((r) => r.rxKey === item.rxKey);
@@ -124,7 +141,7 @@ export default function VisitPlanResultForm(props) {
 
   const swipeLeftAction = (item) => (
     <View style={globalStyles.listItemSwipeLeftContainer}>
-      <FontAwesome5 name='trash-alt' onPress={() => onListItemDelete(item)} size={globalSizes.icons.medium} color={globalColors.btnDelete} />
+      <FontAwesome5 name='trash-alt' onPress={() => confirmAndDelete(item)} size={globalSizes.icons.medium} color={globalColors.btnDelete} />
       <Separator backgroundColor={globalColors.listItemSwipeLeftContainer} />
       <FontAwesome5
         name='edit'

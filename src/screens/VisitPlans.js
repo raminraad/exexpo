@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, FlatList, Alert } from "react-native";
+import { StyleSheet, FlatList, Alert, TouchableOpacity } from "react-native";
 import {
   Container,
   Card,
@@ -8,8 +8,6 @@ import {
   Header,
   Content,
   Left,
-  List,
-  ListItem,
   Right,
   Text,
   Title,
@@ -23,11 +21,13 @@ import {
   Spinner,
   Separator,
 } from "native-base";
-import { Icon, Divider } from "react-native-elements";
-import { Ionicons } from "@expo/vector-icons";
+import { Icon, Divider, ListItem } from "react-native-elements";
 import { Feather } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { Entypo } from '@expo/vector-icons'; 
+import { AntDesign } from '@expo/vector-icons'; 
+import { Ionicons } from '@expo/vector-icons'; 
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import { globalStyles, globalColors, globalSizes, menuOptionsCustomStyles, globalLiterals } from "../lib/rxGlobal";
 import * as persianLib from "../lib/persianLib";
@@ -36,6 +36,8 @@ import DefaultHeader from "../components/DefaultHeader";
 import * as dp from "../lib/sqliteDp";
 import * as visitPlanDp from "../lib/visitPlanSqliteDb";
 import { openDatabase } from "expo-sqlite";
+import TouchableScale from "react-native-touchable-scale"; // https://github.com/kohver/react-native-touchable-scale
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function VisitPlans({ navigation, route }) {
   const [rawData, setRawData] = useState([]);
@@ -67,7 +69,6 @@ export default function VisitPlans({ navigation, route }) {
   };
 
   const reload = async () => {
-    
     const db = openDatabase("db");
     let pr = new Promise((resolve, reject) => {
       let query = `select * from UserVisitPlan `;
@@ -92,21 +93,21 @@ export default function VisitPlans({ navigation, route }) {
     return pr;
   };
 
-  const syncData = async ()=>{
+  const syncData = async () => {
     setIsLoading(true);
     await dp.syncVisitPlanData();
     await reload();
     setIsLoading(false);
-  }
+  };
 
-  const confirmAndSyncData=()=>{
+  const confirmAndSyncData = () => {
     Alert.alert(
-      '',
+      "",
       globalLiterals.Confirmations.syncData,
       [
         {
           text: globalLiterals.ButtonTexts.yes,
-          onPress: syncData
+          onPress: syncData,
         },
         {
           text: globalLiterals.ButtonTexts.no,
@@ -114,80 +115,8 @@ export default function VisitPlans({ navigation, route }) {
       ],
       { cancelable: true }
     );
-  }
-
-  const keyExtractor = (item, index) => item.Id.toString();
-  const renderItem = ({ item, index }) => {
-    let renderItemHeader = (item, expanded) => {
-      return (
-        <View style={globalStyles.listItemHeaderContainer}>
-          <Feather
-            name={expanded ? "chevrons-down" : "chevrons-left"}
-            size={24}
-            style={globalStyles.listItemHeaderCollapseIcon}
-            color={expanded ? globalColors.listItemCollapseIcon : globalColors.listItemExpandIcon}
-          />
-          <View style={globalStyles.listItemHeaderInnerTextContainer}>
-            <View style={{ ...globalStyles.listItemHeaderFieldContainer }}>
-              <Text style={globalStyles.listItemHeaderFieldTitle}>برنامه پویش</Text>
-              <Text style={globalStyles.listItemHeaderFieldData}>{persianLib.toShortDate(new Date(item.OperationDate))}</Text>
-            </View>
-          </View>
-          <View style={globalStyles.shadowedContainer}>
-            <FontAwesome5.Button
-              name='user'
-              backgroundColor={globalColors.listItemNavigateIconUndone}
-              onPress={() =>
-                navigation.push("VisitPlanCustomers", {
-                  title: `مشتریان هدف در تاریخ ${persianLib.toShortDate(new Date(item.OperationDate))}`,
-                  initialItem: item,
-                })
-              }>
-              مشتریان
-            </FontAwesome5.Button>
-          </View>
-        </View>
-      );
-    };
-    let renderItemContent = (item) => {
-      return (
-        <View style={globalStyles.listItemContentContainer}>
-          <View style={globalStyles.listItemContentRow}>
-            <MaterialIcons name='description' size={globalSizes.icons.small} backgroundColor='red' color='grey' />
-            <Text style={globalStyles.listItemContentFieldData}>{item.Summary ? item.Summary : "وارد نشده"}</Text>
-          </View>
-        </View>
-      );
-    };
-
-    let SwipeLeftAction = () => {
-      return (
-        <View style={globalStyles.listItemSwipeLeftContainer}>
-          <FontAwesome5
-            name='trash-alt'
-            // todo: implement update functionality
-            onPress={() => console.warn("delete")}
-            size={globalSizes.icons.medium}
-            color={globalColors.btnDelete}
-          />
-          <Separator backgroundColor={globalColors.listItemSwipeLeftContainer} />
-          <FontAwesome5
-            name='edit'
-            // todo: implement update functionality
-            onPress={() => console.warn("edit")}
-            size={globalSizes.icons.medium}
-            color={globalColors.btnUpdate}
-          />
-          <Separator backgroundColor={globalColors.listItemSwipeLeftContainer} />
-        </View>
-      );
-    };
-    return (
-      <Swipeable renderLeftActions={SwipeLeftAction}>
-        <Accordion dataArray={[item]} renderContent={renderItemContent} renderHeader={renderItemHeader} />
-      </Swipeable>
-    );
   };
+
   const renderHeader = () => (
     <DefaultHeader
       title={title}
@@ -210,9 +139,10 @@ export default function VisitPlans({ navigation, route }) {
         )}
       </FooterTab>
       <FooterTab>
-        <Button onPress={() => setIsOnInstantFilter(true)}>
+        {/* todo: implement search and set button visible */}
+        {/* <Button onPress={() => setIsOnInstantFilter(true)}>
           <Feather name='search' size={globalSizes.icons.large} color={globalColors.palette.cream} />
-        </Button>
+        </Button> */}
       </FooterTab>
       <FooterTab style={{ alignSelf: "center", justifyContent: "center" }}>
         <Menu>
@@ -228,13 +158,46 @@ export default function VisitPlans({ navigation, route }) {
   );
   return (
     <Container>
-      {renderHeader()}
-      <FlatList
-        keyExtractor={keyExtractor}
-        //TODO: get data from a method that performs instant and advanced filter
-        data={presentationalData}
-        renderItem={renderItem}
-      />
+      <Content>
+        {renderHeader()}
+        {/* <FlatList
+          keyExtractor={keyExtractor}
+          //TODO: get data from a method that performs instant and advanced filter
+          data={presentationalData}
+          renderItem={renderItem}
+        /> */}
+
+        {presentationalData.map((item, i) => (
+          <View
+            style={{
+              borderWidth: StyleSheet.hairlineWidth,
+              margin: StyleSheet.hairlineWidth,
+            }}>
+            <ListItem
+              onPress={() =>
+                navigation.push("VisitPlanCustomers", {
+                  title: `مشتریان هدف در تاریخ ${persianLib.toShortDate(new Date(item.OperationDate))}`,
+                  initialItem: item,
+                })
+              }
+              Component={TouchableScale}
+              key={item.rxKey}
+              friction={90} //
+              tension={100} // These props are passed to the parent component (here TouchableScale)
+              activeScale={0.95} //
+              linearGradientProps={{
+                colors: ["#05668d", "#98c1d9"],
+                start: { x: 0.5, y: 0 },
+                end: { x: 0, y: 1 },
+              }}
+              title={item.Summary}
+              titleStyle={{ color: "white", fontWeight: "bold" }}
+              subtitle={`تاریخ پویش ${persianLib.toShortDate(new Date(item.OperationDate))}`}
+              leftElement={<Entypo name='chevron-thin-left' size={globalSizes.icons.small} color={globalColors.palette.cream}/>}
+            />
+          </View>
+        ))}
+      </Content>
       {renderFooter()}
     </Container>
   );

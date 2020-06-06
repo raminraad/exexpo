@@ -8,8 +8,6 @@ import {
   Header,
   Content,
   Left,
-  List,
-  ListItem,
   Right,
   Text,
   Title,
@@ -23,11 +21,12 @@ import {
   Spinner,
   Separator,
 } from "native-base";
-import { Icon, Divider } from "react-native-elements";
+import { Icon, Divider ,ListItem} from "react-native-elements";
 import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { Entypo } from '@expo/vector-icons'; 
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import { globalStyles, globalColors, globalSizes, globalLiterals, menuOptionsCustomStyles } from "../lib/rxGlobal";
 import * as persianLib from "../lib/persianLib";
@@ -36,6 +35,8 @@ import DefaultHeader from "../components/DefaultHeader";
 import VisitPlanResultForm from "../components/VisitPlanResultForm";
 import * as dp from "../lib/sqliteDp";
 import { openDatabase } from "expo-sqlite";
+import TouchableScale from "react-native-touchable-scale"; // https://github.com/kohver/react-native-touchable-scale
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function VisitPlanCustomers(props) {
   const db = openDatabase("db");
@@ -48,9 +49,8 @@ export default function VisitPlanCustomers(props) {
   const [instantFilterText, setInstantFilterText] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
-
   const reload = async () => {
-    console.log('reload started')
+    console.log("reload started");
     let pr = new Promise((resolve, reject) => {
       let query = `select * from VisitPlanCustomers where VisitPlanId = ${props.route.params.initialItem.Id}`;
       db.transaction((tx) => {
@@ -60,11 +60,11 @@ export default function VisitPlanCustomers(props) {
           (_, { rows: { _array } }) => {
             console.log(`☺☺ ${query} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
             for (let i = 0; i < _array.length; i++) _array[i].rxKey = i + 1;
-            console.log('set raw data')
+            console.log("set raw data");
             setRawData(_array);
-            console.log('set presentation data')
+            console.log("set presentation data");
             setPresentationalData(_array);
-            resolve('reload done');
+            resolve("reload done");
           },
           (transaction, error) => {
             alert(`☻☻ ${query} => ${error}`);
@@ -76,13 +76,13 @@ export default function VisitPlanCustomers(props) {
     return pr;
   };
 
-  const syncData = async ()=>{
+  const syncData = async () => {
     setIsLoading(true);
     await dp.syncVisitPlanData();
     await reload();
     setIsLoading(false);
     Alert.alert(
-      '',
+      "",
       globalLiterals.alerts.syncDone,
       [
         {
@@ -91,16 +91,16 @@ export default function VisitPlanCustomers(props) {
       ],
       { cancelable: true }
     );
-  }
+  };
 
-  const confirmAndSyncData=()=>{
+  const confirmAndSyncData = () => {
     Alert.alert(
-      '',
+      "",
       globalLiterals.Confirmations.syncData,
       [
         {
           text: globalLiterals.ButtonTexts.yes,
-          onPress: syncData
+          onPress: syncData,
         },
         {
           text: globalLiterals.ButtonTexts.no,
@@ -108,32 +108,30 @@ export default function VisitPlanCustomers(props) {
       ],
       { cancelable: true }
     );
-  }
-
+  };
 
   useEffect(() => {
- (async ()=>  { setIsLoading(true);
-    if (yoyo) await handleYoyo(yoyo);
-    console.log(await reload());
-    SetIsVisitModalVisible(false);
-    setIsLoading(false);
-  })()
+    (async () => {
+      setIsLoading(true);
+      if (yoyo) await handleYoyo(yoyo);
+      console.log(await reload());
+      SetIsVisitModalVisible(false);
+      setIsLoading(false);
+    })();
   }, [props]);
-  
+
   const { title } = props.route.params;
-  
-  const handleYoyo =async (yoyo) => {
+
+  const handleYoyo = async (yoyo) => {
     try {
-      console.log('handle yoyo : 1')
+      console.log("handle yoyo : 1");
       console.log(await dp.commitVisitPlanResult(yoyo));
-      console.log('handle yoyo : 2')
-      console.log('handle yoyo : 3')
-      
+      console.log("handle yoyo : 2");
+      console.log("handle yoyo : 3");
     } catch (error) {
       alert(globalLiterals.actionErrors.saveError);
     }
-    
-    
+
     // let rawClone = [...rawData];
     // rawClone[rawClone.findIndex((r) => r.rxKey === yoyo.rxKey)] = yoyo;
     // setRawData(rawClone);
@@ -244,22 +242,43 @@ export default function VisitPlanCustomers(props) {
         setisOnAdvancedFilter={setisOnAdvancedFilter}
         navigation={props.navigation}
       />
-
-      {/* <Modal visible={isVisitModalVisible} animationType='slide'>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={globalStyles.addModalContainer}>
-            <VisitPlanResultForm onSubmit={onVisitModalSubmit} onCancel={() => SetIsVisitModalVisible(false)} />
-          </View>
-        </TouchableWithoutFeedback>
-      </Modal> */}
-        <FlatList
-          keyExtractor={keyExtractor}
-          //TODO: get data from a method that performs instant and advanced filter
-          data={isLoading?null:presentationalData}
-          renderItem={renderItem}
-        />
-      
-
+      <Content>
+      {/* TODO: get data from a method that performs instant and advanced filter */}
+      {isLoading
+        ? null
+        : presentationalData.map((item, i) => (
+            <View
+              style={{
+                borderWidth: StyleSheet.hairlineWidth,
+                margin: StyleSheet.hairlineWidth,
+              }}>
+              <ListItem
+                onPress={() => {
+                  item.rxSync = 2;
+                  props.navigation.push("VisitPlanResultForm", {
+                    title: `فروشگاه ${item.Title}`,
+                    initialItem: item,
+                  });
+                }}
+                Component={TouchableScale}
+                checkmark={item.ResultStatus !== 2 }
+                key={item.rxKey}
+                friction={90} //
+                tension={100} // These props are passed to the parent component (here TouchableScale)
+                activeScale={0.95} //
+                linearGradientProps={{
+                  colors: ["#05668d", "#98c1d9"],
+                  start: { x: 0.5, y: 0 },
+                  end: { x: 0, y: 1 },
+                }}
+                title={item.Title}
+                titleStyle={{ color: "white", fontWeight: "bold" }}
+                subtitle={`تاریخ پویش ${persianLib.toShortDate(new Date(item.Owner))}`}
+                leftElement={<Entypo name='chevron-thin-left' size={globalSizes.icons.small} color={globalColors.palette.cream} />}
+              />
+            </View>
+          ))}
+          </Content>
       <Footer>
         <FooterTab style={{ justifyContent: "center", alignItems: "center" }}>
           {isLoading ? (
@@ -271,9 +290,10 @@ export default function VisitPlanCustomers(props) {
           )}
         </FooterTab>
         <FooterTab>
-          <Button onPress={() => setIsOnInstantFilter(true)}>
+          {/* todo: implement search and set button visible */}
+          {/* <Button onPress={() => setIsOnInstantFilter(true)}>
             <Feather name='search' size={globalSizes.icons.large} color={globalColors.palette.cream} />
-          </Button>
+          </Button> */}
         </FooterTab>
         <FooterTab style={{ alignSelf: "center", justifyContent: "center" }}>
           <Menu>

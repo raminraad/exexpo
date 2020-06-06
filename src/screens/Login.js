@@ -67,7 +67,9 @@ export default function Login({ navigation }) {
         } else {
           throw (result.d.Message);
         }
-      }).then(dp.pullAndCommitVisitPlanData).then(gotoHome)
+      })
+      // .then(dp.pullAndCommitVisitPlanData)
+      .then(gotoHome)
       .catch((error) => {
         setMessage(error);
       })

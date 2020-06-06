@@ -91,7 +91,7 @@ const DefaultHeader = ({
           <Button transparent style={styles.headerButton}
           onPress={() => navigation.goBack()}>
             <Ionicons
-              name="ios-arrow-back"
+              name="ios-return-left"
               size={globalSizes.icons.medium}
               color={globalColors.palette.cream}
             />

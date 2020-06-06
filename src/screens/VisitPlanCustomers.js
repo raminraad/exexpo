@@ -29,7 +29,7 @@ import { Feather } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import Swipeable from "react-native-gesture-handler/Swipeable";
-import { globalStyles, globalColors, globalSizes, menuOptionsCustomStyles } from "../lib/rxGlobal";
+import { globalStyles, globalColors, globalSizes, globalLiterals, menuOptionsCustomStyles } from "../lib/rxGlobal";
 import * as persianLib from "../lib/persianLib";
 import { Menu, MenuTrigger, MenuOptions, MenuOption } from "react-native-popup-menu";
 import DefaultHeader from "../components/DefaultHeader";
@@ -94,10 +94,15 @@ export default function VisitPlanCustomers(props) {
   const { title } = props.route.params;
   
   const handleYoyo =async (yoyo) => {
-    console.log('handle yoyo : 1')
-    console.log(await dp.commitVisitPlanResult(yoyo));
-    console.log('handle yoyo : 2')
-    console.log('handle yoyo : 3')
+    try {
+      console.log('handle yoyo : 1')
+      console.log(await dp.commitVisitPlanResult(yoyo));
+      console.log('handle yoyo : 2')
+      console.log('handle yoyo : 3')
+      
+    } catch (error) {
+      alert(globalLiterals.actionErrors.saveError);
+    }
     
     
     // let rawClone = [...rawData];

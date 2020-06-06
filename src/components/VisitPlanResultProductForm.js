@@ -11,6 +11,8 @@ import { Feather } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import * as yup from "yup";
+import Moment from 'moment';
+
 
 const visitPlanResultProductSchema = yup.object().shape({
   ProductSubId: yup.string(globalLiterals.validationErrors.required).required("انتخاب کالا الزامیست"),
@@ -45,6 +47,7 @@ export default function VisitPlanResultProductForm(props) {
       validationSchema={visitPlanResultProductSchema}
       onSubmit={(values, actions) => {
         actions.resetForm();
+        values.LastModifiedDate=Moment(new Date()).format('YYYY/MM/DD HH:mm:ss');
         onSubmit(values);
       }}>
       {(props) => (

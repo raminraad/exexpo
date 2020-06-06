@@ -351,93 +351,89 @@ export const select = async (tableName) => {
 };
 
 export const commitVisitPlanResult = async (VisitPlanCustomer) => {
-
-  let pr = new Promise((resolve,reject)=>{
-
-  
-
   try {
     console.log("☺☺ commit started..");
     const db = openDatabase("db");
-  
+
     let queries = [];
-  
-      let parameters = [
-        VisitPlanCustomer.ResultSummary,
-        VisitPlanCustomer.ResultStatus,
-        VisitPlanCustomer.ResultVisitedDate,
-        VisitPlanCustomer.LastModifiedDate,
-        VisitPlanCustomer.SyncStatus,
-        VisitPlanCustomer.Id,
-      ];
-  
-      let query = `UPDATE VisitPlanCustomers SET ResultSummary = ? , ResultStatus = ? , ResultVisitedDate = ? , LastModifiedDate = ? , SyncStatus = ? WHERE ID = ?`;
-      queries.push({ sql: `${query};`, args: parameters });
-  
-      for (const item of VisitPlanCustomer.details) {
-        if (item.rxSync === 2) {
-          console.log('rxSync === 2')
-          let query = `UPDATE VisitPlanResults SET ProductSubId = ? , SellPrice = ? , Weight = ? , ShelfVisibleCount = ?, LastModifiedDate = ? , SyncStatus = ? WHERE ID = ?`;
-          let parameters = [item.Id, item.ProductSubId, item.SellPrice, item.Weight, item.ShelfVisibleCount, item.LastModifiedDate, item.SyncStatus];
+
+    let parameters = [
+      VisitPlanCustomer.ResultSummary,
+      VisitPlanCustomer.ResultStatus,
+      VisitPlanCustomer.ResultVisitedDate,
+      VisitPlanCustomer.LastModifiedDate,
+      VisitPlanCustomer.SyncStatus,
+      VisitPlanCustomer.Id,
+    ];
+
+    let query = `UPDATE VisitPlanCustomers SET ResultSummary = ? , ResultStatus = ? , ResultVisitedDate = ? , LastModifiedDate = ? , SyncStatus = ? WHERE ID = ?`;
+    queries.push({ sql: `${query};`, args: parameters });
+
+    for (const item of VisitPlanCustomer.details) {
+      if (item.rxSync === 2) {
+        console.log("rxSync === 2");
+        let query = `UPDATE VisitPlanResults SET ProductSubId = ? , SellPrice = ? , Weight = ? , ShelfVisibleCount = ?, LastModifiedDate = ? , SyncStatus = ? WHERE ID = ?`;
+        let parameters = [item.ProductSubId, item.SellPrice, item.Weight, item.ShelfVisibleCount, item.LastModifiedDate, item.SyncStatus, item.Id];
         queries.push({ sql: `${query};`, args: parameters });
-  
-        } else if (item.rxSync === 1) {
-          console.log('rxSync === 1')
-  
-          let parameters = [
-            item.Id,
-            item.VisitPlanCustomerId,
-            item.ProductSubId,
-            item.SellPrice,
-            item.Weight,
-            item.HasInventory,
-            item.ShelfInventoryCount,
-            item.ShelfVisibleCount,
-            item.WarehouseInventoryCount,
-            item.VerbalPurchaseCount,
-            item.FactorPurchaseCount,
-            item.LastModifiedDate,
-            item.SyncStatus,
-          ];
-          let query = `insert into VisitPlanResults (Id,VisitPlanCustomerId,ProductSubId,SellPrice,Weight,HasInventory,ShelfInventoryCount,ShelfVisibleCount,WarehouseInventoryCount,VerbalPurchaseCount,FactorPurchaseCount,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?,?,?,?,?,?,?,?)`;
+      } else if (item.rxSync === 1) {
+        console.log("rxSync === 1");
+
+        let parameters = [
+          item.Id,
+          item.VisitPlanCustomerId,
+          item.ProductSubId,
+          item.SellPrice,
+          item.Weight,
+          item.HasInventory,
+          item.ShelfInventoryCount,
+          item.ShelfVisibleCount,
+          item.WarehouseInventoryCount,
+          item.VerbalPurchaseCount,
+          item.FactorPurchaseCount,
+          item.LastModifiedDate,
+          item.SyncStatus,
+        ];
+        let query = `insert into VisitPlanResults (Id,VisitPlanCustomerId,ProductSubId,SellPrice,Weight,HasInventory,ShelfInventoryCount,ShelfVisibleCount,WarehouseInventoryCount,VerbalPurchaseCount,FactorPurchaseCount,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?,?,?,?,?,?,?,?)`;
         queries.push({ sql: `${query};`, args: parameters });
-          
-        }
-        else if (item.rxSync === -1) {
-          console.log('rxSync === -1')
-  
-          let query = `DELETE FROM VisitPlanResults WHERE ID = ?`;
-          let parameters = [item.Id];
+      } else if (item.rxSync === -1) {
+        console.log("rxSync === -1");
+
+        let query = `DELETE FROM VisitPlanResults WHERE ID = ?`;
+        let parameters = [item.Id];
         queries.push({ sql: `${query};`, args: parameters });
-  
-        }
       }
-  
-      // db.exec(queries, false, () => {resolve('☺☺ commit queries executed successfully..');});
+    }
+    // console.log('777777777777777777777777777777777777777777')
+    // console.log(JSON.stringify(queries))
 
-      db.transaction((tx) => {
-        for (const query of queries) {
-          // console.log('#############################################');
-          // console.log(JSON.stringify(query));
-          // console.log(query.sql);
-          // console.log(query.args);
+    // db.transaction((tx) => {
+    for (const query of queries) {
+      console.log("8888888888888888888888888888888888888888888888");
+      console.log(JSON.stringify(query));
+      console.log(JSON.stringify(await executeSql(query.sql, query.args)));
 
-          tx.executeSql(
-            query.sql,
-            query.args,
-            (_, resultSet) => {
-              resolve(`☺☺ QUERY: ${JSON.stringify(query)} =>  RESULT: ${JSON.stringify(resultSet)}`);
-            },
-            (transaction, error) => console.log(`☻☻ ${JSON.stringify(query)} =>=> ${error}`)
-          );
-        }
-      });
-
+      // tx.executeSql(
+      //   query.sql,
+      //   query.args,
+      //   (_, resultSet) => {
+      //     resolve(`☺☺ QUERY: ${JSON.stringify(query)} =>  RESULT: ${JSON.stringify(resultSet)}`);
+      //   },
+      //   (transaction, error) => reject(`☻☻ ${JSON.stringify(query)} => ${error}`)
+      // );
+    }
+    return "COMMIT VISIT RESULTS DONE";
+    // });
   } catch (err) {
-    reject(err);
+    throw err;
   }
-  })
-  return pr;
+};
+
+const executeSql = async (sql, params = []) => {
+  return new Promise((resolve, reject) =>
+    db.transaction((tx) => {
+      tx.executeSql(sql, params, (_, result) => resolve(result), reject);
+    })
+  );
 };
 
 // todo: following are unused methods

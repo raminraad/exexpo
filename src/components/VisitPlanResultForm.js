@@ -80,7 +80,7 @@ export default function VisitPlanResultForm(props) {
   };
 
   useEffect(() => {
-    let rawDataQuery = `select *,res.Id as VisitPlanResultId, 0 as rxSync from VisitPlanResults res
+    let rawDataQuery = `select *,res.Id as Id, 0 as rxSync from VisitPlanResults res
      inner join ProductSub sub on res.ProductSubId = sub.Id
      inner join Product prd on prd.Id = sub.ProductId
      inner join ProductGroup grp on grp.Id =  prd.ProductGroupId

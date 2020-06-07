@@ -7,7 +7,7 @@ import Login from "./src/screens/Login";
 import SignUp from "./src/screens/SignUp";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { MenuProvider } from "react-native-popup-menu";
-import { HomeDrawerScreen } from "./src/screens/HomeDrawerScreen";
+import { DrawerNavigator } from "./src/screens/DrawerNavigator";
 import { AppLoading } from "expo";
 import { Container, Text } from "native-base";
 import * as Font from "expo-font";
@@ -45,7 +45,7 @@ export default class App extends React.Component {
         <MenuProvider>
           <NavigationContainer>
             <LoginStack.Navigator
-              initialRouteName="Login"
+              initialRouteName="Drawer"
               screenOptions={{
                 headerShown: false,
                 headerStyle: {
@@ -57,10 +57,9 @@ export default class App extends React.Component {
                 },
               }}
             >
-              <LoginStack.Screen name="Home" component={HomeDrawerScreen} />
+              <LoginStack.Screen name="Drawer" component={DrawerNavigator} />
               <LoginStack.Screen name="Login" component={Login} />
               <LoginStack.Screen name="SignUp" component={SignUp} />
-              <LoginStack.Screen name="VisitPlans" component={VisitPlans} />
               <LoginStack.Screen name="VisitPlanCustomers" component={VisitPlanCustomers} />
               <LoginStack.Screen name="VisitPlanResultForm" component={VisitPlanResultForm} />
             </LoginStack.Navigator>

@@ -25,7 +25,6 @@ export default function VisitPlanResultForm(props) {
   const db = openDatabase("db");
   let navigation = props.navigation;
   let initialItem = props.route.params.initialItem;
-  const [productsRawData, setProductsRawData] = useState([]);
   const [visitResultStatus, setVisitResultStatus] = useState(initialItem?.ResultStatus ?? null);
   const [rawData, setRawData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -106,10 +105,6 @@ console.log('5555555555555555555555555555555555555555555555')
      inner join ProductGroup grp on grp.Id =  prd.ProductGroupId
      where VisitPlanCustomerId = ${initialItem.Id}`;
 
-    let productsRawDataQuery = `select *,sub.Id as ProductSubId from ProductSub sub 
-     inner join Product prd on prd.Id = sub.ProductId
-     inner join ProductGroup grp on grp.Id =  prd.ProductGroupId`;
-
     db.transaction((tx) => {
       tx.executeSql(
         rawDataQuery,
@@ -123,18 +118,7 @@ console.log('5555555555555555555555555555555555555555555555')
         },
         (transaction, error) => console.log(`☻☻ ${rawDataQuery} =>=> ${error}`)
       );
-      tx.executeSql(
-        productsRawDataQuery,
-        [],
-        (_, { rows: { _array } }) => {
-          // console.log(`☺☺ PRODUCTS_RAW_DATA: ${productsRawDataQuery} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
-          //todo: replace with sql side indexing
-          for (let i = 0; i < _array.length; i++) _array[i].rxKey = i + 1;
-
-          setProductsRawData(_array);
-        },
-        (transaction, error) => console.log(`☻☻ ${productsRawDataQuery} =>=> ${error}`)
-      );
+      
     });
 
     setIsLoading(false);
@@ -205,7 +189,6 @@ console.log('5555555555555555555555555555555555555555555555')
         <View>
           <Modal visible={isProductModalVisible} animationType='slide'>
             <VisitPlanResultProductForm
-              productsRawData={productsRawData}
               onSubmit={onProductModalSubmit}
               onCancel={() => setIsProductModalVisible(false)}
               initialItem={productModalItem}

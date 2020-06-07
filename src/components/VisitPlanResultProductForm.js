@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { StyleSheet, View, TouchableOpacity, FlatList, TextInput, Button, ScrollView, KeyboardAvoidingView, Keyboard } from "react-native";
+import React, { useState, useEffect, useRef } from "react";
+import { StyleSheet, View, TouchableOpacity, FlatList, TextInput, Button, ScrollView, KeyboardAvoidingView, Keyboard, Alert } from "react-native";
 import { Formik, ErrorMessage } from "formik";
 import { RadioButton, Text, Divider } from "react-native-paper";
 import { Separator, Content, Container, Spinner } from "native-base";
@@ -12,6 +12,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import * as yup from "yup";
 import Moment from "moment";
+import { openDatabase } from "expo-sqlite";
 
 const visitPlanResultProductSchema = yup.object().shape({
   ProductSubId: yup.string(globalLiterals.validationErrors.required).required("انتخاب کالا الزامیست"),
@@ -21,31 +22,80 @@ const visitPlanResultProductSchema = yup.object().shape({
 });
 
 export default function VisitPlanResultProductForm(props) {
+  const db = openDatabase("db");
+
   let initialItem = props.initialItem;
   let onCancel = props.onCancel;
   let onSubmit = props.onSubmit;
-  let productsRawData = props.productsRawData;
   const [isOnProductSearch, setisOnProductSearch] = useState(false);
   const [searchText, setSearchText] = useState("");
-  const [isProductLoading, setIsProductLoading] = useState(false)
+  const [isProductLoading, setIsProductLoading] = useState(false);
   const [selectedItem, setSelectedItem] = useState(initialItem);
   const [isSearchBarFocused, setIsSearchBarFocused] = useState(false);
+  const productsRawData = useRef([]);
 
-  // useEffect(() => {
-  //   setPresentationData(
-  //     props.productsRawData.filter((item) => {
-  //       let trimmedSearchText = searchText.trim();
-  //       if (!trimmedSearchText) return false;
-  //       else return item.Title.includes(searchText) || item.Taste.includes(searchText);
-  //     })
-  //   );
-  // }, [searchText]);
-const loadProduct = ()=>{
-  setIsProductLoading(true);
-  setTimeout(() => {
-    setIsProductLoading(false);
-  }, 2000);
-}
+  useEffect(() => {
+    (async () => {
+      await loadProducts();
+    })();
+  }, []);
+
+  const loadProducts = async () => {
+    setIsProductLoading(true);
+
+    let productsRawDataQuery = `select *,sub.Id as ProductSubId from ProductSub sub 
+     inner join Product prd on prd.Id = sub.ProductId
+     inner join ProductGroup grp on grp.Id =  prd.ProductGroupId`;
+
+    return new Promise((resolve, reject) => {
+      db.transaction((tx) => {
+        tx.executeSql(
+          productsRawDataQuery,
+          [],
+          (_, { rows: { _array } }) => {
+            // console.log(`☺☺ PRODUCTS_RAW_DATA: ${productsRawDataQuery} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
+            //todo: replace with sql side indexing
+            for (let i = 0; i < _array.length; i++) _array[i].rxKey = i + 1;
+            productsRawData.current = _array;
+            resolve();
+          },
+          (transaction, error) => {
+            console.log(`☻☻ ${productsRawDataQuery} => ${error}`);
+            reject();
+          }
+        );
+      });
+    }).finally(() => {
+      setIsProductLoading(false);
+    });
+  };
+  const confirmAndPullProducts = () => {
+    Alert.alert(
+      "",
+      globalLiterals.Confirmations.reloadProducts,
+      [
+        {
+          text: globalLiterals.ButtonTexts.yes,
+          onPress: pullProducts
+        },
+        {
+          text: globalLiterals.ButtonTexts.no,
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+
+  const pullProducts=async ()=>{
+
+    setIsProductLoading(true);
+//fixme: implement real pullProducts
+    setTimeout(() => {
+      setIsProductLoading(false);
+    }, 5000);
+
+  }
+
   return (
     <Formik
       initialValues={selectedItem}
@@ -60,11 +110,21 @@ const loadProduct = ()=>{
           <ScrollView style={isSearchBarFocused ? styles.productListOnSearching : styles.productListOnNotSearching} keyboardShouldPersistTaps='never'>
             {isOnProductSearch || !selectedItem?.ProductSubId ? (
               <View>
-                <View style={{ flexDirection: "row",justifyContent:'center',alignItems:'center' }}>
-                <TouchableOpacity style={{width:48, backgroundColor:globalColors.btnAdd,aspectRatio:1/1,justifyContent:'center',alignItems:'center',borderRadius:10}} onPress={loadProduct}>
-                  {isProductLoading?<Spinner color='white' />:<Feather name='refresh-ccw' size={24} color='white'/>}
+                <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
+                  <TouchableOpacity
+                    style={{
+                      width: 48,
+                      backgroundColor: globalColors.btnReload,
+                      aspectRatio: 1 / 1,
+                      justifyContent: "center",
+                      alignItems: "center",
+                      borderRadius: 10,
+                    }}
+                    onPress={loadProducts}
+                    onLongPress={confirmAndPullProducts}>
+                    {isProductLoading ? <Spinner color='white' /> : <Feather name='refresh-ccw' size={24} color='white' />}
                   </TouchableOpacity>
-                  <View style={{ flex: 1 ,marginLeft:10}}>
+                  <View style={{ flex: 1, marginLeft: 10 }}>
                     <SearchBar
                       onFocus={() => setIsSearchBarFocused(true)}
                       onBlur={() => setIsSearchBarFocused(false)}
@@ -79,7 +139,7 @@ const loadProduct = ()=>{
                     />
                   </View>
                 </View>
-                {productsRawData
+                {productsRawData.current
                   .filter((item) => {
                     let trimmedSearchText = searchText.trim();
                     if (!trimmedSearchText) return false;

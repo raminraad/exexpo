@@ -21,12 +21,15 @@ export default function Login({ navigation }) {
 
   global.AcceptableDistanceForVisitor = 200;
   // XXX: start
+
   console.disableYellowBox = true;
-  // userInfo = {
-  //   userName: "offline",
-  //   passPhrase: "offline123",
-  //   iMEI: "offline",
-  // };
+
+  userInfo = {
+    userName: "offline",
+    passPhrase: "offline123",
+    iMEI: "offline",
+  };
+  
   //xxx: end
 
   const submit = async () => {
@@ -67,13 +70,10 @@ export default function Login({ navigation }) {
     setIsLoading(false);
   };
 
-  const gotoSignUp = () => {
-    navigation.navigate("SignUp");
-  };
-
   const goto = (screen) => {
+    navigation.navigate(screen);
     //clear the stack and set the Home screen as only screen
-    navigation.dispatch(StackActions.replace(screen,{title:'پویش فروش خرده'}));
+    // navigation.dispatch(StackActions.replace(screen,{title:'پویش فروش خرده'}));
   };
 
   return (
@@ -114,7 +114,7 @@ export default function Login({ navigation }) {
       </View>
       <View style={styles.signUpTextContainer}>
         <Text style={styles.signUpText}>هنوز حساب کاریری ندارید؟ </Text>
-        <TouchableOpacity onPress={gotoSignUp}>
+        <TouchableOpacity onPress={()=>{goto('SignUp')}}>
           <Text style={styles.signUpButton}>ایجاد حساب کاربری</Text>
         </TouchableOpacity>
       </View>

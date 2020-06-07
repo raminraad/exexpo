@@ -22,7 +22,8 @@ export const globalColors = {
   btnUpdate: "#3DA5D9",
   btnOk: "#5e60ce",
   btnCancel: "#979DAC",
-  drawerBackground: "#2f3e46",
+  btnReload: "#00a8e8",
+  drawerBackground: "#3a6ea5",
   drawerIcon: "#F1FAEE66",
   homeBackground: "#292f36",
   homeIconBackground1: "#7768ae",
@@ -296,6 +297,7 @@ export const globalLiterals = {
   Confirmations: {
     syncData: "ارسال و بروزرسانی داده ها انجام شود؟",
     deleteProduct: "کالای انتخاب شده حذف شود؟",
+    reloadProducts: "همگام سازی کالاها انجام گردد؟",
   },
   alerts: {
     syncDone: "ارسال و بروزرسانی داده ها با موفقیت انجام شد.",

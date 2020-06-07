@@ -29,8 +29,8 @@ export default function Login({ navigation }) {
   //xxx: end
 
   const submit = async () => {
-    setMessage("در حال بررسی اطلاعات کاربری..");
     setIsLoading(true);
+    setMessage("در حال بررسی اطلاعات کاربری..");
     var myHeaders = new Headers();
     myHeaders.append("Accept", "application/json");
     myHeaders.append("Content-Type", "application/json");
@@ -56,7 +56,7 @@ export default function Login({ navigation }) {
         //xxx:
         // .then(dp.pullAndCommitVisitPlanData)
         //xxx
-        .then(gotoHome)
+        .then(()=>goto('VisitPlans'))
         .catch((error) => {
           setMessage(error);
         });
@@ -70,9 +70,9 @@ export default function Login({ navigation }) {
     navigation.navigate("SignUp");
   };
 
-  const gotoHome = () => {
+  const goto = (screen) => {
     //clear the stack and set the Home screen as only screen
-    navigation.dispatch(StackActions.replace("Home"));
+    navigation.dispatch(StackActions.replace(screen,{title:'پویش فروش خرده'}));
   };
 
   return (
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
   messageContainer: {
     flexDirection: "row-reverse",
     justifyContent: "center",
-    marginVertical: 30,
+    marginVertical: 10,
   },
   message: {
     flexWrap: "wrap",

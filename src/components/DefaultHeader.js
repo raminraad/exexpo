@@ -32,19 +32,12 @@ import {
   menuOptionsCustomStyles,
 } from "../lib/rxGlobal";
 
-const DefaultHeader = ({
-  title,
-  isOnInstantFilter,
-  setIsOnInstantFilter,
-  setInstantFilterText,
-  setisOnAdvancedFilter,
-  navigation,
-}) => {
-  if (isOnInstantFilter) {
+const DefaultHeader = (props) => {
+  if (props.isOnInstantFilter) {
     return (
       <Header searchBar rounded>
         <Left style={styles.headerLeft}>
-          <Button transparent onPress={() => setIsOnInstantFilter(false)} >
+          <Button transparent onPress={() => props.setIsOnInstantFilter(false)} >
             <Feather
               name={"arrow-left"}
               color={globalColors.headerIcon}
@@ -58,7 +51,7 @@ const DefaultHeader = ({
             autoCorrect={false}
             autoFocus={true}
             maxLength={140}
-            onChangeText={(text) => setInstantFilterText(text)}
+            onChangeText={(text) => props.setInstantFilterText(text)}
           />
           <Feather
             name={"search"}
@@ -71,8 +64,8 @@ const DefaultHeader = ({
           <Button
             transparent
             onPress={() => {
-              setIsOnInstantFilter(false);
-              setisOnAdvancedFilter(true);
+              props.setIsOnInstantFilter(false);
+              props.setisOnAdvancedFilter(true);
             }}
           >
             <Feather
@@ -87,26 +80,27 @@ const DefaultHeader = ({
   } else {
     return (
       <Header>
+        {props.leftElementIsVisible===undefined||props.leftElementIsVisible?
         <Left style={styles.headerLeft}>
           <Button transparent style={styles.headerButton}
-          onPress={() => navigation.goBack()}>
+          onPress={() => props.navigation.goBack()}>
             <Ionicons
               name="ios-return-left"
               size={globalSizes.icons.medium}
               color={globalColors.palette.cream}
             />
           </Button>
-        </Left>
+        </Left>:null}
         <Body style={styles.headerBody}>
           {/* todo: remove upper Body style after finding out why the fucking title in not being centered! */}
-          <Title>{title}</Title>
+          <Title>{props.title}</Title>
         </Body>
         <Right style={styles.headerRight}>
           <Button transparent style={styles.headerButton}>
             <Icon
               name="menu"
               color={globalColors.palette.cream}
-              onPress={() => navigation.toggleDrawer()}
+              onPress={() => props.navigation.toggleDrawer()}
             />
           </Button>
         </Right>

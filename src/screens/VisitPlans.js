@@ -132,6 +132,7 @@ export default function VisitPlans({ navigation, route }) {
       setInstantFilterText={setInstantFilterText}
       setisOnAdvancedFilter={setisOnAdvancedFilter}
       navigation={navigation}
+      leftElementIsVisible={false}
     />
   );
   const renderFooter = () => (

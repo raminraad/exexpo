@@ -142,9 +142,14 @@ export default function VisitPlanResultProductForm(props) {
             />
             <Text style={globalStyles.addModalFieldValidationError}>{props.touched.ShelfVisibleCount && props.errors.ShelfVisibleCount}</Text>
           </View>
-          <Button title='تأیید' color={globalColors.btnAdd} onPress={props.handleSubmit} />
-          <View style={{ marginVertical: 5 }} />
-          <Button title='انصراف' color={globalColors.btnCancel} onPress={onCancel} />
+          <View style={{ marginVertical: 5 ,flexDirection:'row-reverse',justifyContent:'space-around'}} >
+                <TouchableOpacity style={{...globalStyles.buttonGroupButton, backgroundColor:globalColors.btnOk}} onPress={props.handleSubmit}>
+                  <Text style={{color:'white'}}>{globalLiterals.ButtonTexts.ok}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{...globalStyles.buttonGroupButton,backgroundColor:globalColors.btnCancel}} onPress={onCancel}>
+                  <Text style={{color:'white'}}>{globalLiterals.ButtonTexts.cancel}</Text>
+                </TouchableOpacity>
+        </View>
         </View>
       )}
     </Formik>

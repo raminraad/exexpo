@@ -78,7 +78,9 @@ export default function Login({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={{ justifyContent: "space-between", flex: 1 }}>
-        <Logo style={styles.logoContainer} />
+      <View style={styles.logoContainer}>
+        <Logo/>
+        </View>
         <View style={styles.inputContainer}>
           <TextInput
             style={[styles.inputAndButton, styles.input]}
@@ -121,10 +123,7 @@ export default function Login({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: globalColors.loginPageContainerBackground,
-    flex: 1,
-  },
-  logoContainer: {
+    backgroundColor: globalColors.loginScreenContainerBackground,
     flex: 1,
   },
   signUpTextContainer: {
@@ -134,7 +133,7 @@ const styles = StyleSheet.create({
     flexDirection: "row-reverse",
   },
   signUpText: {
-    color: "#FFFB",
+    color: globalColors.palette.glassyWhite,
     fontSize: 16,
   },
   signUpButton: {
@@ -142,8 +141,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "500",
   },
-  inputContainer: {
+  logoContainer: {
     flex: 1,
+    marginTop:70
+  },
+  inputContainer: {
+    flex: 2,
+    marginTop:50
   },
   inputAndButton: {
     height: 40,
@@ -153,13 +157,13 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   input: {
-    backgroundColor: globalColors.loginPageInputBackground,
+    backgroundColor: globalColors.loginScreenInputBackground,
     paddingHorizontal: 16,
     fontSize: 16,
     color: globalColors.palette.cream,
   },
   button: {
-    backgroundColor: globalColors.loginPageSubmitButtonBackground,
+    backgroundColor: globalColors.loginScreenSubmitButtonBackground,
   },
   buttonText: {
     flex: 1,

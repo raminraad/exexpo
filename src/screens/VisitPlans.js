@@ -178,7 +178,7 @@ export default function VisitPlans({ navigation, route }) {
         {presentationalData.map((item, i) => (
           
             <ListItem
-            containerStyle={[globalStyles.shadowedContainer,globalStyles.listItemContainer]}
+            containerStyle={[globalStyles.shadowedContainer,globalStyles.listItemHeaderContainer]}
               Component={TouchableScale}
               key={item.rxKey}
               friction={90} //

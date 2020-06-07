@@ -227,7 +227,7 @@ export default function VisitPlanResultForm(props) {
                 /> */}
 
                   <ListItem
-                    containerStyle={[globalStyles.shadowedContainer, globalStyles.listItemContainer]}
+                    containerStyle={[globalStyles.shadowedContainer, globalStyles.listItemHeaderContainer]}
                     Component={TouchableScale}
                     key={item.rxKey}
                     friction={90} //

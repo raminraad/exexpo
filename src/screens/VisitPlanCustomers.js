@@ -158,26 +158,65 @@ export default function VisitPlanCustomers(props) {
       navigation={props.navigation}
     />
   );
-  const renderItem = (item, i) => (
+  const renderItemHeader = (item,expanded) => {return (
     <ListItem
-      containerStyle={[globalStyles.shadowedContainer, globalStyles.listItemContainer]}
-      Component={TouchableScale}
+    chevron={
+      <Feather
+            name={expanded ? "chevrons-down" : "chevrons-left"}
+            size={24}
+            style={globalStyles.listItemHeaderCollapseIcon}
+            color={expanded ? globalColors.listItemCollapseIcon : globalColors.listItemExpandIcon}
+          />
+    }
+      containerStyle={[globalStyles.shadowedContainer, globalStyles.listItemHeaderContainer]}
       checkmark={item.ResultStatus !== 2}
       key={item.rxKey}
-      friction={90} //
-      tension={100} // These props are passed to the parent component (here TouchableScale)
-      activeScale={0.95} //
       linearGradientProps={globalColors.gradients.listItem}
       title={item.Title}
       titleStyle={globalStyles.listItemTitle}
-      subtitle={`تاریخ پویش ${persianLib.toShortDate(new Date(item.Owner))}`}
+      subtitleStyle={{...globalStyles.listItemTitle,color:globalColors.listItemSubtitleText}}
+      subtitle={expanded?null:<Text style={{...globalStyles.listItemContentFieldData,color:globalColors.listItemSubtitleText,fontSize:12}}>{item.Address ? item.Address : "وارد نشده"}</Text>}
       leftElement={
         <TouchableOpacity style={{ alignSelf: "stretch", flex: 1, width: 48, justifyContent: "center" }} onPress={() => onListItemNavigateForward(item)}>
           <Entypo name='chevron-thin-left' size={globalSizes.icons.small} color={globalColors.listItemTitleText} />
         </TouchableOpacity>
       }
     />
-  );
+  )};
+
+  const renderItemContent = (item) => {
+    return (
+      <View style={[globalStyles.listItemContentContainer]}>
+        <View style={globalStyles.listItemContentRow}>
+          <Feather name='hash' size={globalSizes.icons.small} color={globalColors.listItemSubtitleIcon} />
+          <Text style={globalStyles.listItemContentFieldData}>{item?.Code ?? "وارد نشده"}</Text>
+        </View>
+
+        <View style={globalStyles.listItemContentRow}>
+          <Feather name='user' size={globalSizes.icons.small} color={globalColors.listItemSubtitleIcon} />
+          <Text style={globalStyles.listItemContentFieldData}>{item.Owner ? item.Owner : "وارد نشده"}</Text>
+        </View>
+
+        <View style={globalStyles.listItemContentRow}>
+            <Feather name='map-pin' size={globalSizes.icons.small} color={globalColors.listItemSubtitleIcon} />
+            <Text style={globalStyles.listItemContentFieldData}>{item.Address ? item.Address : "وارد نشده"}</Text>
+          </View>
+
+        <View style={globalStyles.listItemContentRow}>
+          <Feather name='phone' size={globalSizes.icons.small} color={globalColors.listItemSubtitleIcon} />
+          <Text style={globalStyles.listItemContentFieldData}>{item.Phone ? item.Phone : "وارد نشده"}</Text>
+        </View>
+
+        <View style={globalStyles.listItemContentRow}>
+          <Feather name='smartphone' size={globalSizes.icons.small} color={globalColors.listItemSubtitleIcon} />
+          <Text style={globalStyles.listItemContentFieldData}>{item.Cell ? item.Cell : "وارد نشده"}</Text>
+        </View>
+      </View>
+    );
+  };
+
+
+
   const renderItem0 = ({ item, index }) => {
     let renderItemHeader = (item, expanded) => {
       return (
@@ -270,14 +309,20 @@ export default function VisitPlanCustomers(props) {
       </Swipeable>
     );
   };
-
+  const dataArray = [
+    { title: "First Element", content: "Lorem ipsum dolor sit amet" },
+    { title: "Second Element", content: "Lorem ipsum dolor sit amet" },
+    { title: "Third Element", content: "Lorem ipsum dolor sit amet" }
+  ];
   return (
     <Container backgroundColor={globalColors.screenContainer}>
       {renderHeader()}
       <Content>
         {/* TODO: get data from a method that performs instant and advanced filter */}
 
-        {isLoading ? null : presentationalData.map((item, i) => renderItem(item, i))}
+        {isLoading ? null : <View style={{flexDirection:'column'}}>
+          <Accordion expanded dataArray={presentationalData} renderContent={renderItemContent} renderHeader={renderItemHeader} />
+        </View>}
       </Content>
       <Footer>
         <FooterTab style={{ justifyContent: "center", alignItems: "center" }}>

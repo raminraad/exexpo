@@ -71,7 +71,7 @@ export default function VisitPlans({ navigation, route }) {
   const reload = async () => {
     const db = openDatabase("db");
     let pr = new Promise((resolve, reject) => {
-      let query = `select * from UserVisitPlan `;
+      let query = `select * from UserVisitPlan limit 1`;
       db.transaction((tx) => {
         tx.executeSql(
           query,

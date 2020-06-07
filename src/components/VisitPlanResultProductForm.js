@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, View, TouchableOpacity, FlatList, TextInput, Button, ScrollView, KeyboardAvoidingView, Keyboard } from "react-native";
 import { Formik, ErrorMessage } from "formik";
 import { RadioButton, Text, Divider } from "react-native-paper";
-import { Separator, Content, Container } from "native-base";
+import { Separator, Content, Container, Spinner } from "native-base";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import { globalStyles, globalColors, globalSizes, globalLiterals } from "../lib/rxGlobal";
 import { Icon, PricingCard, SearchBar, ListItem } from "react-native-elements";
@@ -11,8 +11,7 @@ import { Feather } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import * as yup from "yup";
-import Moment from 'moment';
-
+import Moment from "moment";
 
 const visitPlanResultProductSchema = yup.object().shape({
   ProductSubId: yup.string(globalLiterals.validationErrors.required).required("انتخاب کالا الزامیست"),
@@ -25,50 +24,68 @@ export default function VisitPlanResultProductForm(props) {
   let initialItem = props.initialItem;
   let onCancel = props.onCancel;
   let onSubmit = props.onSubmit;
+  let productsRawData = props.productsRawData;
   const [isOnProductSearch, setisOnProductSearch] = useState(false);
   const [searchText, setSearchText] = useState("");
-  const [presentationData, setPresentationData] = useState([]);
+  const [isProductLoading, setIsProductLoading] = useState(false)
   const [selectedItem, setSelectedItem] = useState(initialItem);
   const [isSearchBarFocused, setIsSearchBarFocused] = useState(false);
 
-  useEffect(() => {
-    setPresentationData(
-      props.productsRawData.filter((item) => {
-        let trimmedSearchText = searchText.trim();
-        if (!trimmedSearchText) return false;
-        else return item.Title.includes(searchText) || item.Taste.includes(searchText);
-      })
-    );
-  }, [searchText]);
-
+  // useEffect(() => {
+  //   setPresentationData(
+  //     props.productsRawData.filter((item) => {
+  //       let trimmedSearchText = searchText.trim();
+  //       if (!trimmedSearchText) return false;
+  //       else return item.Title.includes(searchText) || item.Taste.includes(searchText);
+  //     })
+  //   );
+  // }, [searchText]);
+const loadProduct = ()=>{
+  setIsProductLoading(true);
+  setTimeout(() => {
+    setIsProductLoading(false);
+  }, 2000);
+}
   return (
     <Formik
       initialValues={selectedItem}
       validationSchema={visitPlanResultProductSchema}
       onSubmit={(values, actions) => {
         actions.resetForm();
-        values.LastModifiedDate=Moment(new Date()).format('YYYY/MM/DD HH:mm:ss');
+        values.LastModifiedDate = Moment(new Date()).format("YYYY/MM/DD HH:mm:ss");
         onSubmit(values);
       }}>
       {(props) => (
-        <View style={{...globalStyles.container,padding:40}}>
+        <View style={{ ...globalStyles.container, padding: 40 }}>
           <ScrollView style={isSearchBarFocused ? styles.productListOnSearching : styles.productListOnNotSearching} keyboardShouldPersistTaps='never'>
             {isOnProductSearch || !selectedItem?.ProductSubId ? (
               <View>
-                <View style={{ borderWidth: 0.5, marginVertical: 15, borderRadius: 2 }}>
-                  <SearchBar
-                    onFocus={() => setIsSearchBarFocused(true)}
-                    onBlur={() => setIsSearchBarFocused(false)}
-                    cancelIcon={<FontAwesome5 name='arrow-left' size={24} color={globalColors.searchBarIcon} />}
-                    platform='android'
-                    lightTheme
-                    placeholder='جستجوی محصول...'
-                    onChangeText={(val) => {
-                      setSearchText(val);
-                    }}
-                    value={searchText}
-                  />
-                  {presentationData.map((item, i) => (
+                <View style={{ flexDirection: "row",justifyContent:'center',alignItems:'center' }}>
+                <TouchableOpacity style={{width:48, backgroundColor:globalColors.btnAdd,aspectRatio:1/1,justifyContent:'center',alignItems:'center',borderRadius:10}} onPress={loadProduct}>
+                  {isProductLoading?<Spinner color='white' />:<Feather name='refresh-ccw' size={24} color='white'/>}
+                  </TouchableOpacity>
+                  <View style={{ flex: 1 ,marginLeft:10}}>
+                    <SearchBar
+                      onFocus={() => setIsSearchBarFocused(true)}
+                      onBlur={() => setIsSearchBarFocused(false)}
+                      cancelIcon={<FontAwesome5 name='arrow-left' size={24} color={globalColors.searchBarIcon} />}
+                      platform='default'
+                      lightTheme
+                      placeholder='جستجوی محصول...'
+                      onChangeText={(val) => {
+                        setSearchText(val);
+                      }}
+                      value={searchText}
+                    />
+                  </View>
+                </View>
+                {productsRawData
+                  .filter((item) => {
+                    let trimmedSearchText = searchText.trim();
+                    if (!trimmedSearchText) return false;
+                    else return item.Title.includes(searchText) || item.Taste.includes(searchText);
+                  })
+                  .map((item, i) => (
                     <ListItem
                       containerStyle={{ backgroundColor: globalColors.listItemHeaderContainer }}
                       key={item.ProductSubId.toString()}
@@ -89,7 +106,7 @@ export default function VisitPlanResultProductForm(props) {
                       }
                     />
                   ))}
-                </View>
+
                 <Text style={globalStyles.addModalFieldValidationError}>{props.touched.ProductSubId && props.errors.ProductSubId}</Text>
               </View>
             ) : (
@@ -109,6 +126,7 @@ export default function VisitPlanResultProductForm(props) {
           <View style={globalStyles.addModalFieldContainer}>
             <Text style={{ ...globalStyles.addModalFieldTitle, flex: 0 }}>قیمت فروش</Text>
             <TextInput
+              maxLength={8}
               style={globalStyles.addModalFieldInput}
               placeholder='قیمت فروش محصول'
               keyboardType='number-pad'
@@ -121,6 +139,7 @@ export default function VisitPlanResultProductForm(props) {
           <View style={globalStyles.addModalFieldContainer}>
             <Text style={{ ...globalStyles.addModalFieldTitle, flex: 0 }}>وزن (گرم) </Text>
             <TextInput
+              maxLength={8}
               style={globalStyles.addModalFieldInput}
               placeholder='وزن محصول (گرم) '
               keyboardType='number-pad'
@@ -133,6 +152,7 @@ export default function VisitPlanResultProductForm(props) {
           <View style={globalStyles.addModalFieldContainer}>
             <Text style={{ ...globalStyles.addModalFieldTitle, flex: 0 }}>موجودی قابل مشاهده</Text>
             <TextInput
+              maxLength={8}
               style={globalStyles.addModalFieldInput}
               placeholder='موجودی قابل مشاهده'
               keyboardType='number-pad'
@@ -142,14 +162,14 @@ export default function VisitPlanResultProductForm(props) {
             />
             <Text style={globalStyles.addModalFieldValidationError}>{props.touched.ShelfVisibleCount && props.errors.ShelfVisibleCount}</Text>
           </View>
-          <View style={{ marginVertical: 5 ,flexDirection:'row-reverse',justifyContent:'space-around'}} >
-                <TouchableOpacity style={{...globalStyles.buttonGroupButton, backgroundColor:globalColors.btnOk}} onPress={props.handleSubmit}>
-                  <Text style={{color:'white'}}>{globalLiterals.ButtonTexts.ok}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{...globalStyles.buttonGroupButton,backgroundColor:globalColors.btnCancel}} onPress={onCancel}>
-                  <Text style={{color:'white'}}>{globalLiterals.ButtonTexts.cancel}</Text>
-                </TouchableOpacity>
-        </View>
+          <View style={{ marginVertical: 5, flexDirection: "row-reverse", justifyContent: "space-around" }}>
+            <TouchableOpacity style={{ ...globalStyles.buttonGroupButton, backgroundColor: globalColors.btnOk }} onPress={props.handleSubmit}>
+              <Text style={{ color: "white" }}>{globalLiterals.ButtonTexts.ok}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{ ...globalStyles.buttonGroupButton, backgroundColor: globalColors.btnCancel }} onPress={onCancel}>
+              <Text style={{ color: "white" }}>{globalLiterals.ButtonTexts.cancel}</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       )}
     </Formik>

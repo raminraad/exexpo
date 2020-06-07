@@ -22,11 +22,11 @@ export default function Login({ navigation }) {
   global.AcceptableDistanceForVisitor = null;
   // XXX: start
   console.disableYellowBox = true;
-  userInfo = {
-    userName: "offline",
-    passPhrase: "offline123",
-    iMEI: "offline",
-  };
+  // userInfo = {
+  //   userName: "offline",
+  //   passPhrase: "offline123",
+  //   iMEI: "offline",
+  // };
   //xxx: end
 
   const submit = async () => {
@@ -55,7 +55,7 @@ export default function Login({ navigation }) {
           }
         })
         //xxx:
-        // .then(dp.pullAndCommitVisitPlanData)
+        .then(dp.pullAndCommitVisitPlanData)
         //xxx
         .then(()=>goto('VisitPlans'))
         .catch((error) => {

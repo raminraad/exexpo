@@ -38,7 +38,7 @@ export default function VisitPlanResultForm(props) {
     }
 
     let userLocation = await Location.getCurrentPositionAsync({});
-
+console.log('5555555555555555555555555555555555555555555555')
     let p1 = { latitude: userLocation.coords.latitude, longitude: userLocation.coords.longitude };
     let p2 = { latitude: lat, longitude: long };
     console.log(p1);
@@ -255,6 +255,16 @@ export default function VisitPlanResultForm(props) {
               } else {
                 //fixme: replace alert with a nice one
                 alert(globalLiterals.validationErrors.notInGeoRange);
+                Alert.alert(
+                  "",
+                  globalLiterals.alerts.notInGeoRange,
+                  [
+                    {
+                      text: globalLiterals.ButtonTexts.ok,
+                    },
+                  ],
+                  { cancelable: true }
+                );
               }
             }}>
             {(props) => (

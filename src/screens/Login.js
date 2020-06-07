@@ -19,7 +19,7 @@ export default function Login({ navigation }) {
     iMEI: "64564646465465454",
   };
 
-  global.AcceptableDistanceForVisitor = null;
+  global.AcceptableDistanceForVisitor = 200;
   // XXX: start
   console.disableYellowBox = true;
   // userInfo = {

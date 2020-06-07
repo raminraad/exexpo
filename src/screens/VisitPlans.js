@@ -98,6 +98,16 @@ export default function VisitPlans({ navigation, route }) {
     await dp.syncVisitPlanData();
     await reload();
     setIsLoading(false);
+    Alert.alert(
+      "",
+      globalLiterals.alerts.syncDone,
+      [
+        {
+          text: globalLiterals.ButtonTexts.ok,
+        },
+      ],
+      { cancelable: true }
+    );
   };
 
   const confirmAndSyncData = () => {

@@ -117,6 +117,13 @@ export default function VisitPlans({ navigation, route }) {
     );
   };
 
+  const onListItemNavigateForward = (item)=>{
+    navigation.push("VisitPlanCustomers", {
+      title: `مشتریان هدف در تاریخ ${persianLib.toShortDate(new Date(item.OperationDate))}`,
+      initialItem: item,
+    })
+  };
+
   const renderHeader = () => (
     <DefaultHeader
       title={title}
@@ -157,7 +164,7 @@ export default function VisitPlans({ navigation, route }) {
     </Footer>
   );
   return (
-    <Container>
+    <Container backgroundColor={globalColors.screenContainer}>
       <Content>
         {renderHeader()}
         {/* <FlatList
@@ -168,34 +175,25 @@ export default function VisitPlans({ navigation, route }) {
         /> */}
 
         {presentationalData.map((item, i) => (
-          <View
-            style={{
-              borderWidth: StyleSheet.hairlineWidth,
-              margin: StyleSheet.hairlineWidth,
-            }}>
+          
             <ListItem
-              onPress={() =>
-                navigation.push("VisitPlanCustomers", {
-                  title: `مشتریان هدف در تاریخ ${persianLib.toShortDate(new Date(item.OperationDate))}`,
-                  initialItem: item,
-                })
-              }
+            containerStyle={[globalStyles.shadowedContainer,globalStyles.listItemContainer]}
               Component={TouchableScale}
               key={item.rxKey}
               friction={90} //
               tension={100} // These props are passed to the parent component (here TouchableScale)
               activeScale={0.95} //
-              linearGradientProps={{
-                colors: ["#05668d", "#98c1d9"],
-                start: { x: 0.5, y: 0 },
-                end: { x: 0, y: 1 },
-              }}
+              linearGradientProps={globalColors.gradients.listItem}
               title={item.Summary}
-              titleStyle={{ color: "white", fontWeight: "bold" }}
+              titleStyle={globalStyles.listItemTitle}
               subtitle={`تاریخ پویش ${persianLib.toShortDate(new Date(item.OperationDate))}`}
-              leftElement={<Entypo name='chevron-thin-left' size={globalSizes.icons.small} color={globalColors.palette.cream}/>}
+              leftElement={<Entypo 
+                name='chevron-thin-left' 
+                size={globalSizes.icons.small} 
+                color={globalColors.listItemTitle} 
+                onPress={()=>onListItemNavigateForward(item)}/>}
             />
-          </View>
+          
         ))}
       </Content>
       {renderFooter()}

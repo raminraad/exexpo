@@ -9,6 +9,13 @@ export const globalColors = {
     dirtyNavy: "#1c313a",
     dimBlue: "#0582ca",
   },
+  gradients: {
+    listItem: {
+      colors: ["#e9ecef", "#f8f9fa"],
+      start: { x: 0, y: 0 },
+      end: { x: 0, y: 1 },
+    },
+  },
   btnAdd: "#00C49A",
   btnDelete: "#e55934",
   btnUpdate: "#3DA5D9",
@@ -39,7 +46,9 @@ export const globalColors = {
   listItemHeaderContainer: "#f1f5f7",
   listItemContentContainer: "#FFFFFF",
   listItemSwipeLeftContainer: "#e6e6eaaa",
+  listItemTitle: "#6c757d",
   addModalFieldValidationErrorText: "#e71d36",
+  screenContainer: "#f8f9fa",
 };
 
 export const globalSizes = {
@@ -126,6 +135,11 @@ export const globalStyles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "600",
   },
+  listItemContainer: {
+    borderRadius: 15,
+    marginVertical: 6,
+    marginHorizontal: 15,
+  },
   listItemContentContainer: {
     paddingRight: 40,
     paddingVertical: 10,
@@ -153,17 +167,16 @@ export const globalStyles = StyleSheet.create({
     flexDirection: "row",
     paddingLeft: 10,
   },
+  listItemTitle: {
+    color: globalColors.listItemTitle,
+    fontWeight: "bold",
+  },
   shadowedContainer: {
     borderRadius: 2,
-    borderColor: "#ddd",
-    borderBottomWidth: 0,
-    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
+    shadowOpacity: 1,
     shadowRadius: 2,
-    elevation: 6,
-    marginHorizontal: 5,
-    marginVertical: 2,
+    elevation: 4,
   },
   addModalContainer: {
     padding: 50,
@@ -192,7 +205,7 @@ export const globalStyles = StyleSheet.create({
     textAlign: "right",
   },
   addModalFieldValidationError: {
-    textAlign:'right',
+    textAlign: "right",
     color: globalColors.addModalFieldValidationErrorText,
     marginRight: 20,
   },
@@ -226,28 +239,29 @@ export const menuOptionsCustomStyles = {
 };
 
 export const globalLiterals = {
-  ButtonTexts:{
-    yes:'بلی',
-    no:'خیر',
-    ok:'تأیید',
-    cancel:'انصراف',
+  ButtonTexts: {
+    yes: "بلی",
+    no: "خیر",
+    ok: "تأیید",
+    cancel: "انصراف",
   },
-  Titles:{
-    syncData:'بروزرسانی داده ها',
+  Titles: {
+    syncData: "بروزرسانی داده ها",
   },
   validationErrors: {
     required: "وارد کردن این فیلد الزامیست",
     notNumber: "مقدار این فیلد میبایست عددی باشد",
-    notInGeoRange:"فاصله شما از مقدار تعیین شده بیشتر است. لطفاً به محدوده فروشگاه مورد نظر برگشته و مجددا تلاش فرمایید."
+    notInGeoRange: "فاصله شما از مقدار تعیین شده بیشتر است. لطفاً به محدوده فروشگاه مورد نظر برگشته و مجددا تلاش فرمایید.",
   },
-  actionErrors:{
-    saveError:"ذخیره اطلاعات با خطا مواجه شد. لطفاً دوباره تلاش نمایید"
+  actionAndStateErrors: {
+    saveError: "ذخیره اطلاعات با خطا مواجه شد. لطفاً دوباره تلاش نمایید",
+    NoInternetError: "اتصال به اینترنت برقرار نیست",
   },
-  Confirmations:{
-    syncData:'ارسال و بروزرسانی داده ها انجام شود؟',
-    deleteProduct:'کالای انتخاب شده حذف شود؟',
+  Confirmations: {
+    syncData: "ارسال و بروزرسانی داده ها انجام شود؟",
+    deleteProduct: "کالای انتخاب شده حذف شود؟",
   },
-  alerts:{
-    syncDone:'ارسال و بروزرسانی داده ها با موفقیت انجام شد.',
-  }
+  alerts: {
+    syncDone: "ارسال و بروزرسانی داده ها با موفقیت انجام شد.",
+  },
 };

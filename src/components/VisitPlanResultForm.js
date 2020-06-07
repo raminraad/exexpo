@@ -5,18 +5,21 @@ import { Overlay, ListItem, PricingCard } from "react-native-elements";
 import { Formik } from "formik";
 import { RadioButton, Text, Divider } from "react-native-paper";
 import Swipeable from "react-native-gesture-handler/Swipeable";
-import { globalStyles, globalColors, globalSizes , globalLiterals} from "../lib/rxGlobal";
+import { globalStyles, globalColors, globalSizes, globalLiterals } from "../lib/rxGlobal";
 import { Icon, SearchBar } from "react-native-elements";
 import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
+import { Entypo } from "@expo/vector-icons";
 import { KeyboardAvoidingView } from "react-native";
 import VisitPlanResultProductForm from "./VisitPlanResultProductForm";
 import { openDatabase } from "expo-sqlite";
 import * as Location from "expo-location";
+import TouchableScale from "react-native-touchable-scale"; // https://github.com/kohver/react-native-touchable-scale
 import { getDistance, getPreciseDistance } from "geolib";
-import Moment from 'moment';
+import Moment from "moment";
 
 export default function VisitPlanResultForm(props) {
   const db = openDatabase("db");
@@ -43,8 +46,8 @@ export default function VisitPlanResultForm(props) {
     let distance = await getPreciseDistance(p1, p2, 1);
 
     console.log(distance);
-    
-    return (userLocation && distance <= global.AcceptableDistanceForVisitor) ;
+
+    return userLocation && distance <= global.AcceptableDistanceForVisitor;
   };
 
   const onProductModalSubmit = (item) => {
@@ -69,12 +72,12 @@ export default function VisitPlanResultForm(props) {
 
   const confirmAndDelete = (item) => {
     Alert.alert(
-      '',
+      "",
       globalLiterals.Confirmations.deleteProduct,
       [
         {
           text: globalLiterals.ButtonTexts.yes,
-          onPress: ()=>onListItemDelete(item)
+          onPress: () => onListItemDelete(item),
         },
         {
           text: globalLiterals.ButtonTexts.no,
@@ -83,7 +86,7 @@ export default function VisitPlanResultForm(props) {
       { cancelable: true }
     );
   };
-  
+
   const onListItemDelete = (item) => {
     let rawClone = [...rawData];
     let index = rawClone.findIndex((r) => r.rxKey === item.rxKey);
@@ -95,7 +98,6 @@ export default function VisitPlanResultForm(props) {
     }
     setRawData(rawClone);
   };
-
 
   useEffect(() => {
     let rawDataQuery = `select *,res.Id as Id, 0 as rxSync from VisitPlanResults res
@@ -139,6 +141,22 @@ export default function VisitPlanResultForm(props) {
     return () => setRawData([]);
   }, []);
 
+  const renderSubtitle = (item) => (
+    <View style={styles.listItemSubtitleContainer}>
+      <View style={styles.listItemSubtitleItem}>
+        <FontAwesome name='money' size={globalSizes.icons.small} color={globalColors.listItemSubtitleIcon} />
+        <Text style={styles.listItemSubtitleText}>{item.SellPrice} ريال</Text>
+      </View>
+      <View style={styles.listItemSubtitleItem}>
+        <FontAwesome5 name='weight-hanging' size={globalSizes.icons.small} color={globalColors.listItemSubtitleIcon} />
+        <Text style={styles.listItemSubtitleText}>{item.Weight} گرم</Text>
+      </View>
+      <View style={styles.listItemSubtitleItem}>
+        <FontAwesome5 name='eye' size={globalSizes.icons.small} color={globalColors.listItemSubtitleIcon} />
+        <Text style={styles.listItemSubtitleText}>{item.ShelfVisibleCount}</Text>
+      </View>
+    </View>
+  );
   const swipeLeftAction = (item) => (
     <View style={globalStyles.listItemSwipeLeftContainer}>
       <FontAwesome5 name='trash-alt' onPress={() => confirmAndDelete(item)} size={globalSizes.icons.medium} color={globalColors.btnDelete} />
@@ -184,7 +202,7 @@ export default function VisitPlanResultForm(props) {
                     SellPrice: "",
                     Weight: "",
                     ShelfVisibleCount: "",
-                    VisitPlanCustomerId:initialItem.Id
+                    VisitPlanCustomerId: initialItem.Id,
                   });
                   setIsProductModalVisible(true);
                 }}>
@@ -195,39 +213,60 @@ export default function VisitPlanResultForm(props) {
           {isLoading ? (
             <Spinner style={{ height: "100%" }} color='grey' size={50} />
           ) : (
-            rawData.filter(r=>r.rxSync!==-1).map((item, index) => (
-              <Swipeable renderLeftActions={() => swipeLeftAction(item)} key={index.toString()}>
-                <ListItem
+            rawData
+              .filter((r) => r.rxSync !== -1)
+              .map((item, index) => (
+                <Swipeable renderLeftActions={() => swipeLeftAction(item)} key={index.toString()}>
+                  {/* <ListItem
                   key={index.toString()}
                   containerStyle={{ backgroundColor: globalColors.listItemHeaderContainer, alignSelf: "stretch" }}
                   // fixme: fix productGroup multi layering
                   title={`${item.Title}  ⟸  ${item.Taste}`}
                   subtitle={`     قیمت فروش ${item.SellPrice}ريال      وزن محصول (گرم) ${item.Weight}      موجودی قابل مشاهده ${item.ShelfVisibleCount}`}
                   bottomDivider
-                />
-              </Swipeable>
-            ))
+                /> */}
+
+                  <ListItem
+                    containerStyle={[globalStyles.shadowedContainer, globalStyles.listItemContainer]}
+                    Component={TouchableScale}
+                    key={item.rxKey}
+                    friction={90} //
+                    tension={100} // These props are passed to the parent component (here TouchableScale)
+                    activeScale={0.95} //
+                    linearGradientProps={globalColors.gradients.listItem}
+                    title={`${item.Title}  ⟸  ${item.Taste}`}
+                    titleStyle={globalStyles.listItemTitle}
+                    subtitle={() => renderSubtitle(item)}
+                    leftElement={
+                      <Entypo
+                        name='chevron-thin-left'
+                        size={globalSizes.icons.small}
+                        color={globalColors.listItemTitleText}
+                        onPress={() => {
+                          onListItemNavigateForward(item);
+                        }}
+                      />
+                    }
+                  />
+                </Swipeable>
+              ))
           )}
           <Formik
             initialValues={initialItem}
             onSubmit={async (values, actions) => {
-              
-              
-              
-              if (!global.AcceptableDistanceForVisitor || await isGeoLocationAcceptable(initialItem.Lat, initialItem.Long)) {
-                console.log('submitting')
+              if (!global.AcceptableDistanceForVisitor || (await isGeoLocationAcceptable(initialItem.Lat, initialItem.Long))) {
+                console.log("submitting");
                 actions.resetForm();
                 values.details = rawData;
-                values.LastModifiedDate=Moment(new Date()).format('YYYY/MM/DD HH:mm:ss');
-                values.ResultVisitedDate=Moment(new Date()).format('YYYY/MM/DD HH:mm:ss');
-                values.SyncStatus=2;
-                values.rxSync=2;
+                values.LastModifiedDate = Moment(new Date()).format("YYYY/MM/DD HH:mm:ss");
+                values.ResultVisitedDate = Moment(new Date()).format("YYYY/MM/DD HH:mm:ss");
+                values.SyncStatus = 2;
+                values.rxSync = 2;
                 navigation.navigate("VisitPlanCustomers", { yoyo: values });
               } else {
                 //fixme: replace alert with a nice one
                 alert(globalLiterals.validationErrors.notInGeoRange);
               }
-
             }}>
             {(props) => (
               <View>
@@ -283,3 +322,19 @@ export default function VisitPlanResultForm(props) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  listItemSubtitleContainer: {
+    flexDirection: "row-reverse",
+    justifyContent: "space-around",
+  },
+  listItemSubtitleItem: {
+    flexDirection: "row-reverse",
+    justifyContent: "flex-start",
+    alignItems:'center',
+  },
+  listItemSubtitleText: {
+    color: globalColors.listItemSubtitleText,
+    marginHorizontal:3
+  },
+});

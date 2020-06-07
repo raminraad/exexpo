@@ -185,14 +185,16 @@ export default function VisitPlans({ navigation, route }) {
               tension={100} // These props are passed to the parent component (here TouchableScale)
               activeScale={0.95} //
               linearGradientProps={globalColors.gradients.listItem}
-              title={item.Summary}
+              title={`⚡ ${item.Summary}`}
               titleStyle={globalStyles.listItemTitle}
               subtitle={`تاریخ پویش ${persianLib.toShortDate(new Date(item.OperationDate))}`}
-              leftElement={<Entypo 
-                name='chevron-thin-left' 
-                size={globalSizes.icons.small} 
-                color={globalColors.listItemTitle} 
-                onPress={()=>onListItemNavigateForward(item)}/>}
+              subtitleStyle={{...globalStyles.listItemTitle,color:globalColors.listItemSubtitleText,marginRight:22}}
+              leftElement={<TouchableOpacity style={{alignSelf:'stretch',flex:0.1,justifyContent:'center'}} onPress={()=>onListItemNavigateForward(item)}>
+                <Entypo 
+                  name='chevron-thin-left' 
+                  size={globalSizes.icons.small} 
+                  color={globalColors.listItemTitleText}/>
+              </TouchableOpacity>}
             />
           
         ))}

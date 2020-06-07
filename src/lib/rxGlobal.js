@@ -47,7 +47,9 @@ export const globalColors = {
   listItemHeaderContainer: "#f1f5f7",
   listItemContentContainer: "#FFFFFF",
   listItemSwipeLeftContainer: "#e6e6eaaa",
-  listItemTitle: "#6c757d",
+  listItemTitleText: "#6c757d",
+  listItemSubtitleText: "#6c757dAA",
+  listItemSubtitleIcon: "#3a6ea5AA",
   addModalFieldValidationErrorText: "#e71d36",
   screenContainer: "#f8f9fa",
 };
@@ -169,7 +171,7 @@ export const globalStyles = StyleSheet.create({
     paddingLeft: 10,
   },
   listItemTitle: {
-    color: globalColors.listItemTitle,
+    color: globalColors.listItemTitleText,
     fontWeight: "bold",
   },
   shadowedContainer: {

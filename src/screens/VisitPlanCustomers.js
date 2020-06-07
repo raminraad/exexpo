@@ -37,6 +37,7 @@ import * as dp from "../lib/sqliteDp";
 import { openDatabase } from "expo-sqlite";
 import TouchableScale from "react-native-touchable-scale"; // https://github.com/kohver/react-native-touchable-scale
 import { LinearGradient } from "expo-linear-gradient";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 export default function VisitPlanCustomers(props) {
   const db = openDatabase("db");
@@ -139,6 +140,14 @@ export default function VisitPlanCustomers(props) {
   };
 
   const keyExtractor = (item, index) => item.Id.toString();
+  const onListItemNavigateForward = (item) => {
+    item.rxSync = 2;
+    props.navigation.push("VisitPlanResultForm", {
+      title: `فروشگاه ${item.Title}`,
+      initialItem: item,
+    });
+  };
+
   const renderHeader = () => (
     <DefaultHeader
       title={title}
@@ -149,7 +158,27 @@ export default function VisitPlanCustomers(props) {
       navigation={props.navigation}
     />
   );
-  const renderItem = ({ item, index }) => {
+  const renderItem = (item, i) => (
+    <ListItem
+      containerStyle={[globalStyles.shadowedContainer, globalStyles.listItemContainer]}
+      Component={TouchableScale}
+      checkmark={item.ResultStatus !== 2}
+      key={item.rxKey}
+      friction={90} //
+      tension={100} // These props are passed to the parent component (here TouchableScale)
+      activeScale={0.95} //
+      linearGradientProps={globalColors.gradients.listItem}
+      title={item.Title}
+      titleStyle={globalStyles.listItemTitle}
+      subtitle={`تاریخ پویش ${persianLib.toShortDate(new Date(item.Owner))}`}
+      leftElement={
+        <TouchableOpacity style={{ alignSelf: "stretch", flex: 1, width: 48, justifyContent: "center" }} onPress={() => onListItemNavigateForward(item)}>
+          <Entypo name='chevron-thin-left' size={globalSizes.icons.small} color={globalColors.listItemTitleText} />
+        </TouchableOpacity>
+      }
+    />
+  );
+  const renderItem0 = ({ item, index }) => {
     let renderItemHeader = (item, expanded) => {
       return (
         <View style={globalStyles.listItemHeaderContainer}>
@@ -247,33 +276,8 @@ export default function VisitPlanCustomers(props) {
       {renderHeader()}
       <Content>
         {/* TODO: get data from a method that performs instant and advanced filter */}
-        
-          {isLoading
-            ? null
-            : presentationalData.map((item, i) => (
-                <ListItem
-                  containerStyle={[globalStyles.shadowedContainer,globalStyles.listItemContainer]}
-                  onPress={() => {
-                    item.rxSync = 2;
-                    props.navigation.push("VisitPlanResultForm", {
-                      title: `فروشگاه ${item.Title}`,
-                      initialItem: item,
-                    });
-                  }}
-                  Component={TouchableScale}
-                  checkmark={item.ResultStatus !== 2}
-                  key={item.rxKey}
-                  friction={90} //
-                  tension={100} // These props are passed to the parent component (here TouchableScale)
-                  activeScale={0.95} //
-                  linearGradientProps={globalColors.gradients.listItem}
-                  title={item.Title}
-                  titleStyle={globalStyles.listItemTitle}
-                  subtitle={`تاریخ پویش ${persianLib.toShortDate(new Date(item.Owner))}`}
-                  leftElement={<Entypo name='chevron-thin-left' size={globalSizes.icons.small} color={globalColors.listItemTitle}/>}
-                />
-              ))}
-        
+
+        {isLoading ? null : presentationalData.map((item, i) => renderItem(item, i))}
       </Content>
       <Footer>
         <FooterTab style={{ justifyContent: "center", alignItems: "center" }}>

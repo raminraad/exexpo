@@ -21,6 +21,7 @@ export default function Login({ navigation }) {
 
   global.AcceptableDistanceForVisitor = null;
   // XXX: start
+  console.disableYellowBox = true;
   userInfo = {
     userName: "offline",
     passPhrase: "offline123",

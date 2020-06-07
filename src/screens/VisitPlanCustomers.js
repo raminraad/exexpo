@@ -158,31 +158,39 @@ export default function VisitPlanCustomers(props) {
       navigation={props.navigation}
     />
   );
-  const renderItemHeader = (item,expanded) => {return (
-    <ListItem
-    chevron={
-      <Feather
+  const renderItemHeader = (item, expanded) => {
+    return (
+      <ListItem
+        chevron={
+          <Feather
             name={expanded ? "chevrons-down" : "chevrons-left"}
             size={24}
             style={globalStyles.listItemHeaderCollapseIcon}
             color={expanded ? globalColors.listItemCollapseIcon : globalColors.listItemExpandIcon}
           />
-    }
-      containerStyle={[globalStyles.shadowedContainer, globalStyles.listItemHeaderContainer]}
-      checkmark={item.ResultStatus !== 2}
-      key={item.rxKey}
-      linearGradientProps={globalColors.gradients.listItem}
-      title={item.Title}
-      titleStyle={globalStyles.listItemTitle}
-      subtitleStyle={{...globalStyles.listItemTitle,color:globalColors.listItemSubtitleText}}
-      subtitle={expanded?null:<Text style={{...globalStyles.listItemContentFieldData,color:globalColors.listItemSubtitleText,fontSize:12}}>{item.Address ? item.Address : "وارد نشده"}</Text>}
-      leftElement={
-        <TouchableOpacity style={{ alignSelf: "stretch", flex: 1, width: 48, justifyContent: "center" }} onPress={() => onListItemNavigateForward(item)}>
-          <Entypo name='chevron-thin-left' size={globalSizes.icons.small} color={globalColors.listItemTitleText} />
-        </TouchableOpacity>
-      }
-    />
-  )};
+        }
+        containerStyle={[globalStyles.shadowedContainer, globalStyles.listItemHeaderContainer]}
+        checkmark={item.ResultStatus !== 2}
+        key={item.rxKey}
+        linearGradientProps={globalColors.gradients.listItem}
+        title={item.Title}
+        titleStyle={globalStyles.listItemTitle}
+        subtitleStyle={{ ...globalStyles.listItemTitle, color: globalColors.listItemSubtitleText }}
+        subtitle={
+          expanded ? null : (
+            <Text style={{ ...globalStyles.listItemContentFieldData, color: globalColors.listItemSubtitleText, fontSize: 12 }}>
+              {item.Address ? item.Address : "وارد نشده"}
+            </Text>
+          )
+        }
+        leftElement={
+          <TouchableOpacity style={{ alignSelf: "stretch", flex: 1, width: 48, justifyContent: "center" }} onPress={() => onListItemNavigateForward(item)}>
+            <Entypo name='chevron-thin-left' size={globalSizes.icons.small} color={globalColors.listItemTitleText} />
+          </TouchableOpacity>
+        }
+      />
+    );
+  };
 
   const renderItemContent = (item) => {
     return (
@@ -198,9 +206,9 @@ export default function VisitPlanCustomers(props) {
         </View>
 
         <View style={globalStyles.listItemContentRow}>
-            <Feather name='map-pin' size={globalSizes.icons.small} color={globalColors.listItemSubtitleIcon} />
-            <Text style={globalStyles.listItemContentFieldData}>{item.Address ? item.Address : "وارد نشده"}</Text>
-          </View>
+          <Feather name='map-pin' size={globalSizes.icons.small} color={globalColors.listItemSubtitleIcon} />
+          <Text style={globalStyles.listItemContentFieldData}>{item.Address ? item.Address : "وارد نشده"}</Text>
+        </View>
 
         <View style={globalStyles.listItemContentRow}>
           <Feather name='phone' size={globalSizes.icons.small} color={globalColors.listItemSubtitleIcon} />
@@ -214,8 +222,6 @@ export default function VisitPlanCustomers(props) {
       </View>
     );
   };
-
-
 
   const renderItem0 = ({ item, index }) => {
     let renderItemHeader = (item, expanded) => {
@@ -291,7 +297,7 @@ export default function VisitPlanCustomers(props) {
             size={globalSizes.icons.medium}
             color={globalColors.btnDelete}
           />
-          <Separator backgroundColor={globalColors.listItemSwipeLeftContainer} />
+          <Separator backgroundColor={globalColors.transparent} />
           <FontAwesome5
             name='edit'
             // todo: implement update functionality
@@ -299,7 +305,7 @@ export default function VisitPlanCustomers(props) {
             size={globalSizes.icons.medium}
             color={globalColors.btnUpdate}
           />
-          <Separator backgroundColor={globalColors.listItemSwipeLeftContainer} />
+          <Separator backgroundColor={globalColors.transparent} />
         </View>
       );
     };
@@ -312,7 +318,7 @@ export default function VisitPlanCustomers(props) {
   const dataArray = [
     { title: "First Element", content: "Lorem ipsum dolor sit amet" },
     { title: "Second Element", content: "Lorem ipsum dolor sit amet" },
-    { title: "Third Element", content: "Lorem ipsum dolor sit amet" }
+    { title: "Third Element", content: "Lorem ipsum dolor sit amet" },
   ];
   return (
     <Container backgroundColor={globalColors.screenContainer}>
@@ -320,9 +326,7 @@ export default function VisitPlanCustomers(props) {
       <Content>
         {/* TODO: get data from a method that performs instant and advanced filter */}
 
-        {isLoading ? null : <View style={{flexDirection:'column'}}>
-          <Accordion expanded dataArray={presentationalData} renderContent={renderItemContent} renderHeader={renderItemHeader} />
-        </View>}
+        {isLoading ? null : <Accordion expanded dataArray={presentationalData} renderContent={renderItemContent} renderHeader={renderItemHeader} />}
       </Content>
       <Footer>
         <FooterTab style={{ justifyContent: "center", alignItems: "center" }}>

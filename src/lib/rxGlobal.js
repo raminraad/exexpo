@@ -4,7 +4,7 @@ export const globalColors = {
   palette: {
     seaGreen: "#2a9d8f",
     paleGray: "#e5e5e5",
-    glassyWhite:'rgba(255,255,255,0.7)',
+    glassyWhite: "rgba(255,255,255,0.7)",
     cream: "#F1FAEE",
     coal: "#111111",
     dirtyNavy: "#1c313a",
@@ -17,10 +17,10 @@ export const globalColors = {
       end: { x: 0, y: 1 },
     },
   },
-  btnAdd: "#00C49A",
+  btnAdd: "#06d6a0",
   btnDelete: "#e55934",
   btnUpdate: "#3DA5D9",
-  btnOk: "#3DA5D9",
+  btnOk: "#5e60ce",
   btnCancel: "#979DAC",
   drawerBackground: "#2f3e46",
   drawerIcon: "#F1FAEE66",
@@ -47,12 +47,12 @@ export const globalColors = {
   listItemHeaderContainer: "#f1f5f7",
   listItemContentContainer: "#8da9c422",
   listItemContentBorder: "#8da9c488",
-  listItemSwipeLeftContainer: "#e6e6eaaa",
   listItemTitleText: "#6c757d",
   listItemSubtitleText: "#6c757dAA",
   listItemSubtitleIcon: "#3a6ea588",
   addModalFieldValidationErrorText: "#e71d36",
   screenContainer: "#f8f9fa",
+  transparent: "#FFFFFF00",
 };
 
 export const globalSizes = {
@@ -68,9 +68,26 @@ export const globalSizes = {
 };
 
 export const globalStyles = StyleSheet.create({
+  buttonGroupButton: {
+    alignItems: "center",
+    justifyContent: "center",
+    flex: 1,
+    marginHorizontal: 10,
+    height: 45,
+    borderRadius: 5,
+  },
+
   drawerContainer: {
     flex: 1,
     backgroundColor: globalColors.drawerBackground,
+  },
+  emptyList: {
+    borderRadius: 5,
+    borderWidth: 0.5,
+    borderColor: globalColors.listItemContentBorder,
+    paddingVertical: 30,
+    paddingHorizontal: 10,
+    flexDirection: "row-reverse",
   },
   titleText: {
     textAlign: "right",
@@ -84,7 +101,6 @@ export const globalStyles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    padding: 40,
   },
   input: {
     borderWidth: 1,
@@ -147,16 +163,16 @@ export const globalStyles = StyleSheet.create({
   listItemContentContainer: {
     paddingRight: 40,
     paddingVertical: 10,
-    marginBottom:20,
-    marginHorizontal:30,
-    borderRadius:15,
+    marginBottom: 20,
+    marginHorizontal: 30,
+    borderRadius: 15,
     alignItems: "flex-end",
     backgroundColor: globalColors.listItemContentContainer,
     borderColor: globalColors.listItemContentBorder,
-    borderWidth:1,
-    borderTopWidth:0,
-    borderTopRightRadius:0,
-    borderTopLeftRadius:0,
+    borderWidth: 1,
+    borderTopWidth: 0,
+    borderTopRightRadius: 0,
+    borderTopLeftRadius: 0,
   },
   listItemContentRow: {
     flexDirection: "row-reverse",
@@ -174,10 +190,10 @@ export const globalStyles = StyleSheet.create({
     fontWeight: "600",
   },
   listItemSwipeLeftContainer: {
-    backgroundColor: globalColors.listItemSwipeLeftContainer,
+    justifyContent:'flex-end',
     alignItems: "center",
     flexDirection: "row",
-    paddingLeft: 10,
+    marginLeft:30,
   },
   listItemTitle: {
     color: globalColors.listItemTitleText,
@@ -185,10 +201,15 @@ export const globalStyles = StyleSheet.create({
   },
   shadowedContainer: {
     borderRadius: 2,
+    borderColor: "#ddd",
+    borderBottomWidth: 0,
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 1,
+    shadowOpacity: 0.8,
     shadowRadius: 2,
     elevation: 4,
+    marginHorizontal: 5,
+    marginVertical: 2,
   },
   addModalContainer: {
     padding: 50,
@@ -259,6 +280,9 @@ export const globalLiterals = {
   },
   Titles: {
     syncData: "بروزرسانی داده ها",
+  },
+  Messages: {
+    emptyList: "آیتمی برای نمایش وجود ندارد",
   },
   validationErrors: {
     required: "وارد کردن این فیلد الزامیست",

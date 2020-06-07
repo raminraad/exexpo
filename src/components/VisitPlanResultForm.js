@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, TouchableOpacity, FlatList, TextInput, ScrollView, Button, Modal, Alert } from "react-native";
+import { StyleSheet, View, TouchableOpacity, FlatList, TextInput, ScrollView, Modal, Alert, RecyclerViewBackedScrollView } from "react-native";
 import { Separator, Content, Container, Spinner } from "native-base";
-import { Overlay, ListItem, PricingCard } from "react-native-elements";
+import { Overlay, ListItem, PricingCard, Button } from "react-native-elements";
 import { Formik } from "formik";
 import { RadioButton, Text, Divider } from "react-native-paper";
 import Swipeable from "react-native-gesture-handler/Swipeable";
@@ -160,7 +160,7 @@ export default function VisitPlanResultForm(props) {
   const swipeLeftAction = (item) => (
     <View style={globalStyles.listItemSwipeLeftContainer}>
       <FontAwesome5 name='trash-alt' onPress={() => confirmAndDelete(item)} size={globalSizes.icons.medium} color={globalColors.btnDelete} />
-      <Separator backgroundColor={globalColors.listItemSwipeLeftContainer} />
+      <Separator style={{backgroundColor:globalColors.transparent}}/>
       <FontAwesome5
         name='edit'
         onPress={() => {
@@ -170,11 +170,34 @@ export default function VisitPlanResultForm(props) {
         size={globalSizes.icons.medium}
         color={globalColors.btnUpdate}
       />
-      <Separator backgroundColor={globalColors.listItemSwipeLeftContainer} />
     </View>
   );
 
   const [isProductModalVisible, setIsProductModalVisible] = useState(false);
+
+  const renderItemHeader = (item, i) => (
+    <Swipeable renderLeftActions={() => swipeLeftAction(item)} key={item.rxKey}>
+      {/* fixme: fix productGroup multi layering */}
+      <ListItem
+        containerStyle={[globalStyles.shadowedContainer, globalStyles.listItemHeaderContainer]}
+        Component={TouchableScale}
+        key={item.rxKey}
+        friction={90} //
+        tension={100} // These props are passed to the parent component (here TouchableScale)
+        activeScale={0.95} //
+        linearGradientProps={globalColors.gradients.listItem}
+        title={`${item.Title}  ⟸  ${item.Taste}`}
+        titleStyle={globalStyles.listItemTitle}
+        subtitle={() => renderSubtitle(item)}
+      />
+    </Swipeable>
+  );
+
+  const renderEmptyList = () => (
+    <View style={{ ...globalStyles.emptyList, marginLeft: 20, marginTop: 10 }}>
+      <Text style={{ color: globalColors.listItemSubtitleText }}>{globalLiterals.Messages.emptyList}</Text>
+    </View>
+  );
 
   return (
     <View>
@@ -212,44 +235,10 @@ export default function VisitPlanResultForm(props) {
           </View>
           {isLoading ? (
             <Spinner style={{ height: "100%" }} color='grey' size={50} />
+          ) : rawData.length ? (
+            rawData.filter((r) => r.rxSync !== -1).map((item, i) => renderItemHeader(item, i))
           ) : (
-            rawData
-              .filter((r) => r.rxSync !== -1)
-              .map((item, index) => (
-                <Swipeable renderLeftActions={() => swipeLeftAction(item)} key={index.toString()}>
-                  {/* <ListItem
-                  key={index.toString()}
-                  containerStyle={{ backgroundColor: globalColors.listItemHeaderContainer, alignSelf: "stretch" }}
-                  // fixme: fix productGroup multi layering
-                  title={`${item.Title}  ⟸  ${item.Taste}`}
-                  subtitle={`     قیمت فروش ${item.SellPrice}ريال      وزن محصول (گرم) ${item.Weight}      موجودی قابل مشاهده ${item.ShelfVisibleCount}`}
-                  bottomDivider
-                /> */}
-
-                  <ListItem
-                    containerStyle={[globalStyles.shadowedContainer, globalStyles.listItemHeaderContainer]}
-                    Component={TouchableScale}
-                    key={item.rxKey}
-                    friction={90} //
-                    tension={100} // These props are passed to the parent component (here TouchableScale)
-                    activeScale={0.95} //
-                    linearGradientProps={globalColors.gradients.listItem}
-                    title={`${item.Title}  ⟸  ${item.Taste}`}
-                    titleStyle={globalStyles.listItemTitle}
-                    subtitle={() => renderSubtitle(item)}
-                    leftElement={
-                      <Entypo
-                        name='chevron-thin-left'
-                        size={globalSizes.icons.small}
-                        color={globalColors.listItemTitleText}
-                        onPress={() => {
-                          onListItemNavigateForward(item);
-                        }}
-                      />
-                    }
-                  />
-                </Swipeable>
-              ))
+            renderEmptyList()
           )}
           <Formik
             initialValues={initialItem}
@@ -269,7 +258,7 @@ export default function VisitPlanResultForm(props) {
               }
             }}>
             {(props) => (
-              <View>
+              <View style={{ marginTop: 30, justifyContent: "space-between" }}>
                 <View style={globalStyles.addModalFieldContainer}>
                   <Text style={globalStyles.addModalFieldTitle}>شرح مختصر</Text>
                   <TextInput
@@ -310,10 +299,15 @@ export default function VisitPlanResultForm(props) {
                   </View>
                 </View>
 
-                <Button title='تأیید' color={globalColors.btnAdd} onPress={props.handleSubmit} />
-                <View style={{ marginVertical: 5 }} />
-                <Button title='انصراف' color={globalColors.btnCancel} onPress={navigation.goBack} />
-                <View style={{ marginVertical: 20 }} />
+                
+                <View style={{ marginVertical: 5 ,flexDirection:'row-reverse',justifyContent:'space-around'}} >
+                <TouchableOpacity style={{...globalStyles.buttonGroupButton, backgroundColor:globalColors.btnOk}} onPress={props.handleSubmit}>
+                  <Text style={{color:'white'}}>{globalLiterals.ButtonTexts.ok}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{...globalStyles.buttonGroupButton,backgroundColor:globalColors.btnCancel}} onPress={navigation.goBack}>
+                  <Text style={{color:'white'}}>{globalLiterals.ButtonTexts.cancel}</Text>
+                </TouchableOpacity>
+                </View>
               </View>
             )}
           </Formik>
@@ -331,10 +325,10 @@ const styles = StyleSheet.create({
   listItemSubtitleItem: {
     flexDirection: "row-reverse",
     justifyContent: "flex-start",
-    alignItems:'center',
+    alignItems: "center",
   },
   listItemSubtitleText: {
     color: globalColors.listItemSubtitleText,
-    marginHorizontal:3
+    marginHorizontal: 3,
   },
 });

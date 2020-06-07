@@ -51,7 +51,7 @@ export default function VisitPlanResultProductForm(props) {
         onSubmit(values);
       }}>
       {(props) => (
-        <View style={globalStyles.container}>
+        <View style={{...globalStyles.container,padding:40}}>
           <ScrollView style={isSearchBarFocused ? styles.productListOnSearching : styles.productListOnNotSearching} keyboardShouldPersistTaps='never'>
             {isOnProductSearch || !selectedItem?.ProductSubId ? (
               <View>

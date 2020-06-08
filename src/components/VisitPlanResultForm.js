@@ -30,6 +30,8 @@ export default function VisitPlanResultForm(props) {
   const [isLoading, setIsLoading] = useState(true);
   const [productModalItem, setProductModalItem] = useState(null);
 
+  const { title } = props.route.params;
+  
   const isGeoLocationAcceptable = async (lat, long) => {
     console.log("SUBMITTING");
     let { status } = await Location.requestPermissionsAsync();
@@ -216,6 +218,9 @@ export default function VisitPlanResultForm(props) {
             <Modal visible={isProductModalVisible} animationType='slide'>
               <VisitPlanResultProductForm onSubmit={onProductModalSubmit} onCancel={() => setIsProductModalVisible(false)} initialItem={productModalItem} />
             </Modal>
+              <View style={{...globalStyles.screenTitleContainer,marginBottom:32}}>
+                <Text style={globalStyles.screenTitleText}>فرم پویش مربوط به {title}</Text>
+              </View>
 
             <View style={{ flexDirection: "row-reverse", justifyContent: "space-between" }}>
               <Text style={globalStyles.addModalFieldTitle}>محصولات فروشگاه</Text>

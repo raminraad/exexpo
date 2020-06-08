@@ -56,6 +56,7 @@ export const globalColors = {
   listItemSubtitleIcon: "#3a6ea588",
   addModalFieldValidationErrorText: "#e71d36",
   screenContainer: "#f8f9fa",
+  screenTitleText:'#3a6ea5',
   transparent: "#FFFFFF00",
 };
 
@@ -93,11 +94,15 @@ export const globalStyles = StyleSheet.create({
     paddingHorizontal: 10,
     flexDirection: "row-reverse",
   },
-  titleText: {
+  screenTitleContainer: {
+    justifyContent:'center',
+    alignItems:'center'
+  },
+  screenTitleText: {
     textAlign: "right",
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: "bold",
-    color: "#333",
+    color: globalColors.screenTitleText,
   },
   paragraph: {
     marginVertical: 8,

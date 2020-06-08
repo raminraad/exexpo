@@ -110,7 +110,7 @@ export default function VisitPlanResultProductForm(props) {
           <ScrollView style={isSearchBarFocused ? styles.productListOnSearching : styles.productListOnNotSearching} keyboardShouldPersistTaps='never'>
             {isOnProductSearch || !selectedItem?.ProductSubId ? (
               <View>
-                <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
+                <View style={{ flexDirection: "row", alignItems: "flex-start" }}>
                   <TouchableOpacity
                     style={{
                       width: 48,
@@ -137,9 +137,7 @@ export default function VisitPlanResultProductForm(props) {
                       }}
                       value={searchText}
                     />
-                  </View>
-                </View>
-                {productsRawData.current
+                    {productsRawData.current
                   .filter((item) => {
                     let trimmedSearchText = searchText.trim();
                     if (!trimmedSearchText) return false;
@@ -166,6 +164,9 @@ export default function VisitPlanResultProductForm(props) {
                       }
                     />
                   ))}
+                  </View>
+                </View>
+                
 
                 <Text style={globalStyles.addModalFieldValidationError}>{props.touched.ProductSubId && props.errors.ProductSubId}</Text>
               </View>

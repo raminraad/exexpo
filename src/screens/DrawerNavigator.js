@@ -20,7 +20,6 @@ export class DrawerNavigator extends Component<{ navigation: any }> {
         return (
             <drawer.Navigator drawerType='slide' drawerContent={props => <DrawerContent {...props}  />}
                                   drawerPosition='right'>
-                <drawer.Screen name='Login' component={Login} />
                 <drawer.Screen name='VisitPlans' component={VisitPlans} initialParams={{title:'پویش فروش خرده'}}/>
                 <drawer.Screen name='Home' component={Home} />
                 <drawer.Screen name='VisitPlanCustomers' component={VisitPlanCustomers} />

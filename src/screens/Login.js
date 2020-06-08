@@ -1,5 +1,5 @@
 import React, { Component, useState, useRef, useEffect } from "react";
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, KeyboardAvoidingView, ActivityIndicator } from "react-native";
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, KeyboardAvoidingView, ActivityIndicator ,BackHandler} from "react-native";
 import Logo from "../components/Logo";
 import { StackActions } from "@react-navigation/native";
 import { globalColors, globalLiterals } from "../lib/rxGlobal";
@@ -20,6 +20,12 @@ export default function Login({ navigation }) {
   };
 
   global.AcceptableDistanceForVisitor = 200;
+
+  const goto = (screen) => {
+    //clear the stack and set the Home screen as only screen
+    navigation.dispatch(StackActions.replace(screen,{title:'پویش فروش خرده'}));
+  };
+
   // XXX: start
 
   console.disableYellowBox = true;
@@ -29,7 +35,7 @@ export default function Login({ navigation }) {
     passPhrase: "offline123",
     iMEI: "offline",
   };
-  
+  goto('VisitPlans')
   //xxx: end
 
   const submit = async () => {
@@ -58,7 +64,7 @@ export default function Login({ navigation }) {
           }
         })
         //xxx:
-        .then(dp.pullAndCommitVisitPlanData)
+        // .then(dp.pullAndCommitVisitPlanData)
         //xxx
         .then(()=>goto('VisitPlans'))
         .catch((error) => {
@@ -70,11 +76,7 @@ export default function Login({ navigation }) {
     setIsLoading(false);
   };
 
-  const goto = (screen) => {
-    navigation.navigate(screen);
-    //clear the stack and set the Home screen as only screen
-    // navigation.dispatch(StackActions.replace(screen,{title:'پویش فروش خرده'}));
-  };
+  
 
   return (
     <View style={styles.container}>

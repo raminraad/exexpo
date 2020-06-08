@@ -5,6 +5,8 @@ import {DrawerContentScrollView,DrawerItem} from '@react-navigation/drawer';
 import IconCommunity from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconMaterial from 'react-native-vector-icons/MaterialIcons';
 import { globalStyles, globalColors, globalSizes } from '../lib/rxGlobal';
+import { FontAwesome } from '@expo/vector-icons'; 
+import { StackActions } from "@react-navigation/native";
 
 
 // import{ AuthContext } from '../components/context';
@@ -31,14 +33,11 @@ export function DrawerContent(props) {
                             alignItems: 'center'
                         }}>
                             <View style={{ marginLeft: 15, flexDirection: 'column' }}>
-                                <Title style={styles.title}>رامین راد</Title>
-                                <Caption style={styles.caption}>@raminraad</Caption>
+                                <Title style={styles.title}>کاربر آفلاین</Title>
+                                <Caption style={styles.caption}>@offline</Caption>
                                 <Caption style={styles.caption}>کارشناس بازاریابی</Caption>
                             </View>
-                            <Avatar.Image
-                                source={require('../images/xxx_avatar.png')}
-                                size={120}
-                            />
+                            <FontAwesome name="user-circle-o" size={120} color={globalColors.palette.cream} />
                         </View>
 
                         <View style={styles.row}>
@@ -52,8 +51,38 @@ export function DrawerContent(props) {
                             </View>
                         </View>
                     </View>
+
+                    <Drawer.Section style={{ borderTopWidth: 0.5 }}>
+                        <Text style={styles.sectionHeader}>وضعیت کنونی سیستم</Text>
+                        <View style={styles.preference}>
+                            <Text style={styles.statusLabel}>1399/02/03 14:28:11</Text>
+                            <Text style={styles.statusLabel}>ورود قبلی</Text>
+                        </View>
+                        <View style={styles.preference}>
+                            <Text style={styles.statusLabel}>17</Text>
+                            <Text style={styles.statusLabel}>آنلاین در پرتال</Text>
+                        </View>
+                        <View style={styles.preference}>
+                            <Text style={styles.statusLabel}>4</Text>
+                            <Text style={styles.statusLabel}>ورود امروز کاربران</Text>
+                        </View>
+                        <View style={styles.preference}>
+                            <Text style={styles.statusLabel}>428</Text>
+                            <Text style={styles.statusLabel}>ورود ماه اخیر کاربران</Text>
+                        </View>
+                        <View style={styles.preference}>
+                            <Text style={styles.statusLabel}>2</Text>
+                            <Text style={styles.statusLabel}>اعلانات کاربر</Text>
+                        </View>
+                        <View style={styles.preference}>
+                            <Text style={styles.statusLabel}>5</Text>
+                            <Text style={styles.statusLabel}>در انتظار تأیید</Text>
+                        </View>
+
+                    </Drawer.Section>
+
                     <Drawer.Section style={styles.drawerSection}>
-                        <TouchableHighlight underlayColor='rgba(0,0,0,0.1)' style={styles.drawerItemHighlight}
+                        {/* <TouchableHighlight underlayColor='rgba(0,0,0,0.1)' style={styles.drawerItemHighlight}
                             onPress={() => {
                                 props.navigation.navigate('Home')
                             }}>
@@ -104,7 +133,7 @@ export function DrawerContent(props) {
                                     size={iconSize} />
                             </View>
                         </TouchableHighlight>
-                        <TouchableHighlight underlayColor='rgba(0,0,0,0.1)'
+                        <TouchableHighlight underlayColor='rgba(0,0,0,0.1)' 
                             style={styles.drawerItemHighlight}
                             onPress={() => {
                                 props.navigation.navigate('Details')
@@ -117,11 +146,14 @@ export function DrawerContent(props) {
                                     size={iconSize} />
                             </View>
                         </TouchableHighlight>
+                        */}
 
                         <TouchableHighlight underlayColor='rgba(0,0,0,0.1)'
                             style={styles.drawerItemHighlight}
                             onPress={() => {
-                                props.navigation.navigate('Login')
+                                // props.navigation.navigate('Login')
+    props.navigation.dispatch(StackActions.replace('Login'));
+
                             }}>
                             <View
                                 style={styles.preference}>
@@ -134,34 +166,7 @@ export function DrawerContent(props) {
 
                     </Drawer.Section>
 
-                    <Drawer.Section style={{ borderTopWidth: 0.5 }}>
-                        <Text style={styles.sectionHeader}>وضعیت کنونی سیستم</Text>
-                        <View style={styles.preference}>
-                            <Text style={styles.statusLabel}>1399/02/03 14:28:11</Text>
-                            <Text style={styles.statusLabel}>ورود قبلی</Text>
-                        </View>
-                        <View style={styles.preference}>
-                            <Text style={styles.statusLabel}>17</Text>
-                            <Text style={styles.statusLabel}>آنلاین در پرتال</Text>
-                        </View>
-                        <View style={styles.preference}>
-                            <Text style={styles.statusLabel}>4</Text>
-                            <Text style={styles.statusLabel}>ورود امروز کاربران</Text>
-                        </View>
-                        <View style={styles.preference}>
-                            <Text style={styles.statusLabel}>428</Text>
-                            <Text style={styles.statusLabel}>ورود ماه اخیر کاربران</Text>
-                        </View>
-                        <View style={styles.preference}>
-                            <Text style={styles.statusLabel}>2</Text>
-                            <Text style={styles.statusLabel}>اعلانات کاربر</Text>
-                        </View>
-                        <View style={styles.preference}>
-                            <Text style={styles.statusLabel}>5</Text>
-                            <Text style={styles.statusLabel}>در انتظار تأیید</Text>
-                        </View>
-
-                    </Drawer.Section>
+                    
 
                 </View>
             </DrawerContentScrollView>

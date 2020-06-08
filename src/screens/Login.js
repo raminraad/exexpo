@@ -1,6 +1,7 @@
 import React, { Component, useState, useRef, useEffect } from "react";
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, KeyboardAvoidingView, ActivityIndicator ,BackHandler} from "react-native";
 import Logo from "../components/Logo";
+import { CheckBox } from 'react-native-elements'
 import { StackActions } from "@react-navigation/native";
 import { globalColors, globalLiterals } from "../lib/rxGlobal";
 import NetInfo from '@react-native-community/netinfo';
@@ -10,12 +11,12 @@ export default function Login({ navigation }) {
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const isConnected = useRef(false);
-
+const [IsRememberChecked, setIsRememberChecked] = useState(true);
   const passPhraseRef = useRef(null);
   const userNameRef = useRef(null);
   let userInfo = {
-    passPhrase: "",
-    userName: "",
+    userName: "offline",
+    passPhrase: "offline123",
     iMEI: "64564646465465454",
   };
 
@@ -39,6 +40,8 @@ export default function Login({ navigation }) {
   //xxx: end
 
   const submit = async () => {
+console.log(userInfo);
+
     setIsLoading(true);
     setMessage("در حال بررسی اطلاعات کاربری..");
     var myHeaders = new Headers();
@@ -66,7 +69,7 @@ export default function Login({ navigation }) {
         //xxx:
         .then(dp.pullAndCommitVisitPlanData)
         //xxx
-        .then(()=>goto('VisitPlans'))
+        .then(()=>goto('Drawer'))
         .catch((error) => {
           setMessage(error);
         });
@@ -94,6 +97,7 @@ export default function Login({ navigation }) {
             onSubmitEditing={() => passPhraseRef.current.focus()}
             onChangeText={(val) => (userInfo.userName = val)}
             ref={userNameRef}
+            value='offline'
           />
           <TextInput
             style={[styles.inputAndButton, styles.input]}
@@ -104,7 +108,20 @@ export default function Login({ navigation }) {
             onSubmitEditing={submit}
             onChangeText={(val) => (userInfo.passPhrase = val)}
             ref={passPhraseRef}
+            value='offline123'
           />
+<View style={{justifyContent:'center',alignItems:'center',flexDirection:'row'}}>
+  
+  <Text style={{...styles.buttonText,textAlign:'right',flex:5,color:IsRememberChecked?globalColors.palette.silver:globalColors.palette.lead}}>ذخیــــــــره اطلاعــــــــــات کاربـــــــــری</Text>
+  <CheckBox
+    containerStyle={{backgroundColor:globalColors.transparent,borderWidth:0,flex:2}}
+    checked={IsRememberChecked}
+    checkedColor={globalColors.palette.silver}
+    uncheckedColor={globalColors.palette.lead}
+    onPress={()=>setIsRememberChecked(!IsRememberChecked)}
+  />
+</View>
+
           <TouchableOpacity style={[styles.inputAndButton, styles.button]} onPress={submit}>
             <Text style={styles.buttonText}>ورود به حساب</Text>
           </TouchableOpacity>
@@ -167,9 +184,10 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: globalColors.loginScreenSubmitButtonBackground,
+    alignItems:'center',
+    justifyContent:'center',
   },
   buttonText: {
-    flex: 1,
     fontSize: 16,
     color: globalColors.palette.cream,
     textAlign: "center",

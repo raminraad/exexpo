@@ -145,23 +145,19 @@ export default function VisitPlanResultProductForm(props) {
                   })
                   .map((item, i) => (
                     <ListItem
-                      containerStyle={{ backgroundColor: globalColors.listItemHeaderContainer }}
+                      containerStyle={{ backgroundColor: globalColors.listItemHeaderContainer ,marginVertical:1}}
                       key={item.ProductSubId.toString()}
                       title={`${item.Title}  ⟸  ${item.Taste}`}
                       bottomDivider
-                      leftElement={
-                        <Button
-                          title='انتخاب'
-                          onPress={() => {
-                            setSelectedItem(item);
-                            props.values.ProductSubId = item.ProductSubId;
-                            props.values.Title = item.Title;
-                            props.values.Taste = item.Taste;
-                            Keyboard.dismiss();
-                            setIsSearchBarFocused(false);
-                            setisOnProductSearch(false);
-                          }}></Button>
-                      }
+                      onPress={() => {
+                        setSelectedItem(item);
+                        props.values.ProductSubId = item.ProductSubId;
+                        props.values.Title = item.Title;
+                        props.values.Taste = item.Taste;
+                        Keyboard.dismiss();
+                        setIsSearchBarFocused(false);
+                        setisOnProductSearch(false);
+                      }}
                     />
                   ))}
                   </View>

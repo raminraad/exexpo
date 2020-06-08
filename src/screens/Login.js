@@ -67,7 +67,7 @@ console.log(userInfo);
           }
         })
         //xxx:
-        // .then(dp.pullAndCommitVisitPlanData)
+        .then(dp.pullAndCommitVisitPlanData)
         //xxx
         .then(()=>goto('AppDrawer'))
         .catch((error) => {

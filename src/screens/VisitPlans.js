@@ -128,7 +128,7 @@ export default function VisitPlans({ navigation, route }) {
   };
 
   const onListItemNavigateForward = (item)=>{
-    navigation.push("VisitPlanCustomers", {
+    navigation.navigate("VisitPlanCustomers", {
       title: `مشتریان هدف در تاریخ ${persianLib.toShortDate(new Date(item.OperationDate))}`,
       initialItem: item,
     })

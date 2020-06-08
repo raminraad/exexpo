@@ -45,7 +45,7 @@ export default class App extends React.Component {
         <MenuProvider>
           <NavigationContainer>
             <LoginStack.Navigator
-              initialRouteName="Drawer"
+              initialRouteName="Login"
               screenOptions={{
                 headerShown: false,
                 headerStyle: {
@@ -57,11 +57,11 @@ export default class App extends React.Component {
                 },
               }}
             >
-              <LoginStack.Screen name="Drawer" component={DrawerNavigator} />
               <LoginStack.Screen name="Login" component={Login} />
+              <LoginStack.Screen name="Drawer" component={DrawerNavigator} />
               <LoginStack.Screen name="SignUp" component={SignUp} />
-              <LoginStack.Screen name="VisitPlanCustomers" component={VisitPlanCustomers} />
-              <LoginStack.Screen name="VisitPlanResultForm" component={VisitPlanResultForm} />
+              {/* <LoginStack.Screen name="VisitPlanCustomers" component={VisitPlanCustomers} /> */}
+              {/* <LoginStack.Screen name="VisitPlanResultForm" component={VisitPlanResultForm} /> */}
             </LoginStack.Navigator>
           </NavigationContainer>
         </MenuProvider>

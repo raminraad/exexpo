@@ -142,7 +142,7 @@ export default function VisitPlanCustomers(props) {
   const keyExtractor = (item, index) => item.Id.toString();
   const onListItemNavigateForward = (item) => {
     item.rxSync = 2;
-    props.navigation.push("VisitPlanResultForm", {
+    props.navigation.navigate("VisitPlanResultForm", {
       title: `فروشگاه ${item.Title}`,
       initialItem: item,
     });
@@ -245,7 +245,7 @@ export default function VisitPlanCustomers(props) {
               backgroundColor={item.ResultStatus === 2 || !item.ResultStatus ? globalColors.listItemNavigateIconUndone : globalColors.listItemNavigateIconDone}
               onPress={() => {
                 item.rxSync = 2;
-                props.navigation.push("VisitPlanResultForm", {
+                props.navigation.navigate("VisitPlanResultForm", {
                   title: `فروشگاه ${item.Title}`,
                   initialItem: item,
                 });

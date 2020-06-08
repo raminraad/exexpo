@@ -31,9 +31,9 @@ export default function VisitPlanResultForm(props) {
   const [productModalItem, setProductModalItem] = useState(null);
 
   const isGeoLocationAcceptable = async (lat, long) => {
-    console.log('SUBMITTING');
+    console.log("SUBMITTING");
     let { status } = await Location.requestPermissionsAsync();
-    console.log(status)
+    console.log(status);
     if (status !== "granted") {
       Alert.alert(
         "",
@@ -48,7 +48,7 @@ export default function VisitPlanResultForm(props) {
       return false;
     } else {
       let userLocation = await Location.getCurrentPositionAsync({});
-      console.log(`1 : ${JSON.stringify(userLocation)}`)
+      console.log(`1 : ${JSON.stringify(userLocation)}`);
 
       let p1 = { latitude: userLocation.coords.latitude, longitude: userLocation.coords.longitude };
       console.log(p1);
@@ -56,7 +56,6 @@ export default function VisitPlanResultForm(props) {
       console.log(p2);
       let distance = await getPreciseDistance(p1, p2, 1);
       console.log(distance);
-
 
       if (userLocation && distance <= global.AcceptableDistanceForVisitor) return true;
       else {
@@ -147,7 +146,7 @@ export default function VisitPlanResultForm(props) {
     });
 
     setIsLoading(false);
-    return () => console.log('EFFECT');
+    return () => console.log("EFFECT");
   }, []);
 
   const renderSubtitle = (item) => (
@@ -209,112 +208,119 @@ export default function VisitPlanResultForm(props) {
   );
 
   return (
-    <View>
-      <ScrollView style={{ padding: 25 }} keyboardShouldPersistTaps='never'>
-        <View>
-          <Modal visible={isProductModalVisible} animationType='slide'>
-            <VisitPlanResultProductForm onSubmit={onProductModalSubmit} onCancel={() => setIsProductModalVisible(false)} initialItem={productModalItem} />
-          </Modal>
+    <Container>
+      <Content>
+        
+        <ScrollView style={{ padding: 25 }} keyboardShouldPersistTaps='never'>
+          <View>
+            <Modal visible={isProductModalVisible} animationType='slide'>
+              <VisitPlanResultProductForm onSubmit={onProductModalSubmit} onCancel={() => setIsProductModalVisible(false)} initialItem={productModalItem} />
+            </Modal>
 
-          <View style={{ flexDirection: "row-reverse", justifyContent: "space-between" }}>
-            <Text style={globalStyles.addModalFieldTitle}>محصولات فروشگاه</Text>
-            <View style={globalStyles.shadowedContainer}>
-              <FontAwesome5.Button
-                name='plus'
-                backgroundColor={globalColors.btnAdd}
-                onPress={() => {
-                  setProductModalItem({
-                    rxSync: 1,
-                    ProductSubId: "",
-                    SellPrice: "",
-                    Weight: "",
-                    ShelfVisibleCount: "",
-                    VisitPlanCustomerId: initialItem.Id,
-                  });
-                  setIsProductModalVisible(true);
-                }}>
-                افزودن محصول
-              </FontAwesome5.Button>
+            <View style={{ flexDirection: "row-reverse", justifyContent: "space-between" }}>
+              <Text style={globalStyles.addModalFieldTitle}>محصولات فروشگاه</Text>
+              <View style={globalStyles.shadowedContainer}>
+                <FontAwesome5.Button
+                  name='plus'
+                  backgroundColor={globalColors.btnAdd}
+                  onPress={() => {
+                    setProductModalItem({
+                      rxSync: 1,
+                      ProductSubId: "",
+                      SellPrice: "",
+                      Weight: "",
+                      ShelfVisibleCount: "",
+                      VisitPlanCustomerId: initialItem.Id,
+                    });
+                    setIsProductModalVisible(true);
+                  }}>
+                  افزودن محصول
+                </FontAwesome5.Button>
+              </View>
             </View>
-          </View>
-          {isLoading ? (
-            <Spinner style={{ height: "100%" }} color='grey' size={50} />
-          ) : rawData.length ? (
-            rawData.filter((r) => r.rxSync !== -1).map((item, i) => renderItemHeader(item, i))
-          ) : (
-            renderEmptyList()
-          )}
-          <Formik
-            initialValues={initialItem}
-            onSubmit={async (values, actions) => {
-              if (!global.AcceptableDistanceForVisitor||!initialItem.Lat||!initialItem.Long || (await isGeoLocationAcceptable(initialItem.Lat, initialItem.Long))) {
-                console.log("submitting");
-                actions.resetForm();
-                values.details = rawData;
-                values.LastModifiedDate = Moment(new Date()).format("YYYY/MM/DD HH:mm:ss");
-                values.ResultVisitedDate = Moment(new Date()).format("YYYY/MM/DD HH:mm:ss");
-                values.SyncStatus = 2;
-                values.rxSync = 2;
-                navigation.navigate("VisitPlanCustomers", { yoyo: values });
-              }
-            }}
-            >
-            {(props) => (
-              <View style={{ marginTop: 30, justifyContent: "space-between" }}>
-                <View style={globalStyles.addModalFieldContainer}>
-                  <Text style={globalStyles.addModalFieldTitle}>شرح مختصر</Text>
-                  <TextInput
-                    style={[globalStyles.addModalFieldInput, { height: 100 }]}
-                    textAlignVertical='top'
-                    placeholder='توضیحات مختصر درباره گزارش پویش'
-                    multiline
-                    onChangeText={props.handleChange("ResultSummary")}
-                    value={props.values.ResultSummary}
-                  />
-                </View>
-                <View style={globalStyles.addModalFieldContainer}>
-                  <Text style={globalStyles.addModalFieldTitle}>وضعیت</Text>
-                  <View style={globalStyles.addModalFieldRadioButtonGroupContainer}>
-                    <RadioButton.Group onValueChange={(value) => props.setFieldValue("ResultStatus", value)} value={props.values.ResultStatus}>
-                      <View style={globalStyles.radioItemContainer}>
-                        <Text>پویش نشده</Text>
-                        {/* fixme : ask the enum value of 2} */}
-                        <RadioButton value={2} />
-                      </View>
-                      <View style={globalStyles.radioItemContainer}>
-                        <Text>عدم همکاری</Text>
-                        <RadioButton value={3} />
-                      </View>
-                      <View style={globalStyles.radioItemContainer}>
-                        <Text>پویش موفق</Text>
-                        <RadioButton value={7} />
-                      </View>
-                      <View style={globalStyles.radioItemContainer}>
-                        <Text>تغییر کاربری</Text>
-                        <RadioButton value={11} />
-                      </View>
-                      <View style={globalStyles.radioItemContainer}>
-                        <Text>یافت نشد</Text>
-                        <RadioButton value={13} />
-                      </View>
-                    </RadioButton.Group>
+            {isLoading ? (
+              <Spinner style={{ height: "100%" }} color='grey' size={50} />
+            ) : rawData.length ? (
+              rawData.filter((r) => r.rxSync !== -1).map((item, i) => renderItemHeader(item, i))
+            ) : (
+              renderEmptyList()
+            )}
+            <Formik
+              initialValues={initialItem}
+              onSubmit={async (values, actions) => {
+                if (
+                  !global.AcceptableDistanceForVisitor ||
+                  !initialItem.Lat ||
+                  !initialItem.Long ||
+                  (await isGeoLocationAcceptable(initialItem.Lat, initialItem.Long))
+                ) {
+                  console.log("submitting");
+                  actions.resetForm();
+                  values.details = rawData;
+                  values.LastModifiedDate = Moment(new Date()).format("YYYY/MM/DD HH:mm:ss");
+                  values.ResultVisitedDate = Moment(new Date()).format("YYYY/MM/DD HH:mm:ss");
+                  values.SyncStatus = 2;
+                  values.rxSync = 2;
+                  navigation.navigate("VisitPlanCustomers", { yoyo: values });
+                }
+              }}>
+              {(props) => (
+                <View style={{ marginTop: 30, justifyContent: "space-between" }}>
+                  <View style={globalStyles.addModalFieldContainer}>
+                    <Text style={globalStyles.addModalFieldTitle}>شرح مختصر</Text>
+                    <TextInput
+                      style={[globalStyles.addModalFieldInput, { height: 100 }]}
+                      textAlignVertical='top'
+                      placeholder='توضیحات مختصر درباره گزارش پویش'
+                      multiline
+                      onChangeText={props.handleChange("ResultSummary")}
+                      value={props.values.ResultSummary}
+                    />
+                  </View>
+                  <View style={globalStyles.addModalFieldContainer}>
+                    <Text style={globalStyles.addModalFieldTitle}>وضعیت</Text>
+                    <View style={globalStyles.addModalFieldRadioButtonGroupContainer}>
+                      <RadioButton.Group onValueChange={(value) => props.setFieldValue("ResultStatus", value)} value={props.values.ResultStatus}>
+                        <View style={globalStyles.radioItemContainer}>
+                          <Text>پویش نشده</Text>
+                          {/* fixme : ask the enum value of 2} */}
+                          <RadioButton value={2} />
+                        </View>
+                        <View style={globalStyles.radioItemContainer}>
+                          <Text>عدم همکاری</Text>
+                          <RadioButton value={3} />
+                        </View>
+                        <View style={globalStyles.radioItemContainer}>
+                          <Text>پویش موفق</Text>
+                          <RadioButton value={7} />
+                        </View>
+                        <View style={globalStyles.radioItemContainer}>
+                          <Text>تغییر کاربری</Text>
+                          <RadioButton value={11} />
+                        </View>
+                        <View style={globalStyles.radioItemContainer}>
+                          <Text>یافت نشد</Text>
+                          <RadioButton value={13} />
+                        </View>
+                      </RadioButton.Group>
+                    </View>
+                  </View>
+
+                  <View style={{ marginVertical: 5, flexDirection: "row-reverse", justifyContent: "space-around" }}>
+                    <TouchableOpacity style={{ ...globalStyles.buttonGroupButton, backgroundColor: globalColors.btnOk }} onPress={props.handleSubmit}>
+                      <Text style={{ color: "white" }}>{globalLiterals.ButtonTexts.ok}</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{ ...globalStyles.buttonGroupButton, backgroundColor: globalColors.btnCancel }} onPress={navigation.goBack}>
+                      <Text style={{ color: "white" }}>{globalLiterals.ButtonTexts.cancel}</Text>
+                    </TouchableOpacity>
                   </View>
                 </View>
-
-                <View style={{ marginVertical: 5, flexDirection: "row-reverse", justifyContent: "space-around" }}>
-                  <TouchableOpacity style={{ ...globalStyles.buttonGroupButton, backgroundColor: globalColors.btnOk }} onPress={props.handleSubmit}>
-                    <Text style={{ color: "white" }}>{globalLiterals.ButtonTexts.ok}</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={{ ...globalStyles.buttonGroupButton, backgroundColor: globalColors.btnCancel }} onPress={navigation.goBack}>
-                    <Text style={{ color: "white" }}>{globalLiterals.ButtonTexts.cancel}</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            )}
-          </Formik>
-        </View>
-      </ScrollView>
-    </View>
+              )}
+            </Formik>
+          </View>
+        </ScrollView>
+      </Content>
+    </Container>
   );
 }
 

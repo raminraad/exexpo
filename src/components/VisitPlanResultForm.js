@@ -31,22 +31,48 @@ export default function VisitPlanResultForm(props) {
   const [productModalItem, setProductModalItem] = useState(null);
 
   const isGeoLocationAcceptable = async (lat, long) => {
+    console.log('SUBMITTING');
     let { status } = await Location.requestPermissionsAsync();
+    console.log(status)
     if (status !== "granted") {
+      Alert.alert(
+        "",
+        globalLiterals.validationErrors.locationPermissionDenied,
+        [
+          {
+            text: globalLiterals.ButtonTexts.ok,
+          },
+        ],
+        { cancelable: true }
+      );
       return false;
+    } else {
+      let userLocation = await Location.getCurrentPositionAsync({});
+      console.log(`1 : ${JSON.stringify(userLocation)}`)
+
+      let p1 = { latitude: userLocation.coords.latitude, longitude: userLocation.coords.longitude };
+      console.log(p1);
+      let p2 = { latitude: lat, longitude: long };
+      console.log(p2);
+      let distance = await getPreciseDistance(p1, p2, 1);
+      console.log(distance);
+
+
+      if (userLocation && distance <= global.AcceptableDistanceForVisitor) return true;
+      else {
+        Alert.alert(
+          "",
+          globalLiterals.validationErrors.notInGeoRange,
+          [
+            {
+              text: globalLiterals.ButtonTexts.ok,
+            },
+          ],
+          { cancelable: true }
+        );
+        return false;
+      }
     }
-
-    let userLocation = await Location.getCurrentPositionAsync({});
-console.log('5555555555555555555555555555555555555555555555')
-    let p1 = { latitude: userLocation.coords.latitude, longitude: userLocation.coords.longitude };
-    let p2 = { latitude: lat, longitude: long };
-    console.log(p1);
-    console.log(p2);
-    let distance = await getPreciseDistance(p1, p2, 1);
-
-    console.log(distance);
-
-    return userLocation && distance <= global.AcceptableDistanceForVisitor;
   };
 
   const onProductModalSubmit = (item) => {
@@ -114,15 +140,14 @@ console.log('5555555555555555555555555555555555555555555555')
           for (let i = 0; i < _array.length; i++) _array[i].rxKey = i + 1;
 
           setRawData(_array);
-          // console.log(`☺☺ RAW_DATA: ${rawDataQuery} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
+          console.log(`☺☺ RAW_DATA: ${rawDataQuery} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
         },
         (transaction, error) => console.log(`☻☻ ${rawDataQuery} =>=> ${error}`)
       );
-      
     });
 
     setIsLoading(false);
-    return () => setRawData([]);
+    return () => console.log('EFFECT');
   }, []);
 
   const renderSubtitle = (item) => (
@@ -144,7 +169,7 @@ console.log('5555555555555555555555555555555555555555555555')
   const swipeLeftAction = (item) => (
     <View style={globalStyles.listItemSwipeLeftContainer}>
       <FontAwesome5 name='trash-alt' onPress={() => confirmAndDelete(item)} size={globalSizes.icons.medium} color={globalColors.btnDelete} />
-      <Separator style={{backgroundColor:globalColors.transparent}}/>
+      <Separator style={{ backgroundColor: globalColors.transparent }} />
       <FontAwesome5
         name='edit'
         onPress={() => {
@@ -188,11 +213,7 @@ console.log('5555555555555555555555555555555555555555555555')
       <ScrollView style={{ padding: 25 }} keyboardShouldPersistTaps='never'>
         <View>
           <Modal visible={isProductModalVisible} animationType='slide'>
-            <VisitPlanResultProductForm
-              onSubmit={onProductModalSubmit}
-              onCancel={() => setIsProductModalVisible(false)}
-              initialItem={productModalItem}
-            />
+            <VisitPlanResultProductForm onSubmit={onProductModalSubmit} onCancel={() => setIsProductModalVisible(false)} initialItem={productModalItem} />
           </Modal>
 
           <View style={{ flexDirection: "row-reverse", justifyContent: "space-between" }}>
@@ -226,7 +247,7 @@ console.log('5555555555555555555555555555555555555555555555')
           <Formik
             initialValues={initialItem}
             onSubmit={async (values, actions) => {
-              if (!global.AcceptableDistanceForVisitor || (await isGeoLocationAcceptable(initialItem.Lat, initialItem.Long))) {
+              if (!global.AcceptableDistanceForVisitor||!initialItem.Lat||!initialItem.Long || (await isGeoLocationAcceptable(initialItem.Lat, initialItem.Long))) {
                 console.log("submitting");
                 actions.resetForm();
                 values.details = rawData;
@@ -235,21 +256,9 @@ console.log('5555555555555555555555555555555555555555555555')
                 values.SyncStatus = 2;
                 values.rxSync = 2;
                 navigation.navigate("VisitPlanCustomers", { yoyo: values });
-              } else {
-                //fixme: replace alert with a nice one
-                alert(globalLiterals.validationErrors.notInGeoRange);
-                Alert.alert(
-                  "",
-                  globalLiterals.alerts.notInGeoRange,
-                  [
-                    {
-                      text: globalLiterals.ButtonTexts.ok,
-                    },
-                  ],
-                  { cancelable: true }
-                );
               }
-            }}>
+            }}
+            >
             {(props) => (
               <View style={{ marginTop: 30, justifyContent: "space-between" }}>
                 <View style={globalStyles.addModalFieldContainer}>
@@ -260,7 +269,7 @@ console.log('5555555555555555555555555555555555555555555555')
                     placeholder='توضیحات مختصر درباره گزارش پویش'
                     multiline
                     onChangeText={props.handleChange("ResultSummary")}
-                    value={props.values?.ResultSummary}
+                    value={props.values.ResultSummary}
                   />
                 </View>
                 <View style={globalStyles.addModalFieldContainer}>
@@ -292,14 +301,13 @@ console.log('5555555555555555555555555555555555555555555555')
                   </View>
                 </View>
 
-                
-                <View style={{ marginVertical: 5 ,flexDirection:'row-reverse',justifyContent:'space-around'}} >
-                <TouchableOpacity style={{...globalStyles.buttonGroupButton, backgroundColor:globalColors.btnOk}} onPress={props.handleSubmit}>
-                  <Text style={{color:'white'}}>{globalLiterals.ButtonTexts.ok}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{...globalStyles.buttonGroupButton,backgroundColor:globalColors.btnCancel}} onPress={navigation.goBack}>
-                  <Text style={{color:'white'}}>{globalLiterals.ButtonTexts.cancel}</Text>
-                </TouchableOpacity>
+                <View style={{ marginVertical: 5, flexDirection: "row-reverse", justifyContent: "space-around" }}>
+                  <TouchableOpacity style={{ ...globalStyles.buttonGroupButton, backgroundColor: globalColors.btnOk }} onPress={props.handleSubmit}>
+                    <Text style={{ color: "white" }}>{globalLiterals.ButtonTexts.ok}</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={{ ...globalStyles.buttonGroupButton, backgroundColor: globalColors.btnCancel }} onPress={navigation.goBack}>
+                    <Text style={{ color: "white" }}>{globalLiterals.ButtonTexts.cancel}</Text>
+                  </TouchableOpacity>
                 </View>
               </View>
             )}

@@ -292,6 +292,7 @@ export const globalLiterals = {
     required: "وارد کردن این فیلد الزامیست",
     notNumber: "مقدار این فیلد میبایست عددی باشد",
     notInGeoRange: "فاصله شما از مقدار تعیین شده بیشتر است. لطفاً به محدوده فروشگاه مورد نظر برگشته و مجددا تلاش فرمایید.",
+    locationPermissionDenied: "مجوز دسترسی برنامه به مکان یاب دستگاه الزامیست",
   },
   actionAndStateErrors: {
     saveError: "ذخیره اطلاعات با خطا مواجه شد. لطفاً دوباره تلاش نمایید",
@@ -300,7 +301,7 @@ export const globalLiterals = {
   Confirmations: {
     syncData: "ارسال و بروزرسانی داده ها انجام شود؟",
     deleteProduct: "کالای انتخاب شده حذف شود؟",
-    reloadProducts: "همگام سازی کالاها انجام گردد؟",
+    reloadProducts: "بروزرسانی کالاها انجام گردد؟",
   },
   alerts: {
     syncDone: "ارسال و بروزرسانی داده ها با موفقیت انجام شد.",

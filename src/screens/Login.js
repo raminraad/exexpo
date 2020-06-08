@@ -6,6 +6,7 @@ import { StackActions } from "@react-navigation/native";
 import { globalColors, globalLiterals } from "../lib/rxGlobal";
 import NetInfo from '@react-native-community/netinfo';
 import * as dp from "../lib/sqliteDp";
+import * as persianLib from "../lib/persianLib";
 
 export default function Login({ navigation }) {
   const [message, setMessage] = useState("");
@@ -37,6 +38,7 @@ const [IsRememberChecked, setIsRememberChecked] = useState(true);
   //   iMEI: "offline",
   // };
   // goto('Drawer')
+  
   //xxx: end
 
   const submit = async () => {
@@ -67,7 +69,7 @@ console.log(userInfo);
           }
         })
         //xxx:
-        .then(dp.pullAndCommitVisitPlanData)
+        // .then(dp.pullAndCommitVisitPlanData)
         //xxx
         .then(()=>goto('Drawer'))
         .catch((error) => {
@@ -131,12 +133,13 @@ console.log(userInfo);
           </View>
         </View>
       </View>
-      <View style={styles.signUpTextContainer}>
+       {/* todo: fix and uncomment signUp page */}
+      {/* <View style={styles.signUpTextContainer}>
         <Text style={styles.signUpText}>هنوز حساب کاریری ندارید؟ </Text>
         <TouchableOpacity onPress={()=>{goto('SignUp')}}>
           <Text style={styles.signUpButton}>ایجاد حساب کاربری</Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
     </View>
   );
 }

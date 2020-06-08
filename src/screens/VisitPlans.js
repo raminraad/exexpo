@@ -129,7 +129,7 @@ export default function VisitPlans({ navigation, route }) {
 
   const onListItemNavigateForward = (item)=>{
     navigation.navigate("VisitPlanCustomers", {
-      title: `مشتریان هدف در تاریخ ${persianLib.toShortDate(new Date(item.OperationDate))}`,
+      title: `مشتریان هدف در تاریخ ${persianLib.toShortDate(item.OperationDate)}`,
       initialItem: item,
     })
   };
@@ -197,7 +197,7 @@ export default function VisitPlans({ navigation, route }) {
               linearGradientProps={globalColors.gradients.listItem}
               title={`⚡ ${item.Summary}`}
               titleStyle={globalStyles.listItemTitle}
-              subtitle={`تاریخ پویش ${persianLib.toShortDate(new Date(item.OperationDate))}`}
+              subtitle={`تاریخ پویش:  ${persianLib.toLongDate(item.OperationDate)}`}
               subtitleStyle={{...globalStyles.listItemTitle,color:globalColors.listItemSubtitleText,marginRight:22}}
               leftElement={<TouchableOpacity style={{alignSelf:'stretch',flex:0.1,justifyContent:'center'}} onPress={()=>onListItemNavigateForward(item)}>
                 <Entypo 

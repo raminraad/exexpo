@@ -6,18 +6,16 @@ import { StackActions } from "@react-navigation/native";
 import { globalColors, globalLiterals } from "../lib/rxGlobal";
 import NetInfo from '@react-native-community/netinfo';
 import * as dp from "../lib/sqliteDp";
-import * as persianLib from "../lib/persianLib";
 
 export default function Login({ navigation }) {
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const isConnected = useRef(false);
 const [IsRememberChecked, setIsRememberChecked] = useState(true);
   const passPhraseRef = useRef(null);
   const userNameRef = useRef(null);
   let userInfo = {
-    userName: "offline",
-    passPhrase: "offline123",
+    userName: "",
+    passPhrase: "",
     iMEI: "64564646465465454",
   };
 
@@ -32,12 +30,12 @@ const [IsRememberChecked, setIsRememberChecked] = useState(true);
 
   console.disableYellowBox = true;
 
-  // userInfo = {
-  //   userName: "offline",
-  //   passPhrase: "offline123",
-  //   iMEI: "offline",
-  // };
-  // goto('Drawer')
+  userInfo = {
+    userName: "offline",
+    passPhrase: "offline123",
+    iMEI: "offline",
+  };
+  // goto('AppDrawer')
   
   //xxx: end
 
@@ -69,9 +67,9 @@ console.log(userInfo);
           }
         })
         //xxx:
-        // .then(dp.pullAndCommitVisitPlanData)
+        .then(dp.pullAndCommitVisitPlanData)
         //xxx
-        .then(()=>goto('Drawer'))
+        .then(()=>goto('AppDrawer'))
         .catch((error) => {
           setMessage(error);
         });

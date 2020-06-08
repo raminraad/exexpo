@@ -23,18 +23,12 @@ import {
 } from "native-base";
 import { Icon, Divider, ListItem } from "react-native-elements";
 import { Feather } from "@expo/vector-icons";
-import { MaterialIcons } from "@expo/vector-icons";
-import { FontAwesome5 } from "@expo/vector-icons";
 import { Entypo } from '@expo/vector-icons'; 
-import { AntDesign } from '@expo/vector-icons'; 
-import { Ionicons } from '@expo/vector-icons'; 
-import Swipeable from "react-native-gesture-handler/Swipeable";
 import { globalStyles, globalColors, globalSizes, menuOptionsCustomStyles, globalLiterals } from "../lib/rxGlobal";
 import * as persianLib from "../lib/persianLib";
 import { Menu, MenuTrigger, MenuOptions, MenuOption } from "react-native-popup-menu";
 import DefaultHeader from "../components/DefaultHeader";
 import * as dp from "../lib/sqliteDp";
-import * as visitPlanDp from "../lib/visitPlanSqliteDb";
 import { openDatabase } from "expo-sqlite";
 import TouchableScale from "react-native-touchable-scale"; // https://github.com/kohver/react-native-touchable-scale
 import { LinearGradient } from "expo-linear-gradient";

@@ -1,13 +1,13 @@
 {
   "expo": {
-    "name": "exexpo",
+    "name": "Retail",
     "slug": "exexpo",
     "platforms": [
       "ios",
       "android",
       "web"
     ],
-    "version": "1.0.0",
+    "version": "1.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {

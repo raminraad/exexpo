@@ -1,13 +1,10 @@
 // In App.js in a new project
 
 import * as React from "react";
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
 import Login from "./src/screens/Login";
 import SignUp from "./src/screens/SignUp";
-import { createDrawerNavigator } from "@react-navigation/drawer";
 import { MenuProvider } from "react-native-popup-menu";
-import { DrawerNavigator } from "./src/screens/DrawerNavigator";
+import { AppNavigator } from "./src/screens/AppNavigator";
 import { AppLoading } from "expo";
 import { Container, Text } from "native-base";
 import * as Font from "expo-font";
@@ -16,7 +13,6 @@ import VisitPlans from "./src/screens/VisitPlans";
 import VisitPlanCustomers from "./src/screens/VisitPlanCustomers";
 import VisitPlanResultForm from "./src/components/VisitPlanResultForm";
 
-const LoginStack = createStackNavigator();
 
 export default class App extends React.Component {
   constructor(props) {
@@ -43,27 +39,7 @@ export default class App extends React.Component {
     return (
       <Container>
         <MenuProvider>
-          <NavigationContainer>
-            <LoginStack.Navigator
-              initialRouteName="Login"
-              screenOptions={{
-                headerShown: false,
-                headerStyle: {
-                  backgroundColor: "#E8F1F2",
-                },
-                headerTintColor: "#13293D",
-                headerTitleStyle: {
-                  fontWeight: "bold",
-                },
-              }}
-            >
-              <LoginStack.Screen name="Login" component={Login} />
-              <LoginStack.Screen name="Drawer" component={DrawerNavigator} />
-              <LoginStack.Screen name="SignUp" component={SignUp} />
-              {/* <LoginStack.Screen name="VisitPlanCustomers" component={VisitPlanCustomers} /> */}
-              {/* <LoginStack.Screen name="VisitPlanResultForm" component={VisitPlanResultForm} /> */}
-            </LoginStack.Navigator>
-          </NavigationContainer>
+          <AppNavigator/>
         </MenuProvider>
       </Container>
     );

@@ -32,6 +32,8 @@ import * as dp from "../lib/sqliteDp";
 import { openDatabase } from "expo-sqlite";
 import TouchableScale from "react-native-touchable-scale"; // https://github.com/kohver/react-native-touchable-scale
 import { LinearGradient } from "expo-linear-gradient";
+import * as storageLib from "../lib/storageLib";
+
 
 export default function VisitPlans({ navigation, route }) {
   const [rawData, setRawData] = useState([]);
@@ -40,10 +42,8 @@ export default function VisitPlans({ navigation, route }) {
   const [isOnAdvancedFilter, setisOnAdvancedFilter] = useState(false);
   const [instantFilterText, setInstantFilterText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const authToken = global.authToken;
 
   useEffect(() => {
-    //xxx: uncomment ctor
     ctor();
   }, []);
 

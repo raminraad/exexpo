@@ -19,23 +19,17 @@ export default function Login({ navigation }) {
   global.AcceptableDistanceForVisitor = 200;
 
   const initAuthInfo = async () => {
-    console.log('2')
     let storedString = await storageLib.retrieve("authInfo");
     if (storedString) {
       let storedJson = JSON.parse(storedString);
       setAuthInfo(storedJson);
       setIsRememberChecked(storedJson.isRememberChecked);
     }
-    console.log('3')
-    console.log(`Retrieved info: ${JSON.stringify(authInfo)}`);
   };
-console.log('1')
 
-
-useEffect(() => {
-  initAuthInfo();
-}, [])
-console.log('4')
+  useEffect(() => {
+    initAuthInfo();
+  }, []);
 
   const goto = (screen) => {
     //clear the stack and set the Home screen as only screen
@@ -46,19 +40,10 @@ console.log('4')
 
   console.disableYellowBox = true;
 
-  // authInfo = {
-  //   userName: "offline",
-  //   passPhrase: "offline123",
-  //   iMEI: "offline",
-  // };
-  // goto('AppDrawer')
-
   //xxx: end
 
   const submit = async (newInputs) => {
     setIsLoading(true);
-    console.log("new inputs:");
-    console.log(newInputs);
     setMessage("در حال بررسی اطلاعات کاربری..");
     var myHeaders = new Headers();
     myHeaders.append("Accept", "application/json");
@@ -70,12 +55,10 @@ console.log('4')
       body: JSON.stringify(newInputs),
       redirect: "follow",
     };
-    console.log("submitting..");
     if (await NetInfo.fetch().then((state) => state.isConnected)) {
       fetch("http://audit.mazmaz.net/Api/WebApi.asmx/Authenticate", requestOptions)
         .then((response) => response.json())
         .then((result) => {
-          console.log(JSON.stringify(result));
           if (result.d.Token) newInputs.authToken = result.d.Token;
           else {
             newInputs.isRememberChecked = false;
@@ -95,11 +78,10 @@ console.log('4')
     }
     setIsLoading(false);
   };
-// console.log('[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]]]]')
-// console.log(authInfo)
+
   return (
     <Formik
-    enableReinitialize
+      enableReinitialize
       initialValues={
         authInfo.isRememberChecked
           ? authInfo
@@ -113,7 +95,6 @@ console.log('4')
       }
       onSubmit={async (values, actions) => {
         values.isRememberChecked = isRememberChecked;
-        actions.resetForm();
         submit(values);
       }}>
       {(props) => (

@@ -59,7 +59,7 @@ export default function VisitPlanCustomers(props) {
           query,
           [],
           (_, { rows: { _array } }) => {
-            console.log(`☺☺ ${query} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
+            console.log(`👍 ${query} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
             for (let i = 0; i < _array.length; i++) _array[i].rxKey = i + 1;
             console.log("set raw data");
             setRawData(_array);
@@ -68,7 +68,7 @@ export default function VisitPlanCustomers(props) {
             resolve("reload done");
           },
           (transaction, error) => {
-            alert(`☻☻ ${query} => ${error}`);
+            alert(`❌ ${query} => ${error}`);
             reject();
           }
         );

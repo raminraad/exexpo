@@ -141,9 +141,9 @@ export default function VisitPlanResultForm(props) {
           for (let i = 0; i < _array.length; i++) _array[i].rxKey = i + 1;
 
           setRawData(_array);
-          console.log(`☺☺ RAW_DATA: ${rawDataQuery} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
+          console.log(`👍 RAW_DATA: ${rawDataQuery} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
         },
-        (transaction, error) => console.log(`☻☻ ${rawDataQuery} =>=> ${error}`)
+        (transaction, error) => console.log(`❌ ${rawDataQuery} =>=> ${error}`)
       );
     });
 

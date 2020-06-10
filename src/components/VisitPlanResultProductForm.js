@@ -53,14 +53,14 @@ export default function VisitPlanResultProductForm(props) {
           productsRawDataQuery,
           [],
           (_, { rows: { _array } }) => {
-            // console.log(`☺☺ PRODUCTS_RAW_DATA: ${productsRawDataQuery} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
+            // console.log(`👍 PRODUCTS_RAW_DATA: ${productsRawDataQuery} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
             //todo: replace with sql side indexing
             for (let i = 0; i < _array.length; i++) _array[i].rxKey = i + 1;
             productsRawData.current = _array;
             resolve();
           },
           (transaction, error) => {
-            console.log(`☻☻ ${productsRawDataQuery} => ${error}`);
+            console.log(`❌ ${productsRawDataQuery} => ${error}`);
             reject();
           }
         );

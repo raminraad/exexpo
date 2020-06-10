@@ -54,7 +54,7 @@ export default function VisitPlans({ navigation, route }) {
       if (global.xxx) {
         let result = require("../dev/visitPlanData.json");
         if (result && result.d.DataTables.UserVisitPlan.length) {
-          console.log(`☺☺ dev data loaded. count: {result.d.DataTables.UserVisitPlan.length}`);
+          console.log(`👍 dev data loaded. count: {result.d.DataTables.UserVisitPlan.length}`);
           await setRawData(result.d.DataTables.UserVisitPlan);
           console.log(JSON.stringify(rawData));
         }
@@ -73,13 +73,13 @@ export default function VisitPlans({ navigation, route }) {
           query,
           [],
           (_, { rows: { _array } }) => {
-            console.log(`☺☺ ${query} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
+            console.log(`👍 ${query} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
             for (let i = 0; i < _array.length; i++) _array[i].rxKey = i + 1;
             setRawData(_array);
             resolve();
           },
           (transaction, error) => {
-            console.log(`☻☻ ${query} => ${error}`);
+            console.log(`❌ ${query} => ${error}`);
             reject();
           }
         );

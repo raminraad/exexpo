@@ -38,7 +38,7 @@ export const renewTables = (resolve, reject, result) => {
     ];
 
     db.exec(createQueries, false, () => {
-      console.log(`☺☺ creating tables done successfully..`);
+      console.log(`👍 creating tables done successfully..`);
       resolve(result);
     });
   };
@@ -62,24 +62,24 @@ export const insertProductGroup = (...parameters) => {
   // let params = [Id, ParentId, ProductGroupCode, Title, LastModifiedDate, SyncStatus];
   let query = `insert into ProductGroup (Id,ParentId,ProductGroupCode,Title,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?)`;
 
-  db.exec([{ sql: `${query};`, args: parameters }], false, () => console.log(`☺☺ success: ${query}`));
+  db.exec([{ sql: `${query};`, args: parameters }], false, () => console.log(`👍 success: ${query}`));
 };
 
 export const insertProduct = (...parameters) => {
   // let params = [Id, ProductGroupId, ProductCode, Taste, LastModifiedDate, SyncStatus];
   let query = `insert into Product (Id,ProductGroupId,ProductCode,Taste,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?)`;
-  db.exec([{ sql: `${query};`, args: parameters }], false, () => console.log(`☺☺ insertion done successfully into Product..`));
+  db.exec([{ sql: `${query};`, args: parameters }], false, () => console.log(`👍 insertion done successfully into Product..`));
 };
 
 export const insertProductSub = (...parameters) => {
   // let params = [Id, ProductId, BarCode, IranCode, Color, Language, PriceType, PriceValue, MeasurmentType, MeasurmentScale, LastModifiedDate, SyncStatus];
   let query = `insert into ProductSub (Id,ProductId,BarCode,IranCode,Color,Language,PriceType,PriceValue,MeasurmentType,MeasurmentScale,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?,?,?,?,?,?,?)`;
-  db.exec([{ sql: `${query};`, args: parameters }], false, () => console.log(`☺☺ insertion done successfully into ProductSub..`));
+  db.exec([{ sql: `${query};`, args: parameters }], false, () => console.log(`👍 insertion done successfully into ProductSub..`));
 };
 export const insertUserVisitPlan = (...parameters) => {
   let query = `insert into UserVisitPlan (Id,Summary,OperationDate,DateX,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?)`;
   // let params = [Id, Summary, OperationDate, DateX, LastModifiedDate, SyncStatus];
-  db.exec([{ sql: `${query};`, args: parameters }], false, () => console.log(`☺☺ insertion done successfully into UserVisitPlan..`));
+  db.exec([{ sql: `${query};`, args: parameters }], false, () => console.log(`👍 insertion done successfully into UserVisitPlan..`));
 };
 
 export const insertVisitPlanCustomers = (...parameters) => {
@@ -105,7 +105,7 @@ export const insertVisitPlanCustomers = (...parameters) => {
   //   SyncStatus,
   // ];
   let query = `insert into VisitPlanCustomers (Id,VisitPlanId,CustomerId,Code,Title,Owner,Long,Lat,Type,Address,Phone,Cell,Vol,ResultAttachedFileTitle,ResultSummary,ResultStatus,ResultVisitedDate,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
-  db.exec([{ sql: `${query};`, args: parameters }], false, () => console.log(`☺☺ insertion done successfully into VisitPlanCustomers..`));
+  db.exec([{ sql: `${query};`, args: parameters }], false, () => console.log(`👍 insertion done successfully into VisitPlanCustomers..`));
 };
 
 export const insertVisitPlanResults = (...parameters) => {
@@ -125,11 +125,11 @@ export const insertVisitPlanResults = (...parameters) => {
   //   SyncStatus,
   // ];
   let query = `insert into VisitPlanResults (Id,VisitPlanCustomerId,ProductSubId,SellPrice,Weight,HasInventory,ShelfInventoryCount,ShelfVisibleCount,WarehouseInventoryCount,VerbalPurchaseCount,FactorPurchaseCount,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?,?,?,?,?,?,?,?)`;
-  db.exec([{ sql: `${query};`, args: parameters }], false, () => console.log(`☺☺ insertion done successfully into VisitPlanResults..`));
+  db.exec([{ sql: `${query};`, args: parameters }], false, () => console.log(`👍 insertion done successfully into VisitPlanResults..`));
 };
 
 export const pullAndCommitVisitPlanData = async () => {
-  console.log("☺☺ pull visit plan data started");
+  console.log("👍 pull visit plan data started");
   let authToken = global.authInfo.authToken;
   let myHeaders = new Headers();
   myHeaders.append("Accept", "application/json");
@@ -142,7 +142,7 @@ export const pullAndCommitVisitPlanData = async () => {
     body: JSON.stringify(raw),
     redirect: "follow",
   };
-  console.log(`☺☺ request sent with token: ${authToken}`);
+  console.log(`👍 request sent with token: ${authToken}`);
   return fetch("http://audit.mazmaz.net/Api/WebApi.asmx/SyncServerData", requestOptions)
     .then((response) => response.json())
     .then((result) => {
@@ -159,13 +159,13 @@ export const pullAndCommitVisitPlanData = async () => {
     })
     .then((result) => {
       commitVisitPlanData(result.d.DataTables);
-      console.log(`☺☺ last "then" executed`);
+      console.log(`👍 last "then" executed`);
     })
     .catch((error) => console.log(error));
 };
 
 export const syncVisitPlanData = async () => {
-  console.log("☺☺ sync visit plan data started");
+  console.log("👍 sync visit plan data started");
   let authToken = global.authInfo.authToken;
   console.log("1*");
   let myHeaders = new Headers();
@@ -193,7 +193,7 @@ export const syncVisitPlanData = async () => {
     body: JSON.stringify(raw),
     redirect: "follow",
   };
-  console.log(`☺☺ request sent with token: ${authToken}`);
+  console.log(`👍 request sent with token: ${authToken}`);
   return (
     fetch("http://audit.mazmaz.net/Api/WebApi.asmx/SyncClientData", requestOptions)
       .then((response) => {
@@ -222,14 +222,14 @@ export const syncVisitPlanData = async () => {
       })
       .then((result) => {
         commitVisitPlanData(result.d.DataTables);
-        console.log(`☺☺ last "then" executed`);
+        console.log(`👍 last "then" executed`);
       })
       .catch((error) => alert("خطا در ارتباط با سرور.."))
   );
 };
 
 const commitVisitPlanData = async (DataTables) => {
-  console.log("☺☺ commit started..");
+  console.log("👍 commit started..");
   const db = openDatabase("db");
 
   let queries = [];
@@ -324,9 +324,9 @@ const commitVisitPlanData = async (DataTables) => {
     let query = `insert into VisitPlanResults (Id,VisitPlanCustomerId,ProductSubId,SellPrice,Weight,HasInventory,ShelfInventoryCount,ShelfVisibleCount,WarehouseInventoryCount,VerbalPurchaseCount,FactorPurchaseCount,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?,?,?,?,?,?,?,?)`;
     queries.push({ sql: `${query};`, args: parameters });
   }
-  db.exec(queries, false, () => console.log(`☺☺ insert queries executed successfully..`));
+  db.exec(queries, false, () => console.log(`👍 insert queries executed successfully..`));
 
-  console.log("☺☺ last line of commit executed");
+  console.log("👍 last line of commit executed");
 };
 
 export const select = async (tableName) => {
@@ -339,11 +339,11 @@ export const select = async (tableName) => {
         query,
         [],
         (_, { rows: { _array } }) => {
-          console.log(`☺☺ ${query} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
+          console.log(`👍 ${query} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
           resolve(_array);
         },
         (transaction, error) => {
-          console.log(`☻☻ ${query} => ${error}`);
+          console.log(`❌ ${query} => ${error}`);
           reject(error);
         }
       );
@@ -355,7 +355,7 @@ export const select = async (tableName) => {
 
 export const commitVisitPlanResult = async (VisitPlanCustomer) => {
   try {
-    console.log("☺☺ commit started..");
+    console.log("👍 commit started..");
     const db = openDatabase("db");
 
     let queries = [];
@@ -419,9 +419,9 @@ export const commitVisitPlanResult = async (VisitPlanCustomer) => {
       //   query.sql,
       //   query.args,
       //   (_, resultSet) => {
-      //     resolve(`☺☺ QUERY: ${JSON.stringify(query)} =>  RESULT: ${JSON.stringify(resultSet)}`);
+      //     resolve(`👍 QUERY: ${JSON.stringify(query)} =>  RESULT: ${JSON.stringify(resultSet)}`);
       //   },
-      //   (transaction, error) => reject(`☻☻ ${JSON.stringify(query)} => ${error}`)
+      //   (transaction, error) => reject(`❌ ${JSON.stringify(query)} => ${error}`)
       // );
     }
     return "COMMIT VISIT RESULTS DONE";
@@ -457,9 +457,9 @@ export const getJoinedProducts = () => {
         query,
         [],
         (_, { rows: { _array } }) => {
-          console.log(`☺☺ ${query} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
+          console.log(`👍 ${query} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
         },
-        (transaction, error) => console.log(`☻☻ ${query} =>=> ${error}`)
+        (transaction, error) => console.log(`❌ ${query} =>=> ${error}`)
       );
     }
   });

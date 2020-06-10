@@ -280,17 +280,20 @@ export const menuOptionsCustomStyles = {
 };
 
 export const globalLiterals = {
-  ButtonTexts: {
+  buttonTexts: {
     yes: "بلی",
     no: "خیر",
     ok: "تأیید",
     cancel: "انصراف",
   },
-  Titles: {
+  titles: {
     syncData: "بروزرسانی داده ها",
   },
-  Messages: {
+  messages: {
     emptyList: "آیتمی برای نمایش وجود ندارد",
+  },
+  progress:{
+    syncingTimeInfo:"در حال همگام سازی اطلاعات زمانی",
   },
   validationErrors: {
     required: "وارد کردن این فیلد الزامیست",

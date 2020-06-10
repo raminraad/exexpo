@@ -6,6 +6,7 @@ import { StackActions } from "@react-navigation/native";
 import { globalColors, globalLiterals } from "../lib/rxGlobal";
 import NetInfo from "@react-native-community/netinfo";
 import * as storageLib from "../lib/storageLib";
+import * as calendarLib from "../lib/calendarLib";
 import { Formik } from "formik";
 
 export default function Login({ navigation }) {
@@ -16,7 +17,11 @@ export default function Login({ navigation }) {
   const userNameRef = useRef(null);
   const [authInfo, setAuthInfo] = useState({});
 
-  global.AcceptableDistanceForVisitor = 200;
+  
+  const getSetting = async () => {
+    global.dynamicSetting={AcceptableDistanceForVisitor : 200};
+  }
+
 
   const initAuthInfo = async () => {
     let storedString = await storageLib.retrieve("authInfo");
@@ -66,8 +71,16 @@ export default function Login({ navigation }) {
           }
         })
         .then(() => {
-          global.authInfo = newInputs;
+          global.userinfo = {authInfo : newInputs};
         })
+        .then(async () => {
+          setMessage(globalLiterals.progress.syncingTimeInfo);
+          return await calendarLib.getDateTimeFromWebService();
+        })
+        .then((loginDateTime) => {
+          global.userinfo.loginDateTime = loginDateTime;
+        })
+        .then(async()=>{getSetting()})
         .then(() => goto("AppDrawer"))
         .catch((error) => {
           setMessage(error);

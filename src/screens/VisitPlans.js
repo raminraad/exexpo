@@ -50,8 +50,7 @@ export default function VisitPlans({ navigation, route }) {
 
   const ctor = async () => {
 
-    let d1= await calendarLib.getDateTimeFromWebService();
-    console.log(JSON.stringify(d1));
+    
 
     try {
       setIsLoading(true);
@@ -103,7 +102,7 @@ export default function VisitPlans({ navigation, route }) {
       globalLiterals.alerts.syncDone,
       [
         {
-          text: globalLiterals.ButtonTexts.ok,
+          text: globalLiterals.buttonTexts.ok,
         },
       ],
       { cancelable: true }
@@ -116,11 +115,11 @@ export default function VisitPlans({ navigation, route }) {
       globalLiterals.Confirmations.syncData,
       [
         {
-          text: globalLiterals.ButtonTexts.yes,
+          text: globalLiterals.buttonTexts.yes,
           onPress: syncData,
         },
         {
-          text: globalLiterals.ButtonTexts.no,
+          text: globalLiterals.buttonTexts.no,
         },
       ],
       { cancelable: true }

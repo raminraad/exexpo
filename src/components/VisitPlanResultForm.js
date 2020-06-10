@@ -42,7 +42,7 @@ export default function VisitPlanResultForm(props) {
         globalLiterals.validationErrors.locationPermissionDenied,
         [
           {
-            text: globalLiterals.ButtonTexts.ok,
+            text: globalLiterals.buttonTexts.ok,
           },
         ],
         { cancelable: true }
@@ -59,14 +59,14 @@ export default function VisitPlanResultForm(props) {
       let distance = await getPreciseDistance(p1, p2, 1);
       console.log(distance);
 
-      if (userLocation && distance <= global.AcceptableDistanceForVisitor) return true;
+      if (userLocation && distance <= global.dynamicSetting.AcceptableDistanceForVisitor) return true;
       else {
         Alert.alert(
           "",
           globalLiterals.validationErrors.notInGeoRange,
           [
             {
-              text: globalLiterals.ButtonTexts.ok,
+              text: globalLiterals.buttonTexts.ok,
             },
           ],
           { cancelable: true }
@@ -102,11 +102,11 @@ export default function VisitPlanResultForm(props) {
       globalLiterals.Confirmations.deleteProduct,
       [
         {
-          text: globalLiterals.ButtonTexts.yes,
+          text: globalLiterals.buttonTexts.yes,
           onPress: () => onListItemDelete(item),
         },
         {
-          text: globalLiterals.ButtonTexts.no,
+          text: globalLiterals.buttonTexts.no,
         },
       ],
       { cancelable: true }
@@ -205,7 +205,7 @@ export default function VisitPlanResultForm(props) {
 
   const renderEmptyList = () => (
     <View style={{ ...globalStyles.emptyList, marginLeft: 20, marginTop: 10 }}>
-      <Text style={{ color: globalColors.listItemSubtitleText }}>{globalLiterals.Messages.emptyList}</Text>
+      <Text style={{ color: globalColors.listItemSubtitleText }}>{globalLiterals.messages.emptyList}</Text>
     </View>
   );
 
@@ -254,7 +254,7 @@ export default function VisitPlanResultForm(props) {
               initialValues={initialItem}
               onSubmit={async (values, actions) => {
                 if (
-                  !global.AcceptableDistanceForVisitor ||
+                  !global.dynamicSetting.AcceptableDistanceForVisitor ||
                   !initialItem.Lat ||
                   !initialItem.Long ||
                   (await isGeoLocationAcceptable(initialItem.Lat, initialItem.Long))
@@ -313,10 +313,10 @@ export default function VisitPlanResultForm(props) {
 
                   <View style={{ marginVertical: 5, flexDirection: "row-reverse", justifyContent: "space-around" }}>
                     <TouchableOpacity style={{ ...globalStyles.buttonGroupButton, backgroundColor: globalColors.btnOk }} onPress={props.handleSubmit}>
-                      <Text style={{ color: "white" }}>{globalLiterals.ButtonTexts.ok}</Text>
+                      <Text style={{ color: "white" }}>{globalLiterals.buttonTexts.ok}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{ ...globalStyles.buttonGroupButton, backgroundColor: globalColors.btnCancel }} onPress={navigation.goBack}>
-                      <Text style={{ color: "white" }}>{globalLiterals.ButtonTexts.cancel}</Text>
+                      <Text style={{ color: "white" }}>{globalLiterals.buttonTexts.cancel}</Text>
                     </TouchableOpacity>
                   </View>
                 </View>

@@ -1,7 +1,6 @@
 import moment from "jalali-moment";
 import * as rxGlobal from "../lib/rxGlobal";
 
-
 let week = new Array("يكشنبه", "دوشنبه", "سه شنبه", "چهارشنبه", "پنج شنبه", "جمعه", "شنبه");
 let months = new Array("فروردين", "ارديبهشت", "خرداد", "تير", "مرداد", "شهريور", "مهر", "آبان", "آذر", "دي", "بهمن", "اسفند");
 
@@ -166,17 +165,19 @@ export const getDateTimeFromWebService = async () => {
     .then((result) => {
       if (result.date) {
         let output = {
-          persianDate:result.date.full.official.iso.en,
-          gregorianDate:result.date.other.gregorian.iso.en,
-          time24:result.time24.full.en,
-          time12:result.time12.full.full.en,
+          persianDate: result.date.full.official.iso.en,
+          gregorianDate: result.date.other.gregorian.iso.en,
+          time24: result.time24.full.en,
+          time12: result.time12.full.full.en,
         };
-        console.log(`👍 [calendarLib.getDateTimeFromApi] : ${output}`);
+        console.log(`👍 [calendarLib.getDateTimeFromWebService] : ${JSON.stringify(output)}`);
         return output;
       } else throw new Error(rxGlobal.globalLiterals.actionAndStateErrors.invalidDataFormat);
     })
     .catch((error) => {
-      console.log(`❌ [calendarLib.getDateTimeFromApi] : ${error}`);
+      console.log(`❌ [calendarLib.getDateTimeFromWebService] : ${error}`);
       return null;
     });
 };
+
+export const toShortGregorian = (input, format) => moment.from(input, "fa", format).locale("en").format("YYYY/MM/DD ");

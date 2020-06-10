@@ -75,11 +75,11 @@ export default function VisitPlanResultProductForm(props) {
       globalLiterals.Confirmations.reloadProducts,
       [
         {
-          text: globalLiterals.ButtonTexts.yes,
+          text: globalLiterals.buttonTexts.yes,
           onPress: pullProducts
         },
         {
-          text: globalLiterals.ButtonTexts.no,
+          text: globalLiterals.buttonTexts.no,
         },
       ],
       { cancelable: true }
@@ -221,10 +221,10 @@ export default function VisitPlanResultProductForm(props) {
           </View>
           <View style={{ marginVertical: 5, flexDirection: "row-reverse", justifyContent: "space-around" }}>
             <TouchableOpacity style={{ ...globalStyles.buttonGroupButton, backgroundColor: globalColors.btnOk }} onPress={props.handleSubmit}>
-              <Text style={{ color: "white" }}>{globalLiterals.ButtonTexts.ok}</Text>
+              <Text style={{ color: "white" }}>{globalLiterals.buttonTexts.ok}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={{ ...globalStyles.buttonGroupButton, backgroundColor: globalColors.btnCancel }} onPress={onCancel}>
-              <Text style={{ color: "white" }}>{globalLiterals.ButtonTexts.cancel}</Text>
+              <Text style={{ color: "white" }}>{globalLiterals.buttonTexts.cancel}</Text>
             </TouchableOpacity>
           </View>
         </View>

@@ -87,7 +87,7 @@ export default function VisitPlanCustomers(props) {
       globalLiterals.alerts.syncDone,
       [
         {
-          text: globalLiterals.ButtonTexts.ok,
+          text: globalLiterals.buttonTexts.ok,
         },
       ],
       { cancelable: true }
@@ -100,11 +100,11 @@ export default function VisitPlanCustomers(props) {
       globalLiterals.Confirmations.syncData,
       [
         {
-          text: globalLiterals.ButtonTexts.yes,
+          text: globalLiterals.buttonTexts.yes,
           onPress: syncData,
         },
         {
-          text: globalLiterals.ButtonTexts.no,
+          text: globalLiterals.buttonTexts.no,
         },
       ],
       { cancelable: true }

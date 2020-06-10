@@ -37,7 +37,6 @@ import * as storageLib from "../lib/storageLib";
 
 export default function VisitPlans({ navigation, route }) {
   const [rawData, setRawData] = useState([]);
-  const [presentationalData, setPresentationalData] = useState([]);
   const [isOnInstantFilter, setIsOnInstantFilter] = useState(false);
   const [isOnAdvancedFilter, setisOnAdvancedFilter] = useState(false);
   const [instantFilterText, setInstantFilterText] = useState("");
@@ -50,16 +49,19 @@ export default function VisitPlans({ navigation, route }) {
   const { title } = route.params;
 
   const ctor = async () => {
-    setIsLoading(true);
-    if (global.xxx) {
-      let result = require("../dev/visitPlanData.json");
-      if (result && result.d.DataTables.UserVisitPlan.length) {
-        console.log(`☺☺ dev data loaded. count: {result.d.DataTables.UserVisitPlan.length}`);
-        await setRawData(result.d);
-        await setPresentationalData(result.d.DataTables.UserVisitPlan);
-      }
-    } else await reload();
-    setIsLoading(false);
+    try {
+      setIsLoading(true);
+      if (global.xxx) {
+        let result = require("../dev/visitPlanData.json");
+        if (result && result.d.DataTables.UserVisitPlan.length) {
+          console.log(`☺☺ dev data loaded. count: {result.d.DataTables.UserVisitPlan.length}`);
+          await setRawData(result.d.DataTables.UserVisitPlan);
+          console.log(JSON.stringify(rawData));
+        }
+      } else await reload();
+    } catch (err) {
+      
+    } finally {setIsLoading(false);}
   };
 
   const reload = async () => {
@@ -73,11 +75,11 @@ export default function VisitPlans({ navigation, route }) {
           (_, { rows: { _array } }) => {
             console.log(`☺☺ ${query} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
             for (let i = 0; i < _array.length; i++) _array[i].rxKey = i + 1;
-            setPresentationalData(_array);
+            setRawData(_array);
             resolve();
           },
           (transaction, error) => {
-            alert(`☻☻ ${query} => ${error}`);
+            console.log(`☻☻ ${query} => ${error}`);
             reject();
           }
         );
@@ -179,7 +181,7 @@ export default function VisitPlans({ navigation, route }) {
           renderItem={renderItem}
         /> */}
 
-        {presentationalData.map((item, i) => (
+        {rawData.map((item, i) => (
           
             <ListItem
             containerStyle={[globalStyles.shadowedContainer,globalStyles.listItemHeaderContainer]}

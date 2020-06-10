@@ -130,7 +130,7 @@ export const insertVisitPlanResults = (...parameters) => {
 
 export const pullAndCommitVisitPlanData = async () => {
   console.log("☺☺ pull visit plan data started");
-  let authToken = global.authToken;
+  let authToken = global.authInfo.authToken;
   let myHeaders = new Headers();
   myHeaders.append("Accept", "application/json");
   myHeaders.append("Content-Type", "application/json");
@@ -166,11 +166,14 @@ export const pullAndCommitVisitPlanData = async () => {
 
 export const syncVisitPlanData = async () => {
   console.log("☺☺ sync visit plan data started");
-  let authToken = global.authToken;
+  let authToken = global.authInfo.authToken;
+  console.log("1*");
   let myHeaders = new Headers();
+  console.log("2*");
   myHeaders.append("Accept", "application/json");
+  console.log("3*");
   myHeaders.append("Content-Type", "application/json");
-
+  console.log("4*");
   let dbData = {};
   for (const tbl of tableNames) {
     let selectedContent = await select(tbl);

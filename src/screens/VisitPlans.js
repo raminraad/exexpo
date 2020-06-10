@@ -25,7 +25,7 @@ import { Icon, Divider, ListItem } from "react-native-elements";
 import { Feather } from "@expo/vector-icons";
 import { Entypo } from '@expo/vector-icons'; 
 import { globalStyles, globalColors, globalSizes, menuOptionsCustomStyles, globalLiterals } from "../lib/rxGlobal";
-import * as persianLib from "../lib/persianLib";
+import * as calendarLib from "../lib/calendarLib";
 import { Menu, MenuTrigger, MenuOptions, MenuOption } from "react-native-popup-menu";
 import DefaultHeader from "../components/DefaultHeader";
 import * as dp from "../lib/sqliteDp";
@@ -49,6 +49,10 @@ export default function VisitPlans({ navigation, route }) {
   const { title } = route.params;
 
   const ctor = async () => {
+
+    let d1= await calendarLib.getDateTimeFromWebService();
+    console.log(JSON.stringify(d1));
+
     try {
       setIsLoading(true);
       if (global.xxx) {
@@ -125,7 +129,7 @@ export default function VisitPlans({ navigation, route }) {
 
   const onListItemNavigateForward = (item)=>{
     navigation.navigate("VisitPlanCustomers", {
-      title: `مشتریان هدف در تاریخ ${persianLib.toShortDate(item.OperationDate)}`,
+      title: `مشتریان هدف در تاریخ ${calendarLib.toShortPersian(item.OperationDate)}`,
       initialItem: item,
     })
   };
@@ -193,7 +197,7 @@ export default function VisitPlans({ navigation, route }) {
               linearGradientProps={globalColors.gradients.listItem}
               title={`⚡ ${item.Summary}`}
               titleStyle={globalStyles.listItemTitle}
-              subtitle={`تاریخ پویش:  ${persianLib.toLongDate(item.OperationDate)}`}
+              subtitle={`تاریخ پویش:  ${calendarLib.toLongPersian(item.OperationDate)}`}
               subtitleStyle={{...globalStyles.listItemTitle,color:globalColors.listItemSubtitleText,marginRight:22}}
               leftElement={<TouchableOpacity style={{alignSelf:'stretch',flex:0.1,justifyContent:'center'}} onPress={()=>onListItemNavigateForward(item)}>
                 <Entypo 

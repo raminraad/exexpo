@@ -74,7 +74,7 @@ export default function Login({ navigation }) {
         })
         .finally(() => storageLib.store("authInfo", JSON.stringify(newInputs)));
     } else {
-      setMessage(globalLiterals.actionAndStateErrors.NoInternetError);
+      setMessage(globalLiterals.actionAndStateErrors.noInternetError);
     }
     setIsLoading(false);
   };

@@ -1,31 +1,12 @@
-import moment from 'jalali-moment'
+import moment from "jalali-moment";
+import * as rxGlobal from "../lib/rxGlobal";
 
-let week = new Array(
-  "يكشنبه",
-  "دوشنبه",
-  "سه شنبه",
-  "چهارشنبه",
-  "پنج شنبه",
-  "جمعه",
-  "شنبه"
-);
-let months = new Array(
-  "فروردين",
-  "ارديبهشت",
-  "خرداد",
-  "تير",
-  "مرداد",
-  "شهريور",
-  "مهر",
-  "آبان",
-  "آذر",
-  "دي",
-  "بهمن",
-  "اسفند"
-);
 
-export const toLongDate = (dateString) => {
-  let inputDate=new Date(dateString);
+let week = new Array("يكشنبه", "دوشنبه", "سه شنبه", "چهارشنبه", "پنج شنبه", "جمعه", "شنبه");
+let months = new Array("فروردين", "ارديبهشت", "خرداد", "تير", "مرداد", "شهريور", "مهر", "آبان", "آذر", "دي", "بهمن", "اسفند");
+
+export const toLongPersian = (dateString) => {
+  let inputDate = new Date(dateString);
   let d = inputDate.getDay();
   let day = inputDate.getDate();
   let month = inputDate.getMonth() + 1;
@@ -164,9 +145,38 @@ export const toLongDate = (dateString) => {
   return week[d] + " " + day + " " + months[month - 1] + " " + year;
 };
 
-  export const toShortDate = (date) => {
-    moment.locale('en'); // default locale is en  
-    let m = moment(date, 'YYYY/MM/DD');
-    return m.format('jYYYY/jMM/jDD ');
-  
-  }
+export const toShortPersian = (date) => {
+  moment.locale("en"); // default locale is en
+  let m = moment(date, "YYYY/MM/DD");
+  return m.format("jYYYY/jMM/jDD ");
+};
+
+export const getDateTimeFromWebService = async () => {
+  let headers = new Headers();
+  headers.append("Accept", "application/json");
+  headers.append("Content-Type", "application/json");
+
+  let requestOptions = {
+    method: "GET",
+    redirect: "follow",
+  };
+
+  return fetch("https://api.keybit.ir/time", requestOptions)
+    .then((response) => response.json())
+    .then((result) => {
+      if (result.date) {
+        let output = {
+          persianDate:result.date.full.official.iso.en,
+          gregorianDate:result.date.other.gregorian.iso.en,
+          time24:result.time24.full.en,
+          time12:result.time12.full.full.en,
+        };
+        console.log(`👍 [calendarLib.getDateTimeFromApi] : ${output}`);
+        return output;
+      } else throw new Error(rxGlobal.globalLiterals.actionAndStateErrors.invalidDataFormat);
+    })
+    .catch((error) => {
+      console.log(`❌ [calendarLib.getDateTimeFromApi] : ${error}`);
+      return null;
+    });
+};

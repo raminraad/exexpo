@@ -300,7 +300,8 @@ export const globalLiterals = {
   },
   actionAndStateErrors: {
     saveError: "ذخیره اطلاعات با خطا مواجه شد. لطفاً دوباره تلاش نمایید",
-    NoInternetError: "اتصال به اینترنت برقرار نیست",
+    noInternetError: "اتصال به اینترنت برقرار نیست",
+    invalidDataFormat: "قالب داده ها صحیح نیست",
   },
   Confirmations: {
     syncData: "ارسال و بروزرسانی داده ها انجام شود؟",

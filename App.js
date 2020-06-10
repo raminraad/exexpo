@@ -6,13 +6,12 @@ import SignUp from "./src/screens/SignUp";
 import { MenuProvider } from "react-native-popup-menu";
 import { AppNavigator } from "./src/screens/AppNavigator";
 import { AppLoading } from "expo";
-import { Container, Text } from "native-base";
+import { Container, Text, Root } from "native-base";
 import * as Font from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
 import VisitPlans from "./src/screens/VisitPlans";
 import VisitPlanCustomers from "./src/screens/VisitPlanCustomers";
 import VisitPlanResultForm from "./src/components/VisitPlanResultForm";
-
 
 export default class App extends React.Component {
   constructor(props) {
@@ -37,11 +36,13 @@ export default class App extends React.Component {
     }
 
     return (
-      <Container>
-        <MenuProvider>
-          <AppNavigator/>
-        </MenuProvider>
-      </Container>
+      <Root>
+        <Container>
+          <MenuProvider>
+            <AppNavigator />
+          </MenuProvider>
+        </Container>
+      </Root>
     );
   }
 }

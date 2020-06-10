@@ -129,7 +129,7 @@ export const insertVisitPlanResults = (...parameters) => {
 };
 
 export const pullAndCommitVisitPlanData = async () => {
-  console.log("👍 pull visit plan data started");
+    console.log(`🏁 [sqliteDp.pullAndCommitVisitPlanData]`);
   let authToken = global.userinfo.authInfo.authToken;
   let myHeaders = new Headers();
   myHeaders.append("Accept", "application/json");
@@ -142,7 +142,7 @@ export const pullAndCommitVisitPlanData = async () => {
     body: JSON.stringify(raw),
     redirect: "follow",
   };
-  console.log(`👍 request sent with token: ${authToken}`);
+  console.log(`👍 [sqliteDp.pullAndCommitVisitPlanData] request sent with token: ${authToken}`);
   return fetch("http://audit.mazmaz.net/Api/WebApi.asmx/SyncServerData", requestOptions)
     .then((response) => response.json())
     .then((result) => {
@@ -159,13 +159,13 @@ export const pullAndCommitVisitPlanData = async () => {
     })
     .then((result) => {
       commitVisitPlanData(result.d.DataTables);
-      console.log(`👍 last "then" executed`);
+      console.log(`👍 [sqliteDp.pullAndCommitVisitPlanData] ${result}`);
     })
-    .catch((error) => console.log(error));
+    .catch((error) => console.log(`❌ [sqliteDp.pullAndCommitVisitPlanData] : ${error}`));
 };
 
 export const syncVisitPlanData = async () => {
-  console.log("👍 sync visit plan data started");
+    console.log(`🏁 [sqliteDp.syncVisitPlanData]`);
   let authToken = global.userinfo.authInfo.authToken;
   console.log("1*");
   let myHeaders = new Headers();
@@ -176,10 +176,12 @@ export const syncVisitPlanData = async () => {
   console.log("4*");
   let dbData = {};
   for (const tbl of tableNames) {
-    let selectedContent = await select(tbl);
-    // console.log(`SELECTED ${tbl}`);
-    // console.log(`${JSON.stringify(selectedContent)}`);
-    dbData[`${tbl}`] = selectedContent;
+    try {
+      let selectedContent = await select(tbl);
+      dbData[`${tbl}`] = selectedContent;
+    } catch (error) {
+      console.log(`❌ [sqliteDp.syncVisitPlanData.for] ${error}`);
+    }
   }
 
   let raw = { token: `${authToken}`, syncDataTables: dbData };

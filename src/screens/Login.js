@@ -44,12 +44,14 @@ export default function Login({ navigation }) {
   // XXX: start
 
   console.disableYellowBox = true;
+  global.dev={useFakeData:false};
+  // goto("AppDrawer");
 
   //xxx: end
 
   const submit = async (newInputs) => {
     setIsLoading(true);
-    setMessage("در حال بررسی اطلاعات کاربری..");
+    setMessage(globalLiterals.progress.checkingLoginInfo);
     var myHeaders = new Headers();
     myHeaders.append("Accept", "application/json");
     myHeaders.append("Content-Type", "application/json");

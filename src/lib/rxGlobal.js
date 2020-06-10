@@ -1,8 +1,12 @@
 import { StyleSheet } from "react-native";
 
+export const setting = {
+  toastDuration:5000,
+}
+
 export const globalColors = {
   palette: {
-    seaGreen: "#2a9d8f",
+    seaGreen: "#00a896",
     paleGray: "#e5e5e5",
     glassyWhite: "rgba(255,255,255,0.7)",
     cream: "#F1FAEE",
@@ -12,6 +16,12 @@ export const globalColors = {
     coal: "#111111",
     dirtyNavy: "#1c313a",
     dimBlue: "#0582ca",
+  },
+  toasts:{
+    error:'#e71d36',
+    success:'#02c39a',
+    warning:'#ff9f1c',  
+    message:'#8d99ae',
   },
   gradients: {
     listItem: {
@@ -294,6 +304,7 @@ export const globalLiterals = {
   },
   progress:{
     syncingTimeInfo:"در حال همگام سازی اطلاعات زمانی",
+    checkingLoginInfo:"در حال بررسی اطلاعات کاربری"
   },
   validationErrors: {
     required: "وارد کردن این فیلد الزامیست",

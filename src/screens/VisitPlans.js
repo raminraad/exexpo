@@ -63,13 +63,13 @@ export default function VisitPlans({ navigation, route }) {
           await setRawData(result.d.DataTables.UserVisitPlan);
           console.log(JSON.stringify(rawData));
         }
-      } else await reload();
+      } else await load();
     } catch (err) {
       
     } finally {setIsLoading(false);}
   };
 
-  const reload = async () => {
+  const load = async () => {
     const db = openDatabase("db");
     let pr = new Promise((resolve, reject) => {
       let query = `select * from UserVisitPlan limit 1`;
@@ -97,7 +97,7 @@ export default function VisitPlans({ navigation, route }) {
   const syncData = async () => {
     setIsLoading(true);
     await dp.syncVisitPlanData();
-    await reload();
+    await load();
     setIsLoading(false);
     toastLib.error(rxGlobal.globalLiterals.alerts.syncDone);
   };

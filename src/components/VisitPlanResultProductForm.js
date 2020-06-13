@@ -69,14 +69,14 @@ export default function VisitPlanResultProductForm(props) {
       setIsProductLoading(false);
     });
   };
-  const confirmAndPullProducts = () => {
+  const confirmAndGetProducts = () => {
     Alert.alert(
       "",
-      globalLiterals.Confirmations.reloadProducts,
+      globalLiterals.Confirmations.syncProducts,
       [
         {
           text: globalLiterals.buttonTexts.yes,
-          onPress: pullProducts
+          onPress: getProducts
         },
         {
           text: globalLiterals.buttonTexts.no,
@@ -86,10 +86,10 @@ export default function VisitPlanResultProductForm(props) {
     );
   };
 
-  const pullProducts=async ()=>{
+  const getProducts=async ()=>{
 
     setIsProductLoading(true);
-//fixme: implement real pullProducts
+//fixme: implement real getProducts
     setTimeout(() => {
       setIsProductLoading(false);
     }, 5000);
@@ -121,7 +121,7 @@ export default function VisitPlanResultProductForm(props) {
                       borderRadius: 10,
                     }}
                     onPress={loadProducts}
-                    onLongPress={confirmAndPullProducts}>
+                    onLongPress={confirmAndGetProducts}>
                     {isProductLoading ? <Spinner color='white' /> : <Feather name='refresh-ccw' size={24} color='white' />}
                   </TouchableOpacity>
                   <View style={{ flex: 1, marginLeft: 10 }}>

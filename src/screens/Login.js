@@ -17,11 +17,9 @@ export default function Login({ navigation }) {
   const userNameRef = useRef(null);
   const [authInfo, setAuthInfo] = useState({});
 
-  
   const getSetting = async () => {
-    global.dynamicSetting={AcceptableDistanceForVisitor : 200};
-  }
-
+    global.dynamicSetting = { AcceptableDistanceForVisitor: 200 };
+  };
 
   const initAuthInfo = async () => {
     let storedString = await storageLib.retrieve("authInfo");
@@ -44,7 +42,7 @@ export default function Login({ navigation }) {
   // XXX: start
 
   console.disableYellowBox = true;
-  global.dev={useFakeData:false};
+  global.dev = { useFakeData: false };
   // goto("AppDrawer");
 
   //xxx: end
@@ -73,7 +71,7 @@ export default function Login({ navigation }) {
           }
         })
         .then(() => {
-          global.userInfo = {authInfo : newInputs};
+          global.userInfo = { authInfo: newInputs };
         })
         .then(async () => {
           setMessage(globalLiterals.progress.syncingTimeInfo);
@@ -82,16 +80,20 @@ export default function Login({ navigation }) {
         .then((loginDateTime) => {
           global.userInfo.loginDateTime = loginDateTime;
         })
-        .then(async()=>{getSetting()})
+        .then(async () => {
+          getSetting();
+        })
         .then(() => goto("AppDrawer"))
         .catch((error) => {
           setMessage(error);
         })
-        .finally(() => storageLib.store("authInfo", JSON.stringify(newInputs)));
+        .finally(() => {
+          storageLib.store("authInfo", JSON.stringify(newInputs));
+          setIsLoading(false);
+        });
     } else {
       setMessage(globalLiterals.actionAndStateErrors.noInternetError);
     }
-    setIsLoading(false);
   };
 
   return (

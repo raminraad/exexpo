@@ -320,7 +320,7 @@ export const globalLiterals = {
   Confirmations: {
     syncData: "ارسال و بروزرسانی داده ها انجام شود؟",
     deleteProduct: "کالای انتخاب شده حذف شود؟",
-    reloadProducts: "بروزرسانی کالاها انجام گردد؟",
+    syncProducts: "بروزرسانی کالاها انجام گردد؟",
   },
   alerts: {
     syncDone: "ارسال و بروزرسانی داده ها با موفقیت انجام شد.",

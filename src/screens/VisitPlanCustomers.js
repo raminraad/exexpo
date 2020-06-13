@@ -50,8 +50,8 @@ export default function VisitPlanCustomers(props) {
   const [instantFilterText, setInstantFilterText] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
-  const reload = async () => {
-    console.log("reload started");
+  const load = async () => {
+    console.log(`🏁 [VisitPlanCustomers.load]`);
     let pr = new Promise((resolve, reject) => {
       let query = `select * from VisitPlanCustomers where VisitPlanId = ${props.route.params.initialItem.Id}`;
       db.transaction((tx) => {
@@ -59,13 +59,12 @@ export default function VisitPlanCustomers(props) {
           query,
           [],
           (_, { rows: { _array } }) => {
-            console.log(`👍 ${query} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
+            console.log(`💬 [VisitPlanCustomers.load] ${query} => ${JSON.stringify([..._array])}`);
             for (let i = 0; i < _array.length; i++) _array[i].rxKey = i + 1;
-            console.log("set raw data");
             setRawData(_array);
-            console.log("set presentation data");
             setPresentationalData(_array);
-            resolve("reload done");
+            console.log(`👍 [VisitPlanCustomers.load]`);
+            resolve();
           },
           (transaction, error) => {
             alert(`❌ ${query} => ${error}`);
@@ -80,7 +79,7 @@ export default function VisitPlanCustomers(props) {
   const syncData = async () => {
     setIsLoading(true);
     await dp.syncVisitPlanData();
-    await reload();
+    await load();
     setIsLoading(false);
     Alert.alert(
       "",
@@ -115,7 +114,7 @@ export default function VisitPlanCustomers(props) {
     (async () => {
       setIsLoading(true);
       if (yoyo) await handleYoyo(yoyo);
-      console.log(await reload());
+      console.log(await load());
       SetIsVisitModalVisible(false);
       setIsLoading(false);
     })();
@@ -125,10 +124,7 @@ export default function VisitPlanCustomers(props) {
 
   const handleYoyo = async (yoyo) => {
     try {
-      console.log("handle yoyo : 1");
-      console.log(await dp.commitVisitPlanResult(yoyo));
-      console.log("handle yoyo : 2");
-      console.log("handle yoyo : 3");
+      console.log(await dp.saveVisitPlanResult(yoyo));
     } catch (error) {
       alert(globalLiterals.actionAndStateErrors.saveError);
     }

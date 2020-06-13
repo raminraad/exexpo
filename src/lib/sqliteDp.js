@@ -128,8 +128,8 @@ export const insertVisitPlanResults = (...parameters) => {
   db.exec([{ sql: `${query};`, args: parameters }], false, () => console.log(`👍 insertion done successfully into VisitPlanResults..`));
 };
 
-export const pullAndCommitVisitPlanData = async () => {
-    console.log(`🏁 [sqliteDp.pullAndCommitVisitPlanData]`);
+export const getAndSaveVisitPlanData = async () => {
+    console.log(`🏁 [sqliteDp.getAndSaveVisitPlanData]`);
   let authToken = global.userInfo.authInfo.authToken;
   let myHeaders = new Headers();
   myHeaders.append("Accept", "application/json");
@@ -142,7 +142,7 @@ export const pullAndCommitVisitPlanData = async () => {
     body: JSON.stringify(raw),
     redirect: "follow",
   };
-  console.log(`👍 [sqliteDp.pullAndCommitVisitPlanData] request sent with token: ${authToken}`);
+  console.log(`👍 [sqliteDp.getAndSaveVisitPlanData] request sent with token: ${authToken}`);
   return fetch("http://audit.mazmaz.net/Api/WebApi.asmx/SyncServerData", requestOptions)
     .then((response) => response.json())
     .then((result) => {
@@ -158,10 +158,10 @@ export const pullAndCommitVisitPlanData = async () => {
       return renewPromise.then(result);
     })
     .then((result) => {
-      commitVisitPlanData(result.d.DataTables);
-      console.log(`👍 [sqliteDp.pullAndCommitVisitPlanData] ${result}`);
+      saveVisitPlanData(result.d.DataTables);
+      console.log(`👍 [sqliteDp.getAndSaveVisitPlanData] ${result}`);
     })
-    .catch((error) => console.log(`❌ [sqliteDp.pullAndCommitVisitPlanData] : ${error}`));
+    .catch((error) => console.log(`❌ [sqliteDp.getAndSaveVisitPlanData] : ${error}`));
 };
 
 export const syncVisitPlanData = async () => {
@@ -223,15 +223,15 @@ export const syncVisitPlanData = async () => {
         return renewPromise.then(result);
       })
       .then((result) => {
-        commitVisitPlanData(result.d.DataTables);
+        saveVisitPlanData(result.d.DataTables);
         console.log(`👍 last "then" executed`);
       })
       .catch((error) => alert("خطا در ارتباط با سرور.."))
   );
 };
 
-const commitVisitPlanData = async (DataTables) => {
-  console.log("👍 commit started..");
+const saveVisitPlanData = async (DataTables) => {
+    console.log(`🏁 [sqliteDp.saveVisitPlanData]`);
   const db = openDatabase("db");
 
   let queries = [];
@@ -328,7 +328,7 @@ const commitVisitPlanData = async (DataTables) => {
   }
   db.exec(queries, false, () => console.log(`👍 insert queries executed successfully..`));
 
-  console.log("👍 last line of commit executed");
+  console.log(`👍 [sqliteDp.saveVisitPlanData]`);
 };
 
 export const select = async (tableName) => {
@@ -355,9 +355,10 @@ export const select = async (tableName) => {
   return pr;
 };
 
-export const commitVisitPlanResult = async (VisitPlanCustomer) => {
+export const saveVisitPlanResult = async (VisitPlanCustomer) => {
   try {
-    console.log("👍 commit started..");
+    console.log(`🏁 [sqliteDp.saveVisitPlanResult]`);
+
     const db = openDatabase("db");
 
     let queries = [];
@@ -426,7 +427,8 @@ export const commitVisitPlanResult = async (VisitPlanCustomer) => {
       //   (transaction, error) => reject(`❌ ${JSON.stringify(query)} => ${error}`)
       // );
     }
-    return "COMMIT VISIT RESULTS DONE";
+    
+    return`👍 [sqliteDp.saveVisitPlanResult]`;
     // });
   } catch (err) {
     throw err;

@@ -129,7 +129,7 @@ export const insertVisitPlanResults = (...parameters) => {
 };
 
 export const getAndSaveVisitPlanData = async () => {
-    console.log(`🏁 [sqliteDp.getAndSaveVisitPlanData]`);
+  console.log(`🏁 [sqliteDp.getAndSaveVisitPlanData]`);
   let authToken = global.userInfo.authInfo.authToken;
   let myHeaders = new Headers();
   myHeaders.append("Accept", "application/json");
@@ -164,8 +164,8 @@ export const getAndSaveVisitPlanData = async () => {
     .catch((error) => console.log(`❌ [sqliteDp.getAndSaveVisitPlanData] : ${error}`));
 };
 
-export const syncVisitPlanData = async () => {
-    console.log(`🏁 [sqliteDp.syncVisitPlanData]`);
+export const syncVisitPlans = async () => {
+  console.log(`🏁 [sqliteDp.syncVisitPlans]`);
   let authToken = global.userInfo.authInfo.authToken;
   console.log("1*");
   let myHeaders = new Headers();
@@ -180,7 +180,7 @@ export const syncVisitPlanData = async () => {
       let selectedContent = await select(tbl);
       dbData[`${tbl}`] = selectedContent;
     } catch (error) {
-      console.log(`❌ [sqliteDp.syncVisitPlanData.for] ${error}`);
+      console.log(`❌ [sqliteDp.syncVisitPlans] ${error}`);
     }
   }
 
@@ -231,7 +231,7 @@ export const syncVisitPlanData = async () => {
 };
 
 const saveVisitPlanData = async (DataTables) => {
-    console.log(`🏁 [sqliteDp.saveVisitPlanData]`);
+  console.log(`🏁 [sqliteDp.saveVisitPlanData]`);
   const db = openDatabase("db");
 
   let queries = [];
@@ -335,13 +335,37 @@ export const select = async (tableName) => {
   const db = openDatabase("db");
 
   let pr = new Promise((resolve, reject) => {
-    let query = `select * from UserVisitPlan `;
+    let query = `select * from ${tableName} `;
     db.transaction((tx) => {
       tx.executeSql(
         query,
         [],
         (_, { rows: { _array } }) => {
           console.log(`👍 ${query} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
+          resolve(_array);
+        },
+        (transaction, error) => {
+          console.log(`❌ ${query} => ${error}`);
+          reject(error);
+        }
+      );
+    });
+  });
+
+  return pr;
+};
+
+const loadVisitPlans = async () => {
+  const db = openDatabase("db");
+  let pr = new Promise((resolve, reject) => {
+    let query = `select * from UserVisitPlan limit 1`;
+    db.transaction((tx) => {
+      tx.executeSql(
+        query,
+        [],
+        (_, { rows: { _array } }) => {
+          console.log(`👍 ${query} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
+          for (let i = 0; i < _array.length; i++) _array[i].rxKey = i + 1;
           resolve(_array);
         },
         (transaction, error) => {
@@ -409,28 +433,17 @@ export const saveVisitPlanResult = async (VisitPlanCustomer) => {
         queries.push({ sql: `${query};`, args: parameters });
       }
     }
-    // console.log('777777777777777777777777777777777777777777')
-    // console.log(JSON.stringify(queries))
 
     // db.transaction((tx) => {
     for (const query of queries) {
-      console.log("8888888888888888888888888888888888888888888888");
-      console.log(JSON.stringify(query));
-      console.log(JSON.stringify(await executeSql(query.sql, query.args)));
-
-      // tx.executeSql(
-      //   query.sql,
-      //   query.args,
-      //   (_, resultSet) => {
-      //     resolve(`👍 QUERY: ${JSON.stringify(query)} =>  RESULT: ${JSON.stringify(resultSet)}`);
-      //   },
-      //   (transaction, error) => reject(`❌ ${JSON.stringify(query)} => ${error}`)
-      // );
+      console.log(`💬 [sqliteDp.saveVisitPlanResult] query: ${JSON.stringify(query)}`);
+      let result = await executeSql(query.sql, query.args);
+      console.log(`💬 [sqliteDp.saveVisitPlanResult] result: ${JSON.stringify(result)}`);
     }
-    
-    return`👍 [sqliteDp.saveVisitPlanResult]`;
-    // });
+
+    return `👍 [sqliteDp.saveVisitPlanResult]`;
   } catch (err) {
+    console.log(`❌ [sqliteDp.saveVisitPlanResult]`);
     throw err;
   }
 };

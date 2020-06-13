@@ -29,7 +29,6 @@ import * as calendarLib from "../lib/calendarLib";
 import { Menu, MenuTrigger, MenuOptions, MenuOption } from "react-native-popup-menu";
 import DefaultHeader from "../components/DefaultHeader";
 import * as dp from "../lib/sqliteDp";
-import { openDatabase } from "expo-sqlite";
 import TouchableScale from "react-native-touchable-scale"; // https://github.com/kohver/react-native-touchable-scale
 import { LinearGradient } from "expo-linear-gradient";
 import * as storageLib from "../lib/storageLib";
@@ -44,60 +43,35 @@ export default function VisitPlans({ navigation, route }) {
   const [instantFilterText, setInstantFilterText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  const { title } = route.params;
+
   useEffect(() => {
     ctor();
   }, []);
 
-  const { title } = route.params;
 
   const ctor = async () => {
-
-    
-
+    console.log(`🏁 [VisitPlan.ctor]`);
     try {
       setIsLoading(true);
       if (global.dev.useFakeData) {
         let result = require("../dev/visitPlanData.json");
         if (result && result.d.DataTables.UserVisitPlan.length) {
-          console.log(`👍 dev data loaded. count: {result.d.DataTables.UserVisitPlan.length}`);
+          console.log(`👍 dev data loaded. count: ${result.d.DataTables.UserVisitPlan.length}`);
           await setRawData(result.d.DataTables.UserVisitPlan);
           console.log(JSON.stringify(rawData));
         }
-      } else await load();
+      } else setRawData(await dp.loadVisitPlans()) ;
     } catch (err) {
+      console.log(`❌ [VisitPlan.ctor]`);
       
     } finally {setIsLoading(false);}
   };
 
-  const load = async () => {
-    const db = openDatabase("db");
-    let pr = new Promise((resolve, reject) => {
-      let query = `select * from UserVisitPlan limit 1`;
-      db.transaction((tx) => {
-        tx.executeSql(
-          query,
-          [],
-          (_, { rows: { _array } }) => {
-            console.log(`👍 ${query} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
-            for (let i = 0; i < _array.length; i++) _array[i].rxKey = i + 1;
-            setRawData(_array);
-            resolve();
-          },
-          (transaction, error) => {
-            console.log(`❌ ${query} => ${error}`);
-            reject();
-          }
-        );
-      });
-    });
-
-    return pr;
-  };
-
-  const syncData = async () => {
+  const sync = async () => {
     setIsLoading(true);
-    await dp.syncVisitPlanData();
-    await load();
+    await dp.syncVisitPlans();
+    await loadVisitPlans();
     setIsLoading(false);
     toastLib.error(rxGlobal.globalLiterals.alerts.syncDone);
   };
@@ -111,7 +85,7 @@ export default function VisitPlans({ navigation, route }) {
         [
           {
             text: rxGlobal.globalLiterals.buttonTexts.yes,
-            onPress: syncData,
+            onPress: sync,
           },
           {
             text: rxGlobal.globalLiterals.buttonTexts.no,

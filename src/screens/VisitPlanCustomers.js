@@ -78,7 +78,7 @@ export default function VisitPlanCustomers(props) {
 
   const syncData = async () => {
     setIsLoading(true);
-    await dp.syncVisitPlanData();
+    await dp.syncVisitPlans();
     await load();
     setIsLoading(false);
     Alert.alert(

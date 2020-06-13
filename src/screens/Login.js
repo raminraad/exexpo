@@ -73,14 +73,14 @@ export default function Login({ navigation }) {
           }
         })
         .then(() => {
-          global.userinfo = {authInfo : newInputs};
+          global.userInfo = {authInfo : newInputs};
         })
         .then(async () => {
           setMessage(globalLiterals.progress.syncingTimeInfo);
           return await calendarLib.getDateTimeFromWebService();
         })
         .then((loginDateTime) => {
-          global.userinfo.loginDateTime = loginDateTime;
+          global.userInfo.loginDateTime = loginDateTime;
         })
         .then(async()=>{getSetting()})
         .then(() => goto("AppDrawer"))

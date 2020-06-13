@@ -130,7 +130,7 @@ export const insertVisitPlanResults = (...parameters) => {
 
 export const pullAndCommitVisitPlanData = async () => {
     console.log(`🏁 [sqliteDp.pullAndCommitVisitPlanData]`);
-  let authToken = global.userinfo.authInfo.authToken;
+  let authToken = global.userInfo.authInfo.authToken;
   let myHeaders = new Headers();
   myHeaders.append("Accept", "application/json");
   myHeaders.append("Content-Type", "application/json");
@@ -147,7 +147,7 @@ export const pullAndCommitVisitPlanData = async () => {
     .then((response) => response.json())
     .then((result) => {
       if (result.d.Response.Token) {
-        global.userinfo.lastSyncDateTime = result.d.LastSyncAtDate;
+        global.userInfo.lastSyncDateTime = result.d.LastSyncAtDate;
         return result;
       } else throw new Error(result.d.Response.Message);
     })
@@ -166,7 +166,7 @@ export const pullAndCommitVisitPlanData = async () => {
 
 export const syncVisitPlanData = async () => {
     console.log(`🏁 [sqliteDp.syncVisitPlanData]`);
-  let authToken = global.userinfo.authInfo.authToken;
+  let authToken = global.userInfo.authInfo.authToken;
   console.log("1*");
   let myHeaders = new Headers();
   console.log("2*");
@@ -216,7 +216,7 @@ export const syncVisitPlanData = async () => {
       // return result;
       // })
       .then((result) => {
-        global.userinfo.lastSyncDateTime = result.d.LastSyncAtDate;
+        global.userInfo.lastSyncDateTime = result.d.LastSyncAtDate;
         let renewPromise = new Promise((resolve, reject) => {
           renewTables(resolve, reject, result);
         });

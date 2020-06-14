@@ -8,6 +8,7 @@ import NetInfo from "@react-native-community/netinfo";
 import * as storageLib from "../lib/storageLib";
 import * as calendarLib from "../lib/calendarLib";
 import { Formik } from "formik";
+import { AntDesign } from "@expo/vector-icons";
 
 export default function Login({ navigation }) {
   const [message, setMessage] = useState("");
@@ -93,6 +94,7 @@ export default function Login({ navigation }) {
         });
     } else {
       setMessage(globalLiterals.actionAndStateErrors.noInternetError);
+      setIsLoading(false);
     }
   };
 
@@ -166,7 +168,11 @@ export default function Login({ navigation }) {
                 <Text style={styles.buttonText}>ورود به حساب</Text>
               </TouchableOpacity>
               <View style={styles.messageContainer}>
-                <ActivityIndicator size={isLoading ? 24 : 0} style={{ marginHorizontal: 10 }} />
+                {isLoading ? (
+                  <ActivityIndicator size={24} style={{ marginHorizontal: 10 }} />
+                ) : (
+                  (message?<AntDesign name='warning' size={24} color='#fcbf49' style={{ marginHorizontal: 10 }} />:null)
+                )}
                 <Text style={styles.message}>{message}</Text>
               </View>
             </View>
@@ -239,13 +245,14 @@ const styles = StyleSheet.create({
   messageContainer: {
     flexDirection: "row-reverse",
     justifyContent: "center",
+    alignItems:'center',
     marginVertical: 10,
   },
   message: {
     flexWrap: "wrap",
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "500",
-    color: globalColors.palette.cream,
+    color: "#ffffff",
     textAlign: "right",
   },
 });

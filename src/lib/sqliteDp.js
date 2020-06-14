@@ -167,13 +167,9 @@ export const getAndSaveVisitPlanData = async () => {
 export const syncVisitPlans = async () => {
   console.log(`🏁 [sqliteDp.syncVisitPlans]`);
   let authToken = global.userInfo.authInfo.authToken;
-  console.log("1*");
   let myHeaders = new Headers();
-  console.log("2*");
   myHeaders.append("Accept", "application/json");
-  console.log("3*");
   myHeaders.append("Content-Type", "application/json");
-  console.log("4*");
   let dbData = {};
   for (const tbl of tableNames) {
     try {

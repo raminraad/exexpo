@@ -28,5 +28,5 @@ const styles = StyleSheet.create({
   },
   textCommon: { textAlign: "right", marginRight: 25 },
   error: { backgroundColor: rxGlobal.globalColors.toasts.error },
-  error: { backgroundColor: rxGlobal.globalColors.toasts.success },
+  success: { backgroundColor: rxGlobal.globalColors.toasts.success },
 });

@@ -77,7 +77,7 @@ export default class Menu extends Component {
               color: globalColors.homeIconBackground2,
               members: 56,
               icon: "credit-card",
-              page:'VisitPlans'
+              page:'UserVisitPlans'
             },
             {
               key: 5,

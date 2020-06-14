@@ -4,7 +4,7 @@ import * as enums from "./enums";
 const db = openDatabase("db");
 const tableNames = ["Announcement", "Product", "ProductGroup", "ProductSub", "UserVisitPlan", "VisitPlanCustomers", "VisitPlanResults"];
 
-export const dropAndCreateTables = (resolve, reject) => {
+export const dropAndCreateTables = async () => {
   let createTables = () => {
     console.log(`🏁 [sqliteProvider.dropAndCreateTables.createTables]`);
     let createQueries = [
@@ -49,15 +49,18 @@ export const dropAndCreateTables = (resolve, reject) => {
     dropQueries.push({ sql: `drop table if exists ${table};`, args: [] });
   }
   console.log(`💬 [sqliteProvider.dropAndCreateTables.dropTables] dropping table(s) ${tableNames}..`);
-  try {
-    db.exec(dropQueries, false, () => {
-      console.log(`👍 [sqliteProvider.dropAndCreateTables.dropTables]`);
-      createTables();
-    });
-  } catch (err) {
-    console.log(`❌ [sqliteProvider.dropAndCreateTables.dropTables] ${err}`);
-    reject(err);
-  }
+  return new Promise((resolve,reject)=>{
+    try {
+      db.exec(dropQueries, false, () => {
+        console.log(`👍 [sqliteProvider.dropAndCreateTables.dropTables]`);
+        createTables();
+        resolve(true);
+      });
+    } catch (err) {
+      console.log(`❌ [sqliteProvider.dropAndCreateTables.dropTables] ${err}`);
+      reject(err);
+    }
+  })
 };
 
 export const selectTable = async (tableName) => {
@@ -91,7 +94,7 @@ export const selectTables = async (tables = tableNames) => {
       let selectedContent = await selectLocalData(tbl);
       dbData[`${tbl}`] = selectedContent;
     } catch (error) {
-      console.log(`❌ [webProvider.postClientData] ${error}`);
+      console.log(`❌ [sqliteProvider.selectTables] ${error}`);
       return null;
     }
   }
@@ -370,8 +373,8 @@ export const syncData = async (dataTables) => {
     try {
       console.log(`💬 [sqliteProvider.syncData] executing queries with parameters: ${JSON.stringify(queries)}`);
       db.exec(queries, false, () => {
-        resolve(true);
         console.log(`👍 [sqliteProvider.syncData] synced: ${dataTables}`);
+        resolve(true);
       });
     } catch (err) {
       reject(err);
@@ -573,41 +576,7 @@ export const updateVisitPlanCustomerAndDetails = async (VisitPlanCustomer) => {
 
 
 
-export const getAndSaveVisitPlanData = async () => {
-  console.log(`🏁 [sqliteProvider.getAndSaveVisitPlanData]`);
-  let userToken = global.userInfo.token;
-  let myHeaders = new Headers();
-  myHeaders.append("Accept", "application/json");
-  myHeaders.append("Content-Type", "application/json");
 
-  let raw = { token: `${userToken}` };
-  let requestOptions = {
-    method: "POST",
-    headers: myHeaders,
-    body: JSON.stringify(raw),
-    redirect: "follow",
-  };
-  console.log(`👍 [sqliteProvider.getAndSaveVisitPlanData] request sent with token: ${userToken}`);
-  return fetch("http://audit.mazmaz.net/Api/WebApi.asmx/SyncServerData", requestOptions)
-    .then((response) => response.json())
-    .then((result) => {
-      if (result.d.Response.Token) {
-        global.userInfo.lastSyncDateTime = result.d.LastSyncAtDate;
-        return result;
-      } else throw new Error(result.d.Response.Message);
-    })
-    .then((result) => {
-      let renewPromise = new Promise((resolve, reject) => {
-        dropAndCreateTables(resolve, reject);
-      });
-      return renewPromise.then(result);
-    })
-    .then((result) => {
-      insertData(result.d.DataTables);
-      console.log(`👍 [sqliteProvider.getAndSaveVisitPlanData] ${result}`);
-    })
-    .catch((error) => console.log(`❌ [sqliteProvider.getAndSaveVisitPlanData] : ${error}`));
-};
 
 
 

@@ -35,7 +35,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import * as toastLib from "../lib/toastLib";
 import NetInfo from "@react-native-community/netinfo";
 
-export default function VisitPlans({ navigation, route }) {
+export default function UserVisitPlan({ navigation, route }) {
   const [rawData, setRawData] = useState([]);
   const [isOnInstantFilter, setIsOnInstantFilter] = useState(false);
   const [isOnAdvancedFilter, setisOnAdvancedFilter] = useState(false);
@@ -49,7 +49,7 @@ export default function VisitPlans({ navigation, route }) {
   }, []);
 
   const ctor = async () => {
-    console.log(`🏁 [VisitPlan.ctor]`);
+    console.log(`🏁 [UserVisitPlans.ctor]`);
     try {
       setIsLoading(true);
       if (global.dev.useFakeData) {
@@ -60,44 +60,54 @@ export default function VisitPlans({ navigation, route }) {
           console.log(JSON.stringify(rawData));
         }
       } else if (await dp.tableExists("UserVisitPlan")) {
-        setRawData(await dp.selectTable('UserVisitPlan'));
+        setRawData(await dp.selectTable("UserVisitPlan"));
       } else {
         await sync();
       }
     } catch (err) {
-      console.log(`❌ [VisitPlan.ctor] ${err}`);
+      console.log(`❌ [UserVisitPlans.ctor] ${err}`);
     } finally {
       setIsLoading(false);
     }
   };
 
   const sync = async () => {
-    setIsLoading(true);
-    await wp.postClientData(await dp.selectTables());
-    await loadVisitPlans();
-    setIsLoading(false);
-    toastLib.error(rxGlobal.globalLiterals.alerts.syncDone);
+    try {
+      setIsLoading(true);
+      if (wp.checkNet()) {
+        console.log(`🏁 [UserVisitPlans.sync]`);
+        let dbData = await dp.selectTables();
+        let dataToSync = await wp.syncClientData(dbData);
+        if (await dp.syncData(dataToSync)) {
+          setRawData(await dp.selectTable("UserVisitPlan"));
+          toastLib.success(rxGlobal.globalLiterals.alerts.syncDone);
+          console.log(`👍 [UserVisitPlans.sync] rawData: ${JSON.stringify(rawData)}`);
+        }
+      } else {
+        toastLib.error(rxGlobal.globalLiterals.actionAndStateErrors.noInternetError);
+      }
+    } catch (err) {
+      console.log(`❌ [UserVisitPlans.sync] ${err}`);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const confirmAndSyncData = async () => {
-    if (await NetInfo.fetch().then((state) => state.isConnected)) {
-      Alert.alert(
-        "",
-        rxGlobal.globalLiterals.Confirmations.syncData,
-        [
-          {
-            text: rxGlobal.globalLiterals.buttonTexts.yes,
-            onPress: sync,
-          },
-          {
-            text: rxGlobal.globalLiterals.buttonTexts.no,
-          },
-        ],
-        { cancelable: true }
-      );
-    } else {
-      toastLib.error(rxGlobal.globalLiterals.actionAndStateErrors.noInternetError);
-    }
+    Alert.alert(
+      "",
+      rxGlobal.globalLiterals.Confirmations.syncData,
+      [
+        {
+          text: rxGlobal.globalLiterals.buttonTexts.yes,
+          onPress: sync,
+        },
+        {
+          text: rxGlobal.globalLiterals.buttonTexts.no,
+        },
+      ],
+      { cancelable: true }
+    );
   };
 
   const onListItemNavigateForward = (item) => {

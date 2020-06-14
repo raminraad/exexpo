@@ -39,6 +39,7 @@ import TouchableScale from "react-native-touchable-scale"; // https://github.com
 import { LinearGradient } from "expo-linear-gradient";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import * as enums from "../lib/enums";
+import * as wp from "../lib/webProvider";
 
 export default function VisitPlanCustomers(props) {
   const db = openDatabase("db");
@@ -79,7 +80,7 @@ export default function VisitPlanCustomers(props) {
 
   const syncData = async () => {
     setIsLoading(true);
-    await dp.postClientData();
+    await wp.syncClientData();
     await load();
     setIsLoading(false);
     Alert.alert(

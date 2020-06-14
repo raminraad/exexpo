@@ -9,6 +9,7 @@ import * as storageProvider from "../lib/storageProvider";
 import * as calendarLib from "../lib/calendarLib";
 import { Formik } from "formik";
 import { AntDesign } from "@expo/vector-icons";
+import * as wp from "../lib/webProvider";
 
 export default function Login({ navigation }) {
   const [message, setMessage] = useState("");
@@ -61,7 +62,7 @@ export default function Login({ navigation }) {
       body: JSON.stringify(newInputs),
       redirect: "follow",
     };
-    if (await NetInfo.fetch().then((state) => state.isConnected)) {
+    if (await wp.checkNet()) {
       fetch("http://audit.mazmaz.net/Api/WebApi.asmx/Authenticate", requestOptions)
         .then((response) => response.json())
         .then((result) => {

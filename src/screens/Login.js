@@ -73,7 +73,7 @@ export default function Login({ navigation }) {
         })
         .then((result) => {
           setMessage(globalLiterals.progress.syncingTimeInfo);
-          global.userInfo = { ...newInputs, token: result.d.Token, tokenExpireDateTime: result.d.ExpirationDate, loginDateTime: result.d.CurrentServerTime };
+          global.userInfo = { ...newInputs, token: result.d.Token, tokenExpirationDateTime: result.d.ExpirationDate, loginDateTime: result.d.CurrentServerTime };
         })
         .then(async () => {
           getSetting();

@@ -78,7 +78,7 @@ export default function VisitPlanCustomers(props) {
 
   const syncData = async () => {
     setIsLoading(true);
-    await dp.syncVisitPlans();
+    await dp.postVisitPlans();
     await load();
     setIsLoading(false);
     Alert.alert(
@@ -124,7 +124,7 @@ export default function VisitPlanCustomers(props) {
 
   const handleYoyo = async (yoyo) => {
     try {
-      console.log(await dp.saveVisitPlanResult(yoyo));
+      console.log(await dp.updateVisitPlanResult(yoyo));
     } catch (error) {
       alert(globalLiterals.actionAndStateErrors.saveError);
     }

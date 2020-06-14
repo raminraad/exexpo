@@ -19,11 +19,11 @@ import {
   Item,
   Input,
   Spinner,
-  Separator
+  Separator,
 } from "native-base";
 import { Icon, Divider, ListItem } from "react-native-elements";
 import { Feather } from "@expo/vector-icons";
-import { Entypo } from '@expo/vector-icons'; 
+import { Entypo } from "@expo/vector-icons";
 import * as rxGlobal from "../lib/rxGlobal";
 import * as calendarLib from "../lib/calendarLib";
 import { Menu, MenuTrigger, MenuOptions, MenuOption } from "react-native-popup-menu";
@@ -35,7 +35,6 @@ import * as storageLib from "../lib/storageLib";
 import * as toastLib from "../lib/toastLib";
 import NetInfo from "@react-native-community/netinfo";
 
-
 export default function VisitPlans({ navigation, route }) {
   const [rawData, setRawData] = useState([]);
   const [isOnInstantFilter, setIsOnInstantFilter] = useState(false);
@@ -46,10 +45,8 @@ export default function VisitPlans({ navigation, route }) {
   const { title } = route.params;
 
   useEffect(() => {
-console.log(JSON.stringify(global.userInfo));
-    // ctor();
+    ctor();
   }, []);
-
 
   const ctor = async () => {
     console.log(`🏁 [VisitPlan.ctor]`);
@@ -62,23 +59,27 @@ console.log(JSON.stringify(global.userInfo));
           await setRawData(result.d.DataTables.UserVisitPlan);
           console.log(JSON.stringify(rawData));
         }
-      } else setRawData(await dp.loadVisitPlans()) ;
+      } else if (await dp.tableExists("UserVisitPlan")) {
+        setRawData(await dp.loadVisitPlans());
+      } else {
+        await sync();
+      }
     } catch (err) {
       console.log(`❌ [VisitPlan.ctor] ${err}`);
-      
-    } finally {setIsLoading(false);}
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const sync = async () => {
     setIsLoading(true);
-    await dp.syncVisitPlans();
+    await dp.postVisitPlans();
     await loadVisitPlans();
     setIsLoading(false);
     toastLib.error(rxGlobal.globalLiterals.alerts.syncDone);
   };
 
-  const confirmAndSyncData =async () => {
-
+  const confirmAndSyncData = async () => {
     if (await NetInfo.fetch().then((state) => state.isConnected)) {
       Alert.alert(
         "",
@@ -94,17 +95,16 @@ console.log(JSON.stringify(global.userInfo));
         ],
         { cancelable: true }
       );
-    }
-    else{
+    } else {
       toastLib.error(rxGlobal.globalLiterals.actionAndStateErrors.noInternetError);
     }
   };
 
-  const onListItemNavigateForward = (item)=>{
+  const onListItemNavigateForward = (item) => {
     navigation.navigate("VisitPlanCustomers", {
       title: `مشتریان هدف در تاریخ ${calendarLib.toShortPersian(item.OperationDate)}`,
       initialItem: item,
-    })
+    });
   };
 
   const renderHeader = () => (
@@ -159,27 +159,24 @@ console.log(JSON.stringify(global.userInfo));
         /> */}
 
         {rawData.map((item, i) => (
-          
-            <ListItem
-            containerStyle={[rxGlobal.globalStyles.shadowedContainer,rxGlobal.globalStyles.listItemHeaderContainer]}
-              Component={TouchableScale}
-              key={item.rxKey}
-              friction={90} //
-              tension={100} // These props are passed to the parent component (here TouchableScale)
-              activeScale={0.95} //
-              linearGradientProps={rxGlobal.globalColors.gradients.listItem}
-              title={`⚡ ${item.Summary}`}
-              titleStyle={rxGlobal.globalStyles.listItemTitle}
-              subtitle={`تاریخ پویش:  ${calendarLib.toLongPersian(item.OperationDate)}`}
-              subtitleStyle={{...rxGlobal.globalStyles.listItemTitle,color:rxGlobal.globalColors.listItemSubtitleText,marginRight:22}}
-              leftElement={<TouchableOpacity style={{alignSelf:'stretch',flex:0.1,justifyContent:'center'}} onPress={()=>onListItemNavigateForward(item)}>
-                <Entypo 
-                  name='chevron-thin-left' 
-                  size={rxGlobal.globalSizes.icons.small} 
-                  color={rxGlobal.globalColors.listItemTitleText}/>
-              </TouchableOpacity>}
-            />
-          
+          <ListItem
+            containerStyle={[rxGlobal.globalStyles.shadowedContainer, rxGlobal.globalStyles.listItemHeaderContainer]}
+            Component={TouchableScale}
+            key={item.rxKey}
+            friction={90} //
+            tension={100} // These props are passed to the parent component (here TouchableScale)
+            activeScale={0.95} //
+            linearGradientProps={rxGlobal.globalColors.gradients.listItem}
+            title={`⚡ ${item.Summary}`}
+            titleStyle={rxGlobal.globalStyles.listItemTitle}
+            subtitle={`تاریخ پویش:  ${calendarLib.toLongPersian(item.OperationDate)}`}
+            subtitleStyle={{ ...rxGlobal.globalStyles.listItemTitle, color: rxGlobal.globalColors.listItemSubtitleText, marginRight: 22 }}
+            leftElement={
+              <TouchableOpacity style={{ alignSelf: "stretch", flex: 0.1, justifyContent: "center" }} onPress={() => onListItemNavigateForward(item)}>
+                <Entypo name='chevron-thin-left' size={rxGlobal.globalSizes.icons.small} color={rxGlobal.globalColors.listItemTitleText} />
+              </TouchableOpacity>
+            }
+          />
         ))}
       </Content>
       {renderFooter()}

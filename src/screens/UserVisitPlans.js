@@ -20,6 +20,7 @@ import {
   Input,
   Spinner,
   Separator,
+  Toast,
 } from "native-base";
 import { Icon, Divider, ListItem } from "react-native-elements";
 import { Feather } from "@expo/vector-icons";
@@ -74,12 +75,13 @@ export default function UserVisitPlan({ navigation, route }) {
 
   const syncClient = async () => {
     try {
+      toastLib.message(rxGlobal.globalLiterals.progress.synchingClientData,40000);
       setIsLoading(true);
       if (wp.checkNet()) {
         console.log(`🏁 [UserVisitPlans.syncClient]`);
         let dbData = await dp.selectTables();
         let dataToSync = await wp.syncClientData(dbData);
-        if (await dp.syncData(dataToSync)) {
+        if (await dp.syncData(dataToSync.DataTables)) {
           setRawData(await dp.selectTable("UserVisitPlan"));
           toastLib.success(rxGlobal.globalLiterals.alerts.syncClientDataDone);
           console.log(`👍 [UserVisitPlans.syncClient] rawData: ${JSON.stringify(rawData)}`);
@@ -90,12 +92,14 @@ export default function UserVisitPlan({ navigation, route }) {
     } catch (err) {
       console.log(`❌ [UserVisitPlans.syncClient] ${err}`);
     } finally {
+      Toast.hide();
       setIsLoading(false);
     }
   };
 
   const syncServer = async () => {
     try {
+      toastLib.message(rxGlobal.globalLiterals.progress.synchingServerData,40000);
       setIsLoading(true);
       if (wp.checkNet()) {
         console.log(`🏁 [UserVisitPlans.syncServer]`);
@@ -113,6 +117,7 @@ export default function UserVisitPlan({ navigation, route }) {
     } catch (err) {
       console.log(`❌ [UserVisitPlans.syncServer] ${err}`);
     } finally {
+      Toast.hide();
       setIsLoading(false);
     }
   };

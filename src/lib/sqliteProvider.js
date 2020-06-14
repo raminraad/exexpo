@@ -91,7 +91,7 @@ export const selectTables = async (tables = tableNames) => {
   let dbData = {};
   for (const tbl of tables) {
     try {
-      let selectedContent = await selectLocalData(tbl);
+      let selectedContent = await selectTable(tbl);
       dbData[`${tbl}`] = selectedContent;
     } catch (error) {
       console.log(`❌ [sqliteProvider.selectTables] ${error}`);
@@ -132,27 +132,29 @@ export const insertVisitPlanResults = (...parameters) => {
 
 export const syncData = async (dataTables) => {
   console.log(`🏁 [sqliteProvider.syncData]`);
-  const db = openDatabase("db");
+    console.log(`💬 [sqliteProvider.syncData] dataTables: ${JSON.stringify(dataTables)}`);
+    const db = openDatabase("db");
 
   let queries = [];
-
+  
   for (const item of dataTables.Announcement) {
     let parameters = "";
     let query = "";
     switch (item.SyncStatus) {
-      case enums.SyncStatus.modified:
+      case enums.syncStatus.modified:
         parameters = [item.Title, item.Summary, item.Description, item.DateX, item.SyncStatus, item.LastModifiedDate, item.Id];
         query = `update Announcement set Title=?,Summary=?,Description=?,DateX=?,SyncStatus=?,LastModifiedDate=? where Id=?`;
         break;
-      case enums.SyncStatus.created:
+      case enums.syncStatus.created:
         parameters = [item.Id, item.Title, item.Summary, item.Description, item.DateX, item.SyncStatus, item.LastModifiedDate];
         query = `insert into Announcement (Id,Title,Summary,Description,DateX,SyncStatus,LastModifiedDate) values (?,?,?,?,?,?)`;
         break;
-      case enums.SyncStatus.deleted:
+      case enums.syncStatus.deleted:
         parameters = [item.Id];
         query = `delete from Announcement where Id=?`;
         break;
     }
+  console.log(`💬 [sqliteProvider.syncData] pushed Announcement query: ${query} and params:${parameters} `);
     queries.push({ sql: `${query};`, args: parameters });
   }
 
@@ -160,19 +162,20 @@ export const syncData = async (dataTables) => {
     let parameters = "";
     let query = "";
     switch (item.SyncStatus) {
-      case enums.SyncStatus.modified:
+      case enums.syncStatus.modified:
         parameters = [item.ParentId, item.ProductGroupCode, item.Title, item.LastModifiedDate, item.SyncStatus, item.Id];
         query = `update ProductGroup set ParentId=?,ProductGroupCode=?,Title=?,LastModifiedDate=?,SyncStatus=? where Id=?`;
         break;
-      case enums.SyncStatus.created:
+      case enums.syncStatus.created:
         parameters = [item.Id, item.ParentId, item.ProductGroupCode, item.Title, item.LastModifiedDate, item.SyncStatus];
         query = `insert into ProductGroup (Id,ParentId,ProductGroupCode,Title,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?)`;
         break;
-      case enums.SyncStatus.deleted:
+      case enums.syncStatus.deleted:
         parameters = [item.Id];
         query = `delete from ProductGroup where Id=?`;
         break;
     }
+    console.log(`💬 [sqliteProvider.syncData] pushed ProductGroup query: ${query} and params:${parameters} `);
     queries.push({ sql: `${query};`, args: parameters });
   }
 
@@ -180,19 +183,20 @@ export const syncData = async (dataTables) => {
     let parameters = "";
     let query = "";
     switch (item.SyncStatus) {
-      case enums.SyncStatus.modified:
+      case enums.syncStatus.modified:
         parameters = [item.ProductGroupId, item.ProductCode, item.Taste, item.LastModifiedDate, item.SyncStatus, item.Id];
         query = `update Product set ProductGroupId=?,ProductCode=?,Taste=?,LastModifiedDate=?,SyncStatus=? where Id=?`;
         break;
-      case enums.SyncStatus.created:
+      case enums.syncStatus.created:
         parameters = [item.Id, item.ProductGroupId, item.ProductCode, item.Taste, item.LastModifiedDate, item.SyncStatus];
         query = `insert into Product (Id,ProductGroupId,ProductCode,Taste,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?)`;
         break;
-      case enums.SyncStatus.deleted:
+      case enums.syncStatus.deleted:
         parameters = [item.Id];
         query = `delete from Product where Id=?`;
         break;
     }
+    console.log(`💬 [sqliteProvider.syncData] pushed Product query: ${query} and params:${parameters} `);
     queries.push({ sql: `${query};`, args: parameters });
   }
 
@@ -200,7 +204,7 @@ export const syncData = async (dataTables) => {
     let parameters = "";
     let query = "";
     switch (item.SyncStatus) {
-      case enums.SyncStatus.modified:
+      case enums.syncStatus.modified:
         parameters = [
           item.ProductId,
           item.BarCode,
@@ -217,7 +221,7 @@ export const syncData = async (dataTables) => {
         ];
         query = `update ProductSub set ProductId=?,BarCode=?,IranCode=?,Color=?,Language=?,PriceType=?,PriceValue=?,MeasurmentType=?,MeasurmentScale=?,LastModifiedDate=?,SyncStatus=? where Id=?`;
         break;
-      case enums.SyncStatus.created:
+      case enums.syncStatus.created:
         parameters = [
           item.Id,
           item.ProductId,
@@ -234,11 +238,12 @@ export const syncData = async (dataTables) => {
         ];
         query = `insert into ProductSub (Id,ProductId,BarCode,IranCode,Color,Language,PriceType,PriceValue,MeasurmentType,MeasurmentScale,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?,?,?,?,?,?,?)`;
         break;
-      case enums.SyncStatus.deleted:
+      case enums.syncStatus.deleted:
         parameters = [item.Id];
         query = `delete from ProductSub where Id=?`;
         break;
     }
+    console.log(`💬 [sqliteProvider.syncData] pushed ProductSub query: ${query} and params:${parameters} `);
     queries.push({ sql: `${query};`, args: parameters });
   }
 
@@ -246,19 +251,20 @@ export const syncData = async (dataTables) => {
     let parameters = "";
     let query = "";
     switch (item.SyncStatus) {
-      case enums.SyncStatus.modified:
+      case enums.syncStatus.modified:
         parameters = [item.Summary, item.OperationDate, item.DateX, item.LastModifiedDate, item.SyncStatus, item.Id];
         query = `update UserVisitPlan set Summary=?, OperationDate=?, DateX=?, LastModifiedDate=?, SyncStatus=? where Id=?`;
         break;
-      case enums.SyncStatus.created:
+      case enums.syncStatus.created:
         parameters = [item.Id, item.Summary, item.OperationDate, item.DateX, item.LastModifiedDate, item.SyncStatus];
         query = `insert into UserVisitPlan (Id,Summary,OperationDate,DateX,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?)`;
         break;
-      case enums.SyncStatus.deleted:
+      case enums.syncStatus.deleted:
         parameters = [item.Id];
         query = `delete from UserVisitPlan where Id=?`;
         break;
     }
+    console.log(`💬 [sqliteProvider.syncData] pushed UserVisitPlan query: ${query} and params:${parameters} `);
     queries.push({ sql: `${query};`, args: parameters });
   }
 
@@ -266,7 +272,7 @@ export const syncData = async (dataTables) => {
     let parameters = "";
     let query = "";
     switch (item.SyncStatus) {
-      case enums.SyncStatus.modified:
+      case enums.syncStatus.modified:
         parameters = [
           item.VisitPlanId,
           item.CustomerId,
@@ -290,7 +296,7 @@ export const syncData = async (dataTables) => {
         ];
         query = `update VisitPlanCustomers set VisitPlanId=?,CustomerId=?,Code=?,Title=?,Owner=?,Long=?,Lat=?,Type=?,Address=?,Phone=?,Cell=?,Vol=?,ResultAttachedFileTitle=?,ResultSummary=?,ResultStatus=?,ResultVisitedDate=?,LastModifiedDate=?,SyncStatus=?, where Id=?`;
         break;
-      case enums.SyncStatus.created:
+      case enums.syncStatus.created:
         parameters = [
           item.Id,
           item.VisitPlanId,
@@ -314,11 +320,12 @@ export const syncData = async (dataTables) => {
         ];
         query = `insert into VisitPlanCustomers (Id,item.VisitPlanId,CustomerId,Code,Title,Owner,Long,Lat,Type,Address,Phone,Cell,Vol,ResultAttachedFileTitle,ResultSummary,ResultStatus,ResultVisitedDate,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
         break;
-      case enums.SyncStatus.deleted:
+      case enums.syncStatus.deleted:
         parameters = [item.Id];
         query = `delete from VisitPlanCustomers where Id=?`;
         break;
     }
+    console.log(`💬 [sqliteProvider.syncData] pushed VisitPlanCustomers query: ${query} and params:${parameters} `);
     queries.push({ sql: `${query};`, args: parameters });
   }
 
@@ -326,7 +333,7 @@ export const syncData = async (dataTables) => {
     let parameters = "";
     let query = "";
     switch (item.SyncStatus) {
-      case enums.SyncStatus.modified:
+      case enums.syncStatus.modified:
         parameters = [
           item.VisitPlanCustomerId,
           item.ProductSubId,
@@ -344,7 +351,7 @@ export const syncData = async (dataTables) => {
         ];
         query = `update VisitPlanResults set VisitPlanCustomerId=?,ProductSubId=?,SellPrice=?,Weight=?,HasInventory=?,ShelfInventoryCount=?,ShelfVisibleCount=?,WarehouseInventoryCount=?,VerbalPurchaseCount=?,FactorPurchaseCount=?,LastModifiedDate=?,SyncStatus=? where Id=?`;
         break;
-      case enums.SyncStatus.created:
+      case enums.syncStatus.created:
         parameters = [
           item.Id,
           item.VisitPlanCustomerId,
@@ -362,11 +369,12 @@ export const syncData = async (dataTables) => {
         ];
         query = `insert into VisitPlanResults (Id,VisitPlanCustomerId,ProductSubId,SellPrice,Weight,HasInventory,ShelfInventoryCount,ShelfVisibleCount,WarehouseInventoryCount,VerbalPurchaseCount,FactorPurchaseCount,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?,?,?,?,?,?,?,?)`;
         break;
-      case enums.SyncStatus.deleted:
+      case enums.syncStatus.deleted:
         parameters = [item.Id];
         query = `delete from VisitPlanResults where Id=?`;
         break;
     }
+    console.log(`💬 [sqliteProvider.syncData] pushed VisitPlanResults query: ${query} and params:${parameters} `);
     queries.push({ sql: `${query};`, args: parameters });
   }
   return new Promise((resolve, reject) => {

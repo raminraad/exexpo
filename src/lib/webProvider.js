@@ -29,7 +29,7 @@ export const syncClientData = async (data) => {
         global.userInfo.token = result.d.Response.Token;
         global.userInfo.tokenExpirationDateTime = result.d.Response.ExpirationDate;
         console.log(`💬 [webProvider.syncClientData] updated global.userInfo: ${JSON.stringify(global.userInfo)}`);
-        console.log(`👍 [webProvider.syncClientData] returned: ${result.d}`);
+        console.log(`👍 [webProvider.syncClientData] returned: ${JSON.stringify(result.d)}`);
         return result.d;
       } else throw new Error(result.d.Response.Message);
     })
@@ -57,14 +57,14 @@ export const syncServerData = async () => {
   return fetch("http://audit.mazmaz.net/Api/WebApi.asmx/SyncServerData", requestOptions)
     .then((response) => response.json())
     .then((result) => {
-      console.log(`💬 [webProvider.syncClientData] parsed result: ${JSON.stringify(result)}`);
+      console.log(`💬 [webProvider.syncServerData] parsed result: ${JSON.stringify(result)}`);
       if (result.d.Response.Token) {
-        console.log(`💬 [webProvider.syncClientData] initial global.userInfo: ${JSON.stringify(global.userInfo)}`);
+        console.log(`💬 [webProvider.syncServerData] initial global.userInfo: ${JSON.stringify(global.userInfo)}`);
         global.userInfo.lastSyncDateTime = result.d.LastSyncAtDate;
         global.userInfo.token = result.d.Response.Token;
         global.userInfo.tokenExpirationDateTime = result.d.Response.ExpirationDate;
-        console.log(`💬 [webProvider.syncClientData] updated global.userInfo: ${JSON.stringify(global.userInfo)}`);
-        console.log(`👍 [webProvider.syncClientData] returned: ${result.d}`);
+        console.log(`💬 [webProvider.syncServerData] updated global.userInfo: ${JSON.stringify(global.userInfo)}`);
+        console.log(`👍 [webProvider.syncServerData] returned: ${JSON.stringify(result.d)}`);
         return result.d;
       } else throw new Error(result.d.Response.Message);
     })

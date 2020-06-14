@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 
 export const setting = {
-  toastDuration:5000,
+  toastDurationDefault:5000,
 }
 
 export const globalColors = {
@@ -18,10 +18,10 @@ export const globalColors = {
     dimBlue: "#0582ca",
   },
   toasts:{
-    error:'#e71d36',
-    success:'#02c39a',
-    warning:'#ff9f1c',  
-    message:'#8d99ae',
+    error:'#e71d36EE',
+    success:'#02c39aEE',
+    warning:'#ff9f1cEE',  
+    message:'#ff9f1cEE',
   },
   gradients: {
     listItem: {
@@ -304,7 +304,9 @@ export const globalLiterals = {
   },
   progress:{
     syncingTimeInfo:"در حال همگام سازی اطلاعات زمانی",
-    checkingLoginInfo:"در حال بررسی اطلاعات کاربری"
+    checkingLoginInfo:"در حال بررسی اطلاعات کاربری",
+    synchingServerData:"در حال بروزرسانی داده ها",
+    synchingClientData:"در حال همگام سازی داده ها",
   },
   validationErrors: {
     required: "وارد کردن این فیلد الزامیست",

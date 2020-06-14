@@ -3,30 +3,39 @@ import { StyleSheet } from "react-native";
 import * as rxGlobal from "../lib/rxGlobal";
 import { Toast } from "native-base";
 
-export const error = (text) => {
+export const error = (text,duration=rxGlobal.setting.toastDurationDefault) => {
   Toast.show({
     text,
     textStyle: styles.textCommon,
-    duration: rxGlobal.setting.toastDuration,
+    duration,
     style: [styles.common, styles.error],
   });
 };
-export const success = (text) => {
+export const success = (text,duration=rxGlobal.setting.toastDurationDefault) => {
   Toast.show({
     text,
     textStyle: styles.textCommon,
-    duration: rxGlobal.setting.toastDuration,
+    duration,
     style: [styles.common, styles.error],
+  });
+};
+export const message = (text,duration=rxGlobal.setting.toastDurationDefault) => {
+  Toast.show({
+    text,
+    textStyle: styles.textCommon,
+    duration,
+    style: [styles.common, styles.message],
   });
 };
 
 const styles = StyleSheet.create({
   common: {
-    height: 55,
-    marginBottom:56,
-    
+    marginBottom:60,
+    marginHorizontal:170,
+    borderRadius:50
   },
-  textCommon: { textAlign: "right", marginRight: 25 },
+  textCommon: { textAlign: "center"},
   error: { backgroundColor: rxGlobal.globalColors.toasts.error },
   success: { backgroundColor: rxGlobal.globalColors.toasts.success },
+  message: { backgroundColor: rxGlobal.globalColors.toasts.message },
 });

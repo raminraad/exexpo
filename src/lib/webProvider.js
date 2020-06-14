@@ -35,7 +35,7 @@ export const syncClientData = async (data) => {
     })
     .catch((err) => {
       console.log(`❌ [webProvider.syncClientData] ${err}`);
-      return err;
+      throw err;
     });
 };
 
@@ -70,7 +70,7 @@ export const syncServerData = async () => {
     })
     .catch((err) => {
       console.log(`❌ [webProvider.syncServerData] ${err}`);
-      return err;
+      throw err;
     });
 };
 

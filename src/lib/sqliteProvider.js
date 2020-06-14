@@ -49,7 +49,7 @@ export const dropAndCreateTables = async () => {
     dropQueries.push({ sql: `drop table if exists ${table};`, args: [] });
   }
   console.log(`💬 [sqliteProvider.dropAndCreateTables.dropTables] dropping table(s) ${tableNames}..`);
-  return new Promise((resolve,reject)=>{
+  return new Promise((resolve, reject) => {
     try {
       db.exec(dropQueries, false, () => {
         console.log(`👍 [sqliteProvider.dropAndCreateTables.dropTables]`);
@@ -60,7 +60,7 @@ export const dropAndCreateTables = async () => {
       console.log(`❌ [sqliteProvider.dropAndCreateTables.dropTables] ${err}`);
       reject(err);
     }
-  })
+  });
 };
 
 export const selectTable = async (tableName) => {
@@ -487,25 +487,25 @@ export const insertData = async (dataTables) => {
 export const tableExists = async (table_name) => {
   console.log(`🏁 [storageProvider.tableExists]`);
   const db = openDatabase("db");
-let pr = new Promise((resolve, reject) => {
-  let query = `SELECT * FROM sqlite_master WHERE type='table' AND name='${table_name}';`;
-  db.transaction((tx) => {
-    tx.executeSql(
-      query,
-      [],
-      (_, { rows: { _array } }) => {
-        console.log(`👍 ${query} => length: ${_array.length} => ${_array.length > 0}`);
-        resolve(_array.length > 0);
-      },
-      (transaction, error) => {
-        console.log(`❌ [storageProvider.tableExists] ${query} => ${error}`);
-        reject(error);
-      }
-    );
+  let pr = new Promise((resolve, reject) => {
+    let query = `SELECT * FROM sqlite_master WHERE type='table' AND name='${table_name}';`;
+    db.transaction((tx) => {
+      tx.executeSql(
+        query,
+        [],
+        (_, { rows: { _array } }) => {
+          console.log(`👍 ${query} => length: ${_array.length} => ${_array.length > 0}`);
+          resolve(_array.length > 0);
+        },
+        (transaction, error) => {
+          console.log(`❌ [storageProvider.tableExists] ${query} => ${error}`);
+          reject(error);
+        }
+      );
+    });
   });
-});
 
-return pr;
+  return pr;
 };
 export const updateVisitPlanCustomerAndDetails = async (VisitPlanCustomer) => {
   try {
@@ -533,7 +533,6 @@ export const updateVisitPlanCustomerAndDetails = async (VisitPlanCustomer) => {
         let parameters = [item.ProductSubId, item.SellPrice, item.Weight, item.ShelfVisibleCount, item.LastModifiedDate, item.SyncStatus, item.Id];
         queries.push({ sql: `${query};`, args: parameters });
       } else if (item.rxSync === enums.syncStatus.created) {
-
         let parameters = [
           item.Id,
           item.VisitPlanCustomerId,
@@ -552,7 +551,6 @@ export const updateVisitPlanCustomerAndDetails = async (VisitPlanCustomer) => {
         let query = `insert into VisitPlanResults (Id,VisitPlanCustomerId,ProductSubId,SellPrice,Weight,HasInventory,ShelfInventoryCount,ShelfVisibleCount,WarehouseInventoryCount,VerbalPurchaseCount,FactorPurchaseCount,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?,?,?,?,?,?,?,?)`;
         queries.push({ sql: `${query};`, args: parameters });
       } else if (item.rxSync === enums.syncStatus.deleted) {
-
         let query = `DELETE FROM VisitPlanResults WHERE ID = ?`;
         let parameters = [item.Id];
         queries.push({ sql: `${query};`, args: parameters });
@@ -572,17 +570,6 @@ export const updateVisitPlanCustomerAndDetails = async (VisitPlanCustomer) => {
     throw err;
   }
 };
-
-
-
-
-
-
-
-
-
-
-
 
 const executeSql = async (sql, params = []) => {
   return new Promise((resolve, reject) =>
@@ -618,7 +605,6 @@ export const loadLocalVisitPlans = async () => {
 
   return pr;
 };
-
 
 export const getJoinedProducts = () => {
   let queries = [];

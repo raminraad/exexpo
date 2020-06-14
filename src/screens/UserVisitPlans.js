@@ -60,9 +60,10 @@ export default function UserVisitPlan({ navigation, route }) {
           console.log(JSON.stringify(rawData));
         }
       } else if (await dp.tableExists("UserVisitPlan")) {
-        setRawData(await dp.selectTable("UserVisitPlan"));
+        await syncClient();
       } else {
-        await sync();
+        if (await dp.dropAndCreateTables()) await syncServer();
+        else toastLib.error(rxGlobal.globalLiterals.actionAndStateErrors.tableCreationFailed);
       }
     } catch (err) {
       console.log(`❌ [UserVisitPlans.ctor] ${err}`);
@@ -71,23 +72,46 @@ export default function UserVisitPlan({ navigation, route }) {
     }
   };
 
-  const sync = async () => {
+  const syncClient = async () => {
     try {
       setIsLoading(true);
       if (wp.checkNet()) {
-        console.log(`🏁 [UserVisitPlans.sync]`);
+        console.log(`🏁 [UserVisitPlans.syncClient]`);
         let dbData = await dp.selectTables();
         let dataToSync = await wp.syncClientData(dbData);
         if (await dp.syncData(dataToSync)) {
           setRawData(await dp.selectTable("UserVisitPlan"));
-          toastLib.success(rxGlobal.globalLiterals.alerts.syncDone);
-          console.log(`👍 [UserVisitPlans.sync] rawData: ${JSON.stringify(rawData)}`);
+          toastLib.success(rxGlobal.globalLiterals.alerts.syncClientDataDone);
+          console.log(`👍 [UserVisitPlans.syncClient] rawData: ${JSON.stringify(rawData)}`);
         }
       } else {
         toastLib.error(rxGlobal.globalLiterals.actionAndStateErrors.noInternetError);
       }
     } catch (err) {
-      console.log(`❌ [UserVisitPlans.sync] ${err}`);
+      console.log(`❌ [UserVisitPlans.syncClient] ${err}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const syncServer = async () => {
+    try {
+      setIsLoading(true);
+      if (wp.checkNet()) {
+        console.log(`🏁 [UserVisitPlans.syncServer]`);
+        let serverData = await wp.syncServerData();
+        if (serverData?.DataTables && (await dp.insertData(serverData.DataTables))) {
+          setRawData(await dp.selectTable("UserVisitPlan"));
+          toastLib.success(rxGlobal.globalLiterals.alerts.syncClientDataDone);
+          console.log(`👍 [UserVisitPlans.syncServer] rawData: ${JSON.stringify(rawData)}`);
+        } else {
+          toastLib.error(rxGlobal.globalLiterals.actionAndStateErrors.syncDataFailed);
+        }
+      } else {
+        toastLib.error(rxGlobal.globalLiterals.actionAndStateErrors.noInternetError);
+      }
+    } catch (err) {
+      console.log(`❌ [UserVisitPlans.syncServer] ${err}`);
     } finally {
       setIsLoading(false);
     }
@@ -96,11 +120,11 @@ export default function UserVisitPlan({ navigation, route }) {
   const confirmAndSyncData = async () => {
     Alert.alert(
       "",
-      rxGlobal.globalLiterals.Confirmations.syncData,
+      rxGlobal.globalLiterals.Confirmations.syncClientData,
       [
         {
           text: rxGlobal.globalLiterals.buttonTexts.yes,
-          onPress: sync,
+          onPress: syncClient,
         },
         {
           text: rxGlobal.globalLiterals.buttonTexts.no,

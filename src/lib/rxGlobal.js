@@ -316,13 +316,16 @@ export const globalLiterals = {
     saveError: "ذخیره اطلاعات با خطا مواجه شد. لطفاً دوباره تلاش نمایید",
     noInternetError: "اتصال به اینترنت برقرار نیست",
     invalidDataFormat: "قالب داده ها صحیح نیست",
+    syncDataFailed: "بروزرسانی داده ها با مشکل مواجه شد",
+    tableCreationFailed: "ایجاد جداول با مشکل مواجه شد",
   },
   Confirmations: {
-    syncData: "ارسال و بروزرسانی داده ها انجام شود؟",
+    syncClientData: "همگام سازی داده ها انجام شود؟",
     deleteProduct: "کالای انتخاب شده حذف شود؟",
     syncProducts: "بروزرسانی کالاها انجام گردد؟",
   },
   alerts: {
-    syncDone: "ارسال و بروزرسانی داده ها با موفقیت انجام شد.",
+    syncClientDataDone: "همگام سازی داده ها با موفقیت انجام شد",
+    syncServerDataDone: "بروزرسانی داده ها با موفقیت انجام شد",
   },
 };

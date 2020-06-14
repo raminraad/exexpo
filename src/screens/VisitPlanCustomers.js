@@ -85,7 +85,7 @@ export default function VisitPlanCustomers(props) {
     setIsLoading(false);
     Alert.alert(
       "",
-      globalLiterals.alerts.syncDone,
+      globalLiterals.alerts.syncClientDataDone,
       [
         {
           text: globalLiterals.buttonTexts.ok,
@@ -98,7 +98,7 @@ export default function VisitPlanCustomers(props) {
   const confirmAndSyncData = () => {
     Alert.alert(
       "",
-      globalLiterals.Confirmations.syncData,
+      globalLiterals.Confirmations.syncClientData,
       [
         {
           text: globalLiterals.buttonTexts.yes,

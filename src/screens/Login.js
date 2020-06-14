@@ -5,7 +5,7 @@ import { CheckBox } from "react-native-elements";
 import { StackActions } from "@react-navigation/native";
 import { globalColors, globalLiterals } from "../lib/rxGlobal";
 import NetInfo from "@react-native-community/netinfo";
-import * as storageLib from "../lib/storageLib";
+import * as storageProvider from "../lib/storageProvider";
 import * as calendarLib from "../lib/calendarLib";
 import { Formik } from "formik";
 import { AntDesign } from "@expo/vector-icons";
@@ -23,7 +23,7 @@ export default function Login({ navigation }) {
   };
 
   const initAuthInfo = async () => {
-    let storedString = await storageLib.retrieve("userInfo");
+    let storedString = await storageProvider.retrieve("userInfo");
     if (storedString) {
       let storedJson = JSON.parse(storedString);
       setAuthInfo(storedJson);
@@ -83,7 +83,7 @@ export default function Login({ navigation }) {
           setMessage(error);
         })
         .finally(() => {
-          storageLib.store("userInfo", JSON.stringify(newInputs));
+          storageProvider.store("userInfo", JSON.stringify(newInputs));
           setIsLoading(false);
         });
     } else {

@@ -33,11 +33,12 @@ import * as calendarLib from "../lib/calendarLib";
 import { Menu, MenuTrigger, MenuOptions, MenuOption } from "react-native-popup-menu";
 import DefaultHeader from "../components/DefaultHeader";
 import VisitPlanResultForm from "../components/VisitPlanResultForm";
-import * as dp from "../lib/sqliteDp";
+import * as dp from "../lib/sqliteProvider";
 import { openDatabase } from "expo-sqlite";
 import TouchableScale from "react-native-touchable-scale"; // https://github.com/kohver/react-native-touchable-scale
 import { LinearGradient } from "expo-linear-gradient";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import * as enums from "../lib/enums";
 
 export default function VisitPlanCustomers(props) {
   const db = openDatabase("db");
@@ -78,7 +79,7 @@ export default function VisitPlanCustomers(props) {
 
   const syncData = async () => {
     setIsLoading(true);
-    await dp.postVisitPlans();
+    await dp.postClientData();
     await load();
     setIsLoading(false);
     Alert.alert(
@@ -124,7 +125,7 @@ export default function VisitPlanCustomers(props) {
 
   const handleYoyo = async (yoyo) => {
     try {
-      console.log(await dp.updateVisitPlanResult(yoyo));
+      console.log(await dp.updateVisitPlanCustomerAndDetails(yoyo));
     } catch (error) {
       alert(globalLiterals.actionAndStateErrors.saveError);
     }
@@ -137,7 +138,7 @@ export default function VisitPlanCustomers(props) {
 
   const keyExtractor = (item, index) => item.Id.toString();
   const onListItemNavigateForward = (item) => {
-    item.rxSync = 2;
+    item.rxSync = enums.syncStatus.modified;
     props.navigation.navigate("VisitPlanResultForm", {
       title: `فروشگاه ${item.Title}`,
       initialItem: item,
@@ -240,7 +241,7 @@ export default function VisitPlanCustomers(props) {
               name='long-arrow-alt-left'
               backgroundColor={item.ResultStatus === 2 || !item.ResultStatus ? globalColors.listItemNavigateIconUndone : globalColors.listItemNavigateIconDone}
               onPress={() => {
-                item.rxSync = 2;
+                item.rxSync = enums.syncStatus.modified;
                 props.navigation.navigate("VisitPlanResultForm", {
                   title: `فروشگاه ${item.Title}`,
                   initialItem: item,

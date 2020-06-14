@@ -28,10 +28,10 @@ import * as rxGlobal from "../lib/rxGlobal";
 import * as calendarLib from "../lib/calendarLib";
 import { Menu, MenuTrigger, MenuOptions, MenuOption } from "react-native-popup-menu";
 import DefaultHeader from "../components/DefaultHeader";
-import * as dp from "../lib/sqliteDp";
+import * as dp from "../lib/sqliteProvider";
+import * as wp from "../lib/webProvider";
 import TouchableScale from "react-native-touchable-scale"; // https://github.com/kohver/react-native-touchable-scale
 import { LinearGradient } from "expo-linear-gradient";
-import * as storageLib from "../lib/storageLib";
 import * as toastLib from "../lib/toastLib";
 import NetInfo from "@react-native-community/netinfo";
 
@@ -60,7 +60,7 @@ export default function VisitPlans({ navigation, route }) {
           console.log(JSON.stringify(rawData));
         }
       } else if (await dp.tableExists("UserVisitPlan")) {
-        setRawData(await dp.loadVisitPlans());
+        setRawData(await dp.selectTable('UserVisitPlan'));
       } else {
         await sync();
       }
@@ -73,7 +73,7 @@ export default function VisitPlans({ navigation, route }) {
 
   const sync = async () => {
     setIsLoading(true);
-    await dp.postVisitPlans();
+    await wp.postClientData(await dp.selectTables());
     await loadVisitPlans();
     setIsLoading(false);
     toastLib.error(rxGlobal.globalLiterals.alerts.syncDone);

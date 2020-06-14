@@ -20,6 +20,7 @@ import * as Location from "expo-location";
 import TouchableScale from "react-native-touchable-scale"; // https://github.com/kohver/react-native-touchable-scale
 import { getDistance, getPreciseDistance } from "geolib";
 import Moment from "moment";
+import * as enums from "../lib/enums";
 
 export default function VisitPlanResultForm(props) {
   const db = openDatabase("db");
@@ -78,8 +79,8 @@ export default function VisitPlanResultForm(props) {
 
   const onProductModalSubmit = (item) => {
     let rawClone = [...rawData];
-    if (item.rxSync === 0 || item.rxSync === 2) {
-      item.rxSync = 2;
+    if (item.rxSync === enums.syncStatus.synced || item.rxSync === enums.syncStatus.modified) {
+      item.rxSync = enums.syncStatus.modified;
       rawClone[rawClone.findIndex((r) => r.rxKey === item.rxKey)] = item;
     } else {
       if (!item.rxKey)
@@ -116,8 +117,8 @@ export default function VisitPlanResultForm(props) {
   const onListItemDelete = (item) => {
     let rawClone = [...rawData];
     let index = rawClone.findIndex((r) => r.rxKey === item.rxKey);
-    if (item.rxSync === 0 || item.rxSync === 2) {
-      item.rxSync = -1;
+    if (item.rxSync === enums.syncStatus.synced || item.rxSync === enums.syncStatus.modified) {
+      item.rxSync = enums.syncStatus.deleted;
       rawClone[index] = item;
     } else {
       rawClone.splice(index, 1);
@@ -126,7 +127,7 @@ export default function VisitPlanResultForm(props) {
   };
 
   useEffect(() => {
-    let rawDataQuery = `select *,res.Id as Id, 0 as rxSync from VisitPlanResults res
+    let rawDataQuery = `select *,res.Id as Id, ${enums.syncStatus.synced} as rxSync from VisitPlanResults res
      inner join ProductSub sub on res.ProductSubId = sub.Id
      inner join Product prd on prd.Id = sub.ProductId
      inner join ProductGroup grp on grp.Id =  prd.ProductGroupId
@@ -230,7 +231,7 @@ export default function VisitPlanResultForm(props) {
                   backgroundColor={globalColors.btnAdd}
                   onPress={() => {
                     setProductModalItem({
-                      rxSync: 1,
+                      rxSync: enums.syncStatus.created,
                       ProductSubId: "",
                       SellPrice: "",
                       Weight: "",
@@ -246,7 +247,7 @@ export default function VisitPlanResultForm(props) {
             {isLoading ? (
               <Spinner style={{ height: "100%" }} color='grey' size={50} />
             ) : rawData.length ? (
-              rawData.filter((r) => r.rxSync !== -1).map((item, i) => renderItemHeader(item, i))
+              rawData.filter((r) => r.rxSync !== enums.syncStatus.deleted).map((item, i) => renderItemHeader(item, i))
             ) : (
               renderEmptyList()
             )}
@@ -264,8 +265,8 @@ export default function VisitPlanResultForm(props) {
                   values.details = rawData;
                   values.LastModifiedDate = Moment(new Date()).format("YYYY/MM/DD HH:mm:ss");
                   values.ResultVisitedDate = Moment(new Date()).format("YYYY/MM/DD HH:mm:ss");
-                  values.SyncStatus = 2;
-                  values.rxSync = 2;
+                  values.SyncStatus = enums.syncStatus.modified;
+                  values.rxSync = enums.syncStatus.modified;
                   navigation.navigate("VisitPlanCustomers", { yoyo: values });
                 }
               }}>

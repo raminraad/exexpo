@@ -1,4 +1,4 @@
-import * as dp from "./sqliteDp";
+import * as dp from "./sqliteProvider";
 
 //////////////////// DROP
 export const dropTableProduct = () => {

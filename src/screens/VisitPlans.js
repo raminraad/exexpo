@@ -46,7 +46,8 @@ export default function VisitPlans({ navigation, route }) {
   const { title } = route.params;
 
   useEffect(() => {
-    ctor();
+console.log(JSON.stringify(global.userInfo));
+    // ctor();
   }, []);
 
 
@@ -63,7 +64,7 @@ export default function VisitPlans({ navigation, route }) {
         }
       } else setRawData(await dp.loadVisitPlans()) ;
     } catch (err) {
-      console.log(`❌ [VisitPlan.ctor]`);
+      console.log(`❌ [VisitPlan.ctor] ${err}`);
       
     } finally {setIsLoading(false);}
   };

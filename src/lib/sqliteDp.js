@@ -130,19 +130,19 @@ export const insertVisitPlanResults = (...parameters) => {
 
 export const getAndSaveVisitPlanData = async () => {
   console.log(`🏁 [sqliteDp.getAndSaveVisitPlanData]`);
-  let authToken = global.userInfo.authInfo.authToken;
+  let userToken = global.userInfo.token;
   let myHeaders = new Headers();
   myHeaders.append("Accept", "application/json");
   myHeaders.append("Content-Type", "application/json");
 
-  let raw = { token: `${authToken}` };
+  let raw = { token: `${userToken}` };
   let requestOptions = {
     method: "POST",
     headers: myHeaders,
     body: JSON.stringify(raw),
     redirect: "follow",
   };
-  console.log(`👍 [sqliteDp.getAndSaveVisitPlanData] request sent with token: ${authToken}`);
+  console.log(`👍 [sqliteDp.getAndSaveVisitPlanData] request sent with token: ${userToken}`);
   return fetch("http://audit.mazmaz.net/Api/WebApi.asmx/SyncServerData", requestOptions)
     .then((response) => response.json())
     .then((result) => {
@@ -166,7 +166,7 @@ export const getAndSaveVisitPlanData = async () => {
 
 export const syncVisitPlans = async () => {
   console.log(`🏁 [sqliteDp.syncVisitPlans]`);
-  let authToken = global.userInfo.authInfo.authToken;
+  let userToken = global.userInfo.token;
   let myHeaders = new Headers();
   myHeaders.append("Accept", "application/json");
   myHeaders.append("Content-Type", "application/json");
@@ -180,7 +180,7 @@ export const syncVisitPlans = async () => {
     }
   }
 
-  let raw = { token: `${authToken}`, syncDataTables: dbData };
+  let raw = { token: `${userToken}`, syncDataTables: dbData };
 
   console.log("********************************************************");
   console.log(JSON.stringify(raw));
@@ -191,7 +191,7 @@ export const syncVisitPlans = async () => {
     body: JSON.stringify(raw),
     redirect: "follow",
   };
-  console.log(`👍 request sent with token: ${authToken}`);
+  console.log(`👍 request sent with token: ${userToken}`);
   return (
     fetch("http://audit.mazmaz.net/Api/WebApi.asmx/SyncClientData", requestOptions)
       .then((response) => {
@@ -351,7 +351,7 @@ export const select = async (tableName) => {
   return pr;
 };
 
-const loadVisitPlans = async () => {
+export const loadVisitPlans = async () => {
   const db = openDatabase("db");
   let pr = new Promise((resolve, reject) => {
     let query = `select * from UserVisitPlan limit 1`;

@@ -23,7 +23,7 @@ export default function Login({ navigation }) {
   };
 
   const initAuthInfo = async () => {
-    let storedString = await storageLib.retrieve("authInfo");
+    let storedString = await storageLib.retrieve("userInfo");
     if (storedString) {
       let storedJson = JSON.parse(storedString);
       setAuthInfo(storedJson);
@@ -65,21 +65,15 @@ export default function Login({ navigation }) {
       fetch("http://audit.mazmaz.net/Api/WebApi.asmx/Authenticate", requestOptions)
         .then((response) => response.json())
         .then((result) => {
-          if (result.d.Token) newInputs.authToken = result.d.Token;
+          if (result.d.Token) return result;
           else {
             newInputs.isRememberChecked = false;
             throw result.d.Message;
           }
         })
-        .then(() => {
-          global.userInfo = { authInfo: newInputs };
-        })
-        .then(async () => {
+        .then((result) => {
           setMessage(globalLiterals.progress.syncingTimeInfo);
-          return await calendarLib.getDateTimeFromWebService();
-        })
-        .then((loginDateTime) => {
-          global.userInfo.loginDateTime = loginDateTime;
+          global.userInfo = { ...newInputs, token: result.d.Token, tokenExpireDateTime: result.d.ExpirationDate, loginDateTime: result.d.CurrentServerTime };
         })
         .then(async () => {
           getSetting();
@@ -89,7 +83,7 @@ export default function Login({ navigation }) {
           setMessage(error);
         })
         .finally(() => {
-          storageLib.store("authInfo", JSON.stringify(newInputs));
+          storageLib.store("userInfo", JSON.stringify(newInputs));
           setIsLoading(false);
         });
     } else {
@@ -107,7 +101,6 @@ export default function Login({ navigation }) {
           : {
               userName: "",
               passPhrase: "",
-              authToken: "",
               iMEI: "1",
               isRememberChecked: false,
             }
@@ -170,9 +163,9 @@ export default function Login({ navigation }) {
               <View style={styles.messageContainer}>
                 {isLoading ? (
                   <ActivityIndicator size={24} style={{ marginHorizontal: 10 }} />
-                ) : (
-                  (message?<AntDesign name='warning' size={24} color='#fcbf49' style={{ marginHorizontal: 10 }} />:null)
-                )}
+                ) : message ? (
+                  <AntDesign name='warning' size={24} color='#fcbf49' style={{ marginHorizontal: 10 }} />
+                ) : null}
                 <Text style={styles.message}>{message}</Text>
               </View>
             </View>
@@ -245,7 +238,7 @@ const styles = StyleSheet.create({
   messageContainer: {
     flexDirection: "row-reverse",
     justifyContent: "center",
-    alignItems:'center',
+    alignItems: "center",
     marginVertical: 10,
   },
   message: {

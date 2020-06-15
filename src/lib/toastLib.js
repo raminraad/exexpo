@@ -31,7 +31,7 @@ export const message = (text,duration=rxGlobal.setting.toastDurationDefault) => 
 const styles = StyleSheet.create({
   common: {
     marginBottom:60,
-    marginHorizontal:170,
+    marginHorizontal:100,
     borderRadius:50
   },
   textCommon: { textAlign: "center"},

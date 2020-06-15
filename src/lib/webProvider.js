@@ -5,7 +5,8 @@ import { authError,webError } from "./errors";
 
 export const syncClientData = async (data) => {
   console.log(`🏁 [webProvider.syncClientData]`);
-  let userToken = global.userInfo.token;
+  let userToken = '0cf88527-515e-5cb9-7d50-d79f3693c644';
+  // let userToken = global.userInfo.token;
   let myHeaders = new Headers();
   myHeaders.append("Accept", "application/json");
   myHeaders.append("Content-Type", "application/json");
@@ -29,13 +30,12 @@ export const syncClientData = async (data) => {
       if (result.d.Response.Token) {
         console.log(`💬 [webProvider.syncClientData] initial global.userInfo: ${JSON.stringify(global.userInfo)}`);
         global.userInfo.lastSyncDateTime = result.d.LastSyncAtDate;
-        global.userInfo.token = '0cf88527-515e-5cb9-7d50-d79f3693c644';
-        // global.userInfo.token = result.d.Response.Token;
+        global.userInfo.token = result.d.Response.Token;
         global.userInfo.tokenExpirationDateTime = result.d.Response.ExpirationDate;
         console.log(`💬 [webProvider.syncClientData] updated global.userInfo: ${JSON.stringify(global.userInfo)}`);
         console.log(`👍 [webProvider.syncClientData] returned: ${JSON.stringify(result.d)}`);
         return result.d;
-      } else throw new webError(enums.errorCodes.tokenExpired,rxGlobal.globalLiterals.actionAndStateErrors.tokenExpired);
+      } else throw new webError(enums.authErrors.tokenExpired,rxGlobal.globalLiterals.actionAndStateErrors.tokenExpired);
     })
     .catch((err) => {
       console.log(`❌ [webProvider.syncClientData] ${JSON.stringify(err)}`);
@@ -57,7 +57,7 @@ export const syncServerData = async () => {
     body: JSON.stringify(raw),
     redirect: "follow",
   };
-  console.log(`👍 [sqliteProvider.syncServerData] request sent with token: ${userToken}`);
+  console.log(`💬 [sqliteProvider.syncServerData] request sent with token: ${userToken}`);
   return fetch("http://audit.mazmaz.net/Api/WebApi.asmx/SyncServerData", requestOptions)
     .then((response) => response.json())
     .then((result) => {

@@ -35,14 +35,18 @@ import TouchableScale from "react-native-touchable-scale"; // https://github.com
 import { LinearGradient } from "expo-linear-gradient";
 import * as toastLib from "../lib/toastLib";
 import NetInfo from "@react-native-community/netinfo";
+import * as enums from "../lib/enums";
+import { StackActions } from "@react-navigation/native";
 
-export default function UserVisitPlan({ navigation, route }) {
+
+export default function UserVisitPlan(props) {
   const [rawData, setRawData] = useState([]);
   const [isOnInstantFilter, setIsOnInstantFilter] = useState(false);
   const [isOnAdvancedFilter, setisOnAdvancedFilter] = useState(false);
   const [instantFilterText, setInstantFilterText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
+  const {navigation} = props;
+  const {route} = props;
   const { title } = route.params;
 
   useEffect(() => {
@@ -96,7 +100,15 @@ export default function UserVisitPlan({ navigation, route }) {
       }
     } catch (err) {
       console.log(`❌ [UserVisitPlans.syncClient] ${err.code}`);
+      switch (err.code) {
+        case enums.authErrors.tokenExpired:
+          navigation.dispatch(StackActions.replace('Login'));
           toastLib.error(err.message);
+          break;
+      
+        default:
+          break;
+      }
         } finally {
       setIsLoading(false);
     }

@@ -18,10 +18,10 @@ export const globalColors = {
     dimBlue: "#0582ca",
   },
   toasts:{
-    error:'#e71d36EE',
-    success:'#02c39aEE',
-    warning:'#ff9f1cEE',  
-    message:'#ff9f1cEE',
+    error:'#d62828',
+    success:'#02c39A',
+    warning:'#ff9f1c',  
+    message:'#ff9f1c',
   },
   gradients: {
     listItem: {
@@ -42,7 +42,7 @@ export const globalColors = {
   homeIconBackground1: "#7768ae",
   homeIconBackground2: "#ec9a29",
   homeIconBackground3: "#3bb273",
-  homeIconBackground4: "#43aa8b",
+  homeIconBackground4: "#43EE8b",
   homeIconBackground5: "#577590",
   headerIcon: "#F1FAEE",
   footerIcon: "#F1FAEE",
@@ -325,7 +325,7 @@ export const globalLiterals = {
     invalidDataFormat: "قالب داده ها صحیح نیست",
     syncDataFailed: "بروزرسانی داده ها با مشکل مواجه شد",
     tableCreationFailed: "ایجاد جداول با مشکل مواجه شد",
-    tokenExpired: "لطفاً مجدداً وارد برنامه شوید",
+    tokenExpired: "اعتبار کاربری منقضی شده. ورود مجدد الزامیست",
   },
   Confirmations: {
     syncClientData: "همگام سازی داده ها انجام شود؟",

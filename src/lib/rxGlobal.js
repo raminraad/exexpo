@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 
 export const setting = {
-  toastDurationDefault:5000,
+  toastDurationDefault:7000,
 }
 
 export const globalColors = {
@@ -331,9 +331,12 @@ export const globalLiterals = {
     syncClientData: "همگام سازی داده ها انجام شود؟",
     deleteProduct: "کالای انتخاب شده حذف شود؟",
     syncProducts: "بروزرسانی کالاها انجام گردد؟",
+    continueSyncRatherThanNothingToSyncOnClient: "اطلاعات تغییر یافته ای برای ارسال وجود ندارد. همگام سازی ادامه یابد؟",
   },
   alerts: {
     syncClientDataDone: "همگام سازی داده ها با موفقیت انجام شد",
     syncServerDataDone: "بروزرسانی داده ها با موفقیت انجام شد",
+    nothingToSyncOnServer: "اطلاعات در وضعیت همگام با سرور قرار دارند",
+    nothingToSyncOnClient: "اطلاعات تغییر یافته ای برای ارسال وجود ندارد",
   },
 };

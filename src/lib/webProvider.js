@@ -5,8 +5,10 @@ import { authError,webError } from "./errors";
 
 export const syncClientData = async (data) => {
   console.log(`🏁 [webProvider.syncClientData]`);
-  let userToken = '0cf88527-515e-5cb9-7d50-d79f3693c644';
-  // let userToken = global.userInfo.token;
+  let userToken = global.userInfo.token;
+  // xxx
+  // userToken = '0cf88527-515e-5cb9-7d50-d79f3693c644';   // an expired token
+  // xxx
   let myHeaders = new Headers();
   myHeaders.append("Accept", "application/json");
   myHeaders.append("Content-Type", "application/json");

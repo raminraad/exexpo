@@ -63,11 +63,11 @@ export const dropAndCreateTables = async () => {
   });
 };
 
-export const selectTable = async (tableName) => {
+export const selectTable = async (tableName,where='') => {
   const db = openDatabase("db");
 
   let pr = new Promise((resolve, reject) => {
-    let query = `select * from ${tableName} `;
+    let query = `select * from ${tableName} where ${where}`;
     db.transaction((tx) => {
       tx.executeSql(
         query,
@@ -92,6 +92,20 @@ export const selectTables = async (tables = tableNames) => {
   for (const tbl of tables) {
     try {
       let selectedContent = await selectTable(tbl);
+      dbData[`${tbl}`] = selectedContent;
+    } catch (error) {
+      console.log(`❌ [sqliteProvider.selectTables] ${error}`);
+      return null;
+    }
+  }
+  return dbData;
+};
+
+export const selectTablesNotSynched = async (tables = tableNames) => {
+  let dbData = {};
+  for (const tbl of tables) {
+    try {
+      let selectedContent = await selectTable(tbl,`SyncStatus != ${enums.syncStatuses.synced}`);
       dbData[`${tbl}`] = selectedContent;
     } catch (error) {
       console.log(`❌ [sqliteProvider.selectTables] ${error}`);
@@ -153,6 +167,8 @@ export const syncData = async (dataTables) => {
         parameters = [item.Id];
         query = `delete from Announcement where Id=?`;
         break;
+        default:
+        continue;
     }
   console.log(`💬 [sqliteProvider.syncData] pushed Announcement query: ${query} and params:${parameters} `);
     queries.push({ sql: `${query};`, args: parameters });
@@ -174,6 +190,8 @@ export const syncData = async (dataTables) => {
         parameters = [item.Id];
         query = `delete from ProductGroup where Id=?`;
         break;
+        default:
+        continue;
     }
     console.log(`💬 [sqliteProvider.syncData] pushed ProductGroup query: ${query} and params:${parameters} `);
     queries.push({ sql: `${query};`, args: parameters });
@@ -195,6 +213,8 @@ export const syncData = async (dataTables) => {
         parameters = [item.Id];
         query = `delete from Product where Id=?`;
         break;
+        default:
+        continue;
     }
     console.log(`💬 [sqliteProvider.syncData] pushed Product query: ${query} and params:${parameters} `);
     queries.push({ sql: `${query};`, args: parameters });
@@ -242,6 +262,8 @@ export const syncData = async (dataTables) => {
         parameters = [item.Id];
         query = `delete from ProductSub where Id=?`;
         break;
+      default:
+        continue;
     }
     console.log(`💬 [sqliteProvider.syncData] pushed ProductSub query: ${query} and params:${parameters} `);
     queries.push({ sql: `${query};`, args: parameters });
@@ -263,6 +285,8 @@ export const syncData = async (dataTables) => {
         parameters = [item.Id];
         query = `delete from UserVisitPlan where Id=?`;
         break;
+        default:
+        continue;
     }
     console.log(`💬 [sqliteProvider.syncData] pushed UserVisitPlan query: ${query} and params:${parameters} `);
     queries.push({ sql: `${query};`, args: parameters });
@@ -324,6 +348,8 @@ export const syncData = async (dataTables) => {
         parameters = [item.Id];
         query = `delete from VisitPlanCustomers where Id=?`;
         break;
+        default:
+        continue;
     }
     console.log(`💬 [sqliteProvider.syncData] pushed VisitPlanCustomers query: ${query} and params:${parameters} `);
     queries.push({ sql: `${query};`, args: parameters });
@@ -373,22 +399,27 @@ export const syncData = async (dataTables) => {
         parameters = [item.Id];
         query = `delete from VisitPlanResults where Id=?`;
         break;
+        default:
+        continue;
     }
     console.log(`💬 [sqliteProvider.syncData] pushed VisitPlanResults query: ${query} and params:${parameters} `);
     queries.push({ sql: `${query};`, args: parameters });
   }
+  if (queries)
   return new Promise((resolve, reject) => {
     try {
       console.log(`💬 [sqliteProvider.syncData] executing queries with parameters: ${JSON.stringify(queries)}`);
       db.exec(queries, false, () => {
         console.log(`👍 [sqliteProvider.syncData] synced: ${dataTables}`);
-        resolve(true);
+        resolve(queries.length);
       });
     } catch (err) {
       reject(err);
       console.log(`❌ [sqliteProvider.syncData] ${err}`);
     }
-  });
+  })
+  else
+  return 0;
 };
 
 export const insertData = async (dataTables) => {

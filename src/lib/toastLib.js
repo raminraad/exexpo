@@ -16,7 +16,7 @@ export const success = (text,duration=rxGlobal.setting.toastDurationDefault) => 
     text,
     textStyle: styles.textCommon,
     duration,
-    style: [styles.common, styles.error],
+    style: [styles.common, styles.success],
   });
 };
 export const message = (text,duration=rxGlobal.setting.toastDurationDefault) => {

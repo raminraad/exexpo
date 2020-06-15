@@ -38,15 +38,14 @@ import NetInfo from "@react-native-community/netinfo";
 import * as enums from "../lib/enums";
 import { StackActions } from "@react-navigation/native";
 
-
 export default function UserVisitPlan(props) {
   const [rawData, setRawData] = useState([]);
   const [isOnInstantFilter, setIsOnInstantFilter] = useState(false);
   const [isOnAdvancedFilter, setisOnAdvancedFilter] = useState(false);
   const [instantFilterText, setInstantFilterText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const {navigation} = props;
-  const {route} = props;
+  const { navigation } = props;
+  const { route } = props;
   const { title } = route.params;
 
   useEffect(() => {
@@ -80,21 +79,23 @@ export default function UserVisitPlan(props) {
   const syncClient = async () => {
     try {
       setIsLoading(true);
-      toastLib.message(rxGlobal.globalLiterals.progress.checkingInternetConnection,40000);
+      toastLib.message(rxGlobal.globalLiterals.progress.checkingInternetConnection);
       if (await wp.checkNet()) {
         console.log(`🏁 [UserVisitPlans.syncClient]`);
-        toastLib.message(rxGlobal.globalLiterals.progress.creatingPostData,40000);
-        let dbData = await dp.selectTables();
-        toastLib.message(rxGlobal.globalLiterals.progress.synchingClientData,40000);
-        let dataToSync = await wp.syncClientData(dbData);
-        toastLib.message(rxGlobal.globalLiterals.progress.synchingDbData,40000);
-        if (await dp.syncData(dataToSync.DataTables)) {
-          toastLib.message(rxGlobal.globalLiterals.progress.preparingPresentationData,40000);
+        toastLib.message(rxGlobal.globalLiterals.progress.creatingPostData);
+        let dbData = await dp.selectTablesNotSynched();
+        console.log(`💬 [UserVisitPlans.syncClient] dbData: ${JSON.stringify(dbData)}`);
+
+        toastLib.message(rxGlobal.globalLiterals.progress.synchingClientData);
+        let serverDataToSync = await wp.syncClientData(dbData);
+        toastLib.message(rxGlobal.globalLiterals.progress.synchingDbData);
+        if (await dp.syncData(serverDataToSync.DataTables)) {
+          toastLib.message(rxGlobal.globalLiterals.progress.preparingPresentationData);
           setRawData(await dp.selectTable("UserVisitPlan"));
-          // Toast.hide();
           toastLib.success(rxGlobal.globalLiterals.alerts.syncClientDataDone);
           console.log(`👍 [UserVisitPlans.syncClient] rawData: ${JSON.stringify(rawData)}`);
-        }
+        } 
+        toastLib.success(rxGlobal.globalLiterals.alerts.syncClientDataDone);
       } else {
         toastLib.error(rxGlobal.globalLiterals.actionAndStateErrors.noInternetError);
       }
@@ -102,21 +103,20 @@ export default function UserVisitPlan(props) {
       console.log(`❌ [UserVisitPlans.syncClient] ${err.code}`);
       switch (err.code) {
         case enums.authErrors.tokenExpired:
-          navigation.dispatch(StackActions.replace('Login'));
+          navigation.dispatch(StackActions.replace("Login"));
           toastLib.error(err.message);
           break;
-      
         default:
           break;
       }
-        } finally {
+    } finally {
       setIsLoading(false);
     }
   };
 
   const syncServer = async () => {
     try {
-      toastLib.message(rxGlobal.globalLiterals.progress.synchingServerData,40000);
+      toastLib.message(rxGlobal.globalLiterals.progress.synchingServerData);
       setIsLoading(true);
       if (wp.checkNet()) {
         console.log(`🏁 [UserVisitPlans.syncServer]`);

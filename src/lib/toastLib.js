@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
   common: {
     marginBottom:60,
     marginHorizontal:100,
-    borderRadius:50
+    borderRadius:25
   },
   textCommon: { textAlign: "center"},
   error: { backgroundColor: rxGlobal.globalColors.toasts.error },

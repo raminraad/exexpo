@@ -54,10 +54,6 @@ export default function UserVisitPlan(props) {
   }, []);
 
   const ctor = async () => {
-    //xxx
-    await dp.dropTables();
-    //xxx
-
     console.log(`🏁 [UserVisitPlans.ctor]`);
     try {
       setIsLoading(true);
@@ -93,7 +89,7 @@ export default function UserVisitPlan(props) {
 
   const syncClient = async () => {
     try {
-      toastLib.message(rxGlobal.globalLiterals.progress.synchingClientData,6000);
+      toastLib.message(rxGlobal.globalLiterals.progress.synchingClientData, 6000);
       if (await wp.checkNet()) {
         console.log(`🏁 [UserVisitPlans.syncClient]`);
         toastLib.message(rxGlobal.globalLiterals.progress.creatingPostData);
@@ -103,25 +99,26 @@ export default function UserVisitPlan(props) {
         toastLib.message(rxGlobal.globalLiterals.progress.synchingClientData);
         let serverDataToSync = await wp.syncClientData(dbData);
         toastLib.message(rxGlobal.globalLiterals.progress.synchingDbData);
-        if (await dp.syncData(serverDataToSync.DataTables)) {
-          toastLib.message(rxGlobal.globalLiterals.progress.preparingPresentationData);
-          setRawData(await dp.selectTable("UserVisitPlan"));
-          toastLib.success(rxGlobal.globalLiterals.alerts.syncClientDataDone);
-          console.log(`👍 [UserVisitPlans.syncClient] rawData: ${JSON.stringify(rawData)}`);
-        } else throw new appError(enums.appErrors.syncClientFailed, rxGlobal.globalLiterals.actionAndStateErrors.syncClientFailed);
+
+        await dp.syncData(serverDataToSync.DataTables);
+        toastLib.message(rxGlobal.globalLiterals.progress.preparingPresentationData);
+        setRawData(await dp.selectTable("UserVisitPlan"));
+        toastLib.success(rxGlobal.globalLiterals.alerts.syncClientDataDone);
+        console.log(`👍 [UserVisitPlans.syncClient] rawData: ${JSON.stringify(rawData)}`);
+
         toastLib.success(rxGlobal.globalLiterals.alerts.syncClientDataDone);
       } else {
         throw new webError(enums.webErrors.noInternetError, rxGlobal.globalLiterals.actionAndStateErrors.noInternetError);
       }
     } catch (err) {
-      console.log(`❌ [UserVisitPlans.syncClient] ${err.code}`);
+      console.log(`❌ [UserVisitPlans.syncClient] ${JSON.stringify(err)}`);
       throw err;
     }
   };
 
   const syncServer = async () => {
     try {
-      toastLib.message(rxGlobal.globalLiterals.progress.synchingServerData,6000);
+      toastLib.message(rxGlobal.globalLiterals.progress.synchingServerData, 6000);
       if (wp.checkNet()) {
         console.log(`🏁 [UserVisitPlans.syncServer]`);
         let serverData = await wp.syncServerData();

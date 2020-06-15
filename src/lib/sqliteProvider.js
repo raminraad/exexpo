@@ -1,16 +1,13 @@
 import { openDatabase } from "expo-sqlite";
 import * as enums from "./enums";
-import { dbError } from "./errors";
+import { dbError, appError } from "./errors";
 import * as rxGlobal from "../lib/rxGlobal";
-
 
 const db = openDatabase("db");
 const tableNames = ["Announcement", "Product", "ProductGroup", "ProductSub", "UserVisitPlan", "VisitPlanCustomers", "VisitPlanResults"];
 
-
 export const createTables = async () => {
-  
-    console.log(`🏁 [sqliteProvider.createTables]`);
+  console.log(`🏁 [sqliteProvider.createTables]`);
   let createQueries = [
     {
       sql: `create table if not exists Announcement (rxId integer primary key not null, Id integer,Title,Summary,Description,DateX,SyncStatus integer,LastModifiedDate)`,
@@ -41,20 +38,19 @@ export const createTables = async () => {
       args: [],
     },
   ];
-  return new Promise((resolve,reject)=>{
+  return new Promise((resolve, reject) => {
     try {
       db.exec(createQueries, false, () => {
         console.log(`👍 [sqliteProvider.createTables]`);
         resolve(true);
       });
-      } catch (err) {
-        reject (new dbError(enums.dbErrors.tableCreationFailed,rxGlobal.globalLiterals.actionAndStateErrors.tableCreationFailed));
-      }
+    } catch (err) {
+      reject(new dbError(enums.dbErrors.tableCreationFailed, rxGlobal.globalLiterals.actionAndStateErrors.tableCreationFailed));
+    }
   });
 };
 
 export const dropTables = async () => {
- 
   console.log(`🏁 [sqliteProvider.dropTables]`);
   let dropQueries = [];
   for (const table of tableNames) {
@@ -69,12 +65,12 @@ export const dropTables = async () => {
       });
     } catch (err) {
       console.log(`❌ [sqliteProvider.dropTables] ${err}`);
-      reject (new dbError(enums.dbErrors.tableDropFailed,rxGlobal.globalLiterals.actionAndStateErrors.tableDropFailed));
+      reject(new dbError(enums.dbErrors.tableDropFailed, rxGlobal.globalLiterals.actionAndStateErrors.tableDropFailed));
     }
   });
 };
 
-export const selectTable = async (tableName,criteria='') => {
+export const selectTable = async (tableName, criteria = "") => {
   const db = openDatabase("db");
 
   let pr = new Promise((resolve, reject) => {
@@ -84,7 +80,7 @@ export const selectTable = async (tableName,criteria='') => {
         query,
         [],
         (_, { rows: { _array } }) => {
-          console.log(`👍 ${query} => length: ${_array.length} => ${global.dev.verbose? JSON.stringify([..._array]):'--verbose'}`);
+          console.log(`👍 ${query} => length: ${_array.length} => ${global.dev.verbose ? JSON.stringify([..._array]) : "--verbose"}`);
           resolve(_array);
         },
         (transaction, error) => {
@@ -116,7 +112,7 @@ export const selectTablesNotSynched = async (tables = tableNames) => {
   let dbData = {};
   for (const tbl of tables) {
     try {
-      let selectedContent = await selectTable(tbl,` where SyncStatus != ${enums.syncStatuses.synced}`);
+      let selectedContent = await selectTable(tbl, ` where SyncStatus != ${enums.syncStatuses.synced}`);
       dbData[`${tbl}`] = selectedContent;
     } catch (error) {
       console.log(`❌ [sqliteProvider.selectTables] ${error}`);
@@ -157,11 +153,11 @@ export const insertVisitPlanResults = (...parameters) => {
 
 export const syncData = async (dataTables) => {
   console.log(`🏁 [sqliteProvider.syncData]`);
-    console.log(`💬 [sqliteProvider.syncData] dataTables: ${JSON.stringify(dataTables)}`);
-    const db = openDatabase("db");
+  console.log(`💬 [sqliteProvider.syncData] dataTables: ${global.dev.verbose? JSON.stringify(dataTables):'--verbose'}`);
+  const db = openDatabase("db");
 
   let queries = [];
-  
+
   for (const item of dataTables.Announcement) {
     let parameters = "";
     let query = "";
@@ -178,10 +174,10 @@ export const syncData = async (dataTables) => {
         parameters = [item.Id];
         query = `delete from Announcement where Id=?`;
         break;
-        default:
+      default:
         continue;
     }
-  console.log(`💬 [sqliteProvider.syncData] pushed Announcement query: ${query} and params:${parameters} `);
+    console.log(`💬 [sqliteProvider.syncData] pushed Announcement query: ${query} and params:${parameters} `);
     queries.push({ sql: `${query};`, args: parameters });
   }
 
@@ -201,7 +197,7 @@ export const syncData = async (dataTables) => {
         parameters = [item.Id];
         query = `delete from ProductGroup where Id=?`;
         break;
-        default:
+      default:
         continue;
     }
     console.log(`💬 [sqliteProvider.syncData] pushed ProductGroup query: ${query} and params:${parameters} `);
@@ -224,7 +220,7 @@ export const syncData = async (dataTables) => {
         parameters = [item.Id];
         query = `delete from Product where Id=?`;
         break;
-        default:
+      default:
         continue;
     }
     console.log(`💬 [sqliteProvider.syncData] pushed Product query: ${query} and params:${parameters} `);
@@ -296,7 +292,7 @@ export const syncData = async (dataTables) => {
         parameters = [item.Id];
         query = `delete from UserVisitPlan where Id=?`;
         break;
-        default:
+      default:
         continue;
     }
     console.log(`💬 [sqliteProvider.syncData] pushed UserVisitPlan query: ${query} and params:${parameters} `);
@@ -359,7 +355,7 @@ export const syncData = async (dataTables) => {
         parameters = [item.Id];
         query = `delete from VisitPlanCustomers where Id=?`;
         break;
-        default:
+      default:
         continue;
     }
     console.log(`💬 [sqliteProvider.syncData] pushed VisitPlanCustomers query: ${query} and params:${parameters} `);
@@ -410,27 +406,30 @@ export const syncData = async (dataTables) => {
         parameters = [item.Id];
         query = `delete from VisitPlanResults where Id=?`;
         break;
-        default:
+      default:
         continue;
     }
     console.log(`💬 [sqliteProvider.syncData] pushed VisitPlanResults query: ${query} and params:${parameters} `);
     queries.push({ sql: `${query};`, args: parameters });
   }
-  if (queries)
   return new Promise((resolve, reject) => {
-    try {
-      console.log(`💬 [sqliteProvider.syncData] executing queries with parameters: ${JSON.stringify(queries)}`);
-      db.exec(queries, false, () => {
-        console.log(`👍 [sqliteProvider.syncData] synced: ${dataTables}`);
-        resolve(queries.length);
-      });
-    } catch (err) {
-      reject(err);
-      console.log(`❌ [sqliteProvider.syncData] ${err}`);
+    if (queries.length)
+      try {
+        console.log(`💬 [sqliteProvider.syncData] executing queries with parameters: ${global.dev.verbose ? JSON.stringify(queries) : "--verbose"}`);
+        db.exec(queries, false, () => {
+          console.log(`👍 [sqliteProvider.syncData] synced by ${queries.length} queries: ${global.dev.verbose ? JSON.stringify(dataTables) : "--verbose"}`);
+          resolve(queries.length);
+        });
+      } catch (err) {
+        let exception = new appError(enums.appErrors.syncClientFailed, rxGlobal.globalLiterals.actionAndStateErrors.syncClientFailed,err);
+        console.log(`❌ [sqliteProvider.syncData] ${exception}`);
+        reject(exception);
+      }
+    else {
+      console.log(`💬 [sqliteProvider.syncData] resolving with no queries`);
+      resolve(0);
     }
-  })
-  else
-  return 0;
+  });
 };
 
 export const insertData = async (dataTables) => {
@@ -529,7 +528,6 @@ export const insertData = async (dataTables) => {
     let query = `insert into VisitPlanResults (Id,VisitPlanCustomerId,ProductSubId,SellPrice,Weight,HasInventory,ShelfInventoryCount,ShelfVisibleCount,WarehouseInventoryCount,VerbalPurchaseCount,FactorPurchaseCount,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?,?,?,?,?,?,?,?)`;
     queries.push({ sql: `${query};`, args: parameters });
   }
-  
 
   return new Promise((resolve, reject) => {
     try {
@@ -539,7 +537,7 @@ export const insertData = async (dataTables) => {
       });
     } catch (err) {
       console.log(`❌ [sqliteProvider.insertData] ${err}`);
-      reject (new dbError(enums.dbErrors.dataInsertFailed,rxGlobal.globalLiterals.actionAndStateErrors.dataInsertFailed));
+      reject(new dbError(enums.dbErrors.dataInsertFailed, rxGlobal.globalLiterals.actionAndStateErrors.dataInsertFailed));
     }
   });
 };

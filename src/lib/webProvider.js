@@ -22,6 +22,10 @@ export const syncClientData = async (data) => {
     redirect: "follow",
   };
   console.log(`💬 [webProvider.syncClientData] request sent with token: ${userToken}`);
+
+  if (!await checkNet()) throw new webError(enums.webErrors.noInternetError, rxGlobal.globalLiterals.actionAndStateErrors.noInternetError);
+
+
   return fetch("http://audit.mazmaz.net/Api/WebApi.asmx/SyncClientData", requestOptions)
     .then((response) => {
       console.log(`💬 [webProvider.syncClientData] gotten response: ${global.dev.vergose?JSON.stringify(response):'--verbose'}`);
@@ -46,7 +50,7 @@ export const syncClientData = async (data) => {
 };
 
 export const syncServerData = async () => {
-  console.log(`🏁 [sqliteProvider.syncServerData]`);
+  console.log(`🏁 [webProvider.syncServerData]`);
   let userToken = global.userInfo.token;
   // xxx
   // userToken = '0cf88527-515e-5cb9-7d50-d79f3693c644';   // an expired token
@@ -62,7 +66,8 @@ export const syncServerData = async () => {
     body: JSON.stringify(raw),
     redirect: "follow",
   };
-  console.log(`💬 [sqliteProvider.syncServerData] request sent with token: ${userToken}`);
+  console.log(`💬 [webProvider.syncServerData] request sent with token: ${userToken}`);
+  if (!await checkNet()) throw new webError(enums.webErrors.noInternetError, rxGlobal.globalLiterals.actionAndStateErrors.noInternetError);
   return fetch("http://audit.mazmaz.net/Api/WebApi.asmx/SyncServerData", requestOptions)
     .then((response) => response.json())
     .then((result) => {

@@ -25,7 +25,7 @@ import * as enums from "../lib/enums";
 export default function VisitPlanResultForm(props) {
   const db = openDatabase("db");
   let navigation = props.navigation;
-  let initialItem = props.route.params.initialItem;
+  let {initialItem} = props.route.params;
   const [visitResultStatus, setVisitResultStatus] = useState(initialItem?.ResultStatus ?? null);
   const [rawData, setRawData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -60,7 +60,7 @@ export default function VisitPlanResultForm(props) {
       let distance = await getPreciseDistance(p1, p2, 1);
       console.log(distance);
 
-      if (userLocation && distance <= global.dynamicSetting.AcceptableDistanceForVisitor) return true;
+      if (userLocation && distance <= global.dynamicSetting.allowedDistanceForVisitor) return true;
       else {
         Alert.alert(
           "",
@@ -240,7 +240,7 @@ export default function VisitPlanResultForm(props) {
                     });
                     setIsProductModalVisible(true);
                   }}>
-                  افزودن محصول
+                  افزودن آیتم به لیست پویش فروشگاه
                 </FontAwesome5.Button>
               </View>
             </View>
@@ -255,7 +255,7 @@ export default function VisitPlanResultForm(props) {
               initialValues={initialItem}
               onSubmit={async (values, actions) => {
                 if (
-                  !global.dynamicSetting.AcceptableDistanceForVisitor ||
+                  !global.dynamicSetting.allowedDistanceForVisitor ||
                   !initialItem.Lat ||
                   !initialItem.Long ||
                   (await isGeoLocationAcceptable(initialItem.Lat, initialItem.Long))

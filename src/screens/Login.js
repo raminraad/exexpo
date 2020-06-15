@@ -20,7 +20,10 @@ export default function Login({ navigation }) {
   const [authInfo, setAuthInfo] = useState({});
 
   const getSetting = async () => {
-    global.dynamicSetting = { AcceptableDistanceForVisitor: 200 };
+    global.dynamicSetting = {
+      allowedDistanceForVisitor: 200,
+      isMandatoryInitialClientSync: false,
+    };
   };
 
   const initAuthInfo = async () => {
@@ -44,7 +47,7 @@ export default function Login({ navigation }) {
   // XXX: start
 
   console.disableYellowBox = true;
-  global.dev = { useFakeData: false ,verbose:false};
+  global.dev = { useFakeData: false, verbose: false };
   // goto("AppDrawer");
 
   //xxx: end
@@ -74,7 +77,12 @@ export default function Login({ navigation }) {
         })
         .then((result) => {
           setMessage(globalLiterals.progress.syncingTimeInfo);
-          global.userInfo = { ...newInputs, token: result.d.Token, tokenExpirationDateTime: result.d.ExpirationDate, loginDateTime: result.d.CurrentServerTime };
+          global.userInfo = {
+            ...newInputs,
+            token: result.d.Token,
+            tokenExpirationDateTime: result.d.ExpirationDate,
+            loginDateTime: result.d.CurrentServerTime,
+          };
         })
         .then(async () => {
           getSetting();

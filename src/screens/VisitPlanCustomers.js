@@ -51,11 +51,12 @@ export default function VisitPlanCustomers(props) {
   const [isVisitModalVisible, SetIsVisitModalVisible] = useState(false);
   const [instantFilterText, setInstantFilterText] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  let {initialItem} = props.route.params;
 
   const load = async () => {
     console.log(`🏁 [VisitPlanCustomers.load]`);
     let pr = new Promise((resolve, reject) => {
-      let query = `select * from VisitPlanCustomers where VisitPlanId = ${props.route.params.initialItem.Id}`;
+      let query = `select * from VisitPlanCustomers where VisitPlanId = ${initialItem.Id}`;
       db.transaction((tx) => {
         tx.executeSql(
           query,
@@ -140,10 +141,10 @@ export default function VisitPlanCustomers(props) {
   const keyExtractor = (item, index) => item.Id.toString();
   const onListItemNavigateForward = (item) => {
     item.rxSync = enums.syncStatuses.modified;
-    props.navigation.navigate("VisitPlanResultForm", {
+    props.navigation.navigate("VisitResultTab", {screen:'VisitPlanResultForm',params:{
       title: `فروشگاه ${item.Title}`,
       initialItem: item,
-    });
+    }});
   };
 
   const renderHeader = () => (

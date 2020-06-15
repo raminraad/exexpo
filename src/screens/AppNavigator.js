@@ -10,6 +10,8 @@ import VisitPlanCustomers from "./VisitPlanCustomers";
 import VisitPlanResultForm from "../components/VisitPlanResultForm";
 import SignUp from "./SignUp";
 import { Fontisto } from '@expo/vector-icons'; 
+import { MaterialIcons } from '@expo/vector-icons'; 
+import VisitPlanResultProductForm from "../components/VisitPlanResultProductForm";
 
 const AppDrawer = () => {
   const DrawerNavigator = createDrawerNavigator();
@@ -48,11 +50,20 @@ switch (route.name) {
   case 'VisitPlanResultForm':
     iconName = 'shopping-basket';
     break;
+  case 'VisitPlanResultProductForm':
+    iconName = 'playlist-add';
+    break;
+  case 'VisitPlanResultConfirm':
+    iconName = 'playlist-add-check';
+    break;
+  case 'VisitPlanResultAdd':
+    iconName = 'camera-alt';
+    break;
   default:
     iconName='tablet';
     break;
 }
-        return <Fontisto name={iconName} size={size} color={color} />;
+        return <MaterialIcons name={iconName} size={size} color={color} />;
       },
     })}
     tabBarOptions={{
@@ -61,10 +72,10 @@ switch (route.name) {
       showLabel:false
     }}
     >
-      <VisitTab.Screen name='log1' component={Login} />
-      <VisitTab.Screen name='log2' component={Login} />
-      <VisitTab.Screen name='log3' component={Login} />
+      <VisitTab.Screen name='VisitPlanResultAdd' component={Login} />
+      <VisitTab.Screen name='VisitPlanResultConfirm' component={Login} />
       <VisitTab.Screen name='VisitPlanResultForm' component={VisitPlanResultForm} />
+      <VisitTab.Screen name='VisitPlanResultProductForm' component={VisitPlanResultProductForm} />
     </VisitTab.Navigator>
   );
 };

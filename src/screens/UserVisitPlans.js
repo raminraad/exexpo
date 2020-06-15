@@ -37,6 +37,7 @@ import * as toastLib from "../lib/toastLib";
 import NetInfo from "@react-native-community/netinfo";
 import * as enums from "../lib/enums";
 import { StackActions } from "@react-navigation/native";
+import { webError, appError } from "../lib/errors";
 
 export default function UserVisitPlan(props) {
   const [rawData, setRawData] = useState([]);
@@ -53,6 +54,10 @@ export default function UserVisitPlan(props) {
   }, []);
 
   const ctor = async () => {
+    //xxx
+    await dp.dropTables();
+    //xxx
+
     console.log(`🏁 [UserVisitPlans.ctor]`);
     try {
       setIsLoading(true);
@@ -66,10 +71,20 @@ export default function UserVisitPlan(props) {
       } else if (await dp.tableExists("UserVisitPlan")) {
         await syncClient();
       } else {
-        if (await dp.dropAndCreateTables()) await syncServer();
-        else toastLib.error(rxGlobal.globalLiterals.actionAndStateErrors.tableCreationFailed);
+        await dp.dropTables();
+        await dp.createTables();
+        await syncServer();
       }
     } catch (err) {
+      switch (err.code) {
+        case enums.authErrors.tokenExpired:
+          navigation.dispatch(StackActions.replace("Login"));
+          toastLib.error(err.message);
+          break;
+        default:
+          toastLib.error(err.message);
+          break;
+      }
       console.log(`❌ [UserVisitPlans.ctor] ${err}`);
     } finally {
       setIsLoading(false);
@@ -78,8 +93,7 @@ export default function UserVisitPlan(props) {
 
   const syncClient = async () => {
     try {
-      setIsLoading(true);
-      toastLib.message(rxGlobal.globalLiterals.progress.checkingInternetConnection);
+      toastLib.message(rxGlobal.globalLiterals.progress.synchingClientData,6000);
       if (await wp.checkNet()) {
         console.log(`🏁 [UserVisitPlans.syncClient]`);
         toastLib.message(rxGlobal.globalLiterals.progress.creatingPostData);
@@ -94,48 +108,36 @@ export default function UserVisitPlan(props) {
           setRawData(await dp.selectTable("UserVisitPlan"));
           toastLib.success(rxGlobal.globalLiterals.alerts.syncClientDataDone);
           console.log(`👍 [UserVisitPlans.syncClient] rawData: ${JSON.stringify(rawData)}`);
-        } 
+        } else throw new appError(enums.appErrors.syncClientFailed, rxGlobal.globalLiterals.actionAndStateErrors.syncClientFailed);
         toastLib.success(rxGlobal.globalLiterals.alerts.syncClientDataDone);
       } else {
-        toastLib.error(rxGlobal.globalLiterals.actionAndStateErrors.noInternetError);
+        throw new webError(enums.webErrors.noInternetError, rxGlobal.globalLiterals.actionAndStateErrors.noInternetError);
       }
     } catch (err) {
       console.log(`❌ [UserVisitPlans.syncClient] ${err.code}`);
-      switch (err.code) {
-        case enums.authErrors.tokenExpired:
-          navigation.dispatch(StackActions.replace("Login"));
-          toastLib.error(err.message);
-          break;
-        default:
-          break;
-      }
-    } finally {
-      setIsLoading(false);
+      throw err;
     }
   };
 
   const syncServer = async () => {
     try {
-      toastLib.message(rxGlobal.globalLiterals.progress.synchingServerData);
-      setIsLoading(true);
+      toastLib.message(rxGlobal.globalLiterals.progress.synchingServerData,6000);
       if (wp.checkNet()) {
         console.log(`🏁 [UserVisitPlans.syncServer]`);
         let serverData = await wp.syncServerData();
         if (serverData?.DataTables && (await dp.insertData(serverData.DataTables))) {
           setRawData(await dp.selectTable("UserVisitPlan"));
-          toastLib.success(rxGlobal.globalLiterals.alerts.syncClientDataDone);
-          console.log(`👍 [UserVisitPlans.syncServer] rawData: ${JSON.stringify(rawData)}`);
+          toastLib.success(rxGlobal.globalLiterals.alerts.syncServerDataDone);
+          console.log(`👍 [UserVisitPlans.syncServer] rawData: ${global.dev.verbose ? JSON.stringify(rawData) : "--verbose"}`);
         } else {
-          toastLib.error(rxGlobal.globalLiterals.actionAndStateErrors.syncDataFailed);
+          throw new appError(enums.appErrors.syncServerFailed, rxGlobal.globalLiterals.actionAndStateErrors.syncServerFailed);
         }
       } else {
-        toastLib.error(rxGlobal.globalLiterals.actionAndStateErrors.noInternetError);
+        throw new webError(enums.webErrors.noInternetError, rxGlobal.globalLiterals.actionAndStateErrors.noInternetError);
       }
     } catch (err) {
       console.log(`❌ [UserVisitPlans.syncServer] ${err}`);
-    } finally {
-      Toast.hide();
-      setIsLoading(false);
+      throw err;
     }
   };
 

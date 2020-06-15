@@ -1,79 +1,90 @@
 import { openDatabase } from "expo-sqlite";
 import * as enums from "./enums";
+import { dbError } from "./errors";
+import * as rxGlobal from "../lib/rxGlobal";
+
 
 const db = openDatabase("db");
 const tableNames = ["Announcement", "Product", "ProductGroup", "ProductSub", "UserVisitPlan", "VisitPlanCustomers", "VisitPlanResults"];
 
-export const dropAndCreateTables = async () => {
-  let createTables = () => {
-    console.log(`🏁 [sqliteProvider.dropAndCreateTables.createTables]`);
-    let createQueries = [
-      {
-        sql: `create table if not exists Announcement (rxId integer primary key not null, Id integer,Title,Summary,Description,DateX,SyncStatus integer,LastModifiedDate)`,
-        args: [],
-      },
-      {
-        sql: `create table if not exists ProductGroup (rxId integer primary key not null, Id integer,ParentId integer,ProductGroupCode,Title,LastModifiedDate,SyncStatus integer)`,
-        args: [],
-      },
-      {
-        sql: `create table if not exists Product (rxId integer primary key not null,Id integer,ProductGroupId integer,ProductCode,Taste,LastModifiedDate,SyncStatus integer)`,
-        args: [],
-      },
-      {
-        sql: `create table if not exists ProductSub (rxId integer primary key not null,Id integer,ProductId integer,BarCode,IranCode,Color,Language integer,PriceType integer,PriceValue integer,MeasurmentType integer,MeasurmentScale integer,LastModifiedDate,SyncStatus integer)`,
-        args: [],
-      },
-      {
-        sql: `create table if not exists UserVisitPlan (rxId integer primary key not null,Id integer,Summary,OperationDate,DateX,LastModifiedDate,SyncStatus integer)`,
-        args: [],
-      },
-      {
-        sql: `create table if not exists VisitPlanCustomers (rxId integer primary key not null,Id integer,VisitPlanId integer,CustomerId integer,Code,Title,Owner,Long integer,Lat integer,Type integer,Address,Phone,Cell,Vol integer,ResultAttachedFileTitle,ResultSummary,ResultStatus integer,ResultVisitedDate,LastModifiedDate,SyncStatus integer)`,
-        args: [],
-      },
-      {
-        sql: `create table if not exists VisitPlanResults (rxId integer primary key not null,Id integer,VisitPlanCustomerId integer,ProductSubId integer,SellPrice integer,Weight integer,HasInventory,ShelfInventoryCount integer,ShelfVisibleCount integer,WarehouseInventoryCount,VerbalPurchaseCount,FactorPurchaseCount,LastModifiedDate,SyncStatus integer)`,
-        args: [],
-      },
-    ];
 
-    db.exec(createQueries, false, () => {
-      console.log(`👍 [sqliteProvider.dropAndCreateTables.createTables]`);
-      resolve(true);
-    });
-  };
-  console.log(`🏁 [sqliteProvider.dropAndCreateTables.dropTables]`);
+export const createTables = async () => {
+  
+    console.log(`🏁 [sqliteProvider.createTables]`);
+  let createQueries = [
+    {
+      sql: `create table if not exists Announcement (rxId integer primary key not null, Id integer,Title,Summary,Description,DateX,SyncStatus integer,LastModifiedDate)`,
+      args: [],
+    },
+    {
+      sql: `create table if not exists ProductGroup (rxId integer primary key not null, Id integer,ParentId integer,ProductGroupCode,Title,LastModifiedDate,SyncStatus integer)`,
+      args: [],
+    },
+    {
+      sql: `create table if not exists Product (rxId integer primary key not null,Id integer,ProductGroupId integer,ProductCode,Taste,LastModifiedDate,SyncStatus integer)`,
+      args: [],
+    },
+    {
+      sql: `create table if not exists ProductSub (rxId integer primary key not null,Id integer,ProductId integer,BarCode,IranCode,Color,Language integer,PriceType integer,PriceValue integer,MeasurmentType integer,MeasurmentScale integer,LastModifiedDate,SyncStatus integer)`,
+      args: [],
+    },
+    {
+      sql: `create table if not exists UserVisitPlan (rxId integer primary key not null,Id integer,Summary,OperationDate,DateX,LastModifiedDate,SyncStatus integer)`,
+      args: [],
+    },
+    {
+      sql: `create table if not exists VisitPlanCustomers (rxId integer primary key not null,Id integer,VisitPlanId integer,CustomerId integer,Code,Title,Owner,Long integer,Lat integer,Type integer,Address,Phone,Cell,Vol integer,ResultAttachedFileTitle,ResultSummary,ResultStatus integer,ResultVisitedDate,LastModifiedDate,SyncStatus integer)`,
+      args: [],
+    },
+    {
+      sql: `create table if not exists VisitPlanResults (rxId integer primary key not null,Id integer,VisitPlanCustomerId integer,ProductSubId integer,SellPrice integer,Weight integer,HasInventory,ShelfInventoryCount integer,ShelfVisibleCount integer,WarehouseInventoryCount,VerbalPurchaseCount,FactorPurchaseCount,LastModifiedDate,SyncStatus integer)`,
+      args: [],
+    },
+  ];
+  return new Promise((resolve,reject)=>{
+    try {
+      db.exec(createQueries, false, () => {
+        console.log(`👍 [sqliteProvider.createTables]`);
+        resolve(true);
+      });
+      } catch (err) {
+        reject (new dbError(enums.dbErrors.tableCreationFailed,rxGlobal.globalLiterals.actionAndStateErrors.tableCreationFailed));
+      }
+  });
+};
+
+export const dropTables = async () => {
+ 
+  console.log(`🏁 [sqliteProvider.dropTables]`);
   let dropQueries = [];
   for (const table of tableNames) {
     dropQueries.push({ sql: `drop table if exists ${table};`, args: [] });
   }
-  console.log(`💬 [sqliteProvider.dropAndCreateTables.dropTables] dropping table(s) ${tableNames}..`);
+  console.log(`💬 [sqliteProvider.dropTables] dropping table(s) ${tableNames}..`);
   return new Promise((resolve, reject) => {
     try {
       db.exec(dropQueries, false, () => {
-        console.log(`👍 [sqliteProvider.dropAndCreateTables.dropTables]`);
-        createTables();
+        console.log(`👍 [sqliteProvider.dropTables]`);
         resolve(true);
       });
     } catch (err) {
-      console.log(`❌ [sqliteProvider.dropAndCreateTables.dropTables] ${err}`);
-      reject(err);
+      console.log(`❌ [sqliteProvider.dropTables] ${err}`);
+      reject (new dbError(enums.dbErrors.tableDropFailed,rxGlobal.globalLiterals.actionAndStateErrors.tableDropFailed));
     }
   });
 };
 
-export const selectTable = async (tableName,where='') => {
+export const selectTable = async (tableName,criteria='') => {
   const db = openDatabase("db");
 
   let pr = new Promise((resolve, reject) => {
-    let query = `select * from ${tableName} where ${where}`;
+    let query = `select * from ${tableName} ${criteria}`;
     db.transaction((tx) => {
       tx.executeSql(
         query,
         [],
         (_, { rows: { _array } }) => {
-          console.log(`👍 ${query} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
+          console.log(`👍 ${query} => length: ${_array.length} => ${global.dev.verbose? JSON.stringify([..._array]):'--verbose'}`);
           resolve(_array);
         },
         (transaction, error) => {
@@ -105,7 +116,7 @@ export const selectTablesNotSynched = async (tables = tableNames) => {
   let dbData = {};
   for (const tbl of tables) {
     try {
-      let selectedContent = await selectTable(tbl,`SyncStatus != ${enums.syncStatuses.synced}`);
+      let selectedContent = await selectTable(tbl,` where SyncStatus != ${enums.syncStatuses.synced}`);
       dbData[`${tbl}`] = selectedContent;
     } catch (error) {
       console.log(`❌ [sqliteProvider.selectTables] ${error}`);
@@ -518,9 +529,19 @@ export const insertData = async (dataTables) => {
     let query = `insert into VisitPlanResults (Id,VisitPlanCustomerId,ProductSubId,SellPrice,Weight,HasInventory,ShelfInventoryCount,ShelfVisibleCount,WarehouseInventoryCount,VerbalPurchaseCount,FactorPurchaseCount,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?,?,?,?,?,?,?,?)`;
     queries.push({ sql: `${query};`, args: parameters });
   }
-  db.exec(queries, false, () => console.log(`👍 insert queries executed successfully..`));
+  
 
-  console.log(`👍 [sqliteProvider.insertData]`);
+  return new Promise((resolve, reject) => {
+    try {
+      db.exec(queries, false, () => {
+        console.log(`👍 [sqliteProvider.insertData]`);
+        resolve(true);
+      });
+    } catch (err) {
+      console.log(`❌ [sqliteProvider.insertData] ${err}`);
+      reject (new dbError(enums.dbErrors.dataInsertFailed,rxGlobal.globalLiterals.actionAndStateErrors.dataInsertFailed));
+    }
+  });
 };
 
 export const tableExists = async (table_name) => {

@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 
 export const setting = {
-  toastDurationDefault:7000,
+  toastDurationDefault:4000,
 }
 
 export const globalColors = {
@@ -305,9 +305,9 @@ export const globalLiterals = {
   progress:{
     checkingLoginInfo:"در حال بررسی اطلاعات کاربری",
     checkingInternetConnection:"در حال بررسی اتصال به اینترنت",
-    creatingPostData:"در حال ایجاد اطلاعات ارسالی",
+    creatingPostData:"در حال ایجاد داده های ارسالی",
     connectingToServer:"در حال اتصال به سرور",
-    preparingPresentationData:"در حال آماده سازی اطلاعات برای نمایش",
+    preparingPresentationData:"در حال آماده سازی داده ها برای نمایش",
     synchingServerData:"در حال بروزرسانی داده ها",
     synchingClientData:"در حال همگام سازی داده ها",
     synchingDbData:"در حال بروزرسانی جداول",
@@ -320,23 +320,26 @@ export const globalLiterals = {
     locationPermissionDenied: "مجوز دسترسی برنامه به مکان یاب دستگاه الزامیست",
   },
   actionAndStateErrors: {
-    saveError: "ذخیره اطلاعات با خطا مواجه شد. لطفاً دوباره تلاش نمایید",
-    noInternetError: "اتصال به اینترنت برقرار نیست",
+    dataInsertFailed: "درج داده ها با خطا مواجه شد",
     invalidDataFormat: "قالب داده ها صحیح نیست",
-    syncDataFailed: "بروزرسانی داده ها با مشکل مواجه شد",
-    tableCreationFailed: "ایجاد جداول با مشکل مواجه شد",
+    noInternetError: "اتصال به اینترنت برقرار نیست",
+    syncServerFailed: "بروزرسانی داده ها با مشکل مواجه شد",
+    syncClientFailed: "همگام سازی داده ها با مشکل مواجه شد",
+    tableCreationFailed: "ایجاد جدول با مشکل مواجه شد",
+    tableDropFailed: "حذف جدول با مشکل مواجه شد",
     tokenExpired: "اعتبار کاربری منقضی شده. ورود مجدد الزامیست",
+    saveError: "ذخیره داده ها با خطا مواجه شد. لطفاً دوباره تلاش نمایید",
   },
   Confirmations: {
     syncClientData: "همگام سازی داده ها انجام شود؟",
     deleteProduct: "کالای انتخاب شده حذف شود؟",
     syncProducts: "بروزرسانی کالاها انجام گردد؟",
-    continueSyncRatherThanNothingToSyncOnClient: "اطلاعات تغییر یافته ای برای ارسال وجود ندارد. همگام سازی ادامه یابد؟",
+    continueSyncRatherThanNothingToSyncOnClient: "داده ها تغییر یافته ای برای ارسال وجود ندارد. همگام سازی ادامه یابد؟",
   },
   alerts: {
     syncClientDataDone: "همگام سازی داده ها با موفقیت انجام شد",
     syncServerDataDone: "بروزرسانی داده ها با موفقیت انجام شد",
-    nothingToSyncOnServer: "اطلاعات در وضعیت همگام با سرور قرار دارند",
-    nothingToSyncOnClient: "اطلاعات تغییر یافته ای برای ارسال وجود ندارد",
+    nothingToSyncOnServer: "داده ها در وضعیت همگام با سرور قرار دارند",
+    nothingToSyncOnClient: "داده ی تغییر یافته ای برای ارسال وجود ندارد",
   },
 };

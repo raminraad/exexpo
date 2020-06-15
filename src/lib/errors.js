@@ -9,8 +9,18 @@ export class webError extends baseError {
       super(code,message);
     }
   }
+export class dbError extends baseError {
+    constructor(code,message) {
+      super(code,message);
+    }
+  }
 
 export class authError extends baseError {
+    constructor(code,message) {
+      super(message);
+    }
+  }
+export class appError extends baseError {
     constructor(code,message) {
       super(message);
     }

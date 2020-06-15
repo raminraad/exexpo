@@ -79,8 +79,8 @@ export default function VisitPlanResultForm(props) {
 
   const onProductModalSubmit = (item) => {
     let rawClone = [...rawData];
-    if (item.rxSync === enums.syncStatus.synced || item.rxSync === enums.syncStatus.modified) {
-      item.rxSync = enums.syncStatus.modified;
+    if (item.rxSync === enums.syncStatuses.synced || item.rxSync === enums.syncStatuses.modified) {
+      item.rxSync = enums.syncStatuses.modified;
       rawClone[rawClone.findIndex((r) => r.rxKey === item.rxKey)] = item;
     } else {
       if (!item.rxKey)
@@ -117,8 +117,8 @@ export default function VisitPlanResultForm(props) {
   const onListItemDelete = (item) => {
     let rawClone = [...rawData];
     let index = rawClone.findIndex((r) => r.rxKey === item.rxKey);
-    if (item.rxSync === enums.syncStatus.synced || item.rxSync === enums.syncStatus.modified) {
-      item.rxSync = enums.syncStatus.deleted;
+    if (item.rxSync === enums.syncStatuses.synced || item.rxSync === enums.syncStatuses.modified) {
+      item.rxSync = enums.syncStatuses.deleted;
       rawClone[index] = item;
     } else {
       rawClone.splice(index, 1);
@@ -127,7 +127,7 @@ export default function VisitPlanResultForm(props) {
   };
 
   useEffect(() => {
-    let rawDataQuery = `select *,res.Id as Id, ${enums.syncStatus.synced} as rxSync from VisitPlanResults res
+    let rawDataQuery = `select *,res.Id as Id, ${enums.syncStatuses.synced} as rxSync from VisitPlanResults res
      inner join ProductSub sub on res.ProductSubId = sub.Id
      inner join Product prd on prd.Id = sub.ProductId
      inner join ProductGroup grp on grp.Id =  prd.ProductGroupId
@@ -231,7 +231,7 @@ export default function VisitPlanResultForm(props) {
                   backgroundColor={globalColors.btnAdd}
                   onPress={() => {
                     setProductModalItem({
-                      rxSync: enums.syncStatus.created,
+                      rxSync: enums.syncStatuses.created,
                       ProductSubId: "",
                       SellPrice: "",
                       Weight: "",
@@ -247,7 +247,7 @@ export default function VisitPlanResultForm(props) {
             {isLoading ? (
               <Spinner style={{ height: "100%" }} color='grey' size={50} />
             ) : rawData.length ? (
-              rawData.filter((r) => r.rxSync !== enums.syncStatus.deleted).map((item, i) => renderItemHeader(item, i))
+              rawData.filter((r) => r.rxSync !== enums.syncStatuses.deleted).map((item, i) => renderItemHeader(item, i))
             ) : (
               renderEmptyList()
             )}
@@ -265,8 +265,8 @@ export default function VisitPlanResultForm(props) {
                   values.details = rawData;
                   values.LastModifiedDate = Moment(new Date()).format("YYYY/MM/DD HH:mm:ss");
                   values.ResultVisitedDate = Moment(new Date()).format("YYYY/MM/DD HH:mm:ss");
-                  values.SyncStatus = enums.syncStatus.modified;
-                  values.rxSync = enums.syncStatus.modified;
+                  values.SyncStatus = enums.syncStatuses.modified;
+                  values.rxSync = enums.syncStatuses.modified;
                   navigation.navigate("VisitPlanCustomers", { yoyo: values });
                 }
               }}>

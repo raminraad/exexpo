@@ -75,14 +75,19 @@ export default function UserVisitPlan({ navigation, route }) {
 
   const syncClient = async () => {
     try {
-      toastLib.message(rxGlobal.globalLiterals.progress.synchingClientData,40000);
       setIsLoading(true);
-      if (wp.checkNet()) {
+      toastLib.message(rxGlobal.globalLiterals.progress.checkingInternetConnection,40000);
+      if (await wp.checkNet()) {
         console.log(`🏁 [UserVisitPlans.syncClient]`);
+        toastLib.message(rxGlobal.globalLiterals.progress.creatingPostData,40000);
         let dbData = await dp.selectTables();
+        toastLib.message(rxGlobal.globalLiterals.progress.synchingClientData,40000);
         let dataToSync = await wp.syncClientData(dbData);
+        toastLib.message(rxGlobal.globalLiterals.progress.synchingDbData,40000);
         if (await dp.syncData(dataToSync.DataTables)) {
+          toastLib.message(rxGlobal.globalLiterals.progress.preparingPresentationData,40000);
           setRawData(await dp.selectTable("UserVisitPlan"));
+          // Toast.hide();
           toastLib.success(rxGlobal.globalLiterals.alerts.syncClientDataDone);
           console.log(`👍 [UserVisitPlans.syncClient] rawData: ${JSON.stringify(rawData)}`);
         }
@@ -90,9 +95,9 @@ export default function UserVisitPlan({ navigation, route }) {
         toastLib.error(rxGlobal.globalLiterals.actionAndStateErrors.noInternetError);
       }
     } catch (err) {
-      console.log(`❌ [UserVisitPlans.syncClient] ${err}`);
-    } finally {
-      Toast.hide();
+      console.log(`❌ [UserVisitPlans.syncClient] ${err.code}`);
+          toastLib.error(err.message);
+        } finally {
       setIsLoading(false);
     }
   };

@@ -9,9 +9,7 @@ import { AppLoading } from "expo";
 import { Container, Text, Root } from "native-base";
 import * as Font from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
-import UserVisitPlans from "./src/screens/UserVisitPlans";
-import VisitPlanCustomers from "./src/screens/VisitPlanCustomers";
-import VisitPlanResultForm from "./src/components/VisitPlanResultForm";
+
 
 export default class App extends React.Component {
   constructor(props) {

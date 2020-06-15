@@ -303,10 +303,15 @@ export const globalLiterals = {
     emptyList: "آیتمی برای نمایش وجود ندارد",
   },
   progress:{
-    syncingTimeInfo:"در حال همگام سازی اطلاعات زمانی",
     checkingLoginInfo:"در حال بررسی اطلاعات کاربری",
+    checkingInternetConnection:"در حال بررسی اتصال به اینترنت",
+    creatingPostData:"در حال ایجاد اطلاعات ارسالی",
+    connectingToServer:"در حال اتصال به سرور",
+    preparingPresentationData:"در حال آماده سازی اطلاعات برای نمایش",
     synchingServerData:"در حال بروزرسانی داده ها",
     synchingClientData:"در حال همگام سازی داده ها",
+    synchingDbData:"در حال بروزرسانی جداول",
+    syncingTimeInfo:"در حال همگام سازی اطلاعات زمانی",
   },
   validationErrors: {
     required: "وارد کردن این فیلد الزامیست",
@@ -320,6 +325,7 @@ export const globalLiterals = {
     invalidDataFormat: "قالب داده ها صحیح نیست",
     syncDataFailed: "بروزرسانی داده ها با مشکل مواجه شد",
     tableCreationFailed: "ایجاد جداول با مشکل مواجه شد",
+    tokenExpired: "لطفاً مجدداً وارد برنامه شوید",
   },
   Confirmations: {
     syncClientData: "همگام سازی داده ها انجام شود؟",

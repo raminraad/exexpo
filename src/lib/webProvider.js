@@ -1,4 +1,7 @@
 import NetInfo from "@react-native-community/netinfo";
+import * as enums from "../lib/enums";
+import * as rxGlobal from "../lib/rxGlobal";
+import { authError,webError } from "./errors";
 
 export const syncClientData = async (data) => {
   console.log(`🏁 [webProvider.syncClientData]`);
@@ -26,15 +29,16 @@ export const syncClientData = async (data) => {
       if (result.d.Response.Token) {
         console.log(`💬 [webProvider.syncClientData] initial global.userInfo: ${JSON.stringify(global.userInfo)}`);
         global.userInfo.lastSyncDateTime = result.d.LastSyncAtDate;
-        global.userInfo.token = result.d.Response.Token;
+        global.userInfo.token = '0cf88527-515e-5cb9-7d50-d79f3693c644';
+        // global.userInfo.token = result.d.Response.Token;
         global.userInfo.tokenExpirationDateTime = result.d.Response.ExpirationDate;
         console.log(`💬 [webProvider.syncClientData] updated global.userInfo: ${JSON.stringify(global.userInfo)}`);
         console.log(`👍 [webProvider.syncClientData] returned: ${JSON.stringify(result.d)}`);
         return result.d;
-      } else throw new Error(result.d.Response.Message);
+      } else throw new webError(enums.errorCodes.tokenExpired,rxGlobal.globalLiterals.actionAndStateErrors.tokenExpired);
     })
     .catch((err) => {
-      console.log(`❌ [webProvider.syncClientData] ${err}`);
+      console.log(`❌ [webProvider.syncClientData] ${JSON.stringify(err)}`);
       throw err;
     });
 };

@@ -31,8 +31,8 @@ import Swipeable from "react-native-gesture-handler/Swipeable";
 import { globalStyles, globalColors, globalSizes, globalLiterals, menuOptionsCustomStyles } from "../lib/rxGlobal";
 import * as calendarLib from "../lib/calendarLib";
 import { Menu, MenuTrigger, MenuOptions, MenuOption } from "react-native-popup-menu";
-import DefaultHeader from "../components/DefaultHeader";
-import VisitPlanResultForm from "../components/VisitPlanResultForm";
+import DefaultHeader from "./DefaultHeader";
+import VisitPlanResultForm from "./VisitPlanResultForm";
 import * as dp from "../lib/sqliteProvider";
 import { openDatabase } from "expo-sqlite";
 import TouchableScale from "react-native-touchable-scale"; // https://github.com/kohver/react-native-touchable-scale

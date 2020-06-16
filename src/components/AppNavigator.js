@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { DrawerContent } from "../components/DrawerContent";
+import { DrawerContent } from "./DrawerContent";
 import Login from "./Login";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -7,12 +7,12 @@ import { StackActions, NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import UserVisitPlans from "./UserVisitPlans";
 import VisitPlanCustomers from "./VisitPlanCustomers";
-import VisitPlanResultForm from "../components/VisitPlanResultForm";
+import VisitPlanResultForm from "./VisitPlanResultForm";
 import SignUp from "./SignUp";
 import { Fontisto } from '@expo/vector-icons'; 
 import { MaterialIcons } from '@expo/vector-icons'; 
-import VisitPlanResultProductForm from "../components/VisitPlanResultProductForm";
-import CameraForm from "../screens/CameraForm";
+import VisitPlanResultProductForm from "./VisitPlanResultProductForm";
+import CameraForm from "./CameraForm";
 
 const AppDrawer = () => {
   const DrawerNavigator = createDrawerNavigator();

@@ -1,6 +1,6 @@
 import React, { Component, useState, useRef, useEffect } from "react";
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, KeyboardAvoidingView, ActivityIndicator, BackHandler } from "react-native";
-import Logo from "../components/Logo";
+import Logo from "./Logo";
 import { CheckBox } from "react-native-elements";
 import { StackActions } from "@react-navigation/native";
 import { globalColors, globalLiterals } from "../lib/rxGlobal";

@@ -1,10 +1,10 @@
 // In App.js in a new project
 
 import * as React from "react";
-import Login from "./src/screens/Login";
-import SignUp from "./src/screens/SignUp";
+import Login from "./src/components/Login";
+import SignUp from "./src/components/SignUp";
 import { MenuProvider } from "react-native-popup-menu";
-import { AppNavigator } from "./src/screens/AppNavigator";
+import { AppNavigator } from "./src/components/AppNavigator";
 import { AppLoading } from "expo";
 import { Container, Text, Root } from "native-base";
 import * as Font from "expo-font";

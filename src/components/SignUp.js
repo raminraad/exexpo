@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View, TouchableOpacity, TextInput} from 'react-native';
-import Logo from '../components/Logo';
+import Logo from './Logo';
 
 export default class SignUp extends Component<{}> {
     constructor() {

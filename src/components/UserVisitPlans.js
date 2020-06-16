@@ -28,7 +28,7 @@ import { Entypo } from "@expo/vector-icons";
 import * as rxGlobal from "../lib/rxGlobal";
 import * as calendarLib from "../lib/calendarLib";
 import { Menu, MenuTrigger, MenuOptions, MenuOption } from "react-native-popup-menu";
-import DefaultHeader from "../components/DefaultHeader";
+import DefaultHeader from "./DefaultHeader";
 import * as dp from "../lib/sqliteProvider";
 import * as wp from "../lib/webProvider";
 import TouchableScale from "react-native-touchable-scale"; // https://github.com/kohver/react-native-touchable-scale

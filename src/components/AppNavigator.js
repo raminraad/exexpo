@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { DrawerContent } from "./DrawerContent";
 import Login from "./Login";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import { createStackNavigator } from "@react-navigation/stack";
+import { createStackNavigator, HeaderBackground } from "@react-navigation/stack";
 import { StackActions, NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import UserVisitPlans from "./UserVisitPlans";
@@ -12,7 +12,9 @@ import SignUp from "./SignUp";
 import { Fontisto } from '@expo/vector-icons'; 
 import { MaterialIcons } from '@expo/vector-icons'; 
 import VisitPlanResultProductForm from "./VisitPlanResultProductForm";
+import AddProductFromDb from "./AddProductFromDb";
 import CameraForm from "./CameraForm";
+import * as rxGlobal from '../lib/rxGlobal';
 
 const AppDrawer = () => {
   const DrawerNavigator = createDrawerNavigator();
@@ -48,11 +50,11 @@ const VisitResultTab = () => {
         let iconName;
 
 switch (route.name) {
+  case 'AddProductFromDb':
+    iconName = 'playlist-add';
+    break;
   case 'VisitPlanResultForm':
     iconName = 'shopping-basket';
-    break;
-  case 'VisitPlanResultProductForm':
-    iconName = 'playlist-add';
     break;
   case 'VisitPlanResultConfirm':
     iconName = 'playlist-add-check';
@@ -68,11 +70,16 @@ switch (route.name) {
       },
     })}
     tabBarOptions={{
-      activeTintColor: 'tomato',
-      inactiveTintColor: 'gray',
+      style: {
+        backgroundColor: rxGlobal.globalColors.tabBackgroundDefault,
+      },
+      activeBackgroundColor:rxGlobal.globalColors.tabBackgroundActive,
+      activeTintColor: rxGlobal.globalColors.tabIconActive,
+      inactiveTintColor: rxGlobal.globalColors.tabIconInactive,
       showLabel:false
     }}
     >
+      <VisitTab.Screen name='AddProductFromDb' component={AddProductFromDb} />
       <VisitTab.Screen name='CameraForm' component={CameraForm} />
       <VisitTab.Screen name='VisitPlanResultConfirm' component={Login} />
       <VisitTab.Screen name='VisitPlanResultForm' component={VisitPlanResultForm} />

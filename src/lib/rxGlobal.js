@@ -44,6 +44,7 @@ export const globalColors = {
   homeIconBackground3: "#3bb273",
   homeIconBackground4: "#43EE8b",
   homeIconBackground5: "#577590",
+  headerBackground: "#3F51B5",
   headerIcon: "#F1FAEE",
   footerIcon: "#F1FAEE",
   searchBarIcon: "#666",
@@ -68,6 +69,11 @@ export const globalColors = {
   screenContainer: "#f8f9fa",
   screenTitleText:'#3a6ea5',
   transparent: "#FFFFFF00",
+  tabIconActive: "#F1FAEE",
+  tabIconInactive: "#F1FAEE",
+  tabBackgroundDefault: "#3F51B5",
+  tabBackgroundActive: "#02c39a",
+
 };
 
 export const globalSizes = {

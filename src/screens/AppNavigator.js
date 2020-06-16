@@ -12,6 +12,7 @@ import SignUp from "./SignUp";
 import { Fontisto } from '@expo/vector-icons'; 
 import { MaterialIcons } from '@expo/vector-icons'; 
 import VisitPlanResultProductForm from "../components/VisitPlanResultProductForm";
+import CameraForm from "../screens/CameraForm";
 
 const AppDrawer = () => {
   const DrawerNavigator = createDrawerNavigator();
@@ -56,7 +57,7 @@ switch (route.name) {
   case 'VisitPlanResultConfirm':
     iconName = 'playlist-add-check';
     break;
-  case 'VisitPlanResultAdd':
+  case 'CameraForm':
     iconName = 'camera-alt';
     break;
   default:
@@ -72,7 +73,7 @@ switch (route.name) {
       showLabel:false
     }}
     >
-      <VisitTab.Screen name='VisitPlanResultAdd' component={Login} />
+      <VisitTab.Screen name='CameraForm' component={CameraForm} />
       <VisitTab.Screen name='VisitPlanResultConfirm' component={Login} />
       <VisitTab.Screen name='VisitPlanResultForm' component={VisitPlanResultForm} />
       <VisitTab.Screen name='VisitPlanResultProductForm' component={VisitPlanResultProductForm} />

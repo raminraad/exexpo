@@ -54,9 +54,6 @@ switch (route.name) {
     iconName = 'playlist-add';
     break;
   case 'VisitPlanResultForm':
-    iconName = 'shopping-basket';
-    break;
-  case 'VisitPlanResultConfirm':
     iconName = 'playlist-add-check';
     break;
   case 'CameraForm':
@@ -79,11 +76,10 @@ switch (route.name) {
       showLabel:false
     }}
     >
-      <VisitTab.Screen name='AddProductFromDb' component={AddProductFromDb} />
-      <VisitTab.Screen name='CameraForm' component={CameraForm} />
-      <VisitTab.Screen name='VisitPlanResultConfirm' component={Login} />
       <VisitTab.Screen name='VisitPlanResultForm' component={VisitPlanResultForm} />
-      <VisitTab.Screen name='VisitPlanResultProductForm' component={VisitPlanResultProductForm} />
+      <VisitTab.Screen name='VisitPlanResultProductForm' component={VisitPlanResultProduc tForm} />
+      <VisitTab.Screen name='CameraForm' component={CameraForm} />
+      <VisitTab.Screen name='AddProductFromDb' component={AddProductFromDb} />
     </VisitTab.Navigator>
   );
 };

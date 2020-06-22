@@ -10,18 +10,34 @@ import TouchableScale from "react-native-touchable-scale"; // https://github.com
 import ProductShowcase from "./ProductShowcase";
 
 export default function SearchBarExample() {
-  const groupStack = useRef([null]);
+  const groupstack = useRef([null]);
+  // const [groupstack, setGroupstack] = useState([null]);
   const [showcase, setShowcase] = useState([]);
 
   useEffect(() => {
-    onGroupStackChanged();
+    onGroupstackChanged();
     return () => {};
   }, []);
 
-  const onGroupStackChanged = async () => {
-    let groupId = groupStack.current[groupStack.current.length - 1];
+const pushToGroupstack=async (item)=>{
+  let temp = [...groupstack.current];
+  console.log(groupstack.current);
+  console.log(temp);
+  temp.push(item);
+  groupstack.current = temp;
+  await onGroupstackChanged();
+};
+const popFromGroupstack=async (item)=>{
+  let temp = {...groupstack.current};
+  temp.pop();
+  groupstack.current = temp;
+  await onGroupstackChanged();
+};
+
+  const onGroupstackChanged = async () => {
+    let groupId = groupstack.current[groupstack.current.length - 1];
     console.log(`groupId:${groupId}`);
-    console.log(`groupStack.current:${groupStack.current}`);
+    console.log(`groupStack:${groupstack.current}`);
     if (groupId) setShowcase(await dp.selectTable("ProductGroup", `where ParentId = ${groupId}`));
     else setShowcase(await dp.selectTable("ProductGroup", `where ParentId is ${groupId}`));
     console.log("2");
@@ -38,11 +54,11 @@ export default function SearchBarExample() {
       </Header>
       <Content>
         <View>
-          {/* todo:implement breadcrump */}
+          {/* todo:implement breadcrump here*/}
           <Text>{showcase.length}</Text>
           {console.log(JSON.stringify(showcase))}
         </View>
-        <ProductShowcase data={showcase}/>
+        <ProductShowcase data={showcase} onPress={pushToGroupstack}/>
       </Content>
     </Container>
   );

@@ -4,9 +4,10 @@ import { Entypo, FontAwesome5, Feather } from "@expo/vector-icons";
 import * as rxGlobal from "../lib/rxGlobal";
 import { View } from "react-native";
 import * as dp from "../lib/sqliteProvider";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { TouchableOpacity, FlatList } from "react-native-gesture-handler";
 import { ListItem } from "react-native-elements";
 import TouchableScale from "react-native-touchable-scale"; // https://github.com/kohver/react-native-touchable-scale
+import ProductShowcase from "./ProductShowcase";
 
 export default function SearchBarExample() {
   const groupStack = useRef([null]);
@@ -19,7 +20,8 @@ export default function SearchBarExample() {
 
   const onGroupStackChanged = async () => {
     let groupId = groupStack.current[groupStack.current.length - 1];
-    console.log("1");
+    console.log(`groupId:${groupId}`);
+    console.log(`groupStack.current:${groupStack.current}`);
     if (groupId) setShowcase(await dp.selectTable("ProductGroup", `where ParentId = ${groupId}`));
     else setShowcase(await dp.selectTable("ProductGroup", `where ParentId is ${groupId}`));
     console.log("2");
@@ -38,30 +40,9 @@ export default function SearchBarExample() {
         <View>
           {/* todo:implement breadcrump */}
           <Text>{showcase.length}</Text>
+          {console.log(JSON.stringify(showcase))}
         </View>
-        <View style={{ flexWrap: "wrap-reverse" }}>
-          {console.log("3")}
-
-          {showcase.map((item, i) => (
-            <ListItem
-              containerStyle={[rxGlobal.globalStyles.shadowedContainer, rxGlobal.globalStyles.listItemHeaderContainer, { width: 150, aspectRatio: 1 }]}
-              Component={TouchableScale}
-              key={item.rxKey}
-              friction={90} //
-              tension={100} // These props are passed to the parent component (here TouchableScale)
-              activeScale={0.95} //
-              linearGradientProps={rxGlobal.globalColors.gradients.listItem}
-              title={`${item.Title}`}
-              titleStyle={{ ...rxGlobal.globalStyles.listItemTitle, textAlign: "center", fontSize: 20 }}
-              subtitle={`کد گروه:  ${item.ProductGroupCode}`}
-              subtitleStyle={{ ...rxGlobal.globalStyles.listItemTitle, color: rxGlobal.globalColors.listItemSubtitleText, textAlign: "center" }}
-              onPress={async () => {
-                groupStack.current.push(item.Id);
-                await onGroupStackChanged();
-              }}
-            />
-          ))}
-        </View>
+        <ProductShowcase data={showcase}/>
       </Content>
     </Container>
   );

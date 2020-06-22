@@ -8,7 +8,7 @@ export default function Productdata(props) {
   let { data } = props;
   let { onPress } = props;
   return (
-    <View style={{ flexWrap: "wrap-reverse" }}>
+    <View style={{ alignItems:'center' }}>
       {console.log(data)}
       <FlatList
         columnWrapperStyle={{ flexWrap: "wrap" }}
@@ -18,14 +18,15 @@ export default function Productdata(props) {
           console.log(`ITEM: ${JSON.stringify(item)}`);
           return (
             <ListItem
-            Component={TouchableScale}
-            key={item.rxKey}
-            friction={90} //
-            tension={100} // These props are passed to the parent component (here TouchableScale)
-            activeScale={0.8} //
+              Component={TouchableScale}
+              key={item.rxKey}
+              friction={90} //
+              tension={100} // These props are passed to the parent component (here TouchableScale)
+              activeScale={0.8} //
               containerStyle={[rxGlobal.globalStyles.shadowedContainer, rxGlobal.globalStyles.listItemHeaderContainer, { width: 150, aspectRatio: 1 ,}]}
               underlayColor='FFFF'
               key={item.rxKey}
+              style={{marginVertical:10}}
               linearGradientProps={rxGlobal.globalColors.gradients.listItem}
               title={`${item.Title}`}
               titleStyle={{ ...rxGlobal.globalStyles.listItemTitle, textAlign: "center", fontSize: 20 }}
@@ -38,7 +39,6 @@ export default function Productdata(props) {
           );
         }}
         keyExtractor={(item, index) => index}
-        contentContainerStyle={{ paddingBottom: 100 }}
       />
     </View>
   );

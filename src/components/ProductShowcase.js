@@ -3,11 +3,12 @@ import { View, Text, FlatList, BackHandler } from "react-native";
 import { ListItem } from "react-native-elements";
 import * as rxGlobal from "../lib/rxGlobal";
 import TouchableScale from "react-native-touchable-scale";
+import { Entypo } from "@expo/vector-icons";
 
 export default function Productdata(props) {
   let { data ,onPress} = props;
   return (
-    <View style={{ alignItems:'center' }}>
+    <View style={{ alignItems:'flex-end' ,marginHorizontal:25}}>
       {console.log(data)}
       <FlatList
         columnWrapperStyle={{ flexWrap: "wrap" }}
@@ -22,7 +23,7 @@ export default function Productdata(props) {
               friction={90} //
               tension={100} // These props are passed to the parent component (here TouchableScale)
               activeScale={0.8} //
-              containerStyle={[rxGlobal.globalStyles.shadowedContainer, rxGlobal.globalStyles.listItemHeaderContainer, { width: 150, aspectRatio: 1 ,}]}
+              containerStyle={[rxGlobal.globalStyles.shadowedContainer, rxGlobal.globalStyles.listItemHeaderContainer, { width: 150, aspectRatio: 2 ,}]}
               underlayColor='FFFF'
               key={item.rxKey}
               style={{marginVertical:10}}

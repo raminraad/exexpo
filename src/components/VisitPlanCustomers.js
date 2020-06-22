@@ -244,7 +244,7 @@ export default function VisitPlanCustomers(props) {
               backgroundColor={item.ResultStatus === 2 || !item.ResultStatus ? globalColors.listItemNavigateIconUndone : globalColors.listItemNavigateIconDone}
               onPress={() => {
                 item.rxSync = enums.syncStatuses.modified;
-                props.navigation.navigate("VisitPlanResultForm", {
+                props.navigation.navigate("AddProductFromDb", {
                   title: `فروشگاه ${item.Title}`,
                   initialItem: item,
                 });

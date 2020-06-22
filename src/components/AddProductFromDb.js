@@ -42,15 +42,15 @@ export default function SearchBarExample(props) {
   };
 
   const pushToGroupstack = async (item) => {
-    let temp = [...groupstack.current];
-    temp.push(item);
-    groupstack.current = temp;
+    console.log(`before push: ${JSON.stringify(groupstack.current)}`)
+    groupstack.current.push(item);
+    console.log(`after push: ${JSON.stringify(groupstack.current)}`)
     await onGroupstackChanged();
   };
   const popFromGroupstack = async () => {
-    let temp = [...groupstack.current];
-    temp.pop();
-    groupstack.current = temp;
+    console.log(`before pop: ${JSON.stringify(groupstack.current)}`)
+    groupstack.current.pop();
+    console.log(`after pop: ${JSON.stringify(groupstack.current)}`)
     await onGroupstackChanged();
   };
 
@@ -74,7 +74,7 @@ export default function SearchBarExample(props) {
       </Header>
       <Content>
         <View style={{ backgroundColor: "tomato", height: 50 }}>
-          <FlatList style={{flexDirection:'row-reverse'}} contentContainerStyle={{alignItems:'center'}} horizontal={true} ItemSeparatorComponent={()=><Text> --- </Text>} data={groupstack.current.reverse()} renderItem={({ item }) => <Text>{item.Title}</Text>} />
+          <FlatList style={{flexDirection:'row-reverse'}} contentContainerStyle={{alignItems:'center'}} horizontal={true} ItemSeparatorComponent={()=><Text> --- </Text>} data={([...groupstack.current]).reverse()} renderItem={({ item }) => <Text>{item.Title}</Text>} />
         </View>
         <ProductShowcase data={showcase} onPress={pushToGroupstack} />
       </Content>

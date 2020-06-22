@@ -1,5 +1,5 @@
 import React, { Component, useRef, useEffect, useState } from "react";
-import { Container, Header, Item, Input, Icon, Button, Text, Content } from "native-base";
+import { Container, Header, Item, Input, Icon, Button, Text, Content, Grid } from "native-base";
 import { Entypo, FontAwesome5, Feather } from "@expo/vector-icons";
 import * as rxGlobal from "../lib/rxGlobal";
 import { View } from "react-native";
@@ -18,8 +18,10 @@ export default function SearchBarExample() {
   }, []);
 
   const onGroupStackChanged = async () => {
+    let groupId = groupStack.current[groupStack.current.length - 1];
     console.log("1");
-    setShowcase(await dp.selectTable("ProductGroup", `where ParentId is ${groupStack.current[groupStack.current.length - 1]}`));
+    if (groupId) setShowcase(await dp.selectTable("ProductGroup", `where ParentId = ${groupId}`));
+    else setShowcase(await dp.selectTable("ProductGroup", `where ParentId is ${groupId}`));
     console.log("2");
   };
 
@@ -37,16 +39,12 @@ export default function SearchBarExample() {
           {/* todo:implement breadcrump */}
           <Text>{showcase.length}</Text>
         </View>
-        <View style={{flexWrap:'wrap-reverse'}}>
+        <View style={{ flexWrap: "wrap-reverse" }}>
           {console.log("3")}
 
           {showcase.map((item, i) => (
             <ListItem
-              containerStyle={[
-                rxGlobal.globalStyles.shadowedContainer,
-                rxGlobal.globalStyles.listItemHeaderContainer,
-                { width: 150, aspectRatio: 1 },
-              ]}
+              containerStyle={[rxGlobal.globalStyles.shadowedContainer, rxGlobal.globalStyles.listItemHeaderContainer, { width: 150, aspectRatio: 1 }]}
               Component={TouchableScale}
               key={item.rxKey}
               friction={90} //
@@ -54,10 +52,13 @@ export default function SearchBarExample() {
               activeScale={0.95} //
               linearGradientProps={rxGlobal.globalColors.gradients.listItem}
               title={`${item.Title}`}
-              titleStyle={{...rxGlobal.globalStyles.listItemTitle,textAlign:'center',fontSize:20}}
+              titleStyle={{ ...rxGlobal.globalStyles.listItemTitle, textAlign: "center", fontSize: 20 }}
               subtitle={`کد گروه:  ${item.ProductGroupCode}`}
-              subtitleStyle={{ ...rxGlobal.globalStyles.listItemTitle, color: rxGlobal.globalColors.listItemSubtitleText,textAlign:'center' }}
-              onPress={()=>onGroupStackChanged}
+              subtitleStyle={{ ...rxGlobal.globalStyles.listItemTitle, color: rxGlobal.globalColors.listItemSubtitleText, textAlign: "center" }}
+              onPress={async () => {
+                groupStack.current.push(item.Id);
+                await onGroupStackChanged();
+              }}
             />
           ))}
         </View>

@@ -9,13 +9,12 @@ export default function Productdata(props) {
   let { data ,onPress} = props;
   return (
     <View style={{ alignItems:'flex-end' ,marginHorizontal:25}}>
-      {console.log(data)}
+      {console.log(`RENDERING CHILD`)}
       <FlatList
         columnWrapperStyle={{ flexWrap: "wrap" }}
         data={data}
         numColumns={3}
         renderItem={({ item, i }) => {
-          console.log(`ITEM: ${JSON.stringify(item)}`);
           return (
             <ListItem
               Component={TouchableScale}

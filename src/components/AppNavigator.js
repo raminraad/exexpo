@@ -88,7 +88,7 @@ const VisitPlanStack = () => {
 
   return (
     <VisitStack.Navigator
-      initialRouteName='UserVisitPlans'
+      initialRouteName='VisitResultTab'
       screenOptions={{
         headerShown: false,
       }}>

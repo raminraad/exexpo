@@ -42,25 +42,21 @@ export default function SearchBarExample(props) {
   };
 
   const pushToGroupstack = async (item) => {
-    console.log(`before push: ${JSON.stringify(groupstack.current)}`)
-    groupstack.current.push(item);
-    console.log(`after push: ${JSON.stringify(groupstack.current)}`)
-    await onGroupstackChanged();
+    let details = await dp.selectTable("ProductGroup", `where ParentId = ${item.Id}`);
+    // current group has subgroups
+    groupstack.current.push({ master: item, details });
+    console.log(`Details: ${JSON.stringify(details)}`);
+    if (details.length) {
+      setShowcase(details);
+    }
+    console.log(`PUSH: ${groupstack.current.length}`);
   };
   const popFromGroupstack = async () => {
-    console.log(`before pop: ${JSON.stringify(groupstack.current)}`)
     groupstack.current.pop();
-    console.log(`after pop: ${JSON.stringify(groupstack.current)}`)
-    await onGroupstackChanged();
-  };
-
-  const onGroupstackChanged = async () => {
-    let currentGroupId = groupstack.current[groupstack.current.length - 1].Id;
-    let subgroups = await dp.selectTable("ProductGroup", `where ParentId = ${currentGroupId}`);
     // current group has subgroups
-    if (subgroups.length) {
-      setShowcase(subgroups);
-    }
+    console.log(`groupstack.current: ${JSON.stringify(groupstack.current)}`);
+      setShowcase((groupstack.current[groupstack.current.length-1]).details);
+      console.log(`POP: ${groupstack.current.length}`);
   };
 
   return (
@@ -74,7 +70,14 @@ export default function SearchBarExample(props) {
       </Header>
       <Content>
         <View style={{ backgroundColor: "tomato", height: 50 }}>
-          <FlatList style={{flexDirection:'row-reverse'}} contentContainerStyle={{alignItems:'center'}} horizontal={true} ItemSeparatorComponent={()=><Text> --- </Text>} data={([...groupstack.current]).reverse()} renderItem={({ item }) => <Text>{item.Title}</Text>} />
+          <FlatList
+            style={{ flexDirection: "row-reverse" }}
+            contentContainerStyle={{ alignItems: "center" }}
+            horizontal={true}
+            ItemSeparatorComponent={() => <Text> --- </Text>}
+            data={[...groupstack.current].reverse()}
+            renderItem={({ item }) => <Text>{item.master.Title}</Text>}
+          />
         </View>
         <ProductShowcase data={showcase} onPress={pushToGroupstack} />
       </Content>

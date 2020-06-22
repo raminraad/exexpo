@@ -11,7 +11,7 @@ import ProductShowcase from "./ProductShowcase";
 import { useFocusEffect } from "@react-navigation/native";
 
 export default function SearchBarExample(props) {
-  const groupstack = useRef([4]);
+  const groupstack = useRef([]);
   // const [groupstack, setGroupstack] = useState([null]);
   const [showcase, setShowcase] = useState([]);
 
@@ -33,13 +33,16 @@ export default function SearchBarExample(props) {
   );
 
   useEffect(() => {
-    onGroupstackChanged();
+    loadRootGroups();
   }, []);
+
+  const loadRootGroups = async () => {
+    let rootItem = (await dp.selectTable("ProductGroup", `where ParentId is null`))[0];
+    pushToGroupstack(rootItem);
+  };
 
   const pushToGroupstack = async (item) => {
     let temp = [...groupstack.current];
-    console.log(groupstack.current);
-    console.log(temp);
     temp.push(item);
     groupstack.current = temp;
     await onGroupstackChanged();
@@ -52,12 +55,9 @@ export default function SearchBarExample(props) {
   };
 
   const onGroupstackChanged = async () => {
-    let groupId = groupstack.current[groupstack.current.length - 1];
-    console.log(`groupId:${groupId}`);
-    console.log(`groupStack:${groupstack.current}`);
+    let groupId = groupstack.current[groupstack.current.length - 1].Id;
     if (groupId) setShowcase(await dp.selectTable("ProductGroup", `where ParentId = ${groupId}`));
     else setShowcase(await dp.selectTable("ProductGroup", `where ParentId is ${groupId}`));
-    console.log("2");
   };
 
   return (
@@ -73,7 +73,6 @@ export default function SearchBarExample(props) {
         <View>
           {/* todo:implement breadcrump here*/}
           <Text>{showcase.length}</Text>
-          {console.log(JSON.stringify(showcase))}
         </View>
         <ProductShowcase data={showcase} onPress={pushToGroupstack} />
       </Content>

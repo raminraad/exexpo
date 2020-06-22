@@ -1,38 +1,55 @@
-import React, { Component, useRef, useEffect, useState } from "react";
+import React, { Component, useRef, useEffect, useState, useCallback } from "react";
 import { Container, Header, Item, Input, Icon, Button, Text, Content, Grid } from "native-base";
 import { Entypo, FontAwesome5, Feather } from "@expo/vector-icons";
 import * as rxGlobal from "../lib/rxGlobal";
-import { View } from "react-native";
+import { View, BackHandler, Alert } from "react-native";
 import * as dp from "../lib/sqliteProvider";
 import { TouchableOpacity, FlatList } from "react-native-gesture-handler";
 import { ListItem } from "react-native-elements";
 import TouchableScale from "react-native-touchable-scale"; // https://github.com/kohver/react-native-touchable-scale
 import ProductShowcase from "./ProductShowcase";
+import { useFocusEffect } from "@react-navigation/native";
 
-export default function SearchBarExample() {
-  const groupstack = useRef([null]);
+export default function SearchBarExample(props) {
+  const groupstack = useRef([4]);
   // const [groupstack, setGroupstack] = useState([null]);
   const [showcase, setShowcase] = useState([]);
 
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        if (groupstack.current.length > 1) {
+          popFromGroupstack();
+          return true;
+        } else {
+          return false;
+        }
+      };
+
+      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+
+      return () => BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+    }, [])
+  );
+
   useEffect(() => {
     onGroupstackChanged();
-    return () => {};
   }, []);
 
-const pushToGroupstack=async (item)=>{
-  let temp = [...groupstack.current];
-  console.log(groupstack.current);
-  console.log(temp);
-  temp.push(item);
-  groupstack.current = temp;
-  await onGroupstackChanged();
-};
-const popFromGroupstack=async (item)=>{
-  let temp = {...groupstack.current};
-  temp.pop();
-  groupstack.current = temp;
-  await onGroupstackChanged();
-};
+  const pushToGroupstack = async (item) => {
+    let temp = [...groupstack.current];
+    console.log(groupstack.current);
+    console.log(temp);
+    temp.push(item);
+    groupstack.current = temp;
+    await onGroupstackChanged();
+  };
+  const popFromGroupstack = async () => {
+    let temp = [...groupstack.current];
+    temp.pop();
+    groupstack.current = temp;
+    await onGroupstackChanged();
+  };
 
   const onGroupstackChanged = async () => {
     let groupId = groupstack.current[groupstack.current.length - 1];
@@ -58,7 +75,7 @@ const popFromGroupstack=async (item)=>{
           <Text>{showcase.length}</Text>
           {console.log(JSON.stringify(showcase))}
         </View>
-        <ProductShowcase data={showcase} onPress={pushToGroupstack}/>
+        <ProductShowcase data={showcase} onPress={pushToGroupstack} />
       </Content>
     </Container>
   );

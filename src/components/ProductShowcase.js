@@ -1,12 +1,11 @@
 import React from "react";
-import { View, Text, FlatList } from "react-native";
+import { View, Text, FlatList, BackHandler } from "react-native";
 import { ListItem } from "react-native-elements";
 import * as rxGlobal from "../lib/rxGlobal";
 import TouchableScale from "react-native-touchable-scale";
 
 export default function Productdata(props) {
-  let { data } = props;
-  let { onPress } = props;
+  let { data ,onPress} = props;
   return (
     <View style={{ alignItems:'center' }}>
       {console.log(data)}

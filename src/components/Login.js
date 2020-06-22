@@ -47,7 +47,7 @@ export default function Login({ navigation }) {
   // XXX: start
 
   console.disableYellowBox = true;
-  global.dev = { useFakeData: false, verbose: false };
+  global.dev = { useFakeData: false, verbose: true };
   // goto("AppDrawer");
 
   //xxx: end

@@ -77,7 +77,7 @@ switch (route.name) {
     }}
     >
       <VisitTab.Screen name='VisitPlanResultForm' component={VisitPlanResultForm} />
-      <VisitTab.Screen name='VisitPlanResultProductForm' component={VisitPlanResultProduc tForm} />
+      <VisitTab.Screen name='VisitPlanResultProductForm' component={VisitPlanResultProductForm} />
       <VisitTab.Screen name='CameraForm' component={CameraForm} />
       <VisitTab.Screen name='AddProductFromDb' component={AddProductFromDb} />
     </VisitTab.Navigator>

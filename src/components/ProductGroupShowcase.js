@@ -17,7 +17,7 @@ export default function ProudctGroupShowcase(props) {
           return (
             <ListItem
               Component={TouchableScale}
-              rightAvatar={<FontAwesome5 name="layer-group" size={24} color={rxGlobal.globalColors.palette.mercury} />}
+              rightAvatar={<FontAwesome5 name="layer-group" size={32} color={rxGlobal.globalColors.palette.mercury} />}
               friction={90} //
               tension={100} // These props are passed to the parent component (here TouchableScale)
               activeScale={0.8} //

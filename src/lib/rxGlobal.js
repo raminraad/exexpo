@@ -65,7 +65,7 @@ export const globalColors = {
   listItemContentBorder: "#8da9c488",
   listItemTitleText: "#6c757d",
   listItemSubtitleText: "#6c757dAA",
-  listItemSubtitleIcon: "#6c757dAA",
+  listItemSubtitleIcon: "#6c757d66",
   addModalFieldValidationErrorText: "#e71d36",
   screenContainer: "#f8f9fa",
   screenTitleText:'#3a6ea5',

@@ -19,9 +19,6 @@ export default function SearchBarExample(props) {
   // const [groupstack, setGroupstack] = useState([null]);
   const [showcase, setShowcase] = useState([]);
   const showcaseTypes = Object.freeze({ productGroup: 1, product: 2, productSub: 3 });
-  let presentShowcaseType = groupstack.current.length ? groupstack.current[groupstack.current.length - 1].showcaseType : showcaseTypes.productGroup;
-  console.log(`GROUP STACK: ${JSON.stringify(groupstack.current)}`);
-  console.log(`PRESENT SHOWCASE TYPE: ${presentShowcaseType}`);
 
   useFocusEffect(
     useCallback(() => {
@@ -52,6 +49,7 @@ export default function SearchBarExample(props) {
 
   const pushToGroupstack = async (item) => {
     setIsLoading(true);
+    let presentShowcaseType = groupstack.current.length ? groupstack.current[groupstack.current.length - 1].showcaseType : showcaseTypes.productGroup;
 
     if (presentShowcaseType === showcaseTypes.productGroup) {
       let subgroups = await dp.selectTable("ProductGroup", `where ParentId = ${item.id}`);
@@ -79,12 +77,18 @@ export default function SearchBarExample(props) {
   const popFromGroupstack = async (count) => {
     setIsLoading(true);
     for (let i = 0; i < count; i++) groupstack.current.pop();
-
-    // let details=(groupstack.current[groupstack.current.length-1]).details;
-    let details = await dp.selectTable("ProductGroup", `where ParentId = ${groupstack.current[groupstack.current.length - 1].id}`);
-    if (details.length) setShowcase(details);
+    let presentShowcaseType = groupstack.current[groupstack.current.length - 1].showcaseType;
+    if (presentShowcaseType === showcaseTypes.productGroup) setShowcase(await dp.selectTable("ProductGroup", `where ParentId = ${item.id}`));
+    else if (presentShowcaseType === showcaseTypes.product) setShowcase(await dp.selectTable("Product", `where ProductGroupId = ${item.id}`));
 
     setIsLoading(false);
+  };
+
+  const renderShowcase = () => {
+    let presentShowcaseType = groupstack.current[groupstack.current.length - 1].showcaseType;
+    if (presentShowcaseType === showcaseTypes.productGroup) reutrn(<ProductGroupShowcase data={showcase} onPress={pushToGroupstack} />);
+    else if (presentShowcaseType === showcaseTypes.product) return <ProductShowcase data={showcase} onPress={pushToGroupstack} />;
+    else return <ProductSubShowcase data={showcase} onPress={pushToGroupstack} />;
   };
 
   return (
@@ -121,15 +125,7 @@ export default function SearchBarExample(props) {
           />
         </View>
 
-        {isLoading ? (
-          <Spinner color={rxGlobal.globalColors.spinner} size={72} style={{ flex: 1 }} />
-        ) : presentShowcaseType === showcaseTypes.productGroup ? (
-          <ProductGroupShowcase data={showcase} onPress={pushToGroupstack} />
-        ) : presentShowcaseType === showcaseTypes.product ? (
-          <ProductShowcase data={showcase} onPress={pushToGroupstack} />
-        ) : (
-          <ProductSubShowcase data={showcase} onPress={pushToGroupstack} />
-        )}
+        {isLoading ? <Spinner color={rxGlobal.globalColors.spinner} size={72} style={{ flex: 1 }} /> : renderShowcase()}
       </Content>
     </Container>
   );

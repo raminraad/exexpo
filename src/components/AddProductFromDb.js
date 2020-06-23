@@ -8,13 +8,20 @@ import { TouchableOpacity, FlatList } from "react-native-gesture-handler";
 import { ListItem } from "react-native-elements";
 import TouchableScale from "react-native-touchable-scale"; // https://github.com/kohver/react-native-touchable-scale
 import ProductShowcase from "./ProductShowcase";
+import ProductGroupShowcase from "./ProductGroupShowcase";
+import ProductSubShowcase from "./ProductSubShowcase";
 import { useFocusEffect } from "@react-navigation/native";
 
 export default function SearchBarExample(props) {
   const groupstack = useRef([]);
+
   const [isLoading, setIsLoading] = useState(false);
   // const [groupstack, setGroupstack] = useState([null]);
   const [showcase, setShowcase] = useState([]);
+  const showcaseTypes = Object.freeze({ productGroup: 1, product: 2, productSub: 3 });
+  let presentShowcaseType = groupstack.current.length? groupstack.current[groupstack.current.length - 1].showcaseType: showcaseTypes.productGroup;
+console.log(`PRESENT SHOWCASE TYPE: ${presentShowcaseType}`);
+console.log(`GROUP STACK: ${groupstack.current}`);
 
   useFocusEffect(
     useCallback(() => {
@@ -39,19 +46,39 @@ export default function SearchBarExample(props) {
 
   const loadRootGroups = async () => {
     let rootItem = (await dp.selectTable("ProductGroup", `where ParentId is null`))[0];
-    pushToGroupstack(rootItem);
+
+    pushToGroupstack({ id: rootItem.Id, title: rootItem.Title });
   };
 
   const pushToGroupstack = async (item) => {
     setIsLoading(true);
-    let details = await dp.selectTable("ProductGroup", `where ParentId = ${item.Id}`);
-    groupstack.current.push(item);
-    console.log(`Details: ${JSON.stringify(details)}`);
-    if (details.length) {
-      setShowcase(details);
+    console.log(`pushing item: ${JSON.stringify(item)}`);
+    
+    
+
+    if (presentShowcaseType === showcaseTypes.productGroup) {
+      let subgroups = await dp.selectTable("ProductGroup", `where ParentId = ${item.id}`);
+      if (subgroups.length) {
+        setShowcase(subgroups);
+        groupstack.current.push({ ...item, showcaseType: showcaseTypes.productGroup });
+        // return;
+      } else {
+        let products = await dp.selectTable("Product", `where ProductGroupId = ${item.id}`);
+        // if (products.length)
+        setShowcase(products);
+        groupstack.current.push({ ...item, showcaseType: showcaseTypes.product });
+        // return;
+      }
+    } else if (presentShowcaseType === showcaseTypes.product) {
+      let productSubs = await dp.selectTable("ProductSub", `where ProductId = ${item.id}`);
+      // if (subProducts.length)
+      setShowcase(productSubs);
+      groupstack.current.push({ ...item, showcaseType: showcaseTypes.productSub });
+      // return;
     }
     setIsLoading(false);
-    console.log(`PUSH: ${groupstack.current.length}`);
+
+    console.log(`stack: ${JSON.stringify(groupstack.current)}`);
   };
 
   const popFromGroupstack = async (count) => {
@@ -60,7 +87,7 @@ export default function SearchBarExample(props) {
     for (let i = 0; i < count; i++) groupstack.current.pop();
 
     // let details=(groupstack.current[groupstack.current.length-1]).details;
-    let details = await dp.selectTable("ProductGroup", `where ParentId = ${groupstack.current[groupstack.current.length - 1].Id}`);
+    let details = await dp.selectTable("ProductGroup", `where ParentId = ${groupstack.current[groupstack.current.length - 1].id}`);
     if (details.length) setShowcase(details);
 
     setIsLoading(false);
@@ -91,20 +118,24 @@ export default function SearchBarExample(props) {
             )}
             data={[...groupstack.current].reverse()}
             renderItem={({ item, index }) => (
-              <TouchableOpacity 
+              <TouchableOpacity
                 onPress={() => {
                   if (index) popFromGroupstack(index);
                 }}>
-                <Text>{item.Title}</Text>
+                <Text>{item.title}</Text>
               </TouchableOpacity>
             )}
           />
         </View>
 
-        {isLoading ? (
+        {isLoading ? 
           <Spinner color={rxGlobal.globalColors.spinner} size={72} style={{ flex: 1 }} />
-        ) : (
-          <ProductShowcase data={showcase} onPress={pushToGroupstack} />
+         : (
+           presentShowcaseType===showcaseTypes.productGroup?
+          <ProductGroupShowcase data={showcase} onPress={pushToGroupstack} />
+          :(presentShowcaseType===showcaseTypes.product?
+            <ProductShowcase data={showcase} onPress={pushToGroupstack} />:
+            <ProductSubShowcase data={showcase} onPress={pushToGroupstack} />)
         )}
       </Content>
     </Container>

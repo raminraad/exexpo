@@ -5,15 +5,16 @@ import * as rxGlobal from "../lib/rxGlobal";
 import TouchableScale from "react-native-touchable-scale";
 import { Entypo,FontAwesome5 } from "@expo/vector-icons";
 
-export default function ProductShowcase(props) {
+export default function ProudctGroupShowcase(props) {
   let { data ,onPress} = props;
   return (
     <View style={{ alignItems:'flex-end' ,marginHorizontal:25}}>
-        {console.log(`RENDERING PRODUCT`)}
+      {console.log(`RENDERING PRODUCT-GROUP`)}
+      {console.log(`RENDERING DATA ${JSON.stringify(data)}`)}
       <FlatList
         data={data}
-        numColumns={2}
-        renderItem={({ item, i }) => {
+        numColumns={3}
+        renderItem={({ item, index }) => {
           return (
             <ListItem
               Component={TouchableScale}
@@ -21,14 +22,14 @@ export default function ProductShowcase(props) {
               friction={90} //
               tension={100} // These props are passed to the parent component (here TouchableScale)
               activeScale={0.8} //
-              containerStyle={[rxGlobal.globalStyles.shadowedContainer, rxGlobal.globalStyles.listItemHeaderContainer, { width: 225, aspectRatio: 2 ,}]}
+              containerStyle={[rxGlobal.globalStyles.shadowedContainer, rxGlobal.globalStyles.listItemHeaderContainer, { width: 150, aspectRatio: 2 ,}]}
               underlayColor='FFFF'
-              key={index.toString()}
+              key={item.Id}
               style={{marginVertical:10}}
               linearGradientProps={rxGlobal.globalColors.gradients.listItem}
-              title={`${item.Taste}`}
+              title={`${item.Title}`}
               titleStyle={{ ...rxGlobal.globalStyles.listItemTitle, textAlign: "right", fontSize: 20 }}
-              subtitle={`کد محصول ${item.ProductCode}`}
+              subtitle={`کد گروه ${item.ProductGroupCode}`}
               subtitleStyle={{color: rxGlobal.globalColors.listItemSubtitleText, textAlign: "right" ,fontSize:13}}
               onPress={() => {
                 onPress({id:item.Id,title:item.Title});
@@ -36,7 +37,7 @@ export default function ProductShowcase(props) {
             />
           );
         }}
-        keyExtractor={(item, index) => index}
+        keyExtractor={({item, index}) => index}
       />
     </View>
   );

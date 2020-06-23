@@ -12,7 +12,6 @@ export default function ProductSubShowcase(props) {
       {console.log(`RENDERING PRODUCT-SUB`)}
       <FlatList
         data={data}
-        numColumns={3}
         renderItem={({ item, i }) => {
           return (
             <ListItem
@@ -23,7 +22,7 @@ export default function ProductSubShowcase(props) {
               activeScale={0.8} //
               containerStyle={[rxGlobal.globalStyles.shadowedContainer, rxGlobal.globalStyles.listItemHeaderContainer, { width: 150, aspectRatio: 2 ,}]}
               underlayColor='FFFF'
-              key={index.toString()}
+              key={item.Id}
               style={{marginVertical:10}}
               linearGradientProps={rxGlobal.globalColors.gradients.listItem}
               title={`${item.Title}`}
@@ -36,8 +35,7 @@ export default function ProductSubShowcase(props) {
             />
           );
         }}
-        keyExtractor={(item, index) => index}
-      />
+        keyExtractor={(item, index) => index}      />
     </View>
   );
 }

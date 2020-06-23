@@ -10,7 +10,6 @@ export default function ProudctGroupShowcase(props) {
   return (
     <View style={{ alignItems:'flex-end' ,marginHorizontal:25}}>
       {console.log(`RENDERING PRODUCT-GROUP`)}
-      {console.log(`RENDERING DATA ${JSON.stringify(data)}`)}
       <FlatList
         data={data}
         numColumns={3}
@@ -37,7 +36,7 @@ export default function ProudctGroupShowcase(props) {
             />
           );
         }}
-        keyExtractor={({item, index}) => index}
+        keyExtractor={(item, index) => index}
       />
     </View>
   );

@@ -12,7 +12,7 @@ export default function ProductShowcase(props) {
         {console.log(`RENDERING PRODUCT`)}
       <FlatList
         data={data}
-        numColumns={2}
+        horizontal={true}
         renderItem={({ item, i }) => {
           return (
             <ListItem
@@ -21,9 +21,9 @@ export default function ProductShowcase(props) {
               friction={90} //
               tension={100} // These props are passed to the parent component (here TouchableScale)
               activeScale={0.8} //
-              containerStyle={[rxGlobal.globalStyles.shadowedContainer, rxGlobal.globalStyles.listItemHeaderContainer, { width: 225, aspectRatio: 2 ,}]}
+              containerStyle={[rxGlobal.globalStyles.shadowedContainer, rxGlobal.globalStyles.listItemHeaderContainer]}
               underlayColor='FFFF'
-              key={index.toString()}
+              key={item.Id}
               style={{marginVertical:10}}
               linearGradientProps={rxGlobal.globalColors.gradients.listItem}
               title={`${item.Taste}`}
@@ -31,7 +31,7 @@ export default function ProductShowcase(props) {
               subtitle={`کد محصول ${item.ProductCode}`}
               subtitleStyle={{color: rxGlobal.globalColors.listItemSubtitleText, textAlign: "right" ,fontSize:13}}
               onPress={() => {
-                onPress({id:item.Id,title:item.Title});
+                onPress({id:item.Id,title:item.Taste});
               }}
             />
           );

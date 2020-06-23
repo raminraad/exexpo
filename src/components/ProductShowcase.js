@@ -32,7 +32,7 @@ export default function Productdata(props) {
               subtitle={`کد گروه ${item.ProductGroupCode}`}
               subtitleStyle={{color: rxGlobal.globalColors.listItemSubtitleText, textAlign: "right" ,fontSize:13}}
               onPress={() => {
-                onPress(item);
+                onPress({Id:item.Id,Title:item.Title});
               }}
             />
           );

@@ -10,7 +10,7 @@ import TouchableScale from "react-native-touchable-scale"; // https://github.com
 import ProductShowcase from "./ProductShowcase";
 import ProductGroupShowcase from "./ProductGroupShowcase";
 import ProductSubShowcase from "./ProductSubShowcase";
-import { useFocusEffect } from "@react-navigation/native";
+// import { useFocusEffect } from "@react-navigation/native";
 
 export default function SearchBarExample(props) {
   const groupstack = useRef([]);
@@ -20,22 +20,22 @@ export default function SearchBarExample(props) {
   const [showcase, setShowcase] = useState([]);
   const showcaseTypes = Object.freeze({ productGroup: 1, product: 2, productSub: 3 });
 
-  useFocusEffect(
-    useCallback(() => {
-      const onBackPress = () => {
-        if (groupstack.current.length > 1) {
-          popFromGroupstack(1);
-          return true;
-        } else {
-          return false;
-        }
-      };
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     const onBackPress = () => {
+  //       if (groupstack.current.length > 1) {
+  //         popFromGroupstack(1);
+  //         return true;
+  //       } else {
+  //         return false;
+  //       }
+  //     };
 
-      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+  //     BackHandler.addEventListener("hardwareBackPress", onBackPress);
 
-      return () => BackHandler.removeEventListener("hardwareBackPress", onBackPress);
-    }, [])
-  );
+  //     return () => BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+  //   }, [])
+  // );
 
   useEffect(() => {
     loadRootGroups();

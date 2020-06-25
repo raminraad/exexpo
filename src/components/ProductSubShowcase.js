@@ -5,6 +5,7 @@ import * as rxGlobal from "../lib/rxGlobal";
 import TouchableScale from "react-native-touchable-scale";
 import { Entypo, FontAwesome5, Ionicons, MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import * as enums from "../lib/enums";
+import { Accordion } from "native-base";
 
 export default function ProductSubShowcase(props) {
   let { data, onPress } = props;
@@ -27,7 +28,7 @@ export default function ProductSubShowcase(props) {
     </View>
   );
   const renderTitle = (item) => (
-    <View style={{ flexDirection: "row-reverse", alignItems: "center", justifyContent: "flex-start",marginBottom:10 }}>
+    <View style={{ flexDirection: "row-reverse", alignItems: "center", justifyContent: "flex-start", marginBottom: 10 }}>
       <View style={styles.fieldContainer}>
         {item.PriceValue ? (
           <View style={styles.fieldContainer}>
@@ -41,48 +42,38 @@ export default function ProductSubShowcase(props) {
         <MaterialCommunityIcons name='altimeter' size={16} color={rxGlobal.globalColors.listItemSubtitleIcon} />
         {item.MeasurmentScale ? (
           <View style={styles.fieldContainer}>
-            <Text style={{...styles.titleValue,marginRight:5}}>{item.MeasurmentScale}</Text>
+            <Text style={{ ...styles.titleValue, marginRight: 5 }}>{item.MeasurmentScale}</Text>
             <Text style={styles.titleScale}>{enums.measurementTypesToLiteral(item.MeasurmentType)}</Text>
           </View>
         ) : null}
       </View>
     </View>
   );
-
-  return (
-    <FlatList
-      data={data}
-      renderItem={({ item, i }) => {
-        console.log(`PRODUCTSUB: ${JSON.stringify(item)}`);
-        return (
-          <ListItem
-            Component={TouchableScale}
-            rightAvatar={<FontAwesome5 name='tag' size={32} color={rxGlobal.globalColors.palette.mercury} />}
-            friction={90} //
-            tension={100} // These props are passed to the parent component (here TouchableScale)
-            activeScale={0.8} //
-            containerStyle={[rxGlobal.globalStyles.shadowedContainer, rxGlobal.globalStyles.listItemHeaderContainer]}
-            underlayColor='FFFF'
-            key={item.Id}
-            style={{ marginVertical: 10 }}
-            linearGradientProps={rxGlobal.globalColors.gradients.listItem}
-            title={() => renderTitle(item)}
-            titleStyle={{ ...rxGlobal.globalStyles.listItemTitle, textAlign: "right", fontSize: 20 }}
-            subtitle={() => renderSubtitle(item)}
-            subtitleStyle={{ color: rxGlobal.globalColors.listItemSubtitleText, textAlign: "right", fontSize: 13 }}
-            onPress={() => {
-              onPress({ id: item.Id, title: item.Taste });
-            }}
-          />
-        );
-      }}
-      keyExtractor={(item, index) => index}
+  const renderHeader = (item, expanded) => (
+    <ListItem
+      rightAvatar={<FontAwesome5 name='tag' size={32} color={rxGlobal.globalColors.palette.mercury} />}
+      containerStyle={[rxGlobal.globalStyles.shadowedContainer, rxGlobal.globalStyles.listItemHeaderContainer]}
+      underlayColor='FFFF'
+      key={item.Id}
+      style={{ marginVertical: 10 }}
+      linearGradientProps={rxGlobal.globalColors.gradients.listItem}
+      title={() => renderTitle(item)}
+      titleStyle={{ ...rxGlobal.globalStyles.listItemTitle, textAlign: "right", fontSize: 20 }}
+      subtitle={() => renderSubtitle(item)}
+      subtitleStyle={{ color: rxGlobal.globalColors.listItemSubtitleText, textAlign: "right", fontSize: 13 }}
+      
     />
   );
+
+  const renderContent = ( item) => <View style={{height:50}}>
+    <Text>آیتم های مربوط به افزودن</Text>
+  </View>;
+
+  return <Accordion expanded dataArray={data} renderHeader={renderHeader} renderContent={renderContent} />;
 }
 
 const styles = StyleSheet.create({
   fieldContainer: { flexDirection: "row-reverse", alignItems: "center", marginRight: 10 },
-  titleValue:{fontSize:24,color:rxGlobal.globalColors.listItemTitleText,fontWeight:'bold', marginLeft: 5 },
-  titleScale:{fontSize:12},
+  titleValue: { fontSize: 24, color: rxGlobal.globalColors.listItemTitleText, fontWeight: "bold", marginLeft: 5 },
+  titleScale: { fontSize: 12 },
 });

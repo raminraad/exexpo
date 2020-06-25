@@ -47,12 +47,18 @@ export default function Login({ navigation }) {
   // XXX: start
 
   console.disableYellowBox = true;
-  global.dev = { useFakeData: false, verbose: false };
+  global.dev = { useFakeData: false, verbose: false ,forceLogin:false};
   // goto("AppDrawer");
 
   //xxx: end
 
   const submit = async (newInputs) => {
+if (!global.dev.forceLogin)
+{
+  goto("AppDrawer");
+  return;
+}
+
     setIsLoading(true);
     setMessage(globalLiterals.progress.checkingLoginInfo);
     var myHeaders = new Headers();

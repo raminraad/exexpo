@@ -3,7 +3,7 @@ import { View, Text, FlatList, BackHandler, StyleSheet } from "react-native";
 import { ListItem } from "react-native-elements";
 import * as rxGlobal from "../lib/rxGlobal";
 import TouchableScale from "react-native-touchable-scale";
-import { Entypo, FontAwesome5, Ionicons, MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { Entypo, FontAwesome5, Ionicons, MaterialIcons, MaterialCommunityIcons ,AntDesign} from "@expo/vector-icons";
 import * as enums from "../lib/enums";
 import { Accordion } from "native-base";
 
@@ -51,7 +51,7 @@ export default function ProductSubShowcase(props) {
   );
   const renderHeader = (item, expanded) => (
     <ListItem
-      rightAvatar={<FontAwesome5 name='tag' size={28} color={rxGlobal.globalColors.palette.mercury} />}
+      rightAvatar={<FontAwesome5 name='tag' size={28} color={rxGlobal.globalColors.listItemRightAvatar} />}
       containerStyle={[rxGlobal.globalStyles.shadowedContainer, rxGlobal.globalStyles.listItemHeaderContainer]}
       underlayColor='FFFF'
       key={item.Id}
@@ -61,7 +61,7 @@ export default function ProductSubShowcase(props) {
       titleStyle={{ ...rxGlobal.globalStyles.listItemTitle, textAlign: "right", fontSize: 20 }}
       subtitle={() => renderSubtitle(item)}
       subtitleStyle={{ color: rxGlobal.globalColors.listItemSubtitleText, textAlign: "right", fontSize: 13 }}
-      
+      leftElement={<AntDesign name={expanded?'upcircle':'downcircleo'} size={28} color={rxGlobal.globalColors.listItemActionIcon1} onPress={()=>{expanded=true}}/>}
     />
   );
 

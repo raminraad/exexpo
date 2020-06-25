@@ -77,13 +77,15 @@ export default function SearchBarExample(props) {
   };
 
   const popFromGroupstack = async (count) => {
-    console.log(`START METHOD: popFromGroupstack`);
-
+    console.log(`🏁 [AddProductFromDb.popFromGroupstack]`);
+    console.log(`💬 [AddProductFromDb.popFromGroupstack] popping ${count} item(s) from stack with length of :[${groupstack.current.length}]`);
+    
     setIsLoading(true);
     for (let i = 0; i < count; i++) groupstack.current.pop();
-    let presentShowcaseType = groupstack.current[groupstack.current.length - 1].showcaseType;
-    if (presentShowcaseType === showcaseTypes.productGroup) setShowcase(await dp.selectTable("ProductGroup", `where ParentId = ${item.id}`));
-    else if (presentShowcaseType === showcaseTypes.product) setShowcase(await dp.selectTable("Product", `where ProductGroupId = ${item.id}`));
+    console.log(`💬 [AddProductFromDb.popFromGroupstack] popped ${count} item(s) from stack. current length of stack: [${groupstack.current.length}]`);
+    let top = groupstack.current[groupstack.current.length - 1];
+    if (top.showcaseType === showcaseTypes.productGroup) setShowcase(await dp.selectTable("ProductGroup", `where ParentId = ${top.id}`));
+    else if (top.showcaseType === showcaseTypes.product) setShowcase(await dp.selectTable("Product", `where ProductGroupId = ${top.id}`));
 
     setIsLoading(false);
   };
@@ -107,7 +109,7 @@ export default function SearchBarExample(props) {
         </Item>
       </Header>
       <Content contentContainerStyle={{ flex: 1 }}>
-        <View style={{ alignItems: "flex-end", padding: 10, justifyContent: "flex-end" }}>
+        <View style={{ alignItems: "flex-end", padding: 10,marginRight:7, justifyContent: "flex-end" }}>
           <FlatList
             contentContainerStyle={{ alignItems: "center" }}
             horizontal={true}
@@ -120,6 +122,7 @@ export default function SearchBarExample(props) {
               />
             )}
             data={[...groupstack.current].reverse()}
+            keyExtractor={(item,index)=>index.toString()}
             renderItem={({ item, index }) => (
               <TouchableOpacity
                 onPress={() => {
@@ -139,5 +142,5 @@ export default function SearchBarExample(props) {
 
 const styles = StyleSheet.create({
   breadCrumpLevel1: { color: rxGlobal.globalColors.breadcrumpLevel1 },
-  breadCrumpLevel2: { color: rxGlobal.globalColors.breadcrumpLevel2 },
+  breadCrumpLevel2: { color: rxGlobal.globalColors.breadcrumpLevel2 ,fontWeight:'bold'},
 });

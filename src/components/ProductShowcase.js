@@ -34,7 +34,7 @@ export default function ProductShowcase(props) {
           />
         );
       }}
-      keyExtractor={(item, index) => index}
+      keyExtractor={(item, index) => index.toString()}
     />
   );
 }

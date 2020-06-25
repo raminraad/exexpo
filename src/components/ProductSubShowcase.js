@@ -51,7 +51,7 @@ export default function ProductSubShowcase(props) {
   );
   const renderHeader = (item, expanded) => (
     <ListItem
-      rightAvatar={<FontAwesome5 name='tag' size={32} color={rxGlobal.globalColors.palette.mercury} />}
+      rightAvatar={<FontAwesome5 name='tag' size={28} color={rxGlobal.globalColors.palette.mercury} />}
       containerStyle={[rxGlobal.globalStyles.shadowedContainer, rxGlobal.globalStyles.listItemHeaderContainer]}
       underlayColor='FFFF'
       key={item.Id}

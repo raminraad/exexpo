@@ -2,7 +2,7 @@ import React, { Component, useRef, useEffect, useState, useCallback } from "reac
 import { Container, Header, Item, Input, Icon, Button, Text, Content, Grid, Spinner } from "native-base";
 import { Entypo, FontAwesome5, Feather } from "@expo/vector-icons";
 import * as rxGlobal from "../lib/rxGlobal";
-import { View, BackHandler, Alert, I18nManager, TouchableHighlight } from "react-native";
+import { View, BackHandler, StyleSheet } from "react-native";
 import * as dp from "../lib/sqliteProvider";
 import { TouchableOpacity, FlatList } from "react-native-gesture-handler";
 import { ListItem } from "react-native-elements";
@@ -48,8 +48,8 @@ export default function SearchBarExample(props) {
   };
 
   const pushToGroupstack = async (item) => {
-    console.log(`START METHOD: pushToGroupstack`)
-    setIsLoading(true);   
+    console.log(`START METHOD: pushToGroupstack`);
+    setIsLoading(true);
 
     let presentShowcaseType = groupstack.current.length ? groupstack.current[groupstack.current.length - 1].showcaseType : showcaseTypes.productGroup;
 
@@ -77,7 +77,7 @@ export default function SearchBarExample(props) {
   };
 
   const popFromGroupstack = async (count) => {
-    console.log(`START METHOD: popFromGroupstack`)
+    console.log(`START METHOD: popFromGroupstack`);
 
     setIsLoading(true);
     for (let i = 0; i < count; i++) groupstack.current.pop();
@@ -89,10 +89,10 @@ export default function SearchBarExample(props) {
   };
 
   const renderShowcase = () => {
-    console.log(`START METHOD: renderShowcase`)
-    
+    console.log(`START METHOD: renderShowcase`);
+
     let presentShowcaseType = groupstack.current.length ? groupstack.current[groupstack.current.length - 1].showcaseType : showcaseTypes.productGroup;
-    if (presentShowcaseType === showcaseTypes.productGroup) return(<ProductGroupShowcase data={showcase} onPress={pushToGroupstack} />);
+    if (presentShowcaseType === showcaseTypes.productGroup) return <ProductGroupShowcase data={showcase} onPress={pushToGroupstack} />;
     else if (presentShowcaseType === showcaseTypes.product) return <ProductShowcase data={showcase} onPress={pushToGroupstack} />;
     else return <ProductSubShowcase data={showcase} onPress={pushToGroupstack} />;
   };
@@ -125,7 +125,7 @@ export default function SearchBarExample(props) {
                 onPress={() => {
                   if (index) popFromGroupstack(index);
                 }}>
-                <Text>{item.title}</Text>
+                <Text style={item.showcaseType === showcaseTypes.productSub ? styles.breadCrumpLevel2 : styles.breadCrumpLevel1}>{item.title}</Text>
               </TouchableOpacity>
             )}
           />
@@ -136,3 +136,8 @@ export default function SearchBarExample(props) {
     </Container>
   );
 }
+
+const styles = StyleSheet.create({
+  breadCrumpLevel1: { color: rxGlobal.globalColors.breadcrumpLevel1 },
+  breadCrumpLevel2: { color: rxGlobal.globalColors.breadcrumpLevel2 },
+});

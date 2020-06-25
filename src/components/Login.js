@@ -10,6 +10,7 @@ import * as calendarLib from "../lib/calendarLib";
 import { Formik } from "formik";
 import { AntDesign } from "@expo/vector-icons";
 import * as wp from "../lib/webProvider";
+import * as rxGlobal from "../lib/rxGlobal";
 
 export default function Login({ navigation }) {
   const [message, setMessage] = useState("");
@@ -47,17 +48,16 @@ export default function Login({ navigation }) {
   // XXX: start
 
   console.disableYellowBox = true;
-  global.dev = { useFakeData: false, verbose: false ,forceLogin:false};
+  global.dev = { useFakeData: false, verbose: false, forceLogin: false };
   // goto("AppDrawer");
 
   //xxx: end
 
   const submit = async (newInputs) => {
-if (!global.dev.forceLogin)
-{
-  goto("AppDrawer");
-  return;
-}
+    if (!global.dev.forceLogin) {
+      goto("AppDrawer");
+      return;
+    }
 
     setIsLoading(true);
     setMessage(globalLiterals.progress.checkingLoginInfo);
@@ -72,9 +72,12 @@ if (!global.dev.forceLogin)
       redirect: "follow",
     };
     if (await wp.checkNet()) {
-      console.log('NET IS OK')
+      console.log(`💬 [Login.submit] internet connection is Ok`);
       fetch("http://audit.mazmaz.net/Api/WebApi.asmx/Authenticate", requestOptions)
-        .then((response) => {console.log('DATA FETCHED'); return response;}) //xxx
+        .then((response) => {
+          console.log(`💬 [Login.submit] login data fetched successfully`);
+          return response;
+        }) //xxx
         .then((response) => response.json())
         .then((result) => {
           if (result.d.Token) return result;
@@ -96,10 +99,12 @@ if (!global.dev.forceLogin)
           getSetting();
         })
         .then(() => goto("AppDrawer"))
-        .catch((error) => {
-          setMessage(error);
+        .catch((err) => {
+          console.log(`❌ [Login.submit] err: ${JSON.stringify(err)}`);
+          setMessage(rxGlobal.globalLiterals.actionAndStateErrors.networkError);
         })
         .finally(() => {
+          console.log(`💬 [Login.submit] finally section`);
           storageProvider.store("userInfo", JSON.stringify(newInputs));
           setIsLoading(false);
         });

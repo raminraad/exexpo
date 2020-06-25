@@ -3,7 +3,7 @@ import { View, Text, FlatList, BackHandler } from "react-native";
 import { ListItem } from "react-native-elements";
 import * as rxGlobal from "../lib/rxGlobal";
 import TouchableScale from "react-native-touchable-scale";
-import { Entypo, FontAwesome5 } from "@expo/vector-icons";
+import { Entypo, FontAwesome5 ,MaterialCommunityIcons} from "@expo/vector-icons";
 import { Content } from "native-base";
 
 export default function ProductShowcase(props) {
@@ -15,7 +15,7 @@ export default function ProductShowcase(props) {
         return (
           <ListItem
             Component={TouchableScale}
-            rightAvatar={<FontAwesome5 name='layer-group' size={32} color={rxGlobal.globalColors.palette.mercury} />}
+            rightAvatar={<MaterialCommunityIcons name='food' size={40} color={rxGlobal.globalColors.palette.mercury} />}
             friction={90} //
             tension={100} // These props are passed to the parent component (here TouchableScale)
             activeScale={0.8} //

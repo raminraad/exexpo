@@ -66,7 +66,9 @@ export default function Login({ navigation }) {
       redirect: "follow",
     };
     if (await wp.checkNet()) {
+      console.log('NET IS OK')
       fetch("http://audit.mazmaz.net/Api/WebApi.asmx/Authenticate", requestOptions)
+        .then((response) => {console.log('DATA FETCHED'); return response;}) //xxx
         .then((response) => response.json())
         .then((result) => {
           if (result.d.Token) return result;

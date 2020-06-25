@@ -76,8 +76,8 @@ switch (route.name) {
       showLabel:false
     }}
     >
-      <VisitTab.Screen name='CameraForm' component={CameraForm} />
       <VisitTab.Screen name='AddProductFromDb' component={AddProductFromDb} />
+      <VisitTab.Screen name='CameraForm' component={CameraForm} />
       <VisitTab.Screen name='VisitPlanResultForm' component={VisitPlanResultForm} />
       <VisitTab.Screen name='VisitPlanResultProductForm' component={VisitPlanResultProductForm} />
     </VisitTab.Navigator>
@@ -89,8 +89,8 @@ const VisitPlanStack = () => {
   return (
     <VisitStack.Navigator
     //xxx
-      // initialRouteName='VisitResultTab'
-      initialRouteName='UserVisitPlans'
+      initialRouteName='VisitResultTab'
+      // initialRouteName='UserVisitPlans'
       //xxx
       screenOptions={{
         headerShown: false,

@@ -27,7 +27,7 @@ export default function ProudctGroupShowcase(props) {
               style={{marginVertical:10}}
               linearGradientProps={rxGlobal.globalColors.gradients.listItem}
               title={`${item.Title}`}
-              titleStyle={{ ...rxGlobal.globalStyles.listItemTitle, textAlign: "right", fontSize: 20 }}
+              titleStyle={{ ...rxGlobal.globalStyles.listItemTitle, textAlign: "right", fontSize: 18 }}
               subtitle={`کد گروه ${item.ProductGroupCode}`}
               subtitleStyle={{color: rxGlobal.globalColors.listItemSubtitleText, textAlign: "right" ,fontSize:13}}
               onPress={() => {

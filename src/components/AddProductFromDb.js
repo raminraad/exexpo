@@ -10,7 +10,7 @@ import TouchableScale from "react-native-touchable-scale"; // https://github.com
 import ProductShowcase from "./ProductShowcase";
 import ProductGroupShowcase from "./ProductGroupShowcase";
 import ProductSubShowcase from "./ProductSubShowcase";
-// import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function SearchBarExample(props) {
   const groupstack = useRef([]);
@@ -20,22 +20,22 @@ export default function SearchBarExample(props) {
   const [showcase, setShowcase] = useState([]);
   const showcaseTypes = Object.freeze({ productGroup: 1, product: 2, productSub: 3 });
 
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     const onBackPress = () => {
-  //       if (groupstack.current.length > 1) {
-  //         popFromGroupstack(1);
-  //         return true;
-  //       } else {
-  //         return false;
-  //       }
-  //     };
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        if (groupstack.current.length > 1) {
+          popFromGroupstack(1);
+          return true;
+        } else {
+          return false;
+        }
+      };
 
-  //     BackHandler.addEventListener("hardwareBackPress", onBackPress);
+      BackHandler.addEventListener("hardwareBackPress", onBackPress);
 
-  //     return () => BackHandler.removeEventListener("hardwareBackPress", onBackPress);
-  //   }, [])
-  // );
+      return () => BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+    }, [])
+  );
 
   useEffect(() => {
     loadRootGroups();
@@ -48,7 +48,9 @@ export default function SearchBarExample(props) {
   };
 
   const pushToGroupstack = async (item) => {
-    setIsLoading(true);
+    console.log(`START METHOD: pushToGroupstack`)
+    setIsLoading(true);   
+
     let presentShowcaseType = groupstack.current.length ? groupstack.current[groupstack.current.length - 1].showcaseType : showcaseTypes.productGroup;
 
     if (presentShowcaseType === showcaseTypes.productGroup) {
@@ -75,6 +77,8 @@ export default function SearchBarExample(props) {
   };
 
   const popFromGroupstack = async (count) => {
+    console.log(`START METHOD: popFromGroupstack`)
+
     setIsLoading(true);
     for (let i = 0; i < count; i++) groupstack.current.pop();
     let presentShowcaseType = groupstack.current[groupstack.current.length - 1].showcaseType;
@@ -85,8 +89,10 @@ export default function SearchBarExample(props) {
   };
 
   const renderShowcase = () => {
-    let presentShowcaseType = groupstack.current[groupstack.current.length - 1].showcaseType;
-    if (presentShowcaseType === showcaseTypes.productGroup) reutrn(<ProductGroupShowcase data={showcase} onPress={pushToGroupstack} />);
+    console.log(`START METHOD: renderShowcase`)
+    
+    let presentShowcaseType = groupstack.current.length ? groupstack.current[groupstack.current.length - 1].showcaseType : showcaseTypes.productGroup;
+    if (presentShowcaseType === showcaseTypes.productGroup) return(<ProductGroupShowcase data={showcase} onPress={pushToGroupstack} />);
     else if (presentShowcaseType === showcaseTypes.product) return <ProductShowcase data={showcase} onPress={pushToGroupstack} />;
     else return <ProductSubShowcase data={showcase} onPress={pushToGroupstack} />;
   };

@@ -3,35 +3,35 @@ import * as dp from "./sqliteProvider";
 //////////////////// DROP
 export const dropTableProduct = () => {
   console.log("dropping table Product..");
-  dp.dropTables("Product");
+  dp.dropPermanentTables("Product");
 };
 
 export const dropTableProductGroup = () => {
   console.log("dropping table ProductGroup..");
-  dp.dropTables("ProductGroup");
+  dp.dropPermanentTables("ProductGroup");
 };
 export const dropTableProductSub = () => {
   console.log("dropping table ProductSub..");
-  dp.dropTables("ProductSub");
+  dp.dropPermanentTables("ProductSub");
 };
 
 export const dropTableUserVisitPlan = () => {
   console.log("dropping table UserVisitPlan..");
-  dp.dropTables("UserVisitPlan");
+  dp.dropPermanentTables("UserVisitPlan");
 };
 export const dropTableVisitPlanCustomers = () => {
   console.log("dropping table VisitPlanCustomers..");
-  dp.dropTables("VisitPlanCustomers");
+  dp.dropPermanentTables("VisitPlanCustomers");
 };
 export const dropTableVisitPlanResults = () => {
   console.log("dropping table VisitPlanResults..");
-  dp.dropTables("VisitPlanResults");
+  dp.dropPermanentTables("VisitPlanResults");
 };
 
 export const dropAll = () => {
   console.log("dropping all tables..");
-  dp.dropTables("Product", "ProductGroup", "ProductSub", "UserVisitPlan", "VisitPlanCustomers", "VisitPlanResults");
 };
+dp.dropPermanentTables("Product", "ProductGroup", "ProductSub", "UserVisitPlan", "VisitPlanCustomers", "VisitPlanResults");
 
 //////////////////// CREATE
 

@@ -4,10 +4,11 @@ import { dbError, appError } from "./errors";
 import * as rxGlobal from "../lib/rxGlobal";
 
 const db = openDatabase("db");
-const tableNames = ["Announcement", "Product", "ProductGroup", "ProductSub", "UserVisitPlan", "VisitPlanCustomers", "VisitPlanResults"];
+const permanentTableNames = ["Announcement", "Product", "ProductGroup", "ProductSub", "UserVisitPlan", "VisitPlanCustomers", "VisitPlanResults"];
+const tempTableNames = ["TempVisitPlanResults"];
 
-export const createTables = async () => {
-  console.log(`🏁 [sqliteProvider.createTables]`);
+export const createPermanentTables = async () => {
+  console.log(`🏁 [sqliteProvider.createPermanentTables]`);
   let createQueries = [
     {
       sql: `create table if not exists Announcement (rxId integer primary key not null, Id integer,Title,Summary,Description,DateX,SyncStatus integer,LastModifiedDate)`,
@@ -41,7 +42,7 @@ export const createTables = async () => {
   return new Promise((resolve, reject) => {
     try {
       db.exec(createQueries, false, () => {
-        console.log(`👍 [sqliteProvider.createTables]`);
+        console.log(`👍 [sqliteProvider.createPermanentTables]`);
         resolve(true);
       });
     } catch (err) {
@@ -50,22 +51,62 @@ export const createTables = async () => {
   });
 };
 
-export const dropTables = async () => {
-  console.log(`🏁 [sqliteProvider.dropTables]`);
+export const dropPermanentTables = async () => {
+  console.log(`🏁 [sqliteProvider.dropPermanentTables]`);
   let dropQueries = [];
-  for (const table of tableNames) {
+  for (const table of permanentTableNames) {
     dropQueries.push({ sql: `drop table if exists ${table};`, args: [] });
   }
-  console.log(`💬 [sqliteProvider.dropTables] dropping table(s) ${tableNames}..`);
+  console.log(`💬 [sqliteProvider.dropPermanentTables] dropping table(s) ${permanentTableNames}..`);
   return new Promise((resolve, reject) => {
     try {
       db.exec(dropQueries, false, () => {
-        console.log(`👍 [sqliteProvider.dropTables]`);
+        console.log(`👍 [sqliteProvider.dropPermanentTables]`);
         resolve(true);
       });
     } catch (err) {
-      console.log(`❌ [sqliteProvider.dropTables] ${err}`);
+      console.log(`❌ [sqliteProvider.dropPermanentTables] ${err}`);
       reject(new dbError(enums.dbErrors.tableDropFailed, rxGlobal.globalLiterals.actionAndStateErrors.tableDropFailed));
+    }
+  });
+};
+
+export const dropTempTables = async () => {
+  console.log(`🏁 [sqliteProvider.dropTempTables]`);
+  let dropQueries = [];
+  for (const table of tempTableNames) {
+    dropQueries.push({ sql: `drop table if exists ${table};`, args: [] });
+  }
+  console.log(`💬 [sqliteProvider.dropTempTables] dropping table(s) ${permanentTableNames}..`);
+  return new Promise((resolve, reject) => {
+    try {
+      db.exec(dropQueries, false, () => {
+        console.log(`👍 [sqliteProvider.dropTempTables]`);
+        resolve(true);
+      });
+    } catch (err) {
+      console.log(`❌ [sqliteProvider.dropTempTables] ${err}`);
+      reject(new dbError(enums.dbErrors.tableDropFailed, rxGlobal.globalLiterals.actionAndStateErrors.tableDropFailed));
+    }
+  });
+};
+
+export const createTempTables = async () => {
+  console.log(`🏁 [sqliteProvider.createTempTables]`);
+  let createQueries = [
+    {
+      sql: `create table if not exists TempVisitPlanResults (rxId integer primary key not null,Id integer,VisitPlanCustomerId integer,ProductSubId integer,SellPrice integer,Weight integer,HasInventory,ShelfInventoryCount integer,ShelfVisibleCount integer,WarehouseInventoryCount,VerbalPurchaseCount,FactorPurchaseCount,LastModifiedDate,SyncStatus integer)`,
+      args: [],
+    },
+  ];
+  return new Promise((resolve, reject) => {
+    try {
+      db.exec(createQueries, false, () => {
+        console.log(`👍 [sqliteProvider.createTempTables]`);
+        resolve(true);
+      });
+    } catch (err) {
+      reject(new dbError(enums.dbErrors.tableCreationFailed, rxGlobal.globalLiterals.actionAndStateErrors.tableCreationFailed));
     }
   });
 };
@@ -94,7 +135,7 @@ export const selectTable = async (tableName, criteria = "") => {
   return pr;
 };
 
-export const selectTables = async (tables = tableNames) => {
+export const selectTables = async (tables = permanentTableNames) => {
   let dbData = {};
   for (const tbl of tables) {
     try {
@@ -108,7 +149,7 @@ export const selectTables = async (tables = tableNames) => {
   return dbData;
 };
 
-export const selectTablesNotSynched = async (tables = tableNames) => {
+export const selectTablesNotSynched = async (tables = permanentTableNames) => {
   let dbData = {};
   for (const tbl of tables) {
     try {
@@ -153,7 +194,7 @@ export const insertVisitPlanResults = (...parameters) => {
 
 export const syncData = async (dataTables) => {
   console.log(`🏁 [sqliteProvider.syncData]`);
-  console.log(`💬 [sqliteProvider.syncData] dataTables: ${global.dev.verbose? JSON.stringify(dataTables):'--verbose'}`);
+  console.log(`💬 [sqliteProvider.syncData] dataTables: ${global.dev.verbose ? JSON.stringify(dataTables) : "--verbose"}`);
   const db = openDatabase("db");
 
   let queries = [];
@@ -421,7 +462,7 @@ export const syncData = async (dataTables) => {
           resolve(queries.length);
         });
       } catch (err) {
-        let exception = new appError(enums.appErrors.syncClientFailed, rxGlobal.globalLiterals.actionAndStateErrors.syncClientFailed,err);
+        let exception = new appError(enums.appErrors.syncClientFailed, rxGlobal.globalLiterals.actionAndStateErrors.syncClientFailed, err);
         console.log(`❌ [sqliteProvider.syncData] ${exception}`);
         reject(exception);
       }

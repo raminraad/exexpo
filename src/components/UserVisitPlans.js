@@ -67,8 +67,8 @@ export default function UserVisitPlan(props) {
       } else if (await dp.tableExists("UserVisitPlan")) {
         await syncClient();
       } else {
-        await dp.dropTables();
-        await dp.createTables();
+        await dp.dropPermanentTables();
+        await dp.createPermanentTables();
         await syncServer();
       }
     } catch (err) {

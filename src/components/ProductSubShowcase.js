@@ -8,6 +8,7 @@ import * as enums from "../lib/enums";
 import { Accordion } from "native-base";
 import { Formik } from "formik";
 import * as yup from "yup";
+import * as dp from "../lib/sqliteProvider";
 
 const auditItemSchema = yup.object().shape({
   PriceValue: yup.string(rxGlobal.globalLiterals.validationErrors.required).required(rxGlobal.globalLiterals.validationErrors.required),
@@ -16,7 +17,8 @@ const auditItemSchema = yup.object().shape({
 });
 
 export default function ProductSubShowcase(props) {
-  let { data, onPress } = props;
+  let { data } = props;
+
   const renderSubtitle = (item) => (
     <View style={{ flexDirection: "row-reverse", alignItems: "center", justifyContent: "flex-start" }}>
       <View style={styles.subtitleFieldContainer}>
@@ -98,7 +100,7 @@ export default function ProductSubShowcase(props) {
           addAuditItem(values);
         }}>
         {(props) => (
-          <View style={{ ...rxGlobal.globalStyles.listItemContentContainer, flexDirection: "row-reverse",paddingRight:10}}>
+          <View style={{ ...rxGlobal.globalStyles.listItemContentContainer, flexDirection: "row-reverse", paddingRight: 10 }}>
             <View style={{ flexDirection: "column", marginRight: 20, flex: 2 }}>
               <View style={styles.contentFieldContainer}>
                 <FontAwesome name='money' size={20} color={rxGlobal.globalColors.listItemSubtitleIcon} />
@@ -149,8 +151,7 @@ export default function ProductSubShowcase(props) {
                 onPress={() => {
                   expanded = true;
                 }}>
-                  <Text style={{color:'white',fontWeight:'bold', fontSize:16}}>افزودن به لیست</Text>
-                
+                <Text style={{ color: "white", fontWeight: "bold", fontSize: 16 }}>افزودن به لیست</Text>
               </MaterialIcons.Button>
             </View>
           </View>

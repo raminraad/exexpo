@@ -196,8 +196,11 @@ export const insertVisitPlanResults = (...parameters) => {
 export const insertTempVisitPlanResult = async (item) => {
   console.log(`🏁 [sqliteProvider.insertTempVisitPlanResult]`);
 
-  deleteParam = [item.Id];
-  deleteQuery = `delete from VisitPlanResults where Id=?`;
+  let queries = [];
+
+
+  let deleteParam = [item.ProductSubId];
+  let deleteQuery = `delete from VisitPlanResults where ProductSubId=?`;
   queries.push({ sql: `${deleteQuery};`, args: deleteParam });
 
   let insertQuery = `insert into VisitPlanResults (Id,VisitPlanCustomerId,ProductSubId,SellPrice,Weight,HasInventory,ShelfInventoryCount,ShelfVisibleCount,WarehouseInventoryCount,VerbalPurchaseCount,FactorPurchaseCount,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?,?,?,?,?,?,?,?)`;

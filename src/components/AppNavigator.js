@@ -74,10 +74,10 @@ const VisitResultTab = () => {
         inactiveTintColor: rxGlobal.globalColors.tabIconInactive,
         showLabel: false,
       }}>
-      <VisitTab.Screen name='AddProductFromDb' component={AddProductFromDb} />
-      <VisitTab.Screen name='CameraForm' component={CameraForm} />
       <VisitTab.Screen name='VisitPlanResultForm' component={VisitPlanResultForm} />
       <VisitTab.Screen name='VisitPlanResultProductForm' component={VisitPlanResultProductForm} />
+      <VisitTab.Screen name='CameraForm' component={CameraForm} />
+      <VisitTab.Screen name='AddProductFromDb' component={AddProductFromDb} />
     </VisitTab.Navigator>
   );
 };

@@ -143,7 +143,7 @@ export default function VisitPlanCustomers(props) {
     await dp.dropTempTables();
     await dp.createTempTables();
     item.rxSync = enums.syncStatuses.modified;
-    props.navigation.navigate("VisitResultTab", {screen:'AddProductFromDb',params:{
+    props.navigation.navigate("VisitResultTab", {screen:'VisitPlanResultForm',params:{
       title: `فروشگاه ${item.Title}`,
       initialItem: item,
     }});

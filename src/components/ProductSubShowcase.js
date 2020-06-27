@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, FlatList, BackHandler, StyleSheet, TextInput, TouchableOpacity } from "react-native";
+import { View, Text, FlatList, BackHandler, StyleSheet, TextInput, TouchableOpacity, Alert } from "react-native";
 import { ListItem } from "react-native-elements";
 import * as rxGlobal from "../lib/rxGlobal";
 import TouchableScale from "react-native-touchable-scale";
@@ -9,7 +9,7 @@ import { Accordion } from "native-base";
 import { Formik } from "formik";
 import * as yup from "yup";
 import * as dp from "../lib/sqliteProvider";
-import { isMoment } from "jalali-moment";
+import Moment from "moment";
 
 const auditItemSchema = yup.object().shape({
   PriceValue: yup.number().required(rxGlobal.globalLiterals.validationErrors.required),
@@ -86,23 +86,37 @@ export default function ProductSubShowcase(props) {
   );
 
   const addAuditItem = async (item) => {
-    let currentTempRecord = dp.selectTable('VisitPlanResults',` where ProductSubId=${item.Id}`);
-    if (currentTempRecord.length)
-    Alert.alert(
-      "",
-      rxGlobal.globalLiterals.Confirmations.replaceTempVisitPlanResult,
-      [
-        {
-          text: globalLiterals.buttonTexts.yes,
-        },
-        {
-          text: globalLiterals.buttonTexts.no,
-          onPress: () => {return;}
-        },
-      ],
-      { cancelable: false }
-    );
-    dp.insertTempVisitPlanResult(item);
+    try {
+      console.log(`🏁 [ProductSubShowcase.addAuditItem]`);
+      let currentTempRecord = await dp.selectTable("VisitPlanResults", ` where ProductSubId=${item.Id}`);
+
+let visitPlanResultItem = {ProductSubId:item.Id,SellPrice:item.PriceValue,Weight:item.MeasurmentScale,ShelfVisibleCount:item.ShelfVisibleCount};
+
+      if (currentTempRecord.length)
+        Alert.alert(
+          "",
+          rxGlobal.globalLiterals.Confirmations.replaceTempVisitPlanResult,
+          [
+            {
+              text: rxGlobal.globalLiterals.buttonTexts.yes,
+              onPress: () => {
+                console.log(`💬 [ProductSubShowcase.addAuditItem] alert confirmed.. adding item: ${JSON.stringify(visitPlanResultItem)}`);
+                dp.insertTempVisitPlanResult(visitPlanResultItem);
+              },
+            },
+            {
+              text: rxGlobal.globalLiterals.buttonTexts.no,
+            },
+          ],
+          { cancelable: false }
+        );
+      else {
+        console.log(`💬 [ProductSubShowcase.addAuditItem] adding item: ${JSON.stringify(visitPlanResultItem)}`);
+        dp.insertTempVisitPlanResult(visitPlanResultItem);
+      }
+    } catch (err) {
+      console.log(`❌ [ProductSubShowcase.addAuditItem] : ${err}`);
+    }
   };
 
   const renderContent = (item) => {
@@ -112,13 +126,13 @@ export default function ProductSubShowcase(props) {
         initialValues={item}
         validationSchema={auditItemSchema}
         onSubmit={async (values, actions) => {
-          actions.resetForm();
-          values.LastModifiedDate = isMoment(new Date()).format("YYYY/MM/DD HH:mm:ss");
+          // actions.resetForm();
+          values.LastModifiedDate = Moment(new Date()).format("YYYY/MM/DD HH:mm:ss");
           addAuditItem(values);
         }}>
         {(props) => (
           <View style={{ ...rxGlobal.globalStyles.listItemContentContainer, flexDirection: "row-reverse", paddingRight: 10 }}>
-            <View style={{ flexDirection: "column", paddingHorizontal:15, flex: 3 }}>
+            <View style={{ flexDirection: "column", paddingHorizontal: 15, flex: 3 }}>
               <View style={styles.contentFieldContainer}>
                 <FontAwesome name='money' size={20} color={rxGlobal.globalColors.listItemSubtitleIcon} />
                 <TextInput
@@ -157,15 +171,13 @@ export default function ProductSubShowcase(props) {
               </View>
             </View>
 
-            <View style={{ alignItems: "center", justifyContent: "center", flex: 2, alignSelf: "stretch"}}>
-              <MaterialIcons.Button
-                name='add-circle-outline'
-                size={48}
-                backgroundColor={rxGlobal.globalColors.btnAdd}
-                onPress={props.handleSubmit}>
+            <View style={{ alignItems: "center", justifyContent: "center", flex: 2, alignSelf: "stretch" }}>
+              <MaterialIcons.Button name='add-circle-outline' size={48} backgroundColor={rxGlobal.globalColors.btnAdd} onPress={props.handleSubmit}>
                 <Text style={{ color: "white", fontWeight: "bold", fontSize: 16 }}>افزودن به لیست</Text>
               </MaterialIcons.Button>
-              <Text style={{color:rxGlobal.globalColors.addModalFieldValidationErrorText,textAlign:'center',marginTop:20}}>{ !props.isValid&&rxGlobal.globalLiterals.validationErrors.allFieldsAreRequired}</Text>
+              <Text style={{ color: rxGlobal.globalColors.addModalFieldValidationErrorText, textAlign: "center", marginTop: 20 }}>
+                {!props.isValid && rxGlobal.globalLiterals.validationErrors.allFieldsAreRequired}
+              </Text>
             </View>
           </View>
         )}

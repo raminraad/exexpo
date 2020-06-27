@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { StyleSheet, View, TouchableOpacity, FlatList, TextInput, ScrollView, Modal, Alert, RecyclerViewBackedScrollView } from "react-native";
 import { Separator, Content, Container, Spinner } from "native-base";
 import { Overlay, ListItem, PricingCard, Button } from "react-native-elements";
@@ -21,6 +21,7 @@ import TouchableScale from "react-native-touchable-scale"; // https://github.com
 import { getDistance, getPreciseDistance } from "geolib";
 import Moment from "moment";
 import * as enums from "../lib/enums";
+import VisitPlanResultContext from './VisitPlanResultContext';
 
 export default function VisitPlanResultForm(props) {
   const db = openDatabase("db");
@@ -30,8 +31,8 @@ export default function VisitPlanResultForm(props) {
   const [rawData, setRawData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [productModalItem, setProductModalItem] = useState(null);
-
   const { title } = props.route.params;
+  const context = useContext(VisitPlanResultContext);
   
   const isGeoLocationAcceptable = async (lat, long) => {
     console.log("SUBMITTING");
@@ -220,7 +221,7 @@ export default function VisitPlanResultForm(props) {
               <VisitPlanResultProductForm onSubmit={onProductModalSubmit} onCancel={() => setIsProductModalVisible(false)} initialItem={productModalItem} />
             </Modal>
               <View style={{...globalStyles.screenTitleContainer,marginBottom:32}}>
-                <Text style={globalStyles.screenTitleText}>فرم پویش مربوط به {title}</Text>
+                <Text style={globalStyles.screenTitleText}>فرم پویش مربوط به {context.value.Title}</Text>
               </View>
 
             <View style={{ flexDirection: "row-reverse", justifyContent: "space-between" }}>

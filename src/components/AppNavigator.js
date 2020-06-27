@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import { DrawerContent } from "./DrawerContent";
 import Login from "./Login";
 import { createDrawerNavigator } from "@react-navigation/drawer";
@@ -15,6 +15,7 @@ import VisitPlanResultProductForm from "./VisitPlanResultProductForm";
 import AddProductFromDb from "./AddProductFromDb";
 import CameraForm from "./CameraForm";
 import * as rxGlobal from "../lib/rxGlobal";
+import { VisitPlanResultProvider } from './VisitPlanResultContext'
 
 const AppDrawer = () => {
   const DrawerNavigator = createDrawerNavigator();
@@ -83,8 +84,10 @@ const VisitResultTab = () => {
 };
 const VisitPlanStack = () => {
   const VisitStack = createStackNavigator();
+  const [currentVisitPlan, setCurrentVisitPlan] = useState({});
 
   return (
+    <VisitPlanResultProvider value={{value:currentVisitPlan, setValue:setCurrentVisitPlan}}>
     <VisitStack.Navigator
       //xxx
       // initialRouteName='VisitResultTab'
@@ -97,6 +100,7 @@ const VisitPlanStack = () => {
       <VisitStack.Screen name='VisitPlanCustomers' component={VisitPlanCustomers} />
       <VisitStack.Screen name='VisitResultTab' component={VisitResultTab} />
     </VisitStack.Navigator>
+    </VisitPlanResultProvider>
   );
 };
 

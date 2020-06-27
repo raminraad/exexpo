@@ -21,7 +21,7 @@ export default function ProudctGroupShowcase(props) {
               friction={90} //
               tension={100} // These props are passed to the parent component (here TouchableScale)
               activeScale={0.8} //
-              containerStyle={[rxGlobal.globalStyles.shadowedContainer, rxGlobal.globalStyles.listItemHeaderContainer, { width: 150, aspectRatio: 1 ,}]}
+              containerStyle={[rxGlobal.globalStyles.shadowedContainer, rxGlobal.globalStyles.listItemHeaderContainer, { width: 150, aspectRatio: 1.6180 ,}]}
               underlayColor='FFFF'
               key={item.Id}
               style={{marginVertical:10}}

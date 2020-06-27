@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect ,useContext} from "react";
 import { StyleSheet, FlatList, Modal, Keyboard, TouchableWithoutFeedback, Alert } from "react-native";
 import {
   Container,
@@ -40,6 +40,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import * as enums from "../lib/enums";
 import * as wp from "../lib/webProvider";
+import VisitPlanResultContext from './VisitPlanResultContext'
 
 export default function VisitPlanCustomers(props) {
   const db = openDatabase("db");
@@ -52,6 +53,7 @@ export default function VisitPlanCustomers(props) {
   const [instantFilterText, setInstantFilterText] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   let {initialItem} = props.route.params;
+  const context = useContext(VisitPlanResultContext);
 
   const load = async () => {
     console.log(`🏁 [VisitPlanCustomers.load]`);
@@ -140,11 +142,11 @@ export default function VisitPlanCustomers(props) {
 
   const keyExtractor = (item, index) => item.Id.toString();
   const onListItemNavigateForward = async (item) => {
+    context.setValue(item);
     await dp.dropTempTables();
     await dp.createTempTables();
     item.rxSync = enums.syncStatuses.modified;
     props.navigation.navigate("VisitResultTab", {screen:'VisitPlanResultForm',params:{
-      title: `فروشگاه ${item.Title}`,
       initialItem: item,
     }});
   };

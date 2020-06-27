@@ -85,7 +85,7 @@ export default function ProductSubShowcase(props) {
   );
 
   const addAuditItem = (item) => {
-    // todo: implement
+    dp.insertTempVisitPlanResults(item);
   };
 
   const renderContent = (item) => {
@@ -109,7 +109,7 @@ export default function ProductSubShowcase(props) {
                   style={rxGlobal.globalStyles.addModalFieldInput}
                   placeholder='قیمت فروش محصول'
                   keyboardType='number-pad'
-                  onChangeText={props.handleChange("SellPrice")}
+                  onChangeText={props.handleChange("PriceValue")}
                   value={props.values?.PriceValue?.toString()}
                   onBlur={props.handleBlur("PriceValue")}
                 />

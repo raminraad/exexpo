@@ -20,7 +20,7 @@ export default function Login({ navigation }) {
   const userNameRef = useRef(null);
   const [authInfo, setAuthInfo] = useState({});
 
-  const getSetting = async () => {
+  const getDynamicSettings = async () => {
     global.dynamicSetting = {
       allowedDistanceForVisitor: 200,
       isMandatoryInitialClientSync: false,
@@ -74,6 +74,7 @@ export default function Login({ navigation }) {
     if (await wp.checkNet()) {
       console.log(`💬 [Login.submit] internet connection is Ok`);
       fetch("http://audit.mazmaz.net/Api/WebApi.asmx/Authenticate", requestOptions)
+      //xxx
         .then((response) => {
           console.log(`💬 [Login.submit] login data fetched successfully`);
           return response;
@@ -96,7 +97,7 @@ export default function Login({ navigation }) {
           };
         })
         .then(async () => {
-          getSetting();
+          getDynamicSettings();
         })
         .then(() => goto("AppDrawer"))
         .catch((err) => {

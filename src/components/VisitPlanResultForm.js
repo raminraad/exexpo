@@ -225,7 +225,7 @@ export default function VisitPlanResultForm(props) {
 
             <View style={{ flexDirection: "row-reverse", justifyContent: "space-between" }}>
               <Text style={globalStyles.addModalFieldTitle}>محصولات فروشگاه</Text>
-              <View style={globalStyles.shadowedContainer}>
+              {/* <View style={globalStyles.shadowedContainer}>
                 <FontAwesome5.Button
                   name='plus'
                   backgroundColor={globalColors.btnAdd}
@@ -242,7 +242,7 @@ export default function VisitPlanResultForm(props) {
                   }}>
                   افزودن آیتم به لیست پویش فروشگاه
                 </FontAwesome5.Button>
-              </View>
+              </View> */}
             </View>
             {isLoading ? (
               <Spinner style={{ height: "100%" }} color='grey' size={50} />

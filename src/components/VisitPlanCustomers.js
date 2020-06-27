@@ -139,9 +139,11 @@ export default function VisitPlanCustomers(props) {
   };
 
   const keyExtractor = (item, index) => item.Id.toString();
-  const onListItemNavigateForward = (item) => {
+  const onListItemNavigateForward = async (item) => {
+    await dp.dropTempTables();
+    await dp.createTempTables();
     item.rxSync = enums.syncStatuses.modified;
-    props.navigation.navigate("VisitResultTab", {screen:'VisitPlanResultForm',params:{
+    props.navigation.navigate("VisitResultTab", {screen:'AddProductFromDb',params:{
       title: `فروشگاه ${item.Title}`,
       initialItem: item,
     }});

@@ -192,6 +192,51 @@ export const insertVisitPlanResults = (...parameters) => {
   db.exec([{ sql: `${query};`, args: parameters }], false, () => console.log(`👍 insertion done successfully into VisitPlanResults..`));
 };
 
+export const insertTempVisitPlanResults = (item) => {
+  console.log(`🏁 [sqliteProvider.insertTempVisitPlanResults]`);
+
+  deleteParam = [item.Id];
+  deleteQuery = `delete from VisitPlanResults where Id=?`;
+  queries.push({ sql: `${deleteQuery};`, args: deleteParam });
+
+  let insertQuery = `insert into VisitPlanResults (Id,VisitPlanCustomerId,ProductSubId,SellPrice,Weight,HasInventory,ShelfInventoryCount,ShelfVisibleCount,WarehouseInventoryCount,VerbalPurchaseCount,FactorPurchaseCount,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?,?,?,?,?,?,?,?)`;
+
+  let insertParam = [
+    item.Id,
+    item.VisitPlanCustomerId,
+    item.ProductSubId,
+    item.SellPrice,
+    item.Weight,
+    item.HasInventory,
+    item.ShelfInventoryCount,
+    item.ShelfVisibleCount,
+    item.WarehouseInventoryCount,
+    item.VerbalPurchaseCount,
+    item.FactorPurchaseCount,
+    item.LastModifiedDate,
+    item.SyncStatus,
+  ];
+  queries.push({ sql: `${insertQuery};`, args: insertParam });
+
+  return new Promise((resolve, reject) => {
+    try {
+      console.log(
+        `💬 [sqliteProvider.insertTempVisitPlanResults] executing queries with parameters: ${global.dev.verbose ? JSON.stringify(queries) : "--verbose"}`
+      );
+      db.exec(queries, false, () => {
+        console.log(
+          `👍 [sqliteProvider.insertTempVisitPlanResults]`
+        );
+        resolve(queries.length);
+      });
+    } catch (err) {
+      let exception = new appError(enums.appErrors.syncClientFailed, rxGlobal.globalLiterals.actionAndStateErrors.syncClientFailed, err);
+      console.log(`❌ [sqliteProvider.insertTempVisitPlanResults] ${exception}`);
+      reject(exception);
+    }
+  });
+};
+
 export const syncData = async (dataTables) => {
   console.log(`🏁 [sqliteProvider.syncData]`);
   console.log(`💬 [sqliteProvider.syncData] dataTables: ${global.dev.verbose ? JSON.stringify(dataTables) : "--verbose"}`);

@@ -89,7 +89,7 @@ export default function UserVisitPlan(props) {
 
   const syncClient = async () => {
     try {
-      if (global.dynamicSetting.isMandatoryInitialClientSync) {
+      if (global.dynamicSetting?.isMandatoryInitialClientSync) {
         toastLib.message(rxGlobal.globalLiterals.progress.synchingClientData, 6000);
         console.log(`🏁 [UserVisitPlans.syncClient]`);
         toastLib.message(rxGlobal.globalLiterals.progress.creatingPostData);

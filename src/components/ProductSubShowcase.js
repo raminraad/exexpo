@@ -10,9 +10,8 @@ import { Formik } from "formik";
 import * as yup from "yup";
 
 const auditItemSchema = yup.object().shape({
-  ProductSubId: yup.string(rxGlobal.globalLiterals.validationErrors.required).required("انتخاب کالا الزامیست"),
-  SellPrice: yup.string(rxGlobal.globalLiterals.validationErrors.required).required(rxGlobal.globalLiterals.validationErrors.required),
-  Weight: yup.number().required(rxGlobal.globalLiterals.validationErrors.required),
+  PriceValue: yup.string(rxGlobal.globalLiterals.validationErrors.required).required(rxGlobal.globalLiterals.validationErrors.required),
+  MeasurmentScale: yup.number().required(rxGlobal.globalLiterals.validationErrors.required),
   ShelfVisibleCount: yup.number().required(rxGlobal.globalLiterals.validationErrors.required),
 });
 
@@ -88,6 +87,7 @@ export default function ProductSubShowcase(props) {
   };
 
   const renderContent = (item) => {
+    console.log(`FORMIK ITEM:${JSON.stringify(item)}`);
     return (
       <Formik
         initialValues={item}
@@ -108,10 +108,10 @@ export default function ProductSubShowcase(props) {
                   placeholder='قیمت فروش محصول'
                   keyboardType='number-pad'
                   onChangeText={props.handleChange("SellPrice")}
-                  value={props.values?.SellPrice?.toString()}
-                  onBlur={props.handleBlur("SellPrice")}
+                  value={props.values?.PriceValue?.toString()}
+                  onBlur={props.handleBlur("PriceValue")}
                 />
-                <Text style={rxGlobal.globalStyles.addModalFieldValidationError}>{props.touched.SellPrice && props.errors.SellPrice}</Text>
+                <Text style={rxGlobal.globalStyles.addModalFieldValidationError}>{props.touched.PriceValue && props.errors.PriceValue}</Text>
               </View>
               <View style={styles.contentFieldContainer}>
                 <MaterialCommunityIcons name='altimeter' size={20} color={rxGlobal.globalColors.listItemSubtitleIcon} />
@@ -120,11 +120,11 @@ export default function ProductSubShowcase(props) {
                   style={rxGlobal.globalStyles.addModalFieldInput}
                   placeholder='وزن محصول (گرم) '
                   keyboardType='number-pad'
-                  onChangeText={props.handleChange("Weight")}
-                  value={props.values?.Weight?.toString()}
-                  onBlur={props.handleBlur("Weight")}
+                  onChangeText={props.handleChange("MeasurmentScale")}
+                  value={props.values?.MeasurmentScale?.toString()}
+                  onBlur={props.handleBlur("MeasurmentScale")}
                 />
-                <Text style={rxGlobal.globalStyles.addModalFieldValidationError}>{props.touched.Weight && props.errors.Weight}</Text>
+                <Text style={rxGlobal.globalStyles.addModalFieldValidationError}>{props.touched.MeasurmentScale && props.errors.Weight}</Text>
               </View>
               <View style={styles.contentFieldContainer}>
                 <FontAwesome5 name='eye' size={20} color={rxGlobal.globalColors.listItemSubtitleIcon} />

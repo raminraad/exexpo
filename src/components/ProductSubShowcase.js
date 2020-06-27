@@ -9,9 +9,10 @@ import { Accordion } from "native-base";
 import { Formik } from "formik";
 import * as yup from "yup";
 import * as dp from "../lib/sqliteProvider";
+import { isMoment } from "jalali-moment";
 
 const auditItemSchema = yup.object().shape({
-  PriceValue: yup.string(rxGlobal.globalLiterals.validationErrors.required).required(rxGlobal.globalLiterals.validationErrors.required),
+  PriceValue: yup.number().required(rxGlobal.globalLiterals.validationErrors.required),
   MeasurmentScale: yup.number().required(rxGlobal.globalLiterals.validationErrors.required),
   ShelfVisibleCount: yup.number().required(rxGlobal.globalLiterals.validationErrors.required),
 });
@@ -84,8 +85,24 @@ export default function ProductSubShowcase(props) {
     />
   );
 
-  const addAuditItem = (item) => {
-    dp.insertTempVisitPlanResults(item);
+  const addAuditItem = async (item) => {
+    let currentTempRecord = dp.selectTable('VisitPlanResults',` where ProductSubId=${item.Id}`);
+    if (currentTempRecord.length)
+    Alert.alert(
+      "",
+      rxGlobal.globalLiterals.Confirmations.replaceTempVisitPlanResult,
+      [
+        {
+          text: globalLiterals.buttonTexts.yes,
+        },
+        {
+          text: globalLiterals.buttonTexts.no,
+          onPress: () => {return;}
+        },
+      ],
+      { cancelable: false }
+    );
+    dp.insertTempVisitPlanResult(item);
   };
 
   const renderContent = (item) => {
@@ -94,14 +111,14 @@ export default function ProductSubShowcase(props) {
       <Formik
         initialValues={item}
         validationSchema={auditItemSchema}
-        onSubmit={(values, actions) => {
+        onSubmit={async (values, actions) => {
           actions.resetForm();
-          values.LastModifiedDate = Moment(new Date()).format("YYYY/MM/DD HH:mm:ss");
+          values.LastModifiedDate = isMoment(new Date()).format("YYYY/MM/DD HH:mm:ss");
           addAuditItem(values);
         }}>
         {(props) => (
           <View style={{ ...rxGlobal.globalStyles.listItemContentContainer, flexDirection: "row-reverse", paddingRight: 10 }}>
-            <View style={{ flexDirection: "column", marginRight: 20, flex: 2 }}>
+            <View style={{ flexDirection: "column", paddingHorizontal:15, flex: 3 }}>
               <View style={styles.contentFieldContainer}>
                 <FontAwesome name='money' size={20} color={rxGlobal.globalColors.listItemSubtitleIcon} />
                 <TextInput
@@ -113,7 +130,6 @@ export default function ProductSubShowcase(props) {
                   value={props.values?.PriceValue?.toString()}
                   onBlur={props.handleBlur("PriceValue")}
                 />
-                <Text style={rxGlobal.globalStyles.addModalFieldValidationError}>{props.touched.PriceValue && props.errors.PriceValue}</Text>
               </View>
               <View style={styles.contentFieldContainer}>
                 <MaterialCommunityIcons name='altimeter' size={20} color={rxGlobal.globalColors.listItemSubtitleIcon} />
@@ -126,7 +142,6 @@ export default function ProductSubShowcase(props) {
                   value={props.values?.MeasurmentScale?.toString()}
                   onBlur={props.handleBlur("MeasurmentScale")}
                 />
-                <Text style={rxGlobal.globalStyles.addModalFieldValidationError}>{props.touched.MeasurmentScale && props.errors.Weight}</Text>
               </View>
               <View style={styles.contentFieldContainer}>
                 <FontAwesome5 name='eye' size={20} color={rxGlobal.globalColors.listItemSubtitleIcon} />
@@ -139,20 +154,18 @@ export default function ProductSubShowcase(props) {
                   value={props.values?.ShelfVisibleCount?.toString()}
                   onBlur={props.handleBlur("ShelfVisibleCount")}
                 />
-                <Text style={rxGlobal.globalStyles.addModalFieldValidationError}>{props.touched.ShelfVisibleCount && props.errors.ShelfVisibleCount}</Text>
               </View>
             </View>
 
-            <View style={{ alignItems: "flex-start", justifyContent: "center", flex: 1, alignSelf: "stretch" }}>
+            <View style={{ alignItems: "center", justifyContent: "center", flex: 2, alignSelf: "stretch"}}>
               <MaterialIcons.Button
                 name='add-circle-outline'
                 size={48}
                 backgroundColor={rxGlobal.globalColors.btnAdd}
-                onPress={() => {
-                  expanded = true;
-                }}>
+                onPress={props.handleSubmit}>
                 <Text style={{ color: "white", fontWeight: "bold", fontSize: 16 }}>افزودن به لیست</Text>
               </MaterialIcons.Button>
+              <Text style={{color:rxGlobal.globalColors.addModalFieldValidationErrorText,textAlign:'center',marginTop:20}}>{ !props.isValid&&rxGlobal.globalLiterals.validationErrors.allFieldsAreRequired}</Text>
             </View>
           </View>
         )}

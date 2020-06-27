@@ -334,6 +334,7 @@ export const globalLiterals = {
     syncingTimeInfo:"در حال همگام سازی اطلاعات زمانی",
   },
   validationErrors: {
+    allFieldsAreRequired: "وارد کردن تمام فیلدها الزامیست",
     required: "وارد کردن این فیلد الزامیست",
     notNumber: "مقدار این فیلد میبایست عددی باشد",
     notInGeoRange: "فاصله شما از مقدار تعیین شده بیشتر است. لطفاً به محدوده فروشگاه مورد نظر برگشته و مجددا تلاش فرمایید.",
@@ -352,8 +353,9 @@ export const globalLiterals = {
     saveError: "ذخیره داده ها با خطا مواجه شد. لطفاً دوباره تلاش نمایید",
   },
   Confirmations: {
-    syncClientData: "همگام سازی داده ها انجام شود؟",
     deleteProduct: "کالای انتخاب شده حذف شود؟",
+    replaceTempVisitPlanResult:'این کالا در لیست پویش این فروشگاه موجود است. داده های جدید جایگزین شوند؟',
+    syncClientData: "همگام سازی داده ها انجام شود؟",
     syncProducts: "بروزرسانی کالاها انجام گردد؟",
     continueSyncRatherThanNothingToSyncOnClient: "داده ها تغییر یافته ای برای ارسال وجود ندارد. همگام سازی ادامه یابد؟",
   },

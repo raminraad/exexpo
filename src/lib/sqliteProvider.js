@@ -192,8 +192,9 @@ export const insertVisitPlanResults = (...parameters) => {
   db.exec([{ sql: `${query};`, args: parameters }], false, () => console.log(`👍 insertion done successfully into VisitPlanResults..`));
 };
 
-export const insertTempVisitPlanResults = (item) => {
-  console.log(`🏁 [sqliteProvider.insertTempVisitPlanResults]`);
+
+export const insertTempVisitPlanResult = async (item) => {
+  console.log(`🏁 [sqliteProvider.insertTempVisitPlanResult]`);
 
   deleteParam = [item.Id];
   deleteQuery = `delete from VisitPlanResults where Id=?`;
@@ -221,17 +222,17 @@ export const insertTempVisitPlanResults = (item) => {
   return new Promise((resolve, reject) => {
     try {
       console.log(
-        `💬 [sqliteProvider.insertTempVisitPlanResults] executing queries with parameters: ${global.dev.verbose ? JSON.stringify(queries) : "--verbose"}`
+        `💬 [sqliteProvider.insertTempVisitPlanResult] executing queries with parameters: ${global.dev.verbose ? JSON.stringify(queries) : "--verbose"}`
       );
       db.exec(queries, false, () => {
         console.log(
-          `👍 [sqliteProvider.insertTempVisitPlanResults]`
+          `👍 [sqliteProvider.insertTempVisitPlanResult]`
         );
         resolve(queries.length);
       });
     } catch (err) {
       let exception = new appError(enums.appErrors.syncClientFailed, rxGlobal.globalLiterals.actionAndStateErrors.syncClientFailed, err);
-      console.log(`❌ [sqliteProvider.insertTempVisitPlanResults] ${exception}`);
+      console.log(`❌ [sqliteProvider.insertTempVisitPlanResult] ${exception}`);
       reject(exception);
     }
   });

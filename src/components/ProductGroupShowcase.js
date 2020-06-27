@@ -17,19 +17,19 @@ export default function ProudctGroupShowcase(props) {
           return (
             <ListItem
               Component={TouchableScale}
-              rightAvatar={<FontAwesome5 name="layer-group" size={32} color={rxGlobal.globalColors.palette.mercury} />}
+              rightAvatar={<FontAwesome5 name="layer-group" size={32} color={rxGlobal.globalColors.breadcrumpListAvatar1} />}
               friction={90} //
               tension={100} // These props are passed to the parent component (here TouchableScale)
               activeScale={0.8} //
-              containerStyle={[rxGlobal.globalStyles.shadowedContainer, rxGlobal.globalStyles.listItemHeaderContainer, { width: 150, aspectRatio: 2 ,}]}
+              containerStyle={[rxGlobal.globalStyles.shadowedContainer, rxGlobal.globalStyles.listItemHeaderContainer, { width: 150, aspectRatio: 1.5 ,}]}
               underlayColor='FFFF'
               key={item.Id}
               style={{marginVertical:10}}
               linearGradientProps={rxGlobal.globalColors.gradients.listItem}
               title={`${item.Title}`}
-              titleStyle={{ ...rxGlobal.globalStyles.listItemTitle, textAlign: "right", fontSize: 18 }}
+              titleStyle={{ ...rxGlobal.globalStyles.listItemTitle, textAlign: "right",textAlignVertical:'center', fontSize: 18,flex:1}}
               subtitle={`کد گروه ${item.ProductGroupCode}`}
-              subtitleStyle={{color: rxGlobal.globalColors.listItemSubtitleText, textAlign: "right" ,fontSize:13}}
+              subtitleStyle={{color: rxGlobal.globalColors.listItemSubtitleText, textAlign: "right",textAlignVertical:'bottom' ,fontSize:13}}
               onPress={() => {
                 onPress({id:item.Id,title:item.Title});
               }}

@@ -81,6 +81,7 @@ export default function SearchBarExample(props) {
     console.log(`💬 [AddProductFromDb.popFromGroupstack] popping ${count} item(s) from stack with length of :[${groupstack.current.length}]`);
     
     setIsLoading(true);
+    // if (count===0) groupstack.current.clear();
     for (let i = 0; i < count; i++) groupstack.current.pop();
     console.log(`💬 [AddProductFromDb.popFromGroupstack] popped ${count} item(s) from stack. current length of stack: [${groupstack.current.length}]`);
     let top = groupstack.current[groupstack.current.length - 1];

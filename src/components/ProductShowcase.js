@@ -15,7 +15,7 @@ export default function ProductShowcase(props) {
         return (
           <ListItem
             Component={TouchableScale}
-            rightAvatar={<MaterialCommunityIcons name='food' size={40} color={rxGlobal.globalColors.palette.mercury} />}
+            rightAvatar={<MaterialCommunityIcons name='food' size={40} color={rxGlobal.globalColors.breadcrumpListAvatar2} />}
             friction={90} //
             tension={100} // These props are passed to the parent component (here TouchableScale)
             activeScale={0.8} //
@@ -27,7 +27,7 @@ export default function ProductShowcase(props) {
             title={`${item.Taste??'تعریف نشده'}`}
             titleStyle={{ ...rxGlobal.globalStyles.listItemTitle, textAlign: "right", fontSize: 20 }}
             subtitle={`کد محصول ${item.ProductCode}`}
-            subtitleStyle={{ color: rxGlobal.globalColors.listItemSubtitleText, textAlign: "right", fontSize: 13 }}
+            subtitleStyle={{ color: rxGlobal.globalColors.listItemSubtitleText, textAlign: "right",textAlignVertical:'bottom',paddingTop:10 , fontSize: 13 }}
             onPress={() => {
               onPress({ id: item.Id, title: item.Taste });
             }}

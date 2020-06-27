@@ -89,7 +89,7 @@ export default function VisitPlanResultProductForm(props) {
   const getProducts=async ()=>{
 
     setIsProductLoading(true);
-//fixme: implement real getProducts
+
     setTimeout(() => {
       setIsProductLoading(false);
     }, 5000);

@@ -141,7 +141,7 @@ export default function VisitPlanCustomers(props) {
 
   const keyExtractor = (item, index) => item.Id.toString();
   const onListItemNavigateForward = async (item) => {
-    visitPlanResultContext.setValue(item);
+    visitPlanResultContext.setValue({visitPlanCustomer:item,visitPlanResults:[]});
     await dp.dropTempTables();
     await dp.createTempTables();
     item.rxSync = enums.syncStatuses.modified;

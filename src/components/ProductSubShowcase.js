@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useContext} from "react";
 import { View, Text, FlatList, BackHandler, StyleSheet, TextInput, TouchableOpacity, Alert } from "react-native";
 import { ListItem } from "react-native-elements";
 import * as rxGlobal from "../lib/rxGlobal";
@@ -10,6 +10,7 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import * as dp from "../lib/sqliteProvider";
 import Moment from "moment";
+import VisitPlanResultContext from "../contexts/VisitPlanResultContext";
 
 const auditItemSchema = yup.object().shape({
   PriceValue: yup.number().required(rxGlobal.globalLiterals.validationErrors.required),
@@ -19,6 +20,7 @@ const auditItemSchema = yup.object().shape({
 
 export default function ProductSubShowcase(props) {
   let { data } = props;
+  const visitPlanResultContext = useContext(VisitPlanResultContext);
 
   const renderSubtitle = (item) => (
     <View style={{ flexDirection: "row-reverse", alignItems: "center", justifyContent: "flex-start" }}>
@@ -38,6 +40,7 @@ export default function ProductSubShowcase(props) {
       </View>
     </View>
   );
+
   const renderTitle = (item) => (
     <View style={{ flexDirection: "row-reverse", alignItems: "center", justifyContent: "flex-start", marginBottom: 10 }}>
       <View style={styles.subtitleFieldContainer}>
@@ -60,6 +63,7 @@ export default function ProductSubShowcase(props) {
       </View>
     </View>
   );
+
   const renderHeader = (item, expanded) => (
     <ListItem
       rightAvatar={<FontAwesome5 name='tag' size={28} color={rxGlobal.globalColors.breadcrumpListAvatar3} />}
@@ -85,12 +89,12 @@ export default function ProductSubShowcase(props) {
     />
   );
 
-  const addAuditItem = async (item) => {
+  const addToVisitPlanResultList0 = async (item) => {
     try {
       console.log(`🏁 [ProductSubShowcase.addAuditItem]`);
       let currentTempRecord = await dp.selectTable("VisitPlanResults", ` where ProductSubId=${item.Id}`);
 
-let visitPlanResultItem = {ProductSubId:item.Id,SellPrice:item.PriceValue,Weight:item.MeasurmentScale,ShelfVisibleCount:item.ShelfVisibleCount};
+      let visitPlanResultItem = { ProductSubId: item.Id, SellPrice: item.PriceValue, Weight: item.MeasurmentScale, ShelfVisibleCount: item.ShelfVisibleCount };
 
       if (currentTempRecord.length)
         Alert.alert(
@@ -118,6 +122,47 @@ let visitPlanResultItem = {ProductSubId:item.Id,SellPrice:item.PriceValue,Weight
       console.log(`❌ [ProductSubShowcase.addAuditItem] : ${err}`);
     }
   };
+  const addToVisitPlanResultList = async (item) => {
+    try {
+      console.log(`🏁 [ProductSubShowcase.addAuditItem]`);
+      console.log(`💬 [ProductSubShowcase.addAuditItem] clonning context value: ${JSON.stringify(visitPlanResultContext.value)}`);
+      let clone = {...visitPlanResultContext.value};
+      console.log(`💬 [ProductSubShowcase.addAuditItem] clonned context value: ${JSON.stringify(clone)}`);
+      let existingItemId = clone.visitPlanResults.findIndex(r=>r.Id===item.Id);
+      console.log(`💬 [ProductSubShowcase.addAuditItem] searching for Id of ${item.Id} resulted to index of ${existingItemId}`);
+
+      // let item = { ProductSubId: item.Id, SellPrice: item.PriceValue, Weight: item.MeasurmentScale, ShelfVisibleCount: item.ShelfVisibleCount };
+
+      if (existingItemId!==-1)
+        Alert.alert(
+          "",
+          rxGlobal.globalLiterals.Confirmations.replaceTempVisitPlanResult,
+          [
+            {
+              text: rxGlobal.globalLiterals.buttonTexts.yes,
+              onPress: () => {
+                console.log(`💬 [ProductSubShowcase.addAuditItem] item exists.. replacing item: ${JSON.stringify(item)}`);
+                // dp.insertTempVisitPlanResult(item);
+                clone.visitPlanResults[existingItemId]=item;
+                visitPlanResultContext.setValue(clone);
+              },
+            },
+            {
+              text: rxGlobal.globalLiterals.buttonTexts.no,
+            },
+          ],
+          { cancelable: false }
+        );
+      else {
+        console.log(`💬 [ProductSubShowcase.addAuditItem] item doesn't exist. pushing item: ${JSON.stringify(item)}`);
+        // dp.insertTempVisitPlanResult(item);
+        clone.visitPlanResults.push(item);
+        visitPlanResultContext.setValue(clone);
+      }
+    } catch (err) {
+      console.log(`❌ [ProductSubShowcase.addAuditItem] : ${err}`);
+    }
+  };
 
   const renderContent = (item) => {
     console.log(`FORMIK ITEM:${JSON.stringify(item)}`);
@@ -128,7 +173,7 @@ let visitPlanResultItem = {ProductSubId:item.Id,SellPrice:item.PriceValue,Weight
         onSubmit={async (values, actions) => {
           // actions.resetForm();
           values.LastModifiedDate = Moment(new Date()).format("YYYY/MM/DD HH:mm:ss");
-          addAuditItem(values);
+          addToVisitPlanResultList(values);
         }}>
         {(props) => (
           <View style={{ ...rxGlobal.globalStyles.listItemContentContainer, flexDirection: "row-reverse", paddingRight: 10 }}>

@@ -86,40 +86,6 @@ export default function ProductSubShowcase(props) {
     />
   );
 
-  const addToVisitPlanResultList0 = async (item) => {
-    try {
-      console.log(`🏁 [ProductSubShowcase.addAuditItem]`);
-      let currentTempRecord = await dp.selectTable("VisitPlanResults", ` where ProductSubId=${item.Id}`);
-
-      let visitPlanResultItem = { ProductSubId: item.Id, SellPrice: item.PriceValue, Weight: item.MeasurmentScale, ShelfVisibleCount: item.ShelfVisibleCount };
-
-      if (currentTempRecord.length)
-        Alert.alert(
-          "",
-          rxGlobal.globalLiterals.Confirmations.replaceTempVisitPlanResult,
-          [
-            {
-              text: rxGlobal.globalLiterals.buttonTexts.yes,
-              onPress: () => {
-                console.log(`💬 [ProductSubShowcase.addAuditItem] alert confirmed.. adding item: ${JSON.stringify(visitPlanResultItem)}`);
-                dp.insertTempVisitPlanResult(visitPlanResultItem);
-              },
-            },
-            {
-              text: rxGlobal.globalLiterals.buttonTexts.no,
-            },
-          ],
-          { cancelable: false }
-        );
-      else {
-        console.log(`💬 [ProductSubShowcase.addAuditItem] adding item: ${JSON.stringify(visitPlanResultItem)}`);
-        dp.insertTempVisitPlanResult(visitPlanResultItem);
-      }
-    } catch (err) {
-      console.log(`❌ [ProductSubShowcase.addAuditItem] : ${err}`);
-    }
-  };
-
   const renderContent = (item) => {
     console.log(`FORMIK ITEM:${JSON.stringify(item)}`);
     return (
@@ -193,6 +159,6 @@ const styles = StyleSheet.create({
   subtitleFieldContainer: { flexDirection: "row-reverse", alignItems: "center", marginRight: 10 },
   titleValue: { fontSize: 24, color: rxGlobal.globalColors.listItemTitleText, fontWeight: "bold", marginLeft: 5 },
   titleScale: { fontSize: 12 },
-  contentFieldContainer: { ...rxGlobal.globalStyles.addModalFieldContainer, flexDirection: "row-reverse", alignItems: "center", marginTop: 10 },
+  contentFieldContainer: { marginBottom:10, flexDirection: "row-reverse", alignItems: "center", marginTop: 10 },
   input:{...rxGlobal.globalStyles.addModalFieldInput,marginRight:15}
 });

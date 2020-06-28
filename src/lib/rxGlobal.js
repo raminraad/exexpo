@@ -252,10 +252,6 @@ export const globalStyles = StyleSheet.create({
   addModalContainer: {
     padding: 50,
   },
-  addModalFieldContainer: {
-    alignItems: "flex-end",
-    marginBottom: 10,
-  },
   addModalFieldTitle: {
     flex: 1,
     textAlign: "right",
@@ -282,11 +278,12 @@ export const globalStyles = StyleSheet.create({
     marginRight: 20,
   },
   addModalFieldRadioButtonGroupContainer: {
-    alignItems: "flex-end",
+    justifyContent:'space-between',
+    flexDirection:'row',
     paddingHorizontal: 10,
   },
   radioItemContainer: {
-    flexDirection: "row",
+    flex:1,
     alignItems: "center",
   },
 });

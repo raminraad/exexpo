@@ -105,6 +105,8 @@ export default function SearchBarExample(props) {
 
   const addProductSubToVisitPlanResultList = async (item) => {
     try {
+    //fixme: add item to list based on rxSync analysing
+
       console.log(`🏁 [ProductSubShowcase.addAuditItem]`);
       console.log(`💬 [ProductSubShowcase.addAuditItem] clonning context value: ${JSON.stringify(visitPlanResultContext.value)}`);
       let clone = { ...visitPlanResultContext.value };
@@ -115,7 +117,6 @@ export default function SearchBarExample(props) {
       item.productGroupTitles=[];
       for (let i = 0; i < groupstack.current.length - 1; i++) item.productGroupTitles.push(groupstack.current[i].title);
       item.productTitle = groupstack.current[groupstack.current.length - 1].title;
-      console.log(`XXX: ${JSON.stringify(item)}`);
 
       if (existingItemId !== -1)
         Alert.alert(

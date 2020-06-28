@@ -260,121 +260,120 @@ export default function VisitPlanResultForm(props) {
   return (
     <Container>
       <Content>
-        <ScrollView style={{ padding: 25 }} keyboardShouldPersistTaps='never'>
-          <View>
-            <Modal visible={isProductModalVisible} animationType='slide'>
-              <VisitPlanResultProductForm onSubmit={onProductModalSubmit} onCancel={() => setIsProductModalVisible(false)} initialItem={productModalItem} />
-            </Modal>
-            <View style={{flexDirection:'row-reverse',alignItems:'center',justifyContent:'center',marginBottom:18}}>
-            <Entypo name="shop" size={26} color={rxGlobal.globalColors.screenTitleText} />
-              <Text style={[rxGlobal.globalStyles.screenTitleText,{marginRight:10}]}>{contextValue.visitPlanCustomer.Title}</Text>
-            </View>
-            <View style={{ flexDirection: "row-reverse", justifyContent: "space-between" }}>
-              <Text style={rxGlobal.globalStyles.addModalFieldTitle}>فهرست محصولات</Text>
-              {/* <View style={rxGlobal.globalStyles.shadowedContainer}>
-                <FontAwesome5.Button
-                  name='plus'
-                  backgroundColor={globalColors.btnAdd}
-                  onPress={() => {
-                    setProductModalItem({
-                      rxSync: enums.syncStatuses.created,
-                      ProductSubId: "",
-                      SellPrice: "",
-                      Weight: "",
-                      ShelfVisibleCount: "",
-                      VisitPlanCustomerId: initialItem.Id,
-                    });
-                    setIsProductModalVisible(true);
-                  }}>
-                  افزودن آیتم به لیست پویش فروشگاه
-                </FontAwesome5.Button>
-              </View> */}
-            </View>
-            {isLoading ? (
-              <Spinner style={{ height: "100%" }} color='grey' size={50} />
-            ) : contextValue.visitPlanResults.length ? (
-              contextValue.visitPlanResults.filter((r) => r.rxSync !== enums.syncStatuses.deleted).map((item, i) => renderItemHeader(item, i))
-            ) : (
-              renderEmptyList()
-            )}
-            <Formik
-              initialValues={initialItem}
-              onSubmit={async (values, actions) => {
-                if (
-                  !global.dynamicSetting.allowedDistanceForVisitor ||
-                  !initialItem.Lat ||
-                  !initialItem.Long ||
-                  (await isGeoLocationAcceptable(initialItem.Lat, initialItem.Long))
-                ) {
-                  console.log("submitting");
-                  actions.resetForm();
-                  //fixme: convert context before save
-                  values.details = contextValue.visitPlanResults;
-                  values.LastModifiedDate = Moment(new Date()).format("YYYY/MM/DD HH:mm:ss");
-                  values.ResultVisitedDate = Moment(new Date()).format("YYYY/MM/DD HH:mm:ss");
-                  values.SyncStatus = enums.syncStatuses.modified;
-                  values.rxSync = enums.syncStatuses.modified;
-                  navigation.navigate("VisitPlanCustomers", { yoyo: values });
-                }
-              }}>
-              {(props) => (
-                <View style={{ marginTop: 30, justifyContent: "space-between" }}>
-                  <View style={rxGlobal.globalStyles.addModalFieldContainer}>
-                    <Text style={rxGlobal.globalStyles.addModalFieldTitle}>شرح مختصر</Text>
-                    <TextInput
-                      style={[rxGlobal.globalStyles.addModalFieldInput, { height: 100 }, rxGlobal.globalStyles.listItemHeaderContainer]}
-                      textAlignVertical='top'
-                      placeholder='توضیحات مختصر درباره گزارش پویش'
-                      multiline
-                      onChangeText={props.handleChange("ResultSummary")}
-                      value={props.values.ResultSummary}
-                    />
-                  </View>
-                  <View style={rxGlobal.globalStyles.addModalFieldContainer}>
-                    <Text style={rxGlobal.globalStyles.addModalFieldTitle}>وضعیت</Text>
-                    <View style={rxGlobal.globalStyles.addModalFieldRadioButtonGroupContainer}>
-                      <RadioButton.Group onValueChange={(value) => props.setFieldValue("ResultStatus", value)} value={props.values.ResultStatus}>
-                        <View style={rxGlobal.globalStyles.radioItemContainer}>
-                          <Text>پویش نشده</Text>
-                          {/* fixme : ask the enum value of 2} */}
-                          <RadioButton value={2} />
-                        </View>
-                        <View style={rxGlobal.globalStyles.radioItemContainer}>
-                          <Text>عدم همکاری</Text>
-                          <RadioButton value={3} />
-                        </View>
-                        <View style={rxGlobal.globalStyles.radioItemContainer}>
-                          <Text>پویش موفق</Text>
-                          <RadioButton value={7} />
-                        </View>
-                        <View style={rxGlobal.globalStyles.radioItemContainer}>
-                          <Text>تغییر کاربری</Text>
-                          <RadioButton value={11} />
-                        </View>
-                        <View style={rxGlobal.globalStyles.radioItemContainer}>
-                          <Text>یافت نشد</Text>
-                          <RadioButton value={13} />
-                        </View>
-                      </RadioButton.Group>
-                    </View>
-                  </View>
-
-                  <View style={{ marginVertical: 5, flexDirection: "row-reverse", justifyContent: "space-around" }}>
-                    <TouchableOpacity
-                      style={{ ...rxGlobal.globalStyles.buttonGroupButton, backgroundColor: rxGlobal.globalColors.btnOk }}
-                      onPress={props.handleSubmit}>
-                      <Text style={{ color: "white" }}>{rxGlobal.globalLiterals.buttonTexts.ok}</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={{ ...rxGlobal.globalStyles.buttonGroupButton, backgroundColor: rxGlobal.globalColors.btnCancel }}
-                      onPress={navigation.goBack}>
-                      <Text style={{ color: "white" }}>{rxGlobal.globalLiterals.buttonTexts.cancel}</Text>
-                    </TouchableOpacity>
+        <ScrollView style={{padding:20 }} keyboardShouldPersistTaps='handled'>
+          {/* <Modal visible={isProductModalVisible} animationType='slide'>
+            <VisitPlanResultProductForm onSubmit={onProductModalSubmit} onCancel={() => setIsProductModalVisible(false)} initialItem={productModalItem} />
+          </Modal> */}
+          <View style={{flexDirection:'row-reverse',alignItems:'center',justifyContent:'center',marginBottom:18}}>
+          <Entypo name="shop" size={26} color={rxGlobal.globalColors.screenTitleText} />
+            <Text style={[rxGlobal.globalStyles.screenTitleText,{marginRight:10}]}>{contextValue.visitPlanCustomer.Title}</Text>
+          </View>
+          <View style={{ flexDirection: "row-reverse", justifyContent: "space-between" }}>
+            <Text style={rxGlobal.globalStyles.addModalFieldTitle}>فهرست محصولات</Text>
+            {/* <View style={rxGlobal.globalStyles.shadowedContainer}>
+              <FontAwesome5.Button
+                name='plus'
+                backgroundColor={globalColors.btnAdd}
+                onPress={() => {
+                  setProductModalItem({
+                    rxSync: enums.syncStatuses.created,
+                    ProductSubId: "",
+                    SellPrice: "",
+                    Weight: "",
+                    ShelfVisibleCount: "",
+                    VisitPlanCustomerId: initialItem.Id,
+                  });
+                  setIsProductModalVisible(true);
+                }}>
+                افزودن آیتم به لیست پویش فروشگاه
+              </FontAwesome5.Button>
+            </View> */}
+          </View>
+          {isLoading ? (
+            <Spinner style={{ height: "100%" }} color='grey' size={50} />
+          ) : contextValue.visitPlanResults.length ? (
+            contextValue.visitPlanResults.filter((r) => r.rxSync !== enums.syncStatuses.deleted).map((item, i) => renderItemHeader(item, i))
+          ) : (
+            renderEmptyList()
+          )}
+          <Formik
+            initialValues={initialItem}
+            onSubmit={async (values, actions) => {
+              if (
+                !global.dynamicSetting.allowedDistanceForVisitor ||
+                !initialItem.Lat ||
+                !initialItem.Long ||
+                (await isGeoLocationAcceptable(initialItem.Lat, initialItem.Long))
+              ) {
+                console.log("submitting");
+                actions.resetForm();
+                //fixme: convert context before save
+                values.details = contextValue.visitPlanResults;
+                values.LastModifiedDate = Moment(new Date()).format("YYYY/MM/DD HH:mm:ss");
+                values.ResultVisitedDate = Moment(new Date()).format("YYYY/MM/DD HH:mm:ss");
+                values.SyncStatus = enums.syncStatuses.modified;
+                values.rxSync = enums.syncStatuses.modified;
+                navigation.navigate("VisitPlanCustomers", { yoyo: values });
+              }
+            }}>
+            {(props) => (
+              <View style={{ marginTop: 30 }}>
+                <View>
+                  <Text style={rxGlobal.globalStyles.addModalFieldTitle}>شرح مختصر</Text>
+                  <TextInput
+                    style={[rxGlobal.globalStyles.addModalFieldInput, { height: 100 }, rxGlobal.globalStyles.listItemHeaderContainer]}
+                    textAlignVertical='top'
+                    placeholder='توضیحات مختصر درباره گزارش پویش'
+                    multiline
+                    onChangeText={props.handleChange("ResultSummary")}
+                    value={props.values.ResultSummary}
+                  />
+                </View>
+                <View style={{marginTop:30}}>
+                  <Text style={rxGlobal.globalStyles.addModalFieldTitle}>وضعیت</Text>
+                  <View style={[rxGlobal.globalStyles.addModalFieldInput, rxGlobal.globalStyles.addModalFieldRadioButtonGroupContainer,rxGlobal.globalStyles.listItemHeaderContainer]}>
+                    <RadioButton.Group onValueChange={(value) => props.setFieldValue("ResultStatus", value)} value={props.values.ResultStatus} >
+                      <View style={rxGlobal.globalStyles.radioItemContainer}>
+                      <RadioButton uncheckedColor='#02c39a' color='#02c39a' value={7} />
+                        <Text style={{color:'#02c39a'}}>پویش موفق</Text>
+                      </View>
+                      <View style={rxGlobal.globalStyles.radioItemContainer}>
+                      <RadioButton uncheckedColor='#f94144' color='#f94144' value={3} />
+                        <Text style={{color:'#f94144'}}>عدم همکاری</Text>
+                      </View>
+                      <View style={rxGlobal.globalStyles.radioItemContainer}>
+                      <RadioButton uncheckedColor='#0077b6' color='#0077b6' value={11} />
+                        <Text style={{color:'#0077b6'}}>تغییر کاربری</Text>
+                      </View>
+                      <View style={rxGlobal.globalStyles.radioItemContainer}>
+                        <RadioButton uncheckedColor='#0077b6' color='#0077b6' value={13} />
+                        <Text style={{color:'#0077b6'}}>یافت نشد</Text>
+                      </View>
+                      <View style={rxGlobal.globalStyles.radioItemContainer}>
+                        {/* fixme : ask the enum value of 2} */}
+                        <RadioButton uncheckedColor='#0077b6' color='#0077b6' value={2} />
+                        <Text style={{color:'#0077b6'}}>پویش نشده</Text>
+                      </View>
+                    </RadioButton.Group>
                   </View>
                 </View>
-              )}
-            </Formik>
-          </View>
+
+                <View style={{ marginTop: 60, flexDirection: "row-reverse", justifyContent: "space-around"}}>
+                  <TouchableOpacity
+                    style={{ ...rxGlobal.globalStyles.buttonGroupButton, backgroundColor: rxGlobal.globalColors.btnAdd }}
+                    onPress={props.handleSubmit}>
+                    <Text style={{ color: "white" }}>{rxGlobal.globalLiterals.buttonTexts.ok}</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={{ ...rxGlobal.globalStyles.buttonGroupButton, backgroundColor: rxGlobal.globalColors.btnCancel }}
+                    onPress={navigation.goBack}>
+                    <Text style={{ color: "white" }}>{rxGlobal.globalLiterals.buttonTexts.cancel}</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            )}
+          </Formik>
+        
         </ScrollView>
       </Content>
     </Container>
@@ -399,6 +398,5 @@ const styles = StyleSheet.create({
   subtitleFieldContainer: { flexDirection: "row-reverse", alignItems: "center"},
   titleValue: { fontSize: 18, color: rxGlobal.globalColors.listItemTitleText, fontWeight: "bold", marginLeft: 5 },
   titleScale: { fontSize: 12 },
-  contentFieldContainer: { ...rxGlobal.globalStyles.addModalFieldContainer, flexDirection: "row-reverse", alignItems: "center", marginTop: 10 },
 
 });

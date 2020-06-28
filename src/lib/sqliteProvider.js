@@ -5,7 +5,6 @@ import * as rxGlobal from "../lib/rxGlobal";
 
 const db = openDatabase("db");
 const permanentTableNames = ["Announcement", "Product", "ProductGroup", "ProductSub", "UserVisitPlan", "VisitPlanCustomers", "VisitPlanResults"];
-const tempTableNames = ["TempVisitPlanResults"];
 
 export const createPermanentTables = async () => {
   console.log(`🏁 [sqliteProvider.createPermanentTables]`);
@@ -67,46 +66,6 @@ export const dropPermanentTables = async () => {
     } catch (err) {
       console.log(`❌ [sqliteProvider.dropPermanentTables] ${err}`);
       reject(new dbError(enums.dbErrors.tableDropFailed, rxGlobal.globalLiterals.actionAndStateErrors.tableDropFailed));
-    }
-  });
-};
-
-export const dropTempTables = async () => {
-  console.log(`🏁 [sqliteProvider.dropTempTables]`);
-  let dropQueries = [];
-  for (const table of tempTableNames) {
-    dropQueries.push({ sql: `drop table if exists ${table};`, args: [] });
-  }
-  console.log(`💬 [sqliteProvider.dropTempTables] dropping table(s) ${permanentTableNames}..`);
-  return new Promise((resolve, reject) => {
-    try {
-      db.exec(dropQueries, false, () => {
-        console.log(`👍 [sqliteProvider.dropTempTables]`);
-        resolve(true);
-      });
-    } catch (err) {
-      console.log(`❌ [sqliteProvider.dropTempTables] ${err}`);
-      reject(new dbError(enums.dbErrors.tableDropFailed, rxGlobal.globalLiterals.actionAndStateErrors.tableDropFailed));
-    }
-  });
-};
-
-export const createTempTables = async () => {
-  console.log(`🏁 [sqliteProvider.createTempTables]`);
-  let createQueries = [
-    {
-      sql: `create table if not exists TempVisitPlanResults (rxId integer primary key not null,Id integer,VisitPlanCustomerId integer,ProductSubId integer,SellPrice integer,Weight integer,HasInventory,ShelfInventoryCount integer,ShelfVisibleCount integer,WarehouseInventoryCount,VerbalPurchaseCount,FactorPurchaseCount,LastModifiedDate,SyncStatus integer)`,
-      args: [],
-    },
-  ];
-  return new Promise((resolve, reject) => {
-    try {
-      db.exec(createQueries, false, () => {
-        console.log(`👍 [sqliteProvider.createTempTables]`);
-        resolve(true);
-      });
-    } catch (err) {
-      reject(new dbError(enums.dbErrors.tableCreationFailed, rxGlobal.globalLiterals.actionAndStateErrors.tableCreationFailed));
     }
   });
 };
@@ -192,54 +151,6 @@ export const insertVisitPlanResults = (...parameters) => {
   db.exec([{ sql: `${query};`, args: parameters }], false, () => console.log(`👍 insertion done successfully into VisitPlanResults..`));
 };
 
-
-export const insertTempVisitPlanResult = async (item) => {
-  console.log(`🏁 [sqliteProvider.insertTempVisitPlanResult]`);
-
-  let queries = [];
-
-
-  let deleteParam = [item.ProductSubId];
-  let deleteQuery = `delete from VisitPlanResults where ProductSubId=?`;
-  queries.push({ sql: `${deleteQuery};`, args: deleteParam });
-
-  let insertQuery = `insert into VisitPlanResults (Id,VisitPlanCustomerId,ProductSubId,SellPrice,Weight,HasInventory,ShelfInventoryCount,ShelfVisibleCount,WarehouseInventoryCount,VerbalPurchaseCount,FactorPurchaseCount,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?,?,?,?,?,?,?,?)`;
-
-  let insertParam = [
-    item.Id,
-    item.VisitPlanCustomerId,
-    item.ProductSubId,
-    item.SellPrice,
-    item.Weight,
-    item.HasInventory,
-    item.ShelfInventoryCount,
-    item.ShelfVisibleCount,
-    item.WarehouseInventoryCount,
-    item.VerbalPurchaseCount,
-    item.FactorPurchaseCount,
-    item.LastModifiedDate,
-    item.SyncStatus,
-  ];
-  queries.push({ sql: `${insertQuery};`, args: insertParam });
-
-  return new Promise((resolve, reject) => {
-    try {
-      console.log(
-        `💬 [sqliteProvider.insertTempVisitPlanResult] executing queries with parameters: ${global.dev.verbose ? JSON.stringify(queries) : "--verbose"}`
-      );
-      db.exec(queries, false, () => {
-        console.log(
-          `👍 [sqliteProvider.insertTempVisitPlanResult]`
-        );
-        resolve(queries.length);
-      });
-    } catch (err) {
-      let exception = new appError(enums.appErrors.syncClientFailed, rxGlobal.globalLiterals.actionAndStateErrors.syncClientFailed, err);
-      console.log(`❌ [sqliteProvider.insertTempVisitPlanResult] ${exception}`);
-      reject(exception);
-    }
-  });
-};
 
 export const syncData = async (dataTables) => {
   console.log(`🏁 [sqliteProvider.syncData]`);

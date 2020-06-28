@@ -142,8 +142,6 @@ export default function VisitPlanCustomers(props) {
   const keyExtractor = (item, index) => item.Id.toString();
   const onListItemNavigateForward = async (item) => {
     visitPlanResultContext.setValue({visitPlanCustomer:item,visitPlanResults:[]});
-    await dp.dropTempTables();
-    await dp.createTempTables();
     item.rxSync = enums.syncStatuses.modified;
     props.navigation.navigate("VisitResultTab", {screen:'VisitPlanResultForm',params:{
       initialItem: item,

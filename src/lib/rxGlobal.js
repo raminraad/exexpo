@@ -364,5 +364,6 @@ export const globalLiterals = {
     syncServerDataDone: "بروزرسانی داده ها با موفقیت انجام شد",
     nothingToSyncOnServer: "داده ها در وضعیت همگام با سرور قرار دارند",
     nothingToSyncOnClient: "داده ی تغییر یافته ای برای ارسال وجود ندارد",
+    visitPlanResultItemAdded: "کالای مربوطه به لیست اضافه شد",
   },
 };

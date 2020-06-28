@@ -11,6 +11,7 @@ import * as yup from "yup";
 import * as dp from "../lib/sqliteProvider";
 import Moment from "moment";
 import VisitPlanResultContext from "../contexts/VisitPlanResultContext";
+import * as toastLib from "../lib/toastLib";
 
 const auditItemSchema = yup.object().shape({
   PriceValue: yup.number().required(rxGlobal.globalLiterals.validationErrors.required),
@@ -76,14 +77,11 @@ export default function ProductSubShowcase(props) {
       titleStyle={{ ...rxGlobal.globalStyles.listItemTitle, textAlign: "right", fontSize: 20 }}
       subtitle={() => renderSubtitle(item)}
       subtitleStyle={{ color: rxGlobal.globalColors.listItemSubtitleText, textAlign: "right", fontSize: 13 }}
-      leftElement={
+      leftIcon={
         <AntDesign
           name={expanded ? "upcircle" : "downcircleo"}
           size={28}
           color={rxGlobal.globalColors.breadcrumpLevel3}
-          onPress={() => {
-            expanded = true;
-          }}
         />
       }
     />
@@ -131,8 +129,6 @@ export default function ProductSubShowcase(props) {
       let existingItemId = clone.visitPlanResults.findIndex(r=>r.Id===item.Id);
       console.log(`💬 [ProductSubShowcase.addAuditItem] searching for Id of ${item.Id} resulted to index of ${existingItemId}`);
 
-      // let item = { ProductSubId: item.Id, SellPrice: item.PriceValue, Weight: item.MeasurmentScale, ShelfVisibleCount: item.ShelfVisibleCount };
-
       if (existingItemId!==-1)
         Alert.alert(
           "",
@@ -142,9 +138,9 @@ export default function ProductSubShowcase(props) {
               text: rxGlobal.globalLiterals.buttonTexts.yes,
               onPress: () => {
                 console.log(`💬 [ProductSubShowcase.addAuditItem] item exists.. replacing item: ${JSON.stringify(item)}`);
-                // dp.insertTempVisitPlanResult(item);
                 clone.visitPlanResults[existingItemId]=item;
                 visitPlanResultContext.setValue(clone);
+                toastLib.success(rxGlobal.globalLiterals.alerts.visitPlanResultItemAdded, 3500);
               },
             },
             {
@@ -155,9 +151,9 @@ export default function ProductSubShowcase(props) {
         );
       else {
         console.log(`💬 [ProductSubShowcase.addAuditItem] item doesn't exist. pushing item: ${JSON.stringify(item)}`);
-        // dp.insertTempVisitPlanResult(item);
         clone.visitPlanResults.push(item);
         visitPlanResultContext.setValue(clone);
+        toastLib.success(rxGlobal.globalLiterals.alerts.visitPlanResultItemAdded, 3500);
       }
     } catch (err) {
       console.log(`❌ [ProductSubShowcase.addAuditItem] : ${err}`);

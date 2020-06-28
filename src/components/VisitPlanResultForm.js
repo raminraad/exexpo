@@ -5,14 +5,9 @@ import { Overlay, ListItem, PricingCard, Button } from "react-native-elements";
 import { Formik } from "formik";
 import { RadioButton, Text, Divider } from "react-native-paper";
 import Swipeable from "react-native-gesture-handler/Swipeable";
-import { globalStyles, globalColors, globalSizes, globalLiterals } from "../lib/rxGlobal";
+import * as rxGlobal from "../lib/rxGlobal";
 import { Icon, SearchBar } from "react-native-elements";
-import { AntDesign } from "@expo/vector-icons";
-import { Feather } from "@expo/vector-icons";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { FontAwesome5 } from "@expo/vector-icons";
-import { FontAwesome } from "@expo/vector-icons";
-import { Entypo } from "@expo/vector-icons";
+import { FontAwesome5,FontAwesome,MaterialCommunityIcons ,AntDesign ,Entypo,Feather } from "@expo/vector-icons";
 import { KeyboardAvoidingView } from "react-native";
 import VisitPlanResultProductForm from "./VisitPlanResultProductForm";
 import { openDatabase } from "expo-sqlite";
@@ -21,12 +16,12 @@ import TouchableScale from "react-native-touchable-scale"; // https://github.com
 import { getDistance, getPreciseDistance } from "geolib";
 import Moment from "moment";
 import * as enums from "../lib/enums";
-import VisitPlanResultContext from '../contexts/VisitPlanResultContext';
+import VisitPlanResultContext from "../contexts/VisitPlanResultContext";
 
 export default function VisitPlanResultForm(props) {
   const db = openDatabase("db");
   let navigation = props.navigation;
-  let {initialItem} = props.route.params;
+  let { initialItem } = props.route.params;
   const [visitResultStatus, setVisitResultStatus] = useState(initialItem?.ResultStatus ?? null);
   const [rawData, setRawData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -40,10 +35,10 @@ export default function VisitPlanResultForm(props) {
     if (status !== "granted") {
       Alert.alert(
         "",
-        globalLiterals.validationErrors.locationPermissionDenied,
+        rxGlobal.globalLiterals.validationErrors.locationPermissionDenied,
         [
           {
-            text: globalLiterals.buttonTexts.ok,
+            text: rxGlobal.globalLiterals.buttonTexts.ok,
           },
         ],
         { cancelable: true }
@@ -64,10 +59,10 @@ export default function VisitPlanResultForm(props) {
       else {
         Alert.alert(
           "",
-          globalLiterals.validationErrors.notInGeoRange,
+          rxGlobal.globalLiterals.validationErrors.notInGeoRange,
           [
             {
-              text: globalLiterals.buttonTexts.ok,
+              text: rxGlobal.globalLiterals.buttonTexts.ok,
             },
           ],
           { cancelable: true }
@@ -100,14 +95,14 @@ export default function VisitPlanResultForm(props) {
   const confirmAndDelete = (item) => {
     Alert.alert(
       "",
-      globalLiterals.Confirmations.deleteProduct,
+      rxGlobal.globalLiterals.Confirmations.deleteProduct,
       [
         {
-          text: globalLiterals.buttonTexts.yes,
+          text: rxGlobal.globalLiterals.buttonTexts.yes,
           onPress: () => onListItemDelete(item),
         },
         {
-          text: globalLiterals.buttonTexts.no,
+          text: rxGlobal.globalLiterals.buttonTexts.no,
         },
       ],
       { cancelable: true }
@@ -152,81 +147,131 @@ export default function VisitPlanResultForm(props) {
     return () => console.log("EFFECT");
   }, []);
 
+
   const renderSubtitle = (item) => (
+    <View style={{ flexDirection: "row-reverse", marginTop: 10 ,justifyContent:'space-evenly'}}>
+      <View style={styles.subtitleFieldContainer}>
+        <FontAwesome name='money' size={16} color={rxGlobal.globalColors.listItemSubtitleIcon} />
+        {item.PriceValue ? (
+          <View style={styles.subtitleFieldContainer}>
+            <Text style={{ ...styles.titleValue, marginRight: 5 }}>{item.PriceValue}</Text>
+            <Text style={styles.titleScale}>{enums.priceTypesToLiteral(item.PriceType)}</Text>
+          </View>
+        ) : null}
+      </View>
+
+      <View style={styles.subtitleFieldContainer}>
+        <MaterialCommunityIcons name='altimeter' size={16} color={rxGlobal.globalColors.listItemSubtitleIcon} />
+        {item.MeasurmentScale ? (
+          <View style={styles.subtitleFieldContainer}>
+            <Text style={{ ...styles.titleValue, marginRight: 5 }}>{item.MeasurmentScale}</Text>
+            <Text style={styles.titleScale}>{enums.measurementTypesToLiteral(item.MeasurmentType)}</Text>
+          </View>
+        ) : null}
+      </View>
+
+      <View style={styles.subtitleFieldContainer}>
+        <FontAwesome5 name='eye' size={16} color={rxGlobal.globalColors.listItemSubtitleIcon} />
+          <View style={styles.subtitleFieldContainer}>
+            <Text style={{ ...styles.titleValue, marginRight: 5 }}>{item.ShelfVisibleCount}</Text>
+          </View>
+      </View>
+    </View>
+  );
+  const renderSubtitle0 = (item) => (
     <View style={styles.listItemSubtitleContainer}>
       <View style={styles.listItemSubtitleItem}>
-        <FontAwesome name='money' size={globalSizes.icons.small} color={globalColors.listItemSubtitleIcon} />
+        <FontAwesome name='money' size={rxGlobal.globalSizes.icons.small} color={rxGlobal.globalColors.listItemSubtitleIcon} />
         <Text style={styles.listItemSubtitleText}>{item.SellPrice} ريال</Text>
       </View>
       <View style={styles.listItemSubtitleItem}>
-        <FontAwesome5 name='weight-hanging' size={globalSizes.icons.small} color={globalColors.listItemSubtitleIcon} />
+        <FontAwesome5 name='weight-hanging' size={rxGlobal.globalSizes.icons.small} color={rxGlobal.globalColors.listItemSubtitleIcon} />
         <Text style={styles.listItemSubtitleText}>{item.Weight} گرم</Text>
       </View>
       <View style={styles.listItemSubtitleItem}>
-        <FontAwesome5 name='eye' size={globalSizes.icons.small} color={globalColors.listItemSubtitleIcon} />
+        <FontAwesome5 name='eye' size={rxGlobal.globalSizes.icons.small} color={rxGlobal.globalColors.listItemSubtitleIcon} />
         <Text style={styles.listItemSubtitleText}>{item.ShelfVisibleCount}</Text>
       </View>
     </View>
   );
   const swipeLeftAction = (item) => (
-    <View style={globalStyles.listItemSwipeLeftContainer}>
-      <FontAwesome5 name='trash-alt' onPress={() => confirmAndDelete(item)} size={globalSizes.icons.medium} color={globalColors.btnDelete} />
-      <Separator style={{ backgroundColor: globalColors.transparent }} />
+    <View style={rxGlobal.globalStyles.listItemSwipeLeftContainer}>
+      <FontAwesome5 name='trash-alt' onPress={() => confirmAndDelete(item)} size={rxGlobal.globalSizes.icons.medium} color={rxGlobal.globalColors.btnDelete} />
+      <Separator style={{ backgroundColor: rxGlobal.globalColors.transparent }} />
       <FontAwesome5
         name='edit'
         onPress={() => {
           setProductModalItem(item);
           setIsProductModalVisible(true);
         }}
-        size={globalSizes.icons.medium}
-        color={globalColors.btnUpdate}
+        size={rxGlobal.globalSizes.icons.medium}
+        color={rxGlobal.globalColors.btnUpdate}
       />
     </View>
   );
 
   const [isProductModalVisible, setIsProductModalVisible] = useState(false);
 
+  const renderItemBreadcrump = (item, i) => {
+    let data = item.productGroupTitles.concat(item.productTitle).reverse();
+    return (
+      <View>
+        <FlatList
+          contentContainerStyle={{ flexGrow: 1, justifyContent: "flex-end" }}
+          horizontal={true}
+          ItemSeparatorComponent={() => (
+            <FontAwesome5
+              name='chevron-left'
+              size={12}
+              color={rxGlobal.globalColors.breadcrumpSeparator}
+              style={{ alignSelf: "center", marginHorizontal: 10 }}
+            />
+          )}
+          data={data}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item, index }) => <Text style={data.indexOf(item)===0? rxGlobal.globalStyles.breadCrumpLevel2:rxGlobal.globalStyles.breadCrumpLevel1}>{item}</Text>}
+        />
+      </View>
+    );
+  };
+
   const renderItemHeader = (item, i) => (
     <Swipeable renderLeftActions={() => swipeLeftAction(item)} key={item.rxKey}>
-      {/* fixme: fix productGroup multi layering */}
       <ListItem
-        containerStyle={[globalStyles.shadowedContainer, globalStyles.listItemHeaderContainer]}
+        containerStyle={[rxGlobal.globalStyles.shadowedContainer, rxGlobal.globalStyles.listItemHeaderContainer]}
         Component={TouchableScale}
         key={item.rxKey}
         friction={90} //
         tension={100} // These props are passed to the parent component (here TouchableScale)
         activeScale={0.95} //
-        linearGradientProps={globalColors.gradients.listItem}
-        title={`${item.Title}  ⟸  ${item.Taste}`}
-        titleStyle={globalStyles.listItemTitle}
+        linearGradientProps={rxGlobal.globalColors.gradients.listItem}
+        title={() => renderItemBreadcrump(item)}
         subtitle={() => renderSubtitle(item)}
       />
     </Swipeable>
   );
 
   const renderEmptyList = () => (
-    <View style={{ ...globalStyles.emptyList, marginLeft: 20, marginTop: 10 }}>
-      <Text style={{ color: globalColors.listItemSubtitleText }}>{globalLiterals.messages.emptyList}</Text>
+    <View style={{ ...rxGlobal.globalStyles.emptyList, marginLeft: 20, marginTop: 10 }}>
+      <Text style={{ color: rxGlobal.globalColors.listItemSubtitleText }}>{rxGlobal.globalLiterals.messages.emptyList}</Text>
     </View>
   );
 
   return (
     <Container>
       <Content>
-        
         <ScrollView style={{ padding: 25 }} keyboardShouldPersistTaps='never'>
           <View>
             <Modal visible={isProductModalVisible} animationType='slide'>
               <VisitPlanResultProductForm onSubmit={onProductModalSubmit} onCancel={() => setIsProductModalVisible(false)} initialItem={productModalItem} />
             </Modal>
-              <View style={{...globalStyles.screenTitleContainer,marginBottom:32}}>
-                <Text style={globalStyles.screenTitleText}>فرم پویش مربوط به {contextValue.visitPlanCustomer.Title}</Text>
-                <Text style={globalStyles.screenTitleText}>نعداد آیتم ها: {contextValue.visitPlanResults?.length}</Text>
-              </View>
-
+            <View style={{flexDirection:'row-reverse',alignItems:'center',justifyContent:'center',marginBottom:18}}>
+            <Entypo name="shop" size={26} color={rxGlobal.globalColors.screenTitleText} />
+              <Text style={[rxGlobal.globalStyles.screenTitleText,{marginRight:10}]}>{contextValue.visitPlanCustomer.Title}</Text>
+            </View>
             <View style={{ flexDirection: "row-reverse", justifyContent: "space-between" }}>
-              <Text style={globalStyles.addModalFieldTitle}>محصولات فروشگاه</Text>
-              {/* <View style={globalStyles.shadowedContainer}>
+              <Text style={rxGlobal.globalStyles.addModalFieldTitle}>فهرست محصولات</Text>
+              {/* <View style={rxGlobal.globalStyles.shadowedContainer}>
                 <FontAwesome5.Button
                   name='plus'
                   backgroundColor={globalColors.btnAdd}
@@ -247,8 +292,8 @@ export default function VisitPlanResultForm(props) {
             </View>
             {isLoading ? (
               <Spinner style={{ height: "100%" }} color='grey' size={50} />
-            ) : rawData.length ? (
-              rawData.filter((r) => r.rxSync !== enums.syncStatuses.deleted).map((item, i) => renderItemHeader(item, i))
+            ) : contextValue.visitPlanResults.length ? (
+              contextValue.visitPlanResults.filter((r) => r.rxSync !== enums.syncStatuses.deleted).map((item, i) => renderItemHeader(item, i))
             ) : (
               renderEmptyList()
             )}
@@ -263,7 +308,8 @@ export default function VisitPlanResultForm(props) {
                 ) {
                   console.log("submitting");
                   actions.resetForm();
-                  values.details = rawData;
+                  //fixme: convert context before save
+                  values.details = contextValue.visitPlanResults;
                   values.LastModifiedDate = Moment(new Date()).format("YYYY/MM/DD HH:mm:ss");
                   values.ResultVisitedDate = Moment(new Date()).format("YYYY/MM/DD HH:mm:ss");
                   values.SyncStatus = enums.syncStatuses.modified;
@@ -273,10 +319,10 @@ export default function VisitPlanResultForm(props) {
               }}>
               {(props) => (
                 <View style={{ marginTop: 30, justifyContent: "space-between" }}>
-                  <View style={globalStyles.addModalFieldContainer}>
-                    <Text style={globalStyles.addModalFieldTitle}>شرح مختصر</Text>
+                  <View style={rxGlobal.globalStyles.addModalFieldContainer}>
+                    <Text style={rxGlobal.globalStyles.addModalFieldTitle}>شرح مختصر</Text>
                     <TextInput
-                      style={[globalStyles.addModalFieldInput, { height: 100 }]}
+                      style={[rxGlobal.globalStyles.addModalFieldInput, { height: 100 }, rxGlobal.globalStyles.listItemHeaderContainer]}
                       textAlignVertical='top'
                       placeholder='توضیحات مختصر درباره گزارش پویش'
                       multiline
@@ -284,28 +330,28 @@ export default function VisitPlanResultForm(props) {
                       value={props.values.ResultSummary}
                     />
                   </View>
-                  <View style={globalStyles.addModalFieldContainer}>
-                    <Text style={globalStyles.addModalFieldTitle}>وضعیت</Text>
-                    <View style={globalStyles.addModalFieldRadioButtonGroupContainer}>
+                  <View style={rxGlobal.globalStyles.addModalFieldContainer}>
+                    <Text style={rxGlobal.globalStyles.addModalFieldTitle}>وضعیت</Text>
+                    <View style={rxGlobal.globalStyles.addModalFieldRadioButtonGroupContainer}>
                       <RadioButton.Group onValueChange={(value) => props.setFieldValue("ResultStatus", value)} value={props.values.ResultStatus}>
-                        <View style={globalStyles.radioItemContainer}>
+                        <View style={rxGlobal.globalStyles.radioItemContainer}>
                           <Text>پویش نشده</Text>
                           {/* fixme : ask the enum value of 2} */}
                           <RadioButton value={2} />
                         </View>
-                        <View style={globalStyles.radioItemContainer}>
+                        <View style={rxGlobal.globalStyles.radioItemContainer}>
                           <Text>عدم همکاری</Text>
                           <RadioButton value={3} />
                         </View>
-                        <View style={globalStyles.radioItemContainer}>
+                        <View style={rxGlobal.globalStyles.radioItemContainer}>
                           <Text>پویش موفق</Text>
                           <RadioButton value={7} />
                         </View>
-                        <View style={globalStyles.radioItemContainer}>
+                        <View style={rxGlobal.globalStyles.radioItemContainer}>
                           <Text>تغییر کاربری</Text>
                           <RadioButton value={11} />
                         </View>
-                        <View style={globalStyles.radioItemContainer}>
+                        <View style={rxGlobal.globalStyles.radioItemContainer}>
                           <Text>یافت نشد</Text>
                           <RadioButton value={13} />
                         </View>
@@ -314,11 +360,15 @@ export default function VisitPlanResultForm(props) {
                   </View>
 
                   <View style={{ marginVertical: 5, flexDirection: "row-reverse", justifyContent: "space-around" }}>
-                    <TouchableOpacity style={{ ...globalStyles.buttonGroupButton, backgroundColor: globalColors.btnOk }} onPress={props.handleSubmit}>
-                      <Text style={{ color: "white" }}>{globalLiterals.buttonTexts.ok}</Text>
+                    <TouchableOpacity
+                      style={{ ...rxGlobal.globalStyles.buttonGroupButton, backgroundColor: rxGlobal.globalColors.btnOk }}
+                      onPress={props.handleSubmit}>
+                      <Text style={{ color: "white" }}>{rxGlobal.globalLiterals.buttonTexts.ok}</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={{ ...globalStyles.buttonGroupButton, backgroundColor: globalColors.btnCancel }} onPress={navigation.goBack}>
-                      <Text style={{ color: "white" }}>{globalLiterals.buttonTexts.cancel}</Text>
+                    <TouchableOpacity
+                      style={{ ...rxGlobal.globalStyles.buttonGroupButton, backgroundColor: rxGlobal.globalColors.btnCancel }}
+                      onPress={navigation.goBack}>
+                      <Text style={{ color: "white" }}>{rxGlobal.globalLiterals.buttonTexts.cancel}</Text>
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -342,7 +392,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   listItemSubtitleText: {
-    color: globalColors.listItemSubtitleText,
+    color: rxGlobal.globalColors.listItemSubtitleText,
     marginHorizontal: 3,
   },
+
+  subtitleFieldContainer: { flexDirection: "row-reverse", alignItems: "center"},
+  titleValue: { fontSize: 18, color: rxGlobal.globalColors.listItemTitleText, fontWeight: "bold", marginLeft: 5 },
+  titleScale: { fontSize: 12 },
+  contentFieldContainer: { ...rxGlobal.globalStyles.addModalFieldContainer, flexDirection: "row-reverse", alignItems: "center", marginTop: 10 },
+
 });

@@ -10,7 +10,6 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import * as dp from "../lib/sqliteProvider";
 import Moment from "moment";
-import VisitPlanResultContext from "../contexts/VisitPlanResultContext";
 import * as toastLib from "../lib/toastLib";
 
 const auditItemSchema = yup.object().shape({
@@ -20,8 +19,8 @@ const auditItemSchema = yup.object().shape({
 });
 
 export default function ProductSubShowcase(props) {
-  let { data } = props;
-  const visitPlanResultContext = useContext(VisitPlanResultContext);
+  let { data ,onConfirm} = props;
+  
 
   const renderSubtitle = (item) => (
     <View style={{ flexDirection: "row-reverse", alignItems: "center", justifyContent: "flex-start" }}>
@@ -120,45 +119,6 @@ export default function ProductSubShowcase(props) {
       console.log(`❌ [ProductSubShowcase.addAuditItem] : ${err}`);
     }
   };
-  const addToVisitPlanResultList = async (item) => {
-    try {
-      console.log(`🏁 [ProductSubShowcase.addAuditItem]`);
-      console.log(`💬 [ProductSubShowcase.addAuditItem] clonning context value: ${JSON.stringify(visitPlanResultContext.value)}`);
-      let clone = {...visitPlanResultContext.value};
-      console.log(`💬 [ProductSubShowcase.addAuditItem] clonned context value: ${JSON.stringify(clone)}`);
-      let existingItemId = clone.visitPlanResults.findIndex(r=>r.Id===item.Id);
-      console.log(`💬 [ProductSubShowcase.addAuditItem] searching for Id of ${item.Id} resulted to index of ${existingItemId}`);
-
-      if (existingItemId!==-1)
-        Alert.alert(
-          "",
-          rxGlobal.globalLiterals.Confirmations.replaceTempVisitPlanResult,
-          [
-            {
-              text: rxGlobal.globalLiterals.buttonTexts.yes,
-              onPress: () => {
-                console.log(`💬 [ProductSubShowcase.addAuditItem] item exists.. replacing item: ${JSON.stringify(item)}`);
-                clone.visitPlanResults[existingItemId]=item;
-                visitPlanResultContext.setValue(clone);
-                toastLib.success(rxGlobal.globalLiterals.alerts.visitPlanResultItemAdded, 3500);
-              },
-            },
-            {
-              text: rxGlobal.globalLiterals.buttonTexts.no,
-            },
-          ],
-          { cancelable: false }
-        );
-      else {
-        console.log(`💬 [ProductSubShowcase.addAuditItem] item doesn't exist. pushing item: ${JSON.stringify(item)}`);
-        clone.visitPlanResults.push(item);
-        visitPlanResultContext.setValue(clone);
-        toastLib.success(rxGlobal.globalLiterals.alerts.visitPlanResultItemAdded, 3500);
-      }
-    } catch (err) {
-      console.log(`❌ [ProductSubShowcase.addAuditItem] : ${err}`);
-    }
-  };
 
   const renderContent = (item) => {
     console.log(`FORMIK ITEM:${JSON.stringify(item)}`);
@@ -169,7 +129,7 @@ export default function ProductSubShowcase(props) {
         onSubmit={async (values, actions) => {
           // actions.resetForm();
           values.LastModifiedDate = Moment(new Date()).format("YYYY/MM/DD HH:mm:ss");
-          addToVisitPlanResultList(values);
+          onConfirm(values);
         }}>
         {(props) => (
           <View style={{ ...rxGlobal.globalStyles.listItemContentContainer, flexDirection: "row-reverse", paddingRight: 10 }}>
@@ -178,7 +138,7 @@ export default function ProductSubShowcase(props) {
                 <FontAwesome name='money' size={20} color={rxGlobal.globalColors.listItemSubtitleIcon} />
                 <TextInput
                   maxLength={8}
-                  style={rxGlobal.globalStyles.addModalFieldInput}
+                  style={styles.input}
                   placeholder='قیمت فروش محصول'
                   keyboardType='number-pad'
                   onChangeText={props.handleChange("PriceValue")}
@@ -190,7 +150,7 @@ export default function ProductSubShowcase(props) {
                 <MaterialCommunityIcons name='altimeter' size={20} color={rxGlobal.globalColors.listItemSubtitleIcon} />
                 <TextInput
                   maxLength={8}
-                  style={rxGlobal.globalStyles.addModalFieldInput}
+                  style={styles.input}
                   placeholder='وزن محصول (گرم) '
                   keyboardType='number-pad'
                   onChangeText={props.handleChange("MeasurmentScale")}
@@ -202,7 +162,7 @@ export default function ProductSubShowcase(props) {
                 <FontAwesome5 name='eye' size={20} color={rxGlobal.globalColors.listItemSubtitleIcon} />
                 <TextInput
                   maxLength={8}
-                  style={rxGlobal.globalStyles.addModalFieldInput}
+                  style={styles.input}
                   placeholder='موجودی قابل مشاهده'
                   keyboardType='number-pad'
                   onChangeText={props.handleChange("ShelfVisibleCount")}
@@ -234,4 +194,5 @@ const styles = StyleSheet.create({
   titleValue: { fontSize: 24, color: rxGlobal.globalColors.listItemTitleText, fontWeight: "bold", marginLeft: 5 },
   titleScale: { fontSize: 12 },
   contentFieldContainer: { ...rxGlobal.globalStyles.addModalFieldContainer, flexDirection: "row-reverse", alignItems: "center", marginTop: 10 },
+  input:{...rxGlobal.globalStyles.addModalFieldInput,marginRight:15}
 });

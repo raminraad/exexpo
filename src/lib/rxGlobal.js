@@ -80,7 +80,7 @@ export const globalColors = {
   listItemSubtitleIcon: "#6c757d66",
   addModalFieldValidationErrorText: "#e71d36",
   screenContainer: "#f8f9fa",
-  screenTitleText:'#3a6ea5',
+  screenTitleText:'#3F51B5',
   spinner: "#3F51B5A3",
   transparent: "#FFFFFF00",
   tabIconActive: "#F1FAEE",
@@ -111,7 +111,8 @@ export const globalStyles = StyleSheet.create({
     height: 45,
     borderRadius: 5,
   },
-
+  breadCrumpLevel1: { color: globalColors.breadcrumpLevel1 },
+  breadCrumpLevel2: { color: globalColors.breadcrumpLevel2, fontWeight: "bold" },
   drawerContainer: {
     flex: 1,
     backgroundColor: globalColors.drawerBackground,
@@ -129,8 +130,8 @@ export const globalStyles = StyleSheet.create({
     alignItems:'center'
   },
   screenTitleText: {
-    textAlign: "right",
-    fontSize: 24,
+    textAlign: "center",
+    fontSize: 20,
     fontWeight: "bold",
     color: globalColors.screenTitleText,
   },
@@ -272,8 +273,8 @@ export const globalStyles = StyleSheet.create({
     padding: 10,
     fontSize: 18,
     borderRadius: 6,
-    marginRight: 20,
     textAlign: "right",
+    alignSelf:'stretch',
   },
   addModalFieldValidationError: {
     textAlign: "right",

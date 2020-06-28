@@ -6,13 +6,17 @@ import TouchableScale from "react-native-touchable-scale";
 import { Entypo,FontAwesome5 } from "@expo/vector-icons";
 
 export default function ProudctGroupShowcase(props) {
-  let { data ,onPress} = props;
+  let { data ,onConfirm} = props;
+  let itemWidth = data.length>30 ? 150 : 225;
+  let itemAspect = data.length>30 ? 1.6180 : 2.33;
+  let numColumns = data.length>30 ? 3 : 2;
+
   return (
     <View style={{ alignItems:'flex-end' ,marginHorizontal:25}}>
       {console.log(`RENDERING PRODUCT-GROUP`)}
       <FlatList
         data={data}
-        numColumns={3}
+        numColumns={numColumns}
         renderItem={({ item, index }) => {
           return (
             <ListItem
@@ -21,7 +25,7 @@ export default function ProudctGroupShowcase(props) {
               friction={90} //
               tension={100} // These props are passed to the parent component (here TouchableScale)
               activeScale={0.8} //
-              containerStyle={[rxGlobal.globalStyles.shadowedContainer, rxGlobal.globalStyles.listItemHeaderContainer, { width: 150, aspectRatio: 1.6180 ,}]}
+              containerStyle={[rxGlobal.globalStyles.shadowedContainer, rxGlobal.globalStyles.listItemHeaderContainer, { width: itemWidth, aspectRatio: itemAspect ,}]}
               underlayColor='FFFF'
               key={item.Id}
               style={{marginVertical:10}}
@@ -31,7 +35,7 @@ export default function ProudctGroupShowcase(props) {
               subtitle={`کد گروه ${item.ProductGroupCode}`}
               subtitleStyle={{color: rxGlobal.globalColors.listItemSubtitleText, textAlign: "right",textAlignVertical:'bottom' ,fontSize:13}}
               onPress={() => {
-                onPress({id:item.Id,title:item.Title});
+                onConfirm({id:item.Id,title:item.Title});
               }}
             />
           );

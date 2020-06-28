@@ -1,9 +1,7 @@
-import React, { Component, useRef, useEffect, useState, useCallback ,useContext} from "react";
+import React, { Component, useRef, useEffect, useState, useCallback, useContext } from "react";
 import { Container, Header, Item, Input, Icon, Button, Text, Content, Grid, Spinner } from "native-base";
 import { Entypo, FontAwesome5, Feather } from "@expo/vector-icons";
-import * as rxGlobal from "../lib/rxGlobal";
-import { View, BackHandler, StyleSheet } from "react-native";
-import * as dp from "../lib/sqliteProvider";
+import { View, BackHandler, StyleSheet, Alert } from "react-native";
 import { TouchableOpacity, FlatList } from "react-native-gesture-handler";
 import { ListItem } from "react-native-elements";
 import TouchableScale from "react-native-touchable-scale"; // https://github.com/kohver/react-native-touchable-scale
@@ -11,7 +9,10 @@ import ProductShowcase from "./ProductShowcase";
 import ProductGroupShowcase from "./ProductGroupShowcase";
 import ProductSubShowcase from "./ProductSubShowcase";
 import { useFocusEffect } from "@react-navigation/native";
-import VisitPlanResultContext from '../contexts/VisitPlanResultContext'
+import VisitPlanResultContext from "../contexts/VisitPlanResultContext";
+import * as rxGlobal from "../lib/rxGlobal";
+import * as dp from "../lib/sqliteProvider";
+import * as toastLib from "../lib/toastLib";
 
 export default function SearchBarExample(props) {
   const groupstack = useRef([]);
@@ -50,7 +51,6 @@ export default function SearchBarExample(props) {
   };
 
   const pushToGroupstack = async (item) => {
-    
     console.log(`START METHOD: pushToGroupstack`);
     setIsLoading(true);
 
@@ -82,7 +82,7 @@ export default function SearchBarExample(props) {
   const popFromGroupstack = async (count) => {
     console.log(`🏁 [AddProductFromDb.popFromGroupstack]`);
     console.log(`💬 [AddProductFromDb.popFromGroupstack] popping ${count} item(s) from stack with length of :[${groupstack.current.length}]`);
-    
+
     setIsLoading(true);
     // if (count===0) groupstack.current.clear();
     for (let i = 0; i < count; i++) groupstack.current.pop();
@@ -98,9 +98,54 @@ export default function SearchBarExample(props) {
     console.log(`START METHOD: renderShowcase`);
 
     let presentShowcaseType = groupstack.current.length ? groupstack.current[groupstack.current.length - 1].showcaseType : showcaseTypes.productGroup;
-    if (presentShowcaseType === showcaseTypes.productGroup) return <ProductGroupShowcase data={showcase} onPress={pushToGroupstack} />;
-    else if (presentShowcaseType === showcaseTypes.product) return <ProductShowcase data={showcase} onPress={pushToGroupstack} />;
-    else return <ProductSubShowcase data={showcase} onPress={pushToGroupstack} />;
+    if (presentShowcaseType === showcaseTypes.productGroup) return <ProductGroupShowcase data={showcase} onConfirm={pushToGroupstack} />;
+    else if (presentShowcaseType === showcaseTypes.product) return <ProductShowcase data={showcase} onConfirm={pushToGroupstack} />;
+    else return <ProductSubShowcase data={showcase} onConfirm={addProductSubToVisitPlanResultList} />;
+  };
+
+  const addProductSubToVisitPlanResultList = async (item) => {
+    try {
+      console.log(`🏁 [ProductSubShowcase.addAuditItem]`);
+      console.log(`💬 [ProductSubShowcase.addAuditItem] clonning context value: ${JSON.stringify(visitPlanResultContext.value)}`);
+      let clone = { ...visitPlanResultContext.value };
+      console.log(`💬 [ProductSubShowcase.addAuditItem] clonned context value: ${JSON.stringify(clone)}`);
+      let existingItemId = clone.visitPlanResults.findIndex((r) => r.Id === item.Id);
+      console.log(`💬 [ProductSubShowcase.addAuditItem] searching for Id of ${item.Id} resulted to index of ${existingItemId}`);
+      
+      item.productGroupTitles=[];
+      for (let i = 0; i < groupstack.current.length - 1; i++) item.productGroupTitles.push(groupstack.current[i].title);
+      item.productTitle = groupstack.current[groupstack.current.length - 1].title;
+      console.log(`XXX: ${JSON.stringify(item)}`);
+
+      if (existingItemId !== -1)
+        Alert.alert(
+          "",
+          rxGlobal.globalLiterals.Confirmations.replaceTempVisitPlanResult,
+          [
+            {
+              text: rxGlobal.globalLiterals.buttonTexts.yes,
+              onPress: () => {
+                console.log(`💬 [ProductSubShowcase.addAuditItem] item exists.. replacing item: ${JSON.stringify(item)}`);
+                clone.visitPlanResults[existingItemId] = item;
+                visitPlanResultContext.setValue(clone);
+                toastLib.success(rxGlobal.globalLiterals.alerts.visitPlanResultItemAdded, 3500);
+              },
+            },
+            {
+              text: rxGlobal.globalLiterals.buttonTexts.no,
+            },
+          ],
+          { cancelable: false }
+        );
+      else {
+        console.log(`💬 [ProductSubShowcase.addAuditItem] item doesn't exist. pushing item: ${JSON.stringify(item)}`);
+        clone.visitPlanResults.push(item);
+        visitPlanResultContext.setValue(clone);
+        toastLib.success(rxGlobal.globalLiterals.alerts.visitPlanResultItemAdded, 3500);
+      }
+    } catch (err) {
+      console.log(`❌ [ProductSubShowcase.addAuditItem] : ${err}`);
+    }
   };
 
   return (
@@ -113,7 +158,7 @@ export default function SearchBarExample(props) {
         </Item>
       </Header>
       <Content contentContainerStyle={{ flex: 1 }}>
-        <View style={{ alignItems: "flex-end", padding: 10,marginRight:7, justifyContent: "flex-end" }}>
+        <View style={{ alignItems: "flex-end", padding: 10, marginRight: 7, justifyContent: "flex-end" }}>
           <FlatList
             contentContainerStyle={{ alignItems: "center" }}
             horizontal={true}
@@ -126,13 +171,13 @@ export default function SearchBarExample(props) {
               />
             )}
             data={[...groupstack.current].reverse()}
-            keyExtractor={(item,index)=>index.toString()}
+            keyExtractor={(item, index) => index.toString()}
             renderItem={({ item, index }) => (
               <TouchableOpacity
                 onPress={() => {
                   if (index) popFromGroupstack(index);
                 }}>
-                <Text style={item.showcaseType === showcaseTypes.productSub ? styles.breadCrumpLevel2 : styles.breadCrumpLevel1}>{item.title}</Text>
+                <Text style={item.showcaseType === showcaseTypes.productSub ? rxGlobal.globalStyles.breadCrumpLevel2 : rxGlobal.globalStyles.breadCrumpLevel1}>{item.title}</Text>
               </TouchableOpacity>
             )}
           />
@@ -144,7 +189,3 @@ export default function SearchBarExample(props) {
   );
 }
 
-const styles = StyleSheet.create({
-  breadCrumpLevel1: { color: rxGlobal.globalColors.breadcrumpLevel1 },
-  breadCrumpLevel2: { color: rxGlobal.globalColors.breadcrumpLevel2 ,fontWeight:'bold'},
-});

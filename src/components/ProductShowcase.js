@@ -7,7 +7,7 @@ import { Entypo, FontAwesome5 ,MaterialCommunityIcons} from "@expo/vector-icons"
 import { Content } from "native-base";
 
 export default function ProductShowcase(props) {
-  let { data, onPress } = props;
+  let { data, onConfirm } = props;
   return (
     <FlatList
       data={data}
@@ -29,7 +29,7 @@ export default function ProductShowcase(props) {
             subtitle={`کد محصول ${item.ProductCode}`}
             subtitleStyle={{ color: rxGlobal.globalColors.listItemSubtitleText, textAlign: "right",textAlignVertical:'bottom',paddingTop:10 , fontSize: 13 }}
             onPress={() => {
-              onPress({ id: item.Id, title: item.Taste });
+              onConfirm({ id: item.Id, title: item.Taste });
             }}
           />
         );

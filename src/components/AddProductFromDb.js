@@ -11,7 +11,7 @@ import ProductShowcase from "./ProductShowcase";
 import ProductGroupShowcase from "./ProductGroupShowcase";
 import ProductSubShowcase from "./ProductSubShowcase";
 import { useFocusEffect } from "@react-navigation/native";
-import VisitPlanResultContext from './VisitPlanResultContext'
+import VisitPlanResultContext from '../contexts/VisitPlanResultContext'
 
 export default function SearchBarExample(props) {
   const groupstack = useRef([]);
@@ -20,7 +20,7 @@ export default function SearchBarExample(props) {
   // const [groupstack, setGroupstack] = useState([null]);
   const [showcase, setShowcase] = useState([]);
   const showcaseTypes = Object.freeze({ productGroup: 1, product: 2, productSub: 3 });
-  const context = useContext(VisitPlanResultContext);
+  const visitPlanResultContext = useContext(VisitPlanResultContext);
 
   useFocusEffect(
     useCallback(() => {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect ,useContext} from "react";
-import { StyleSheet, FlatList, Modal, Keyboard, TouchableWithoutFeedback, Alert } from "react-native";
+import { StyleSheet, FlatList, Modal, Keyboard,TouchableOpacity, TouchableWithoutFeedback, Alert } from "react-native";
 import {
   Container,
   Card,
@@ -37,10 +37,9 @@ import * as dp from "../lib/sqliteProvider";
 import { openDatabase } from "expo-sqlite";
 import TouchableScale from "react-native-touchable-scale"; // https://github.com/kohver/react-native-touchable-scale
 import { LinearGradient } from "expo-linear-gradient";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import * as enums from "../lib/enums";
 import * as wp from "../lib/webProvider";
-import VisitPlanResultContext from './VisitPlanResultContext'
+import VisitPlanResultContext from '../contexts/VisitPlanResultContext'
 
 export default function VisitPlanCustomers(props) {
   const db = openDatabase("db");
@@ -53,7 +52,7 @@ export default function VisitPlanCustomers(props) {
   const [instantFilterText, setInstantFilterText] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   let {initialItem} = props.route.params;
-  const context = useContext(VisitPlanResultContext);
+  const visitPlanResultContext = useContext(VisitPlanResultContext);
 
   const load = async () => {
     console.log(`🏁 [VisitPlanCustomers.load]`);
@@ -142,7 +141,7 @@ export default function VisitPlanCustomers(props) {
 
   const keyExtractor = (item, index) => item.Id.toString();
   const onListItemNavigateForward = async (item) => {
-    context.setValue(item);
+    visitPlanResultContext.setValue(item);
     await dp.dropTempTables();
     await dp.createTempTables();
     item.rxSync = enums.syncStatuses.modified;
@@ -226,103 +225,6 @@ export default function VisitPlanCustomers(props) {
     );
   };
 
-  const renderItem0 = ({ item, index }) => {
-    let renderItemHeader = (item, expanded) => {
-      return (
-        <View style={globalStyles.listItemHeaderContainer}>
-          <Feather
-            name={expanded ? "chevrons-down" : "chevrons-left"}
-            size={24}
-            style={globalStyles.listItemHeaderCollapseIcon}
-            color={expanded ? globalColors.listItemCollapseIcon : globalColors.listItemExpandIcon}
-          />
-          <View style={globalStyles.listItemHeaderInnerTextContainer}>
-            <View style={{ ...globalStyles.listItemHeaderFieldContainer, flex: 2 }}>
-              <Text style={globalStyles.listItemHeaderFieldTitle}>عنوان:</Text>
-              <Text style={[globalStyles.listItemHeaderFieldData, { flex: 1 }]}>{item.Title}</Text>
-            </View>
-          </View>
-          <View style={globalStyles.shadowedContainer}>
-            <FontAwesome5.Button
-              name='long-arrow-alt-left'
-              backgroundColor={item.ResultStatus === 2 || !item.ResultStatus ? globalColors.listItemNavigateIconUndone : globalColors.listItemNavigateIconDone}
-              onPress={() => {
-                item.rxSync = enums.syncStatuses.modified;
-                props.navigation.navigate("AddProductFromDb", {
-                  title: `فروشگاه ${item.Title}`,
-                  initialItem: item,
-                });
-              }}>
-              پویش
-            </FontAwesome5.Button>
-          </View>
-        </View>
-      );
-    };
-    let renderItemContent = (item) => {
-      return (
-        <View style={globalStyles.listItemContentContainer}>
-          <View style={globalStyles.listItemContentRow}>
-            <Feather name='hash' size={globalSizes.icons.small} color='grey' />
-            <Text style={globalStyles.listItemContentFieldData}>{item?.Code ?? "وارد نشده"}</Text>
-          </View>
-
-          <View style={globalStyles.listItemContentRow}>
-            <Feather name='user' size={globalSizes.icons.small} color='grey' />
-            <Text style={globalStyles.listItemContentFieldData}>{item.Owner ? item.Owner : "وارد نشده"}</Text>
-          </View>
-
-          <View style={globalStyles.listItemContentRow}>
-            <Feather name='map-pin' size={globalSizes.icons.small} color='grey' />
-            <Text style={globalStyles.listItemContentFieldData}>{item.Address ? item.Address : "وارد نشده"}</Text>
-          </View>
-
-          <View style={globalStyles.listItemContentRow}>
-            <Feather name='phone' size={globalSizes.icons.small} color='grey' />
-            <Text style={globalStyles.listItemContentFieldData}>{item.Phone ? item.Phone : "وارد نشده"}</Text>
-          </View>
-
-          <View style={globalStyles.listItemContentRow}>
-            <Feather name='smartphone' size={globalSizes.icons.small} color='grey' />
-            <Text style={globalStyles.listItemContentFieldData}>{item.Cell ? item.Cell : "وارد نشده"}</Text>
-          </View>
-        </View>
-      );
-    };
-
-    let SwipeLeftAction = () => {
-      return (
-        <View style={globalStyles.listItemSwipeLeftContainer}>
-          <FontAwesome5
-            name='trash-alt'
-            // todo: implement update functionality
-            onPress={() => console.warn("delete")}
-            size={globalSizes.icons.medium}
-            color={globalColors.btnDelete}
-          />
-          <Separator backgroundColor={globalColors.transparent} />
-          <FontAwesome5
-            name='edit'
-            // todo: implement update functionality
-            onPress={() => console.warn("edit")}
-            size={globalSizes.icons.medium}
-            color={globalColors.btnUpdate}
-          />
-          <Separator backgroundColor={globalColors.transparent} />
-        </View>
-      );
-    };
-    return (
-      <Swipeable renderLeftActions={SwipeLeftAction}>
-        <Accordion dataArray={[item]} renderContent={renderItemContent} renderHeader={renderItemHeader} />
-      </Swipeable>
-    );
-  };
-  const dataArray = [
-    { title: "First Element", content: "Lorem ipsum dolor sit amet" },
-    { title: "Second Element", content: "Lorem ipsum dolor sit amet" },
-    { title: "Third Element", content: "Lorem ipsum dolor sit amet" },
-  ];
   return (
     <Container backgroundColor={globalColors.screenContainer}>
       {renderHeader()}

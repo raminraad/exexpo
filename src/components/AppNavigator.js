@@ -15,14 +15,17 @@ import VisitPlanResultProductForm from "./VisitPlanResultProductForm";
 import AddProductFromDb from "./AddProductFromDb";
 import CameraForm from "./CameraForm";
 import * as rxGlobal from "../lib/rxGlobal";
-import { VisitPlanResultProvider } from './VisitPlanResultContext'
+import VisitPlanResultContext from "../contexts/VisitPlanResultContext";
 
 const AppDrawer = () => {
   const DrawerNavigator = createDrawerNavigator();
+  const [currentVisitPlan, setCurrentVisitPlan] = useState({});
   return (
-    <DrawerNavigator.Navigator drawerType='slide' drawerContent={(props) => <DrawerContent {...props} />} drawerPosition='right'>
-      <DrawerNavigator.Screen name='VisitPlanStack' component={VisitPlanStack} />
-    </DrawerNavigator.Navigator>
+    <VisitPlanResultContext.Provider value={{ value: currentVisitPlan, setValue: setCurrentVisitPlan }}>
+      <DrawerNavigator.Navigator drawerType='slide' drawerContent={(props) => <DrawerContent {...props} />} drawerPosition='right'>
+        <DrawerNavigator.Screen name='VisitPlanStack' component={VisitPlanStack} />
+      </DrawerNavigator.Navigator>
+    </VisitPlanResultContext.Provider>
   );
 };
 
@@ -84,10 +87,8 @@ const VisitResultTab = () => {
 };
 const VisitPlanStack = () => {
   const VisitStack = createStackNavigator();
-  const [currentVisitPlan, setCurrentVisitPlan] = useState({});
 
   return (
-    <VisitPlanResultProvider value={{value:currentVisitPlan, setValue:setCurrentVisitPlan}}>
     <VisitStack.Navigator
       //xxx
       // initialRouteName='VisitResultTab'
@@ -100,7 +101,6 @@ const VisitPlanStack = () => {
       <VisitStack.Screen name='VisitPlanCustomers' component={VisitPlanCustomers} />
       <VisitStack.Screen name='VisitResultTab' component={VisitResultTab} />
     </VisitStack.Navigator>
-    </VisitPlanResultProvider>
   );
 };
 

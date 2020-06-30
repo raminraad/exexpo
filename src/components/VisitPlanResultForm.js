@@ -29,6 +29,10 @@ export default function VisitPlanResultForm(props) {
 
   useEffect(() => {
     setContextValue(visitPlanResultContext.value);
+    console.log('EFFECT')
+    console.log(JSON.stringify(contextValue))
+    console.log(JSON.stringify(visitPlanResultContext.value))
+    
   }, []);
 
   const isGeoLocationAcceptable = async (lat, long) => {
@@ -320,7 +324,8 @@ export default function VisitPlanResultForm(props) {
                       rxGlobal.globalStyles.addModalFieldRadioButtonGroupContainer,
                       rxGlobal.globalStyles.listItemHeaderContainer,
                     ]}>
-                    <RadioButton.Group onValueChange={(value) => props.setFieldValue("ResultStatus", value)} value={props.values?.ResultStatus}>
+                    {/* <RadioButton.Group onValueChange={(value) => console.log(JSON.stringify(props))} value={props.values?.ResultStatus}> */}
+                    <RadioButton.Group onValueChange={(value) => console.log(JSON.stringify(props))} value={props.values?.ResultStatus}>
                       <View style={rxGlobal.globalStyles.radioItemContainer}>
                         <RadioButton uncheckedColor='#02c39a' color='#02c39a' value={7} />
                         <Text style={{ color: "#02c39a" }}>پویش موفق</Text>

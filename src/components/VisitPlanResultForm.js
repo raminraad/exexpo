@@ -24,13 +24,13 @@ export default function VisitPlanResultForm(props) {
   const [isLoading, setIsLoading] = useState(false);
   const [productModalItem, setProductModalItem] = useState(null);
   const visitPlanResultContext = useContext(VisitPlanResultContext);
-  const [contextValue, setContextValue] = useState({});
+  
   // let { initialItem } = contextValue?.visitPlanCustomer;
 
   useEffect(() => {
-    setContextValue(visitPlanResultContext.value);
+    // setContextValue(visitPlanResultContext.value);
     console.log('EFFECT')
-    console.log(JSON.stringify(contextValue))
+    console.log(JSON.stringify(visitPlanResultContext.value))
     console.log(JSON.stringify(visitPlanResultContext.value))
     
   }, []);
@@ -117,7 +117,7 @@ export default function VisitPlanResultForm(props) {
   };
 
   const onListItemDelete = (item) => {
-    let clone = [...contextValue?.visitPlanResults];
+    let clone = [...visitPlanResultContext.value?.visitPlanResults];
     let index = clone.findIndex((r) => r.rxKey === item.rxKey);
     if (item.rxSync === enums.syncStatuses.synced || item.rxSync === enums.syncStatuses.modified) {
       item.rxSync = enums.syncStatuses.deleted;
@@ -252,7 +252,7 @@ export default function VisitPlanResultForm(props) {
           </Modal> */}
           <View style={{ flexDirection: "row-reverse", alignItems: "center", justifyContent: "center", marginBottom: 18 }}>
             <Entypo name='shop' size={26} color={rxGlobal.globalColors.screenTitleText} />
-            <Text style={[rxGlobal.globalStyles.screenTitleText, { marginRight: 10 }]}>{contextValue?.visitPlanCustomer?.Title}</Text>
+            <Text style={[rxGlobal.globalStyles.screenTitleText, { marginRight: 10 }]}>{visitPlanResultContext.value?.visitPlanCustomer?.Title}</Text>
           </View>
           <View style={{ flexDirection: "row-reverse", justifyContent: "space-between" }}>
             <Text style={rxGlobal.globalStyles.addModalFieldTitle}>فهرست محصولات</Text>
@@ -275,27 +275,27 @@ export default function VisitPlanResultForm(props) {
               </FontAwesome5.Button>
             </View> */}
           </View>
-          {console.log(`💬 [VisitPlanResultFrom.render] context value: ${JSON.stringify(contextValue)}`)}
+          {console.log(`💬 [VisitPlanResultFrom.render] context value: ${JSON.stringify(visitPlanResultContext.value)}`)}
           {isLoading ? (
             <Spinner style={{ height: "100%" }} color='grey' size={50} />
-          ) : contextValue?.visitPlanResults?.length ? (
-            contextValue?.visitPlanResults.filter((r) => r.rxSync !== enums.syncStatuses.deleted).map((item, i) => renderItemHeader(item, i))
+          ) : visitPlanResultContext.value?.visitPlanResults?.length ? (
+            visitPlanResultContext.value?.visitPlanResults.filter((r) => r.rxSync !== enums.syncStatuses.deleted).map((item, i) => renderItemHeader(item, i))
           ) : (
             renderEmptyList()
           )}
           <Formik
-            initialValues={contextValue?.visitPlanCustomer}
+            initialValues={visitPlanResultContext.value?.visitPlanCustomer}
             onSubmit={async (values, actions) => {
               if (
                 !global.dynamicSetting.allowedDistanceForVisitor ||
-                !contextValue?.visitPlanCustomer.Lat ||
-                !contextValue?.visitPlanCustomer.Long ||
-                (await isGeoLocationAcceptable(contextValue?.visitPlanCustomer.Lat, contextValue?.visitPlanCustomer.Long))
+                !visitPlanResultContext.value?.visitPlanCustomer.Lat ||
+                !visitPlanResultContext.value?.visitPlanCustomer.Long ||
+                (await isGeoLocationAcceptable(visitPlanResultContext.value?.visitPlanCustomer.Lat, visitPlanResultContext.value?.visitPlanCustomer.Long))
               ) {
                 console.log("submitting");
                 actions.resetForm();
                 //fixme: convert context before save
-                values.details = contextValue?.visitPlanResults;
+                values.details = visitPlanResultContext.value?.visitPlanResults;
                 values.LastModifiedDate = Moment(new Date()).format("YYYY/MM/DD HH:mm:ss");
                 values.ResultVisitedDate = Moment(new Date()).format("YYYY/MM/DD HH:mm:ss");
                 values.SyncStatus = enums.syncStatuses.modified;
@@ -325,7 +325,7 @@ export default function VisitPlanResultForm(props) {
                       rxGlobal.globalStyles.listItemHeaderContainer,
                     ]}>
                     {/* <RadioButton.Group onValueChange={(value) => console.log(JSON.stringify(props))} value={props.values?.ResultStatus}> */}
-                    <RadioButton.Group onValueChange={(value) => console.log(JSON.stringify(props))} value={props.values?.ResultStatus}>
+                    <RadioButton.Group onValueChange={(value) => props.setFieldValue("ResultStatus", value)} value={props.values?.ResultStatus}>
                       <View style={rxGlobal.globalStyles.radioItemContainer}>
                         <RadioButton uncheckedColor='#02c39a' color='#02c39a' value={7} />
                         <Text style={{ color: "#02c39a" }}>پویش موفق</Text>

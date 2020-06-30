@@ -91,12 +91,23 @@ export default function VisitPlanCustomers(props) {
   const keyExtractor = (item, index) => item.Id.toString();
 
   const onListItemNavigateForward = async (item) => {
-    visitPlanResultContext.setValue({ visitPlanCustomer: item, visitPlanResults:  await dp.selectJoinedVisitPlanResultProducts(item.Id)});
+    let productGroups = await dp.selectTable("ProductGroup");
+    let ctx = { visitPlanCustomer: item, visitPlanResults: await dp.selectJoinedVisitPlanResultProducts(item.Id) };
+    ctx.visitPlanResults.forEach((vpr) => {
+      vpr.productTitle = vpr.Taste;
+      vpr.productGroupTitles = [];
+      let parentGroup = productGroups.find((g) => g.Id === vpr.ProductGroupId);
+
+      do {
+        vpr.productGroupTitles.push(parentGroup.Title);
+        parentGroup = productGroups.find((g) => g.Id === parentGroup.ParentId);
+      } while (parentGroup?.ParentId !== null);
+      vpr.productGroupTitles.reverse();
+    });
+    visitPlanResultContext.setValue(ctx);
 
     console.log(`💬 [VisitPlanCustomers.onListItemNavigateForward] context value => ${JSON.stringify(visitPlanResultContext.value)}`);
-    props.navigation.navigate("VisitResultTab", {screen: "VisitPlanResultForm"});
-
-
+    props.navigation.navigate("VisitResultTab", { screen: "VisitPlanResultForm" });
   };
 
   const renderHeader = () => (

@@ -19,6 +19,8 @@ const VisitPlanResultContext = React.createContext({
         FactorPurchaseCount: null,
         LastModifiedDate: "",
         SyncStatus: null,
+        productGroupTitles: [""],
+        productTitle: "",
       },
     ],
   },

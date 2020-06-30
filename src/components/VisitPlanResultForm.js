@@ -206,7 +206,7 @@ export default function VisitPlanResultForm(props) {
           data={data}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item, index }) => (
-            <Text style={data.indexOf(item) === 0 ? rxGlobal.globalStyles.breadCrumpLevel2 : rxGlobal.globalStyles.breadCrumpLevel1}>{item}</Text>
+            <Text style={index === 0 ? rxGlobal.globalStyles.breadCrumpLevel2 : rxGlobal.globalStyles.breadCrumpLevel1}>{item}</Text>
           )}
         />
       </View>

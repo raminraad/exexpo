@@ -123,11 +123,13 @@ Result.ShelfVisibleCount=productSub.ShelfVisibleCount;
       console.log(`💬 [AddProductFromDb.addProductSubToVisitPlanResultList] searching for Id of ${productSubItem.Id} resulted to index of ${existingItemId}`);
 
       let productGroupTitles = [];
-      for (let i = 0; i < groupstack.current.length - 1; i++) newResultItem.productGroupTitles.push(groupstack.current[i].title);
+      for (let i = 0; i < groupstack.current.length - 1; i++) productGroupTitles.push(groupstack.current[i].title);
       let productTitle = groupstack.current[groupstack.current.length - 1].title;
 
       if (existingItemId !== -1) {
+        console.log(`A`)
         let newResultItem = { ...clone.visitPlanResults[existingItemId] };
+        console.log(`B : ${newResultItem}`)
         newResultItem.productGroupTitles = productGroupTitles;
         newResultItem.productTitle = productTitle;
         copyProductSubToVisitResultItem(productSubItem,newResultItem);
@@ -168,17 +170,19 @@ Result.ShelfVisibleCount=productSub.ShelfVisibleCount;
       } else {
         let newResultItem = {
           Id: null,
-          VisitPlanCustomerId:visitPlanResultContext.visitPlanCustomer.Id,
+          VisitPlanCustomerId:visitPlanResultContext.value.visitPlanCustomer.Id,
           rxKey:
             Math.max.apply(
               Math,
-              clone.map(function (o) {
+              clone.visitPlanResults.map(function (o) {
                 return o.rxKey;
               })
             ) + 1,
           rxSync: enums.syncStatuses.created,
           SellPrice: productSubItem.PriceValue,
+          PriceType: productSubItem.PriceType,
           Weight: productSubItem.MeasurmentScale,
+          MeasurmentType: productSubItem.MeasurmentType,
           ShelfVisibleCount:productSubItem.ShelfVisibleCount,
           productGroupTitles: productGroupTitles,
           productTitle: productTitle,

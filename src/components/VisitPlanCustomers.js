@@ -141,7 +141,8 @@ export default function VisitPlanCustomers(props) {
 
   const keyExtractor = (item, index) => item.Id.toString();
   const onListItemNavigateForward = async (item) => {
-    visitPlanResultContext.setValue({visitPlanCustomer:item,visitPlanResults:[]});
+let convertedResultList = (await dp.selectJoinedVisitPlanResultProducts(item.Id)).map()
+    visitPlanResultContext.setValue({visitPlanCustomer:item,visitPlanResults:});
     item.rxSync = enums.syncStatuses.modified;
     props.navigation.navigate("VisitResultTab", {screen:'VisitPlanResultForm',params:{
       initialItem: item,

@@ -110,43 +110,16 @@ export default function VisitPlanResultForm(props) {
   };
 
   const onListItemDelete = (item) => {
-    let rawClone = [...rawData];
-    let index = rawClone.findIndex((r) => r.rxKey === item.rxKey);
+    let clone = [...contextValue.visitPlanResults];
+    let index = clone.findIndex((r) => r.rxKey === item.rxKey);
     if (item.rxSync === enums.syncStatuses.synced || item.rxSync === enums.syncStatuses.modified) {
       item.rxSync = enums.syncStatuses.deleted;
-      rawClone[index] = item;
+      clone[index] = item;
     } else {
-      rawClone.splice(index, 1);
+      clone.splice(index, 1);
     }
-    setRawData(rawClone);
+    setRawData(clone);
   };
-
-  useEffect(() => {
-    let rawDataQuery = `select *,res.Id as Id, ${enums.syncStatuses.synced} as rxSync from VisitPlanResults res
-     inner join ProductSub sub on res.ProductSubId = sub.Id
-     inner join Product prd on prd.Id = sub.ProductId
-     inner join ProductGroup grp on grp.Id =  prd.ProductGroupId
-     where VisitPlanCustomerId = ${initialItem.Id}`;
-
-    db.transaction((tx) => {
-      tx.executeSql(
-        rawDataQuery,
-        [],
-        (_, { rows: { _array } }) => {
-          //todo: replace with sql side indexing
-          for (let i = 0; i < _array.length; i++) _array[i].rxKey = i + 1;
-
-          setRawData(_array);
-          console.log(`👍 RAW_DATA: ${rawDataQuery} => length: ${_array.length} => ${JSON.stringify([..._array])}`);
-        },
-        (transaction, error) => console.log(`❌ ${rawDataQuery} =>=> ${error}`)
-      );
-    });
-
-    setIsLoading(false);
-    return () => console.log("EFFECT");
-  }, []);
-
 
   const renderSubtitle = (item) => (
     <View style={{ flexDirection: "row-reverse", marginTop: 10 ,justifyContent:'space-evenly'}}>

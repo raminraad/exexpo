@@ -340,6 +340,7 @@ export const globalLiterals = {
   },
   actionAndStateErrors: {
     dataInsertFailed: "درج داده ها با خطا مواجه شد",
+    dataSelectFailed: "خواندن داده ها با خطا مواجه شد",
     invalidDataFormat: "قالب داده ها صحیح نیست",
     noInternetError: "اتصال به اینترنت برقرار نیست",
     networkError: "خطا در ارتباط با سرور",

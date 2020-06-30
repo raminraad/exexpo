@@ -13,6 +13,7 @@ import VisitPlanResultContext from "../contexts/VisitPlanResultContext";
 import * as rxGlobal from "../lib/rxGlobal";
 import * as dp from "../lib/sqliteProvider";
 import * as toastLib from "../lib/toastLib";
+import * as enums from "../lib/enums";
 
 export default function SearchBarExample(props) {
   const groupstack = useRef([]);
@@ -105,7 +106,7 @@ export default function SearchBarExample(props) {
 
   const addProductSubToVisitPlanResultList = async (item) => {
     try {
-    //fixme: add item to list based on rxSync analysing
+      //fixme: test different states of rxSync
 
       console.log(`🏁 [ProductSubShowcase.addAuditItem]`);
       console.log(`💬 [ProductSubShowcase.addAuditItem] clonning context value: ${JSON.stringify(visitPlanResultContext.value)}`);
@@ -113,33 +114,56 @@ export default function SearchBarExample(props) {
       console.log(`💬 [ProductSubShowcase.addAuditItem] clonned context value: ${JSON.stringify(clone)}`);
       let existingItemId = clone.visitPlanResults.findIndex((r) => r.Id === item.Id);
       console.log(`💬 [ProductSubShowcase.addAuditItem] searching for Id of ${item.Id} resulted to index of ${existingItemId}`);
-      
-      item.productGroupTitles=[];
+
+      item.productGroupTitles = [];
       for (let i = 0; i < groupstack.current.length - 1; i++) item.productGroupTitles.push(groupstack.current[i].title);
       item.productTitle = groupstack.current[groupstack.current.length - 1].title;
 
-      if (existingItemId !== -1)
-        Alert.alert(
-          "",
-          rxGlobal.globalLiterals.Confirmations.replaceTempVisitPlanResult,
-          [
-            {
-              text: rxGlobal.globalLiterals.buttonTexts.yes,
-              onPress: () => {
-                console.log(`💬 [ProductSubShowcase.addAuditItem] item exists.. replacing item: ${JSON.stringify(item)}`);
-                clone.visitPlanResults[existingItemId] = item;
-                visitPlanResultContext.setValue(clone);
-                toastLib.success(rxGlobal.globalLiterals.alerts.visitPlanResultItemAdded, 3500);
+      if (existingItemId !== -1) {
+        item.rxKey =  clone.visitPlanResults[existingItemId].rxKey;
+        if (clone.visitPlanResults[existingItemId].rxSync !== enums.syncStatuses.deleted) {
+          Alert.alert(
+            "",
+            rxGlobal.globalLiterals.Confirmations.replaceTempVisitPlanResult,
+            [
+              {
+                text: rxGlobal.globalLiterals.buttonTexts.yes,
+                onPress: () => {
+                  if (
+                    clone.visitPlanResults[existingItemId].rxSync === enums.syncStatuses.synced ||
+                    clone.visitPlanResults[existingItemId].rxSync === enums.syncStatuses.modified
+                  )
+                    item.rxSync = enums.syncStatuses.modified;
+                  else if (clone.visitPlanResults[existingItemId].rxSync === enums.syncStatuses.created) item.rxSync = enums.syncStatuses.created;
+                  console.log(`💬 [ProductSubShowcase.addAuditItem] item exists.. replacing item with: ${JSON.stringify(item)}`);
+                  clone.visitPlanResults[existingItemId] = item;
+                  visitPlanResultContext.setValue(clone);
+                  toastLib.success(rxGlobal.globalLiterals.alerts.visitPlanResultItemAdded, 3500);
+                },
               },
-            },
-            {
-              text: rxGlobal.globalLiterals.buttonTexts.no,
-            },
-          ],
-          { cancelable: false }
-        );
-      else {
+              {
+                text: rxGlobal.globalLiterals.buttonTexts.no,
+              },
+            ],
+            { cancelable: false }
+          );
+        } else {
+          item.rxSync = enums.syncStatuses.modified;
+          console.log(`💬 [ProductSubShowcase.addAuditItem] item exists with 'DELETED' rxSync.. replacing item with: ${JSON.stringify(item)}`);
+          clone.visitPlanResults[existingItemId] = item;
+          visitPlanResultContext.setValue(clone);
+          toastLib.success(rxGlobal.globalLiterals.alerts.visitPlanResultItemAdded, 3500);
+        }
+      } else {
         console.log(`💬 [ProductSubShowcase.addAuditItem] item doesn't exist. pushing item: ${JSON.stringify(item)}`);
+        item.rxKey =
+          Math.max.apply(
+            Math,
+            clone.map(function (o) {
+              return o.rxKey;
+            })
+          ) + 1;
+        item.rxSync = enums.syncStatuses.created;
         clone.visitPlanResults.push(item);
         visitPlanResultContext.setValue(clone);
         toastLib.success(rxGlobal.globalLiterals.alerts.visitPlanResultItemAdded, 3500);
@@ -178,7 +202,9 @@ export default function SearchBarExample(props) {
                 onPress={() => {
                   if (index) popFromGroupstack(index);
                 }}>
-                <Text style={item.showcaseType === showcaseTypes.productSub ? rxGlobal.globalStyles.breadCrumpLevel2 : rxGlobal.globalStyles.breadCrumpLevel1}>{item.title}</Text>
+                <Text style={item.showcaseType === showcaseTypes.productSub ? rxGlobal.globalStyles.breadCrumpLevel2 : rxGlobal.globalStyles.breadCrumpLevel1}>
+                  {item.title}
+                </Text>
               </TouchableOpacity>
             )}
           />
@@ -189,4 +215,3 @@ export default function SearchBarExample(props) {
     </Container>
   );
 }
-

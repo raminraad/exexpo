@@ -122,6 +122,38 @@ export const selectTablesNotSynched = async (tables = permanentTableNames) => {
   return dbData;
 };
 
+export const selectJoinedVisitPlanResultProducts = async (VisitPlanCustomerId)=>{
+  console.log(`🏁 [sqliteProvider.selectJoinedVisitPlanResultProducts]`);
+
+  let rawDataQuery = `select *,res.Id as Id, ${enums.syncStatuses.synced} as rxSync from VisitPlanResults res
+     inner join ProductSub sub on res.ProductSubId = sub.Id
+     inner join Product prd on prd.Id = sub.ProductId
+     inner join ProductGroup grp on grp.Id =  prd.ProductGroupId
+     where VisitPlanCustomerId = ${VisitPlanCustomerId}`;
+
+    return new Promise((resolve, reject) => {
+      
+        db.transaction((tx) => {
+          tx.executeSql(
+            rawDataQuery,
+            [],
+            (_, { rows: { _array } }) => {
+              //todo: replace with sql side indexing
+              for (let i = 0; i < _array.length; i++) _array[i].rxKey = i + 1;
+    
+              console.log(`👍 [sqliteProvider.selectJoinedVisitPlanResultProducts] ${query} => length: ${_array.length} => ${global.dev.verbose ? JSON.stringify([..._array]) : "--verbose"}`);
+              resolve(_array);
+            },
+            (transaction, error) => {console.log(`❌ [sqliteProvider.selectJoinedVisitPlanResultProducts] ${rawDataQuery} =>=> ${error}`);
+            reject(new dbError(enums.dbErrors.dataSelectFailed, rxGlobal.globalLiterals.actionAndStateErrors.dataSelectFailed));}
+          );
+        });
+      
+        
+      
+    });
+}
+
 export const insertProductGroup = (...parameters) => {
   let query = `insert into ProductGroup (Id,ParentId,ProductGroupCode,Title,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?)`;
   db.exec([{ sql: `${query};`, args: parameters }], false, () => console.log(`👍 success: ${query}`));

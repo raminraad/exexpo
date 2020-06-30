@@ -19,6 +19,7 @@ export default function SearchBarExample(props) {
   const groupstack = useRef([]);
 
   const [isLoading, setIsLoading] = useState(false);
+  const [isProductSubAddingOnProgress, setIsProductSubAddingOnProgress] = useState(false)
   // const [groupstack, setGroupstack] = useState([null]);
   const [showcase, setShowcase] = useState([]);
   const showcaseTypes = Object.freeze({ productGroup: 1, product: 2, productSub: 3 });
@@ -101,26 +102,28 @@ export default function SearchBarExample(props) {
     let presentShowcaseType = groupstack.current.length ? groupstack.current[groupstack.current.length - 1].showcaseType : showcaseTypes.productGroup;
     if (presentShowcaseType === showcaseTypes.productGroup) return <ProductGroupShowcase data={showcase} onConfirm={pushToGroupstack} />;
     else if (presentShowcaseType === showcaseTypes.product) return <ProductShowcase data={showcase} onConfirm={pushToGroupstack} />;
-    else return <ProductSubShowcase data={showcase} onConfirm={addProductSubToVisitPlanResultList} />;
+    else return <ProductSubShowcase data={showcase} onConfirm={addProductSubToVisitPlanResultList} isAdding={isProductSubAddingOnProgress}/>;
   };
 
-  const addProductSubToVisitPlanResultList = async (item) => {
+  const addProductSubToVisitPlanResultList = async (productSubItem) => {
+    setIsProductSubAddingOnProgress(true);
     try {
-      //fixme: test different states of rxSync
-
-      console.log(`🏁 [ProductSubShowcase.addAuditItem]`);
-      console.log(`💬 [ProductSubShowcase.addAuditItem] clonning context value: ${JSON.stringify(visitPlanResultContext.value)}`);
+      console.log(`🏁 [AddProductFromDb.addProductSubToVisitPlanResultList]`);
+      console.log(`💬 [AddProductFromDb.addProductSubToVisitPlanResultList] clonning context value: ${JSON.stringify(visitPlanResultContext.value)}`);
       let clone = { ...visitPlanResultContext.value };
-      console.log(`💬 [ProductSubShowcase.addAuditItem] clonned context value: ${JSON.stringify(clone)}`);
-      let existingItemId = clone.visitPlanResults.findIndex((r) => r.Id === item.Id);
-      console.log(`💬 [ProductSubShowcase.addAuditItem] searching for Id of ${item.Id} resulted to index of ${existingItemId}`);
+      console.log(`💬 [AddProductFromDb.addProductSubToVisitPlanResultList] clonned context value: ${JSON.stringify(clone)}`);
+      let existingItemId = clone.visitPlanResults.findIndex((r) => r.ProductSubId === productSubItem.Id);
+      console.log(`💬 [AddProductFromDb.addProductSubToVisitPlanResultList] searching for Id of ${productSubItem.Id} resulted to index of ${existingItemId}`);
 
-      item.productGroupTitles = [];
-      for (let i = 0; i < groupstack.current.length - 1; i++) item.productGroupTitles.push(groupstack.current[i].title);
-      item.productTitle = groupstack.current[groupstack.current.length - 1].title;
+      let productGroupTitles = [];
+      for (let i = 0; i < groupstack.current.length - 1; i++) newResultItem.productGroupTitles.push(groupstack.current[i].title);
+      let productTitle = groupstack.current[groupstack.current.length - 1].title;
 
       if (existingItemId !== -1) {
-        item.rxKey =  clone.visitPlanResults[existingItemId].rxKey;
+        let newResultItem = { ...clone.visitPlanResults[existingItemId] };
+        newResultItem.productGroupTitles = productGroupTitles;
+        newResultItem.productTitle = productTitle;
+
         if (clone.visitPlanResults[existingItemId].rxSync !== enums.syncStatuses.deleted) {
           Alert.alert(
             "",
@@ -133,10 +136,10 @@ export default function SearchBarExample(props) {
                     clone.visitPlanResults[existingItemId].rxSync === enums.syncStatuses.synced ||
                     clone.visitPlanResults[existingItemId].rxSync === enums.syncStatuses.modified
                   )
-                    item.rxSync = enums.syncStatuses.modified;
-                  else if (clone.visitPlanResults[existingItemId].rxSync === enums.syncStatuses.created) item.rxSync = enums.syncStatuses.created;
-                  console.log(`💬 [ProductSubShowcase.addAuditItem] item exists.. replacing item with: ${JSON.stringify(item)}`);
-                  clone.visitPlanResults[existingItemId] = item;
+                    newResultItem.rxSync = enums.syncStatuses.modified;
+                  else if (clone.visitPlanResults[existingItemId].rxSync === enums.syncStatuses.created) newResultItem.rxSync = enums.syncStatuses.created;
+                  console.log(`💬 [AddProductFromDb.addProductSubToVisitPlanResultList] item exists.. replacing item with: ${JSON.stringify(newResultItem)}`);
+                  clone.visitPlanResults[existingItemId] = newResultItem;
                   visitPlanResultContext.setValue(clone);
                   toastLib.success(rxGlobal.globalLiterals.alerts.visitPlanResultItemAdded, 3500);
                 },
@@ -148,29 +151,42 @@ export default function SearchBarExample(props) {
             { cancelable: false }
           );
         } else {
-          item.rxSync = enums.syncStatuses.modified;
-          console.log(`💬 [ProductSubShowcase.addAuditItem] item exists with 'DELETED' rxSync.. replacing item with: ${JSON.stringify(item)}`);
-          clone.visitPlanResults[existingItemId] = item;
+          newResultItem.rxSync = enums.syncStatuses.modified;
+          console.log(`💬 [AddProductFromDb.addProductSubToVisitPlanResultList] item exists with 'DELETED' rxSync.. replacing item with: ${JSON.stringify(newResultItem)}`);
+          clone.visitPlanResults[existingItemId] = newResultItem;
           visitPlanResultContext.setValue(clone);
           toastLib.success(rxGlobal.globalLiterals.alerts.visitPlanResultItemAdded, 3500);
         }
       } else {
-        console.log(`💬 [ProductSubShowcase.addAuditItem] item doesn't exist. pushing item: ${JSON.stringify(item)}`);
-        item.rxKey =
-          Math.max.apply(
-            Math,
-            clone.map(function (o) {
-              return o.rxKey;
-            })
-          ) + 1;
-        item.rxSync = enums.syncStatuses.created;
-        clone.visitPlanResults.push(item);
+        let newResultItem = {
+          Id: 0,
+          rxKey:
+            Math.max.apply(
+              Math,
+              clone.map(function (o) {
+                return o.rxKey;
+              })
+            ) + 1,
+          rxSync: enums.syncStatuses.created,
+          PriceValue: productSubItem.PriceValue,
+          PriceType: productSubItem.PriceType,
+          MeasurmentScale: productSubItem.MeasurmentScale,
+          MeasurmentType: enums.measurementTypes.Gram,
+          ShelfVisibleCount:productSubItem.ShelfVisibleCount,
+          productGroupTitles: productGroupTitles,
+          productTitle: productTitle,
+        };
+        console.log(`💬 [AddProductFromDb.addProductSubToVisitPlanResultList] item doesn't exist. pushing productSubItem: ${JSON.stringify(productSubItem)}`);
+        console.log(`💬 [AddProductFromDb.addProductSubToVisitPlanResultList] converted productSub : ${JSON.stringify(productSubItem)}`);
+        
+        clone.visitPlanResults.push(newResultItem);
         visitPlanResultContext.setValue(clone);
         toastLib.success(rxGlobal.globalLiterals.alerts.visitPlanResultItemAdded, 3500);
       }
     } catch (err) {
-      console.log(`❌ [ProductSubShowcase.addAuditItem] : ${err}`);
+      console.log(`❌ [AddProductFromDb.addProductSubToVisitPlanResultList] : ${err}`);
     }
+    setIsProductSubAddingOnProgress(false);
   };
 
   return (

@@ -1,11 +1,11 @@
-import React,{useContext} from "react";
+import React, { useContext } from "react";
 import { View, Text, FlatList, BackHandler, StyleSheet, TextInput, TouchableOpacity, Alert } from "react-native";
 import { ListItem } from "react-native-elements";
 import * as rxGlobal from "../lib/rxGlobal";
 import TouchableScale from "react-native-touchable-scale";
 import { Entypo, FontAwesome5, Ionicons, MaterialIcons, MaterialCommunityIcons, AntDesign, Feather, FontAwesome } from "@expo/vector-icons";
 import * as enums from "../lib/enums";
-import { Accordion } from "native-base";
+import { Accordion, Spinner } from "native-base";
 import { Formik } from "formik";
 import * as yup from "yup";
 import * as dp from "../lib/sqliteProvider";
@@ -19,8 +19,7 @@ const auditItemSchema = yup.object().shape({
 });
 
 export default function ProductSubShowcase(props) {
-  let { data ,onConfirm} = props;
-  
+  let { data, onConfirm, isAdding } = props;
 
   const renderSubtitle = (item) => (
     <View style={{ flexDirection: "row-reverse", alignItems: "center", justifyContent: "flex-start" }}>
@@ -76,13 +75,7 @@ export default function ProductSubShowcase(props) {
       titleStyle={{ ...rxGlobal.globalStyles.listItemTitle, textAlign: "right", fontSize: 20 }}
       subtitle={() => renderSubtitle(item)}
       subtitleStyle={{ color: rxGlobal.globalColors.listItemSubtitleText, textAlign: "right", fontSize: 13 }}
-      leftIcon={
-        <AntDesign
-          name={expanded ? "upcircle" : "downcircleo"}
-          size={28}
-          color={rxGlobal.globalColors.breadcrumpLevel3}
-        />
-      }
+      leftIcon={<AntDesign name={expanded ? "upcircle" : "downcircleo"} size={28} color={rxGlobal.globalColors.breadcrumpLevel3} />}
     />
   );
 
@@ -139,12 +132,18 @@ export default function ProductSubShowcase(props) {
             </View>
 
             <View style={{ alignItems: "center", justifyContent: "center", flex: 2, alignSelf: "stretch" }}>
-              <MaterialIcons.Button name='add-circle-outline' size={48} backgroundColor={rxGlobal.globalColors.btnAdd} onPress={props.handleSubmit}>
-                <Text style={{ color: "white", fontWeight: "bold", fontSize: 16 }}>افزودن به لیست</Text>
-              </MaterialIcons.Button>
-              <Text style={{ color: rxGlobal.globalColors.addModalFieldValidationErrorText, textAlign: "center", marginTop: 20 }}>
-                {!props.isValid && rxGlobal.globalLiterals.validationErrors.allFieldsAreRequired}
-              </Text>
+              {isAdding ? (
+                <Spinner size={24} color={rxGlobal.globalColors.spinner}/>
+              ) : (
+                <>
+                  <MaterialIcons.Button name='add-circle-outline' size={48} backgroundColor={rxGlobal.globalColors.btnAdd} onPress={props.handleSubmit}>
+                    <Text style={{ color: "white", fontWeight: "bold", fontSize: 16 }}>افزودن به لیست</Text>
+                  </MaterialIcons.Button>
+                  <Text style={{ color: rxGlobal.globalColors.addModalFieldValidationErrorText, textAlign: "center", marginTop: 20 }}>
+                    {!props.isValid && rxGlobal.globalLiterals.validationErrors.allFieldsAreRequired}
+                  </Text>
+                </>
+              )}
             </View>
           </View>
         )}
@@ -159,6 +158,6 @@ const styles = StyleSheet.create({
   subtitleFieldContainer: { flexDirection: "row-reverse", alignItems: "center", marginRight: 10 },
   titleValue: { fontSize: 24, color: rxGlobal.globalColors.listItemTitleText, fontWeight: "bold", marginLeft: 5 },
   titleScale: { fontSize: 12 },
-  contentFieldContainer: { marginBottom:10, flexDirection: "row-reverse", alignItems: "center", marginTop: 10 },
-  input:{...rxGlobal.globalStyles.addModalFieldInput,marginRight:15}
+  contentFieldContainer: { marginBottom: 10, flexDirection: "row-reverse", alignItems: "center", marginTop: 10 },
+  input: { ...rxGlobal.globalStyles.addModalFieldInput, marginRight: 15 },
 });

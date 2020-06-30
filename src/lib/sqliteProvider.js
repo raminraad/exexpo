@@ -122,37 +122,63 @@ export const selectTablesNotSynched = async (tables = permanentTableNames) => {
   return dbData;
 };
 
-export const selectJoinedVisitPlanResultProducts = async (VisitPlanCustomerId)=>{
+export const selectVisitPlanCustomers = async (VisitPlanId) => {
+  console.log(`🏁 [sqliteProvider.selectVisitPlanCustomers]`);
+  return new Promise((resolve, reject) => {
+    let query = `select * from VisitPlanCustomers where VisitPlanId = ${VisitPlanId}`;
+    db.transaction((tx) => {
+      tx.executeSql(
+        query,
+        [],
+        (_, { rows: { _array } }) => {
+          console.log(`💬 [sqliteProvider.selectVisitPlanCustomers] ${query} => ${JSON.stringify([..._array])}`);
+          for (let i = 0; i < _array.length; i++) _array[i].rxKey = i + 1;
+          
+          console.log(`👍 [sqliteProvider.selectVisitPlanCustomers]`);
+          resolve(_array);
+        },
+        (transaction, error) => {
+          console.log(`❌ [sqliteProvider.selectVisitPlanCustomers] ${query} =>=> ${error}`);
+          reject(new dbError(enums.dbErrors.dataSelectFailed, rxGlobal.globalLiterals.actionAndStateErrors.dataSelectFailed));
+        }
+      );
+    });
+  });
+};
+
+export const selectJoinedVisitPlanResultProducts = async (VisitPlanCustomerId) => {
   console.log(`🏁 [sqliteProvider.selectJoinedVisitPlanResultProducts]`);
 
-  let rawDataQuery = `select *,res.Id as Id, ${enums.syncStatuses.synced} as rxSync from VisitPlanResults res
+  let query = `select *,res.Id as Id from VisitPlanResults res
      inner join ProductSub sub on res.ProductSubId = sub.Id
      inner join Product prd on prd.Id = sub.ProductId
      inner join ProductGroup grp on grp.Id =  prd.ProductGroupId
      where VisitPlanCustomerId = ${VisitPlanCustomerId}`;
 
-    return new Promise((resolve, reject) => {
-      
-        db.transaction((tx) => {
-          tx.executeSql(
-            rawDataQuery,
-            [],
-            (_, { rows: { _array } }) => {
-              //todo: replace with sql side indexing
-              for (let i = 0; i < _array.length; i++) _array[i].rxKey = i + 1;
-    
-              console.log(`👍 [sqliteProvider.selectJoinedVisitPlanResultProducts] ${query} => length: ${_array.length} => ${global.dev.verbose ? JSON.stringify([..._array]) : "--verbose"}`);
-              resolve(_array);
-            },
-            (transaction, error) => {console.log(`❌ [sqliteProvider.selectJoinedVisitPlanResultProducts] ${rawDataQuery} =>=> ${error}`);
-            reject(new dbError(enums.dbErrors.dataSelectFailed, rxGlobal.globalLiterals.actionAndStateErrors.dataSelectFailed));}
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        query,
+        [],
+        (_, { rows: { _array } }) => {
+          //todo: replace with sql side indexing
+          for (let i = 0; i < _array.length; i++) _array[i].rxKey = i + 1;
+
+          console.log(
+            `👍 [sqliteProvider.selectJoinedVisitPlanResultProducts] ${query} => length: ${_array.length} => ${
+              global.dev.verbose ? JSON.stringify([..._array]) : "--verbose"
+            }`
           );
-        });
-      
-        
-      
+          resolve(_array);
+        },
+        (transaction, error) => {
+          console.log(`❌ [sqliteProvider.selectJoinedVisitPlanResultProducts] ${query} =>=> ${error}`);
+          reject(new dbError(enums.dbErrors.dataSelectFailed, rxGlobal.globalLiterals.actionAndStateErrors.dataSelectFailed));
+        }
+      );
     });
-}
+  });
+};
 
 export const insertProductGroup = (...parameters) => {
   let query = `insert into ProductGroup (Id,ParentId,ProductGroupCode,Title,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?)`;
@@ -182,7 +208,6 @@ export const insertVisitPlanResults = (...parameters) => {
   let query = `insert into VisitPlanResults (Id,VisitPlanCustomerId,ProductSubId,SellPrice,Weight,HasInventory,ShelfInventoryCount,ShelfVisibleCount,WarehouseInventoryCount,VerbalPurchaseCount,FactorPurchaseCount,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?,?,?,?,?,?,?,?)`;
   db.exec([{ sql: `${query};`, args: parameters }], false, () => console.log(`👍 insertion done successfully into VisitPlanResults..`));
 };
-
 
 export const syncData = async (dataTables) => {
   console.log(`🏁 [sqliteProvider.syncData]`);

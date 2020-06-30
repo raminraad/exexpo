@@ -1,32 +1,8 @@
-import React, { useState, useEffect ,useContext} from "react";
-import { StyleSheet, FlatList, Modal, Keyboard,TouchableOpacity, TouchableWithoutFeedback, Alert } from "react-native";
-import {
-  Container,
-  Card,
-  CardItem,
-  Body,
-  Header,
-  Content,
-  Left,
-  Right,
-  Text,
-  Title,
-  Button,
-  Accordion,
-  View,
-  Footer,
-  FooterTab,
-  Item,
-  Input,
-  Spinner,
-  Separator,
-} from "native-base";
+import React, { useState, useEffect, useContext } from "react";
+import { StyleSheet, FlatList, Modal, Keyboard, TouchableOpacity, TouchableWithoutFeedback, Alert } from "react-native";
+import { Container, Content, Text, Button, Accordion, View, Footer, FooterTab, Spinner } from "native-base";
 import { Icon, Divider, ListItem } from "react-native-elements";
-import { Ionicons } from "@expo/vector-icons";
-import { Feather } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
-import { FontAwesome5 } from "@expo/vector-icons";
-import { Entypo } from "@expo/vector-icons";
+import { Ionicons, Feather, AntDesign, FontAwesome5, Entypo } from "@expo/vector-icons";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import { globalStyles, globalColors, globalSizes, globalLiterals, menuOptionsCustomStyles } from "../lib/rxGlobal";
 import * as calendarLib from "../lib/calendarLib";
@@ -39,51 +15,24 @@ import TouchableScale from "react-native-touchable-scale"; // https://github.com
 import { LinearGradient } from "expo-linear-gradient";
 import * as enums from "../lib/enums";
 import * as wp from "../lib/webProvider";
-import VisitPlanResultContext from '../contexts/VisitPlanResultContext'
+import VisitPlanResultContext from "../contexts/VisitPlanResultContext";
+import { dbError } from "../lib/errors";
 
 export default function VisitPlanCustomers(props) {
-  const db = openDatabase("db");
   const yoyo = props.route.params.yoyo;
   const [presentationalData, setPresentationalData] = useState([]);
-  const [rawData, setRawData] = useState([]);
   const [isOnInstantFilter, setIsOnInstantFilter] = useState(false);
   const [isOnAdvancedFilter, setisOnAdvancedFilter] = useState(false);
   const [isVisitModalVisible, SetIsVisitModalVisible] = useState(false);
   const [instantFilterText, setInstantFilterText] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  let {initialItem} = props.route.params;
+  let { initialItem } = props.route.params;
   const visitPlanResultContext = useContext(VisitPlanResultContext);
-
-  const load = async () => {
-    console.log(`🏁 [VisitPlanCustomers.load]`);
-    let pr = new Promise((resolve, reject) => {
-      let query = `select * from VisitPlanCustomers where VisitPlanId = ${initialItem.Id}`;
-      db.transaction((tx) => {
-        tx.executeSql(
-          query,
-          [],
-          (_, { rows: { _array } }) => {
-            console.log(`💬 [VisitPlanCustomers.load] ${query} => ${JSON.stringify([..._array])}`);
-            for (let i = 0; i < _array.length; i++) _array[i].rxKey = i + 1;
-            setRawData(_array);
-            setPresentationalData(_array);
-            console.log(`👍 [VisitPlanCustomers.load]`);
-            resolve();
-          },
-          (transaction, error) => {
-            alert(`❌ ${query} => ${error}`);
-            reject();
-          }
-        );
-      });
-    });
-    return pr;
-  };
 
   const syncData = async () => {
     setIsLoading(true);
     await wp.syncClientData();
-    await load();
+    setPresentationalData(await dp.selectVisitPlanCustomers(initialItem.Id));
     setIsLoading(false);
     Alert.alert(
       "",
@@ -118,7 +67,7 @@ export default function VisitPlanCustomers(props) {
     (async () => {
       setIsLoading(true);
       if (yoyo) await handleYoyo(yoyo);
-      console.log(await load());
+      setPresentationalData(await dp.selectVisitPlanCustomers(initialItem.Id));
       SetIsVisitModalVisible(false);
       setIsLoading(false);
     })();
@@ -141,12 +90,14 @@ export default function VisitPlanCustomers(props) {
 
   const keyExtractor = (item, index) => item.Id.toString();
   const onListItemNavigateForward = async (item) => {
-let convertedResultList = (await dp.selectJoinedVisitPlanResultProducts(item.Id)).map()
-    visitPlanResultContext.setValue({visitPlanCustomer:item,visitPlanResults:});
+    visitPlanResultContext.setValue({ visitPlanCustomer: item, visitPlanResults: await dp.selectJoinedVisitPlanResultProducts(item.Id) });
     item.rxSync = enums.syncStatuses.modified;
-    props.navigation.navigate("VisitResultTab", {screen:'VisitPlanResultForm',params:{
-      initialItem: item,
-    }});
+    props.navigation.navigate("VisitResultTab", {
+      screen: "VisitPlanResultForm",
+      params: {
+        initialItem: item,
+      },
+    });
   };
 
   const renderHeader = () => (

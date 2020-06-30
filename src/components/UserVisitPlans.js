@@ -148,6 +148,8 @@ export default function UserVisitPlan(props) {
   };
 
   const onListItemNavigateForward = (item) => {
+    console.log(`💬 [UserVisitPlans.onListItemNavigateForward] navigating to details of item: => ${JSON.stringify(item)}`);
+
     navigation.navigate("VisitPlanCustomers", {
       title: `مشتریان هدف در تاریخ ${calendarLib.toShortPersian(item.OperationDate)}`,
       initialItem: item,
@@ -198,18 +200,11 @@ export default function UserVisitPlan(props) {
     <Container backgroundColor={rxGlobal.globalColors.screenContainer}>
       <Content>
         {renderHeader()}
-        {/* <FlatList
-          keyExtractor={keyExtractor}
-          //TODO: get data from a method that performs instant and advanced filter
-          data={presentationalData}
-          renderItem={renderItem}
-        /> */}
-
         {rawData.map((item, i) => (
           <ListItem
             containerStyle={[rxGlobal.globalStyles.shadowedContainer, rxGlobal.globalStyles.listItemHeaderContainer]}
             Component={TouchableScale}
-            key={item.rxKey}
+            key={item.Id}
             friction={90} //
             tension={100} // These props are passed to the parent component (here TouchableScale)
             activeScale={0.95} //

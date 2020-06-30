@@ -24,7 +24,7 @@ export default function VisitPlanResultForm(props) {
   let { initialItem } = props.route.params;
   const [visitResultStatus, setVisitResultStatus] = useState(initialItem?.ResultStatus ?? null);
   const [rawData, setRawData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [productModalItem, setProductModalItem] = useState(null);
   const visitPlanResultContext = useContext(VisitPlanResultContext);
   let contextValue = visitPlanResultContext.value;
@@ -208,7 +208,10 @@ export default function VisitPlanResultForm(props) {
     );
   };
 
-  const renderItemHeader = (item, i) => (
+  const renderItemHeader = (item, i) => {
+    console.log(`🏁 [VisitPlanResultsFrom.renderItemHeader]`);
+    console.log(`💬 [VisitPlanResultsFrom.renderItemHeader] item => ${JSON.stringify(item)}`);
+    return (
     <Swipeable renderLeftActions={() => swipeLeftAction(item)} key={item.rxKey}>
       <ListItem
         containerStyle={[rxGlobal.globalStyles.shadowedContainer, rxGlobal.globalStyles.listItemHeaderContainer]}
@@ -222,7 +225,7 @@ export default function VisitPlanResultForm(props) {
         subtitle={() => renderSubtitle(item)}
       />
     </Swipeable>
-  );
+  )}
 
   const renderEmptyList = () => (
     <View style={{ ...rxGlobal.globalStyles.emptyList, marginLeft: 20, marginTop: 10 }}>

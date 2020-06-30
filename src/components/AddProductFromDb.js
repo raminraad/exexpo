@@ -105,6 +105,13 @@ export default function SearchBarExample(props) {
     else return <ProductSubShowcase data={showcase} onConfirm={addProductSubToVisitPlanResultList} isAdding={isProductSubAddingOnProgress}/>;
   };
 
+const copyProductSubToVisitResultItem =(productSub,Result)=>{
+  Result.ProductSubId=productSub.Id;
+Result.SellPrice=productSub.PriceValue;
+Result.Weight=productSub.MeasurmentScale;
+Result.ShelfVisibleCount=productSub.ShelfVisibleCount;
+};
+
   const addProductSubToVisitPlanResultList = async (productSubItem) => {
     setIsProductSubAddingOnProgress(true);
     try {
@@ -123,6 +130,7 @@ export default function SearchBarExample(props) {
         let newResultItem = { ...clone.visitPlanResults[existingItemId] };
         newResultItem.productGroupTitles = productGroupTitles;
         newResultItem.productTitle = productTitle;
+        copyProductSubToVisitResultItem(productSubItem,newResultItem);
 
         if (clone.visitPlanResults[existingItemId].rxSync !== enums.syncStatuses.deleted) {
           Alert.alert(
@@ -159,7 +167,8 @@ export default function SearchBarExample(props) {
         }
       } else {
         let newResultItem = {
-          Id: 0,
+          Id: null,
+          VisitPlanCustomerId:visitPlanResultContext.visitPlanCustomer.Id,
           rxKey:
             Math.max.apply(
               Math,
@@ -168,10 +177,8 @@ export default function SearchBarExample(props) {
               })
             ) + 1,
           rxSync: enums.syncStatuses.created,
-          PriceValue: productSubItem.PriceValue,
-          PriceType: productSubItem.PriceType,
-          MeasurmentScale: productSubItem.MeasurmentScale,
-          MeasurmentType: enums.measurementTypes.Gram,
+          SellPrice: productSubItem.PriceValue,
+          Weight: productSubItem.MeasurmentScale,
           ShelfVisibleCount:productSubItem.ShelfVisibleCount,
           productGroupTitles: productGroupTitles,
           productTitle: productTitle,

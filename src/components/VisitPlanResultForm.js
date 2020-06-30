@@ -19,15 +19,14 @@ import * as enums from "../lib/enums";
 import VisitPlanResultContext from "../contexts/VisitPlanResultContext";
 
 export default function VisitPlanResultForm(props) {
-  const db = openDatabase("db");
   let navigation = props.navigation;
-  let { initialItem } = props.route.params;
   const [visitResultStatus, setVisitResultStatus] = useState(initialItem?.ResultStatus ?? null);
   const [rawData, setRawData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [productModalItem, setProductModalItem] = useState(null);
   const visitPlanResultContext = useContext(VisitPlanResultContext);
   let contextValue = visitPlanResultContext.value;
+  let { initialItem } = contextValue.visitPlanCustomer;
   const isGeoLocationAcceptable = async (lat, long) => {
     console.log("SUBMITTING");
     let { status } = await Location.requestPermissionsAsync();
@@ -265,6 +264,7 @@ export default function VisitPlanResultForm(props) {
               </FontAwesome5.Button>
             </View> */}
           </View>
+          {console.log(`💬 [VisitPlanResultFrom.render] context value: ${JSON.stringify(visitPlanResultContext.value)}`)}
           {isLoading ? (
             <Spinner style={{ height: "100%" }} color='grey' size={50} />
           ) : contextValue.visitPlanResults.length ? (

@@ -149,7 +149,7 @@ export const selectVisitPlanCustomers = async (VisitPlanId) => {
 export const selectJoinedVisitPlanResultProducts = async (VisitPlanCustomerId) => {
   console.log(`🏁 [sqliteProvider.selectJoinedVisitPlanResultProducts]`);
 
-  let query = `select *,res.Id as Id from VisitPlanResults res
+  let query = `select *,res.Id as Id, ${enums.syncStatuses.synced} as rxSync from VisitPlanResults res
      inner join ProductSub sub on res.ProductSubId = sub.Id
      inner join Product prd on prd.Id = sub.ProductId
      inner join ProductGroup grp on grp.Id =  prd.ProductGroupId

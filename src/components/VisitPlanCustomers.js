@@ -89,15 +89,14 @@ export default function VisitPlanCustomers(props) {
   };
 
   const keyExtractor = (item, index) => item.Id.toString();
+
   const onListItemNavigateForward = async (item) => {
-    visitPlanResultContext.setValue({ visitPlanCustomer: item, visitPlanResults: await dp.selectJoinedVisitPlanResultProducts(item.Id) });
-    item.rxSync = enums.syncStatuses.modified;
-    props.navigation.navigate("VisitResultTab", {
-      screen: "VisitPlanResultForm",
-      params: {
-        initialItem: item,
-      },
-    });
+    visitPlanResultContext.setValue({ visitPlanCustomer: item, visitPlanResults:  await dp.selectJoinedVisitPlanResultProducts(item.Id)});
+
+    console.log(`💬 [VisitPlanCustomers.onListItemNavigateForward] context value => ${JSON.stringify(visitPlanResultContext.value)}`);
+    props.navigation.navigate("VisitResultTab", {screen: "VisitPlanResultForm"});
+
+
   };
 
   const renderHeader = () => (

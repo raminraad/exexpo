@@ -133,7 +133,7 @@ export const selectVisitPlanCustomers = async (VisitPlanId) => {
         (_, { rows: { _array } }) => {
           console.log(`💬 [sqliteProvider.selectVisitPlanCustomers] ${query} => ${JSON.stringify([..._array])}`);
           for (let i = 0; i < _array.length; i++) _array[i].rxKey = i + 1;
-          
+
           console.log(`👍 [sqliteProvider.selectVisitPlanCustomers]`);
           resolve(_array);
         },
@@ -623,32 +623,58 @@ export const tableExists = async (table_name) => {
 
   return pr;
 };
-export const updateVisitPlanCustomerAndDetails = async (VisitPlanCustomer) => {
+export const updateVisitPlanResultContextData = async (contextValue) => {
   try {
-    console.log(`🏁 [sqliteProvider.updateVisitPlanCustomerAndDetails]`);
+    // fixme: test different types of actions based on rxSync and SyncStatus
+    console.log(`🏁 [sqliteProvider.updateVisitPlanResultContextData]`);
 
     const db = openDatabase("db");
-
+    let dbAction;
     let queries = [];
 
     let parameters = [
-      VisitPlanCustomer.ResultSummary,
-      VisitPlanCustomer.ResultStatus,
-      VisitPlanCustomer.ResultVisitedDate,
-      VisitPlanCustomer.LastModifiedDate,
-      VisitPlanCustomer.SyncStatus,
-      VisitPlanCustomer.Id,
+      contextValue.visitPlanCustomer?.ResultSummary,
+      contextValue.visitPlanCustomer?.ResultStatus,
+      contextValue.visitPlanCustomer?.ResultVisitedDate,
+      contextValue.visitPlanCustomer?.LastModifiedDate,
+      contextValue.visitPlanCustomer?.SyncStatus,
+      contextValue.visitPlanCustomer?.Id,
     ];
 
     let query = `UPDATE VisitPlanCustomers SET ResultSummary = ? , ResultStatus = ? , ResultVisitedDate = ? , LastModifiedDate = ? , SyncStatus = ? WHERE ID = ?`;
     queries.push({ sql: `${query};`, args: parameters });
 
-    for (const item of VisitPlanCustomer.details) {
-      if (item.rxSync === enums.syncStatuses.modified) {
+    for (const item of contextValue.visitPlanResults) {
+      switch (item.rxSync) {
+        case enums.syncStatuses.created:
+          item.SyncStatus = enums.syncStatuses.created;
+          dbAction = enums.crudActions.create;
+          break;
+        case enums.syncStatuses.modified:
+          if (item.SyncStatus === enums.syncStatuses.created) {
+            item.SyncStatus = enums.syncStatuses.created;
+            dbAction = enums.crudActions.update;
+          } else if (item.SyncStatus === enums.syncStatuses.modified) {
+            item.SyncStatus = enums.syncStatuses.modified;
+            dbAction = enums.crudActions.update;
+          }
+          else continue;
+          break;
+        case enums.syncStatuses.deleted:
+          if (item.SyncStatus === enums.syncStatuses.created) dbAction = enums.crudActions.delete;
+          else {
+            item.SyncStatus = enums.syncStatuses.deleted;
+            dbAction = enums.crudActions.update;
+          }
+          break;
+        case enums.syncStatuses.synced:
+          continue;
+      }
+      if (dbAction === enums.crudActions.update) {
         let query = `UPDATE VisitPlanResults SET ProductSubId = ? , SellPrice = ? , Weight = ? , ShelfVisibleCount = ?, LastModifiedDate = ? , SyncStatus = ? WHERE ID = ?`;
         let parameters = [item.ProductSubId, item.SellPrice, item.Weight, item.ShelfVisibleCount, item.LastModifiedDate, item.SyncStatus, item.Id];
         queries.push({ sql: `${query};`, args: parameters });
-      } else if (item.rxSync === enums.syncStatuses.created) {
+      } else if (dbAction === enums.crudActions.create) {
         let parameters = [
           item.Id,
           item.VisitPlanCustomerId,
@@ -666,7 +692,7 @@ export const updateVisitPlanCustomerAndDetails = async (VisitPlanCustomer) => {
         ];
         let query = `insert into VisitPlanResults (Id,VisitPlanCustomerId,ProductSubId,SellPrice,Weight,HasInventory,ShelfInventoryCount,ShelfVisibleCount,WarehouseInventoryCount,VerbalPurchaseCount,FactorPurchaseCount,LastModifiedDate,SyncStatus) values (?,?,?,?,?,?,?,?,?,?,?,?,?)`;
         queries.push({ sql: `${query};`, args: parameters });
-      } else if (item.rxSync === enums.syncStatuses.deleted) {
+      } else if (dbAction === enums.crudActions.delete) {
         let query = `DELETE FROM VisitPlanResults WHERE ID = ?`;
         let parameters = [item.Id];
         queries.push({ sql: `${query};`, args: parameters });
@@ -675,14 +701,14 @@ export const updateVisitPlanCustomerAndDetails = async (VisitPlanCustomer) => {
 
     // db.transaction((tx) => {
     for (const query of queries) {
-      console.log(`💬 [sqliteProvider.updateVisitPlanCustomerAndDetails] query: ${JSON.stringify(query)}`);
+      console.log(`💬 [sqliteProvider.updateVisitPlanResultContextData] query: ${JSON.stringify(query)}`);
       let result = await executeSql(query.sql, query.args);
-      console.log(`💬 [sqliteProvider.updateVisitPlanCustomerAndDetails] result: ${JSON.stringify(result)}`);
+      console.log(`💬 [sqliteProvider.updateVisitPlanResultContextData] result: ${JSON.stringify(result)}`);
     }
 
-    return `👍 [sqliteProvider.updateVisitPlanCustomerAndDetails]`;
+    return `👍 [sqliteProvider.updateVisitPlanResultContextData]`;
   } catch (err) {
-    console.log(`❌ [sqliteProvider.updateVisitPlanCustomerAndDetails]`);
+    console.log(`❌ [sqliteProvider.updateVisitPlanResultContextData]`);
     throw err;
   }
 };

@@ -127,9 +127,7 @@ Result.ShelfVisibleCount=productSub.ShelfVisibleCount;
       let productTitle = groupstack.current[groupstack.current.length - 1].title;
 
       if (existingItemId !== -1) {
-        console.log(`A`)
         let newResultItem = { ...clone.visitPlanResults[existingItemId] };
-        console.log(`B : ${newResultItem}`)
         newResultItem.productGroupTitles = productGroupTitles;
         newResultItem.productTitle = productTitle;
         copyProductSubToVisitResultItem(productSubItem,newResultItem);

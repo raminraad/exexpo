@@ -1,8 +1,11 @@
 export const syncStatuses = Object.freeze({ modified: 1, created: 3, deleted: 5, synced: 7 });
+export const resultStatuses = Object.freeze({ NotVisited: 1, NoCooperation: 3, Success: 7, ChangeStatus: 11, NotExists: 13 }); //fixme: update enum values on backend
 export const authErrors = Object.freeze({ tokenExpired: 120 });
-export const dbErrors = Object.freeze({ tableCreationFailed: 200, tableDropFailed: 210, dataInsertFailed: 220 , dataSelectFailed : 230});
+export const dbErrors = Object.freeze({ tableCreationFailed: 200, tableDropFailed: 210, dataInsertFailed: 220, dataSelectFailed: 230 });
 export const webErrors = Object.freeze({ noInternetError: 300 });
 export const appErrors = Object.freeze({ syncServerFailed: 400, syncClientFailed: 410 });
+export const componentActions = Object.freeze({ saveContext: 500 });
+export const crudActions = Object.freeze({ create:600 , read: 610 , update: 620 , delete:630});
 
 export const priceTypes = Object.freeze({
   Others: 0,

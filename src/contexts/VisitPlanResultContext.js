@@ -7,6 +7,8 @@ const VisitPlanResultContext = React.createContext({
     visitPlanResults: [
       {
         Id: null,
+        rxKey:null,
+        rxSync:null,
         VisitPlanCustomerId: null,
         ProductSubId: null,
         SellPrice: null,

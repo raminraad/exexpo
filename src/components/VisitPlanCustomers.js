@@ -66,18 +66,18 @@ export default function VisitPlanCustomers(props) {
   useEffect(() => {
     (async () => {
       setIsLoading(true);
-      if (yoyo) await handleYoyo(yoyo);
+      if (props.route?.params?.todo === enums.componentActions.saveContext) await saveContext();
       setPresentationalData(await dp.selectVisitPlanCustomers(initialItem.Id));
-      SetIsVisitModalVisible(false);
       setIsLoading(false);
     })();
   }, [props]);
 
   const { title } = props.route.params;
 
-  const handleYoyo = async (yoyo) => {
+  const saveContext = async () => {
     try {
-      console.log(await dp.updateVisitPlanCustomerAndDetails(yoyo));
+      let contextValue =visitPlanResultContext.value;
+      await dp.updateVisitPlanResultContextData(contextValue);
     } catch (error) {
       alert(globalLiterals.actionAndStateErrors.saveError);
     }

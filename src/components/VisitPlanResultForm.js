@@ -287,20 +287,22 @@ export default function VisitPlanResultForm(props) {
             initialValues={visitPlanResultContext.value?.visitPlanCustomer}
             onSubmit={async (values, actions) => {
               if (
-                !global.dynamicSetting.allowedDistanceForVisitor ||
+                !global.dynamicSetting?.allowedDistanceForVisitor ||
                 !visitPlanResultContext.value?.visitPlanCustomer.Lat ||
                 !visitPlanResultContext.value?.visitPlanCustomer.Long ||
                 (await isGeoLocationAcceptable(visitPlanResultContext.value?.visitPlanCustomer.Lat, visitPlanResultContext.value?.visitPlanCustomer.Long))
               ) {
-                console.log("submitting");
                 actions.resetForm();
-                //fixme: convert context before save
-                values.details = visitPlanResultContext.value?.visitPlanResults;
-                values.LastModifiedDate = Moment(new Date()).format("YYYY/MM/DD HH:mm:ss");
-                values.ResultVisitedDate = Moment(new Date()).format("YYYY/MM/DD HH:mm:ss");
-                values.SyncStatus = enums.syncStatuses.modified;
-                values.rxSync = enums.syncStatuses.modified;
-                navigation.navigate("VisitPlanCustomers", { yoyo: values });
+                let clone = {...visitPlanResultContext.value};
+                
+                clone.visitPlanCustomer.LastModifiedDate = Moment(new Date()).format("YYYY/MM/DD HH:mm:ss");
+                clone.visitPlanCustomer.ResultVisitedDate = Moment(new Date()).format("YYYY/MM/DD HH:mm:ss");
+                clone.visitPlanCustomer.ResultStatus = values.ResultStatus ?? enums.resultStatuses.NotVisited;
+                clone.visitPlanCustomer.SyncStatus = enums.syncStatuses.modified;
+                visitPlanResultContext.setValue(clone);
+
+                console.log(`💬 [Formik.onSubmit] Submitting context value => \n${JSON.stringify(visitPlanResultContext.value)}`);
+                navigation.navigate("VisitPlanCustomers", { todo : enums.componentActions.saveContext });
               }
             }}>
             {(props) => (
@@ -317,7 +319,7 @@ export default function VisitPlanResultForm(props) {
                   />
                 </View>
                 <View style={{ marginTop: 30 }}>
-                  <Text style={rxGlobal.globalStyles.addModalFieldTitle}>وضعیت</Text>
+                  <Text style={rxGlobal.globalStyles.addModalFieldTitle}>وضعیت پویش</Text>
                   <View
                     style={[
                       rxGlobal.globalStyles.addModalFieldInput,
@@ -327,24 +329,23 @@ export default function VisitPlanResultForm(props) {
                     {/* <RadioButton.Group onValueChange={(value) => console.log(JSON.stringify(props))} value={props.values?.ResultStatus}> */}
                     <RadioButton.Group onValueChange={(value) => props.setFieldValue("ResultStatus", value)} value={props.values?.ResultStatus}>
                       <View style={rxGlobal.globalStyles.radioItemContainer}>
-                        <RadioButton uncheckedColor='#02c39a' color='#02c39a' value={7} />
+                        <RadioButton uncheckedColor='#02c39a' color='#02c39a' value={enums.resultStatuses.Success} />
                         <Text style={{ color: "#02c39a" }}>پویش موفق</Text>
                       </View>
                       <View style={rxGlobal.globalStyles.radioItemContainer}>
-                        <RadioButton uncheckedColor='#f94144' color='#f94144' value={3} />
+                        <RadioButton uncheckedColor='#f94144' color='#f94144' value={enums.resultStatuses.NoCooperation} />
                         <Text style={{ color: "#f94144" }}>عدم همکاری</Text>
                       </View>
                       <View style={rxGlobal.globalStyles.radioItemContainer}>
-                        <RadioButton uncheckedColor='#0077b6' color='#0077b6' value={11} />
+                        <RadioButton uncheckedColor='#0077b6' color='#0077b6' value={enums.resultStatuses.ChangeStatus} />
                         <Text style={{ color: "#0077b6" }}>تغییر کاربری</Text>
                       </View>
                       <View style={rxGlobal.globalStyles.radioItemContainer}>
-                        <RadioButton uncheckedColor='#0077b6' color='#0077b6' value={13} />
+                        <RadioButton uncheckedColor='#0077b6' color='#0077b6' value={enums.resultStatuses.NotExists} />
                         <Text style={{ color: "#0077b6" }}>یافت نشد</Text>
                       </View>
                       <View style={rxGlobal.globalStyles.radioItemContainer}>
-                        {/* fixme : ask the enum value of 2} */}
-                        <RadioButton uncheckedColor='#0077b6' color='#0077b6' value={2} />
+                        <RadioButton uncheckedColor='#0077b6' color='#0077b6' value={enums.resultStatuses.NotVisited} />
                         <Text style={{ color: "#0077b6" }}>پویش نشده</Text>
                       </View>
                     </RadioButton.Group>

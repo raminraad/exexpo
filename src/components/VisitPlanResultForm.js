@@ -117,15 +117,15 @@ export default function VisitPlanResultForm(props) {
   };
 
   const onListItemDelete = (item) => {
-    let clone = [...visitPlanResultContext.value?.visitPlanResults];
-    let index = clone.findIndex((r) => r.rxKey === item.rxKey);
+    let clone = {...visitPlanResultContext.value};
+    let index = clone.visitPlanResults.findIndex((r) => r.rxKey === item.rxKey);
     if (item.rxSync === enums.syncStatuses.synced || item.rxSync === enums.syncStatuses.modified) {
       item.rxSync = enums.syncStatuses.deleted;
-      clone[index] = item;
+      clone.visitPlanResults[index] = item;
     } else {
-      clone.splice(index, 1);
+      clone.visitPlanResults.splice(index, 1);
     }
-    setRawData(clone);
+    visitPlanResultContext.setValue(clone);
   };
 
   const renderSubtitle = (item) => (

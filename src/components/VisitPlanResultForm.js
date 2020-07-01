@@ -359,7 +359,7 @@ export default function VisitPlanResultForm(props) {
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={{ ...rxGlobal.globalStyles.buttonGroupButton, backgroundColor: rxGlobal.globalColors.btnCancel }}
-                    onPress={navigation.goBack}>
+                    onPress={()=>navigation.navigate('VisitPlanCustomers')}>
                     <Text style={{ color: "white" }}>{rxGlobal.globalLiterals.buttonTexts.cancel}</Text>
                   </TouchableOpacity>
                 </View>

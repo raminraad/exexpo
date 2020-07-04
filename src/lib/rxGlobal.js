@@ -337,6 +337,7 @@ export const globalLiterals = {
     notNumber: "مقدار این فیلد میبایست عددی باشد",
     notInGeoRange: "فاصله شما از مقدار تعیین شده بیشتر است. لطفاً به محدوده فروشگاه مورد نظر برگشته و مجددا تلاش فرمایید.",
     locationPermissionDenied: "مجوز دسترسی برنامه به مکان یاب دستگاه الزامیست",
+    cameraPermissionDenied: "مجوز دسترسی برنامه به دوربین دستگاه الزامیست",
   },
   actionAndStateErrors: {
     dataInsertFailed: "درج داده ها با خطا مواجه شد",

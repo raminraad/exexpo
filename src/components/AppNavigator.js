@@ -13,7 +13,7 @@ import { Fontisto } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import VisitPlanResultProductForm from "./VisitPlanResultProductForm";
 import AddProductFromDb from "./AddProductFromDb";
-import CameraForm from "./CameraForm";
+import AddProductFromCamera from "./AddProductFromCamera";
 import * as rxGlobal from "../lib/rxGlobal";
 import VisitPlanResultContext from "../contexts/VisitPlanResultContext";
 
@@ -59,7 +59,7 @@ const VisitResultTab = () => {
             case "VisitPlanResultForm":
               iconName = "playlist-add-check";
               break;
-            case "CameraForm":
+            case "AddProductFromCamera":
               iconName = "camera-alt";
               break;
             default:
@@ -80,7 +80,7 @@ const VisitResultTab = () => {
       }}>
       <VisitTab.Screen name='VisitPlanResultForm' component={VisitPlanResultForm} />
       <VisitTab.Screen name='VisitPlanResultProductForm' component={VisitPlanResultProductForm} />
-      <VisitTab.Screen name='CameraForm' component={CameraForm} />
+      <VisitTab.Screen name='AddProductFromCamera' component={AddProductFromCamera} />
       <VisitTab.Screen name='AddProductFromDb' component={AddProductFromDb} />
     </VisitTab.Navigator>
   );

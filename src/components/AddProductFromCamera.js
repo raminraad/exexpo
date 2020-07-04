@@ -1,19 +1,23 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Text, View, TouchableOpacity } from "react-native";
+import { Text, View, TouchableOpacity, ActivityIndicator, ScrollView } from "react-native";
 import { Camera } from "expo-camera";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as rxGlobal from "../lib/rxGlobal";
+import { Image } from "react-native-elements";
 
 export default function App() {
   const [hasPermission, setHasPermission] = useState(null);
   const [cameraRef, setCameraRef] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
+  const [isOnPreview, setIsOnPreview] = useState(false);
+  const [pictures, setPictures] = useState([]);
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestPermissionsAsync();
       setHasPermission(status === "granted");
     })();
   }, []);
+  console.log("RENDER");
   if (hasPermission === null) {
     return <View />;
   }
@@ -23,7 +27,7 @@ export default function App() {
   return (
     <View style={{ flex: 1 }}>
       <Camera
-        style={{ flex: 1 }}
+        style={{ flex: 8 }}
         type={type}
         ref={(ref) => {
           setCameraRef(ref);
@@ -50,19 +54,27 @@ export default function App() {
               {
                 backgroundColor: "#FFFFFF77",
                 marginBottom: 20,
-                alignSelf:'center'
+                alignSelf: "center",
               },
             ]}
             onPress={async () => {
               if (cameraRef) {
-                let photo = await cameraRef.takePictureAsync();
-                console.log("photo", photo);
+                let newPicture = await cameraRef.takePictureAsync();
+                setPictures([...pictures, newPicture]);
+                setIsOnPreview(true);
+                console.log("photo", newPicture);
               }
             }}>
             <MaterialCommunityIcons name='camera-iris' size={72} color='white' />
           </TouchableOpacity>
         </View>
       </Camera>
+
+      <ScrollView horizontal style={{flex:1, marginVertical: 10 }}>
+        {pictures.map((pic) => (
+          <Image source={{ uri: pic.uri }} style={{marginHorizontal:5, width: 100, height: 100 }} PlaceholderContent={<ActivityIndicator />} key={pic.uri} />
+        ))}
+      </ScrollView>
     </View>
   );
 }
